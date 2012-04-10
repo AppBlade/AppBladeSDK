@@ -1,0 +1,123 @@
+#AppBlade SDK#
+##*An easy-to-use, drop-in library to tightly integrate the Appblade service into your app.*##
+
+###Integrating the framework enables enhanced AppBlade features such as:###
+
+ - **Application kill switch**
+   - Administrators can remote disable AppBlade installed applications.
+   - Kill switch enabled applications are required to connect to the internet and verify status with AppBlade.
+   - If it has been more than 24 hours since the last verified check OR if the user status is not valid, the application will not run.
+ - **Capture application crash logs**
+   - Capture, view & download crash logs via AppBlade  
+ - **Application update notification**
+   - On application start, users are automatically notified when an update is available
+ - **Application Feedback** *(iOS Only)*
+ 	- At any point in the app, users can send a screenshot and a note to AppBlade by doing a three-finger double tap.
+
+#iOS SDK#
+##Add AppBlade to your project#
+There are two ways to include AppBlade in your project, as source or a compiled library. The AppBlade framework is not currently ARC compatible, so if you are writing a project using ARC we suggest you include the binary.
+
+###Including AppBlade Source##
+If you are upgrading from a previous version, delete the current AppBlade folder and its contents before updating.
+
+####Xcode 4###
+
+1. Download and unzip the AppBlade framework, then drag the inner AppBlade folder into the left-hand File Navigator of your application's Xcode project.
+1.  Select the following options in the add file options panel and before clicking "Finish":
+    - Make sure that "Copy items" is checked for "Destination".
+    - Check each of your app targets in "Add to targets".
+1.  Click your project file from the File Navigator and then select your app target from the list on the right.
+1.	Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
+1.  Select Security.framework from the list and click "Add".
+2.  Repeat steps 4 and 5, this time adding QuartzCore.framework (used for Feedback).
+1.  Configure the framework using the instructions in the *Configure AppBlade* section of this document.
+
+####Xcode 3###
+1.  If you are upgrading from a previous version, delete the current AppBlade folder and its contents. Download and unzip the AppBlade framework, then drag the folder into the left-hand Project Navigator of your application's Xcode project.
+1.  Right click the "Frameworks" group in the Project Navigator and select "Add" > "Existing Frameworks".
+1.  Select "Security.framework" and click "Add".
+1.  Configure the framework using the instructions in the *Configure AppBlade* section of this document.
+
+###Including AppBlade Binary in Xcode 4##
+You can either download the compiled version from [our website](http://appblade.com/sdk/download) and skip to step 5, or follow these instructions for creating your own library from source.
+
+1. Download the source. Open AppBlade.xcodeproj located in `iOS/Framework/`.  
+2. If you need support in the iPhone Simulator, select AppBladeUniversal from the Scheme dropdown. If not, then you can leave it on the normal AppBlade scheme.
+3. Build.
+4. Expand the `Products` group in the left-hand navigator. Right-click on `libAppBlade.a` and select `Show in Finder`.
+5. For a non-universal build, simply copy that libAppBlade.a file, and AppBlade.h from the project into your project.  For a universal build, navigate one folder above where libAppBlade.a lives, then go into `Release_Production-universal`. Include both of the files (libAppBladeUniversal.a and AppBlade.h) in your project.
+6. Open your Xcode project.
+1.  Click your project file from the File Navigator and then select your app target from the list on the right.
+1.	Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
+1.  Select Security.framework from the list and click "Add".
+2.  Repeat steps 8 and 9, this time adding QuartzCore.framework (used for Feedback).
+6. Configure the framework using the instructions in the *Configure AppBlade* section of this document.
+
+##Configure AppBlade#
+
+1. Log in or register at [http://appblade.com/](http://appblade.com)
+1. Click 'Upload' in the top right-hand corner. If you have an .ipa, you may upload it now. If not, skip the upload and finish the project configuration. This creates a new project.
+1. In your application delegate implementation file (e.g.AppDelegate.m), import AppBlade.h and add the following to `-application:didFinishLaunchingWithOptions:`.
+
+            // Enter your 32-digit alphanumeric project id, token, secret, and issued timestamp here.
+            // These can be found under the SDK Keys section of your AppBlade project on AppBlade.com.
+            AppBlade *blade = [AppBlade sharedManager];
+            blade.appBladeProjectID = @"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+            blade.appBladeProjectToken = @"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+            blade.appBladeProjectSecret = @"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+            blade.appBladeProjectIssuedTimestamp = @"9999999999";
+    
+1.  Enable crash logging
+
+            [[AppBlade sharedManager] catchAndReportCrashes];
+
+1.  To enable the AppBlade kill switch, add the following code to `-applicationDidBecomeActive:` in your application delegate. IMPORTANT: this features is intended only for ad hoc and enterprise applications. Shipping an app to the iTunes App store with a call to |-checkApproval| could result in app termination (and rejection).
+
+            [[AppBlade sharedManager] checkApproval];
+            
+1. To enable feedback reporting, add the following code to `-application:didFinishLaunchingWithOptions:`.
+
+            [[AppBlade sharedManager] allowFeedbackReporting];
+            
+            
+
+#Android#
+You can download a compiled .jar from [our website](http://appblade.com/sdk/download), or compile it yourself from source.
+
+##Adding and Configuring AppBlade##
+
+1. Add a "libs" folder to your project (if one does not already exist) and include the latest AppBlade jar file.
+2. Add a library reference to the AppBlade jar file in your project.  If you are using Eclipse with the ADT plugin, you can right-click on your project file and select Properties, navigate to Java Build Path - Libraries - Add JARs... and select the AppBlade jar by browsing to the libs folder.
+3. In the main entry point in your application, register your project specific keys with AppBlade.  We recommend using a custom Application class in your project, but you can do this in the onCreate method of your main Activity as well.
+
+	To register a custom Application class for your Android app, you will need to refer to it by name in the application element of your project's manifest.  For example:
+
+			<application android:name=".MyApplication">
+	
+	Then, register your application details in your Application class' onCreate method:
+
+			@Override
+			public void onCreate() {
+				super.onCreate();
+				
+				String token = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+				String secret = ""xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
+				String uuid = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+				String issuance = "9999999999";
+				
+				AppBlade.register(this, token, secret, uuid, issuance);
+			}
+	
+4. To allow AppBlade to enforce user authorization in your app, call AppBlade.authorize statically from your main activity's onResume method.
+
+			public class MainActivity extends Activity {
+				
+				public void onResume() {
+					super.onResume();
+					AppBlade.authorize(this);
+				}
+
+#Resources:#
+###[AppBlade.com](https://appblade.com/)###
+###[License and terms](https://appblade.com/terms_of_use)###

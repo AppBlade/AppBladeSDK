@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#EFEFEF">
+    
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:src="@drawable/appblade_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dip" />
+    
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgLogo"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:padding="10dip">
+
+            <!-- Exception reporting section... -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exception reporting"
+                android:textColor="#464e54"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dip" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="3dip"
+                android:background="#464e54"
+                android:layout_marginBottom="5dip" />
+            
+		    <Button
+		        android:id="@+id/btnDivideByZero"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="Divide by zero" />
+
+		    <!-- Remote authorization sections... -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remote Authorization"
+                android:textColor="#464e54"
+                android:textStyle="bold"
+                android:layout_marginTop="10dip"
+                android:layout_marginLeft="10dip" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="3dip"
+                android:background="#464e54"
+                android:layout_marginBottom="5dip" />
+		
+		    <Button
+		        android:id="@+id/btnClearAuthData"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="Clear Authorization Data" />
+        </LinearLayout>
+        
+    </ScrollView>
+
+</RelativeLayout>
