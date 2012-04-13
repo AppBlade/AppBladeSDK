@@ -28,10 +28,10 @@
 
 		// Populate with values from the project SDK settings
 		// see README for details
-    blade.appBladeProjectID = @"";
-    blade.appBladeProjectToken = @"";
-    blade.appBladeProjectSecret = @"";
-    blade.appBladeProjectIssuedTimestamp = @"";
+    blade.appBladeProjectID = @"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+    blade.appBladeProjectToken = @"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    blade.appBladeProjectSecret = @"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    blade.appBladeProjectIssuedTimestamp = @"9999999999";
 
     [blade catchAndReportCrashes];
     [blade allowFeedbackReporting];

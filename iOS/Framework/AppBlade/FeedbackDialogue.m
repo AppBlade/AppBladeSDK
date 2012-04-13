@@ -45,7 +45,9 @@
         [overlayView release];
         
         // overall dialogue view
-        self.dialogueView = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width/2 - feedbackWidthMin/2, 0, feedbackWidthMin, feedbackHeightMin)];
+        int width = feedbackWidthMin;
+        int originX = floor(self.frame.size.width / 2 - width / 2);
+        self.dialogueView = [[UIView alloc] initWithFrame:CGRectMake(originX, 0, width, feedbackHeightMin)];
         self.dialogueView.backgroundColor = [UIColor whiteColor];
         self.dialogueView.layer.cornerRadius = 7.0f;
         self.dialogueView.clipsToBounds = YES;
