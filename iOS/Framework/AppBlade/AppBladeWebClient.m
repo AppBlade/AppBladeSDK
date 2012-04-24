@@ -49,6 +49,7 @@ static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%
 @synthesize delegate = _delegate;
 @synthesize api = _api;
 @synthesize responseHeaders = _responseHeaders;
+@synthesize userInfo = _userInfo;
 
 const int kNonceRandomStringLength = 74;
 
@@ -68,6 +69,7 @@ const int kNonceRandomStringLength = 74;
     [_request release];
     [_receivedData release];
     [_responseHeaders release];
+    [_userInfo release];
     [super dealloc];
 }
 
@@ -118,6 +120,7 @@ const int kNonceRandomStringLength = 74;
     
     NSString* udid = [self udid];
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
+    NSData* consoleContent = [NSData dataWithContentsOfFile:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:console]];
     
     // Build report URL.
     NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeProjectID], udid];
@@ -137,13 +140,12 @@ const int kNonceRandomStringLength = 74;
     
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[NSString stringWithString:@"Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[console dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:consoleContent];
     
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"%@\"\r\n", screenshot] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[NSString stringWithString:@"Content-Type: application/octet-stream\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSLog(@"%@", screenshotPath);
+
     [body appendData:[NSData dataWithContentsOfFile:screenshotPath]];
     
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
