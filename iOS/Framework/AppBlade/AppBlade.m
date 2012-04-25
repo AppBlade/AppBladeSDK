@@ -237,6 +237,10 @@ static AppBlade *s_sharedManager = nil;
     self.tapRecognizer.numberOfTapsRequired = 2;
     self.tapRecognizer.numberOfTouchesRequired = 3;
     [window addGestureRecognizer:self.tapRecognizer];
+    
+    if ([self hasPendingFeedbackReports]) {
+        [self handleBackloggedFeedback];
+    }
 }
 
 - (void)handleFeedback
@@ -436,6 +440,9 @@ static AppBlade *s_sharedManager = nil;
 
         }
     }
+    else if (client.api == AppBladeWebClientAPI_Feedback) {
+        NSLog(@"ERROR sending feedback");
+    }
     
 }
 
@@ -511,7 +518,7 @@ static AppBlade *s_sharedManager = nil;
             NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
             NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
             NSString* fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
-            NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingFormat:fileName];
+            NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
             
             NSError* error = nil;
             BOOL success = [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
@@ -529,6 +536,12 @@ static AppBlade *s_sharedManager = nil;
                 [[NSFileManager defaultManager] removeItemAtPath:fileName error:&error];
             }
         }
+        
+        
+        // Only continue to save feedback if we succeed
+        if ([self hasPendingFeedbackReports]) {
+            [self handleBackloggedFeedback];
+        }
             
     }
     else if (!isBacklog) {
@@ -537,7 +550,7 @@ static AppBlade *s_sharedManager = nil;
         // We do not remove backlogged files unless the request is sucessful
         
         NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-        NSString* newFeedbackName = [[NSString stringWithFormat:@"%d", now] stringByAppendingPathComponent:@"plist"];
+        NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
         NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
         
         [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
@@ -550,11 +563,12 @@ static AppBlade *s_sharedManager = nil;
         
         [backupFiles addObject:newFeedbackName];
         
-        [backupFiles writeToFile:backupFilePath atomically:YES];
+        BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+        if(!success){
+            NSLog(@"Error writing backup file.");
+        }
     }
-    
     if (isBacklog) {
-        
         [self.feedbackRequests removeObject:client];
     }
     else {
