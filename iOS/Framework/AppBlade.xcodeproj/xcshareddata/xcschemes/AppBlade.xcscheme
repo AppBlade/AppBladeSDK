@@ -28,15 +28,6 @@
       buildConfiguration = "Release_Production">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CB2977641395C5340094C550"
-            BuildableName = "Maps.app"
-            BlueprintName = "Maps"
-            ReferencedContainer = "container:../Example/Maps.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
@@ -46,17 +37,9 @@
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release_Production"
+      ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CB2977641395C5340094C550"
-            BuildableName = "Maps.app"
-            BlueprintName = "Maps"
-            ReferencedContainer = "container:../Example/Maps.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
