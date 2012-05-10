@@ -253,6 +253,12 @@ public class AppBlade {
 						activity.finish();
 					}
 				});
+				builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					
+					public void onCancel(DialogInterface dialog) {
+						activity.finish();
+					}
+				});
 				builder.show();
 			}
 			// Otherwise, we are looping back from within AppBlade and we should run the code
