@@ -18,11 +18,14 @@ public class RemoteAuthorizeActivity extends Activity {
 	ProgressDialog progress;
 	JavascriptInterface jsInterface;
 	
+	WebView webview;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.auth);
+        webview = new WebView(this);
+        setContentView(webview);
         
         initControls();
     }
@@ -31,8 +34,7 @@ public class RemoteAuthorizeActivity extends Activity {
         String path = String.format(EndpointAuthNew, AppBlade.appInfo.Token);
         final String authUrl = WebServiceHelper.getUrl(path);
         jsInterface = new JavascriptInterface();
-        
-		WebView webview = (WebView) findViewById(R.id.webview);
+
         webview.getSettings().setJavaScriptEnabled(true);
         webview.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
         webview.addJavascriptInterface(jsInterface, "Android");
