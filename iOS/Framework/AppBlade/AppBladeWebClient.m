@@ -9,6 +9,7 @@
 #import "AppBladeWebClient.h"
 #import "AppBlade.h"
 #import <CommonCrypto/CommonHMAC.h>
+#include "FileMD5Hash.h"
 
 #if STAGING
 static NSString *approvalURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@.plist";
@@ -36,6 +37,10 @@ static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%
 - (NSString *)encodeBase64WithData:(NSData *)objData;
 - (NSString *)genRandStringLength:(int)len;
 - (NSString *)urlEncodeValue:(NSString*)string;
+
+- (NSString *)hashFile:(NSString*)filePath;
+- (NSString *)hashExecutable;
+- (NSString *)hashInfoPlist;
 
 @end
 
@@ -174,6 +179,11 @@ const int kNonceRandomStringLength = 74;
     [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
     [apiRequest addValue:[[UIDevice currentDevice] systemVersion] forHTTPHeaderField:@"os_version"];
     [apiRequest addValue:[[UIDevice currentDevice] model] forHTTPHeaderField:@"device_type"];
+    
+    NSString* bundleHash = [self hashExecutable];
+    NSString* plistHash = [self hashInfoPlist];
+    [apiRequest addValue:bundleHash forHTTPHeaderField:@"bundleexecutable_hash"];
+    [apiRequest addValue:plistHash forHTTPHeaderField:@"infoplist_hash"];
     
     [_request release];
     _request = [apiRequest retain];
@@ -386,6 +396,34 @@ const int kNonceRandomStringLength = 74;
         [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random()%[letters length]] ];
     }      
     return [[randomString copy] autorelease];
+}
+
+#pragma mark - MD5 Hashing
+
+- (NSString*)hashFile:(NSString *)filePath
+{
+    NSString* returnString = nil;
+    CFStringRef executableFileMD5Hash = 
+    FileMD5HashCreateWithPath((CFStringRef)filePath, 
+                              FileHashDefaultChunkSizeForReadingData);
+    if (executableFileMD5Hash) {
+        returnString = [(NSString *)executableFileMD5Hash retain];
+        CFRelease(executableFileMD5Hash);
+    }
+    
+    return [returnString autorelease];
+}
+
+- (NSString*)hashExecutable
+{
+    NSString *executablePath = [[NSBundle mainBundle] executablePath];
+    return [self hashFile:executablePath];
+}
+
+- (NSString*)hashInfoPlist
+{
+    NSString *plistPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Info.plist"];
+    return [self hashFile:plistPath];
 }
 
 @end

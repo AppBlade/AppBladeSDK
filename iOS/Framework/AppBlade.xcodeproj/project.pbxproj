@@ -36,6 +36,10 @@
 		620217891404450A00A14BA7 /* PLCrashSysctl.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217561404450900A14BA7 /* PLCrashSysctl.c */; };
 		6202178F1404451700A14BA7 /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 6202178C1404451700A14BA7 /* protobuf-c.c */; };
 		620217921404461000A14BA7 /* crash_report.proto in Sources */ = {isa = PBXBuildFile; fileRef = 620217911404457200A14BA7 /* crash_report.proto */; };
+		7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690DA31562A839009391BD /* FileMD5Hash.h */; };
+		7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690DA31562A839009391BD /* FileMD5Hash.h */; };
+		7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
+		7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
 		A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */ = {isa = PBXBuildFile; fileRef = A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */; };
 		A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; };
 		CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */; };
@@ -119,6 +123,8 @@
 		6202178D1404451700A14BA7 /* protobuf-c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "protobuf-c.h"; path = "AppBlade/CrashReporter/Dependencies/protobuf-2.0.3/src/protobuf-c.h"; sourceTree = SOURCE_ROOT; };
 		620217911404457200A14BA7 /* crash_report.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crash_report.proto; path = AppBlade/CrashReporter/Resources/crash_report.proto; sourceTree = SOURCE_ROOT; };
 		628A131E141EB60400EEB082 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE.md; path = AppBlade/LICENSE.md; sourceTree = "<group>"; };
+		7E690DA31562A839009391BD /* FileMD5Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMD5Hash.h; sourceTree = "<group>"; };
+		7E690DA41562A839009391BD /* FileMD5Hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FileMD5Hash.c; sourceTree = "<group>"; };
 		A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackDialogue.h; sourceTree = "<group>"; };
 		A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackDialogue.m; sourceTree = "<group>"; };
 		CB18A56D13ACE77C00091131 /* AppBladeWebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeWebClient.h; sourceTree = "<group>"; };
@@ -129,7 +135,7 @@
 		CBF479FF13969C2B00949297 /* AppBlade-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppBlade-Prefix.pch"; sourceTree = "<group>"; };
 		CBF47A0E13969C8B00949297 /* AppBlade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
 		CBF47A0F13969C8B00949297 /* AppBlade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBlade.m; sourceTree = "<group>"; };
-		CBF47A191396BC9600949297 /* AppBladeSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; path = AppBladeSimpleKeychain.h; sourceTree = "<group>"; };
+		CBF47A191396BC9600949297 /* AppBladeSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSimpleKeychain.h; sourceTree = "<group>"; };
 		CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeSimpleKeychain.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -226,6 +232,15 @@
 			path = "../Dependencies/protobuf-2.0.3/src";
 			sourceTree = "<group>";
 		};
+		7E690DA91562AC51009391BD /* Hashing */ = {
+			isa = PBXGroup;
+			children = (
+				7E690DA31562A839009391BD /* FileMD5Hash.h */,
+				7E690DA41562A839009391BD /* FileMD5Hash.c */,
+			);
+			name = Hashing;
+			sourceTree = "<group>";
+		};
 		CBF479ED13969C2B00949297 = {
 			isa = PBXGroup;
 			children = (
@@ -259,6 +274,7 @@
 		CBF479FD13969C2B00949297 /* AppBlade */ = {
 			isa = PBXGroup;
 			children = (
+				7E690DA91562AC51009391BD /* Hashing */,
 				CBF479FE13969C2B00949297 /* Supporting Files */,
 				CBF47A0E13969C8B00949297 /* AppBlade.h */,
 				CBF47A0F13969C8B00949297 /* AppBlade.m */,
@@ -288,6 +304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB51D33514293D0600A43CB5 /* AppBlade.h in Headers */,
+				7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,6 +313,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */,
+				7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,6 +410,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,6 +449,7 @@
 				620217891404450A00A14BA7 /* PLCrashSysctl.c in Sources */,
 				6202178F1404451700A14BA7 /* protobuf-c.c in Sources */,
 				A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */,
+				7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,7 +487,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/system\"",
+				);
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -509,7 +532,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/system\"",
+				);
 				OTHER_CFLAGS = "-DSTAGING=1";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -548,7 +574,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/system\"",
+				);
 				OTHER_CFLAGS = "-DSTAGING=1";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -566,7 +595,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBladeUniversal/AppBladeUniversal-Prefix.pch";
+				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -594,7 +623,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBladeUniversal/AppBladeUniversal-Prefix.pch";
+				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -620,7 +649,7 @@
 				DSTROOT = /tmp/AppBladeUniversal.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBladeUniversal/AppBladeUniversal-Prefix.pch";
+				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -642,7 +671,7 @@
 				DSTROOT = /tmp/AppBladeUniversal.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBladeUniversal/AppBladeUniversal-Prefix.pch";
+				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -690,7 +719,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/system\"",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
