@@ -52,6 +52,7 @@ typedef enum {
 
 @property (nonatomic, assign) id<AppBladeWebClientDelegate> delegate;
 @property (nonatomic, readonly) AppBladeWebClientAPI api;
+@property (nonatomic, retain) NSDictionary* userInfo;
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
 

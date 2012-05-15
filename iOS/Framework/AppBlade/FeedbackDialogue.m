@@ -7,14 +7,11 @@
 //
 
 #import "FeedbackDialogue.h"
-#import <QuartzCore/QuartzCore.h>
+#import "FeedbackBackgroundView.h"
+
 @implementation FeedbackDialogue
 
-#define isPad()             UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
-
-#define feedbackWidthMin            isPad() ? 450 : 300
-#define feedbackHeightMin           isPad() ? 350 : 200
-#define textViewVerticalOffset      80
+#define textViewVerticalOffset      54
 #define textViewHorizontalOffset    10
 #define submitButtonWidth           100
 #define submitButtonHeight          44
@@ -36,6 +33,7 @@
         
         // overlay view
         self.backgroundColor = [UIColor clearColor];
+        self.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
         UIView *overlayView = [[UIView alloc] initWithFrame:self.frame];
         overlayView.alpha = 0.5;
         overlayView.backgroundColor = [UIColor blackColor];
@@ -44,12 +42,12 @@
         self.overlayView = overlayView;
         [overlayView release];
         
+        
         // overall dialogue view
-        self.dialogueView = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width/2 - feedbackWidthMin/2, 0, feedbackWidthMin, feedbackHeightMin)];
-        self.dialogueView.backgroundColor = [UIColor whiteColor];
-        self.dialogueView.layer.cornerRadius = 7.0f;
-        self.dialogueView.clipsToBounds = YES;
-        self.dialogueView.layer.masksToBounds = YES;
+        int width = feedbackWidthMin;
+        int originX = floor(self.frame.size.width / 2 - width / 2);
+        self.dialogueView = [[FeedbackBackgroundView alloc] initWithFrame:CGRectMake(originX, 0, width, feedbackHeightMin)];
+        self.dialogueView.backgroundColor = [UIColor clearColor];
         
         if (isPad()) {
             CGRect dialogueFrame = self.dialogueView.frame;
@@ -60,11 +58,6 @@
         
         // Header bar
         self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, submitButtonHeight)];
-        self.headerView.backgroundColor = [UIColor colorWithRed:233/255.0f green:234/255.0f blue:235/255.0f alpha:1.0];
-        CAGradientLayer *topGradient = [CAGradientLayer layer];
-        topGradient.frame = self.headerView.bounds;
-        topGradient.colors = [NSArray arrayWithObjects:(id)[[UIColor clearColor] CGColor], (id)[[UIColor colorWithWhite:0.8 alpha:0.2] CGColor], (id)[[UIColor colorWithWhite:0.8 alpha:0.5] CGColor], nil];
-        [self.headerView.layer addSublayer:topGradient];
         
         
         // header text
@@ -86,6 +79,7 @@
         [self.submitButton setTitle:@"Submit" forState:UIControlStateNormal];
         
         self.submitButton.backgroundColor = [UIColor clearColor];
+        self.submitButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
         self.submitButton.titleLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
         [self.submitButton addTarget:self action:@selector(submitPressed:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -94,6 +88,7 @@
         self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.cancelButton.frame = CGRectMake(0, 0, submitButtonWidth, submitButtonHeight);
         [self.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+        self.cancelButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
         self.cancelButton.titleLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
         [self.cancelButton addTarget:self action:@selector(cancelPressed:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -113,8 +108,14 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
+    self.overlayView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
     
     [self addSubview:self.dialogueView];
+    
+    if (isPad()) {
+        self.dialogueView.autoresizingMask = (UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin);
+    }
+    
     [self.dialogueView addSubview:self.headerView];
     [self.dialogueView addSubview:self.textView];
     [self.dialogueView addSubview:self.cancelButton];
@@ -163,8 +164,10 @@
 
 - (void)keyboardWillHide:(NSNotification*)notification
 {
-
-    CGRect finalFrame = CGRectMake(self.frame.size.width/2 - feedbackWidthMin/2, 0, feedbackWidthMin, feedbackHeightMin);
+    int width = feedbackWidthMin;
+    int originX = floor(self.frame.size.width / 2 - width / 2);
+    
+    CGRect finalFrame = CGRectMake(originX, 0, width, feedbackHeightMin);
     if (isPad()) {
         finalFrame.origin.y = self.frame.size.height / 2 - finalFrame.size.height / 2;
     }

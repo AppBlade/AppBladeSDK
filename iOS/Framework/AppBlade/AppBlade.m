@@ -24,9 +24,12 @@ static NSString* const kAppBladeErrorDomain             = @"com.appblade.sdk";
 static const int kAppBladeOfflineError                  = 1200;
 static NSString *s_letters                              = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 static NSString* const kAppBladeCacheDirectory          = @"AppBladeCache";
+static NSString* const kAppBladeBacklogFileName         = @"AppBladeBacklog.plist";
 static NSString* const kAppBladeFeedbackKeyConsole      = @"console";
 static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
 static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
+static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
+static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
@@ -36,6 +39,7 @@ static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
 @property (nonatomic, assign) BOOL showingFeedbackDialogue;
 @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
+@property (nonatomic, retain) NSMutableSet* feedbackRequests;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
@@ -48,6 +52,9 @@ static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 - (NSString*)captureScreen;
 - (UIImage*)getContentBelowView;
 - (NSString*)randomString:(int)length;
+
+- (BOOL)hasPendingFeedbackReports;
+- (void)handleBackloggedFeedback;
 
 @end
 
@@ -63,6 +70,7 @@ static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 @synthesize feedbackDictionary = _feedbackDictionary;
 @synthesize showingFeedbackDialogue = _showingFeedbackDialogue;
 @synthesize tapRecognizer = _tapRecognizer;
+@synthesize feedbackRequests = _feedbackRequests;
 
 static AppBlade *s_sharedManager = nil;
 
@@ -84,6 +92,13 @@ static AppBlade *s_sharedManager = nil;
         s_sharedManager = [[super allocWithZone:NULL] init];
     }
     return s_sharedManager;
+}
+
+
++ (NSString*)cachesDirectoryPath
+{
+    NSString* cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
 }
 
 - (id)init {
@@ -120,6 +135,7 @@ static AppBlade *s_sharedManager = nil;
 {   
     [_upgradeLink release];
     [_feedbackDictionary release];
+    [_feedbackRequests release];
     [super dealloc];
 }
 
@@ -179,6 +195,10 @@ static AppBlade *s_sharedManager = nil;
 
 #pragma mark Feedback
 
+- (BOOL)hasPendingFeedbackReports
+{
+    return [[NSFileManager defaultManager] fileExistsAtPath:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName]];
+}
 
 - (void)showFeedbackDialogue{
     
@@ -201,6 +221,7 @@ static AppBlade *s_sharedManager = nil;
         window = [[UIApplication sharedApplication].windows objectAtIndex:0];
     [[[window subviews] objectAtIndex:0] addSubview:feedback];   
     self.showingFeedbackDialogue = YES;
+    [feedback.textView becomeFirstResponder];
     
 }
 
@@ -224,6 +245,12 @@ static AppBlade *s_sharedManager = nil;
     self.tapRecognizer.numberOfTapsRequired = 2;
     self.tapRecognizer.numberOfTouchesRequired = 3;
     [window addGestureRecognizer:self.tapRecognizer];
+    
+    [self checkAndCreateAppBladeCacheDirectory];
+    
+    if ([self hasPendingFeedbackReports]) {
+        [self handleBackloggedFeedback];
+    }
 }
 
 - (void)handleFeedback
@@ -238,8 +265,8 @@ static AppBlade *s_sharedManager = nil;
     NSMutableArray* logs = [NSMutableArray arrayWithCapacity:15];
     while (NULL != (m = aslresponse_next(r)))
     {
-        NSMutableString* logString = [NSMutableString string];
-        [logString appendString:@"{ \t"];
+        
+        NSMutableDictionary* logDict = [NSMutableDictionary dictionaryWithCapacity:10];
         for (i = 0; (NULL != (key = asl_key(m, i))); i++)
         {
             NSString *keyString = [NSString stringWithUTF8String:(char *)key];
@@ -247,34 +274,47 @@ static AppBlade *s_sharedManager = nil;
             val = asl_get(m, key);
             
             NSString *string = [NSString stringWithUTF8String:val];
-            [logString appendString:keyString];
-            [logString appendString:@":"];
-            [logString appendString:string];
-            [logString appendString:@",\n\t"];
+            
+            [logDict setObject:string forKey:keyString];
         }
-        [logString appendString:@"}"];
-        [logs addObject:logString];
+        
+        [logs addObject:logDict];
     }
     aslresponse_free(r);
+    NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"plist"];
+	NSString *plistFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
+    [logs writeToFile:plistFilePath atomically:YES];
     
-    NSMutableString *consoleString = [NSMutableString stringWithString:@"["];
-    [logs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSString* item = (NSString*)obj;
-        [consoleString appendString:item];
-        if (idx < logs.count - 1) {
-            [consoleString appendString:@","];
-        }
-    }];
-    
-    [consoleString appendString:@"]"];
-    
-    self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:consoleString forKey:kAppBladeFeedbackKeyConsole];
+    self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:fileName forKey:kAppBladeFeedbackKeyConsole];
     
     NSString* screenshotPath = [self captureScreen];
     
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
     
     [self showFeedbackDialogue];
+}
+
+- (void)handleBackloggedFeedback
+{
+    NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+    NSMutableArray* backupFiles = [[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy];
+    if (backupFiles.count > 0) {
+        NSString* fileName = [backupFiles objectAtIndex:0];
+        NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
+        
+        NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
+        if (feedback) {
+            AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+            client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
+            [client sendFeedbackWithScreenshot:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot] note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:[feedback objectForKey:kAppBladeFeedbackKeyConsole]];
+            
+            if (!self.feedbackRequests) {
+                self.feedbackRequests = [NSMutableSet set];
+            }
+            
+            [self.feedbackRequests addObject:client];
+        }
+    }
 }
 
 - (void)reportFeedback:(NSString *)feedback
@@ -296,12 +336,6 @@ static AppBlade *s_sharedManager = nil;
             NSLog(@"Error creating directory %@", error);
         }
     }
-}
-
-+ (NSString*)cachesDirectoryPath
-{
-    NSString* cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
 }
 
 -(NSString *)captureScreen
@@ -410,6 +444,9 @@ static AppBlade *s_sharedManager = nil;
 
         }
     }
+    else if (client.api == AppBladeWebClientAPI_Feedback) {
+        NSLog(@"ERROR sending feedback");
+    }
     
 }
 
@@ -471,13 +508,76 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success
 {
+    BOOL isBacklog = [self.feedbackRequests containsObject:client];
     if (success) {
+        NSDictionary* feedback = isBacklog ? [client.userInfo objectForKey:kAppBladeFeedbackKeyFeedback] : self.feedbackDictionary;
         // Clean up
-        NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot]];
+        NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
         [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
+        
+        NSString* consolePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyConsole]];
+        [[NSFileManager defaultManager] removeItemAtPath:consolePath error:nil];
+        
+        if (isBacklog) {
+            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+            NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+            NSString* fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
+            NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
+            
+            NSError* error = nil;
+            BOOL success = [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+            if (!success) {
+                NSLog(@"Error removing AppBlade Feedback file. %@", error);
+            }
+            
+            [backups removeObject:fileName];
+            
+            if (backups.count > 0) {
+                [backups writeToFile:backupFilePath atomically:YES];
+            }
+            else {
+                error = nil;
+                [[NSFileManager defaultManager] removeItemAtPath:fileName error:&error];
+            }
+        }
+        
+        
+        // Only continue to save feedback if we succeed
+        if ([self hasPendingFeedbackReports]) {
+            [self handleBackloggedFeedback];
+        }
+            
+    }
+    else if (!isBacklog) {
+        
+        // If we fail sending, add to backlog
+        // We do not remove backlogged files unless the request is sucessful
+        
+        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+        NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+        NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+        
+        [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+        
+        NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+        NSMutableArray* backupFiles = [[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy];
+        if (!backupFiles) {
+            backupFiles = [NSMutableArray array];
+        }
+        
+        [backupFiles addObject:newFeedbackName];
+        
+        BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+        if(!success){
+            NSLog(@"Error writing backup file to %@", backupFilePath);
+        }
+    }
+    if (isBacklog) {
+        [self.feedbackRequests removeObject:client];
+    }
+    else {
         self.feedbackDictionary = nil;
     }
-    // TODO: Else, save for later
 
 }
 
