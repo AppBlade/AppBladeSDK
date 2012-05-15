@@ -40,6 +40,10 @@
 		7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690DA31562A839009391BD /* FileMD5Hash.h */; };
 		7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
 		7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
+		7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */; };
+		7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */; };
+		7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; };
+		7EE6A17C1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; };
 		A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */ = {isa = PBXBuildFile; fileRef = A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */; };
 		A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; };
 		CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */; };
@@ -125,6 +129,8 @@
 		628A131E141EB60400EEB082 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE.md; path = AppBlade/LICENSE.md; sourceTree = "<group>"; };
 		7E690DA31562A839009391BD /* FileMD5Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMD5Hash.h; sourceTree = "<group>"; };
 		7E690DA41562A839009391BD /* FileMD5Hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FileMD5Hash.c; sourceTree = "<group>"; };
+		7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackBackgroundView.h; sourceTree = "<group>"; };
+		7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackBackgroundView.m; sourceTree = "<group>"; };
 		A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackDialogue.h; sourceTree = "<group>"; };
 		A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackDialogue.m; sourceTree = "<group>"; };
 		CB18A56D13ACE77C00091131 /* AppBladeWebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeWebClient.h; sourceTree = "<group>"; };
@@ -292,6 +298,8 @@
 				CBF479FF13969C2B00949297 /* AppBlade-Prefix.pch */,
 				A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */,
 				A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */,
+				7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */,
+				7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -305,6 +313,7 @@
 			files = (
 				CB51D33514293D0600A43CB5 /* AppBlade.h in Headers */,
 				7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */,
+				7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,6 +323,7 @@
 			files = (
 				A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */,
 				7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */,
+				7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,6 +421,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */,
+				7EE6A17C1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,6 +461,7 @@
 				6202178F1404451700A14BA7 /* protobuf-c.c in Sources */,
 				A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */,
 				7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */,
+				7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

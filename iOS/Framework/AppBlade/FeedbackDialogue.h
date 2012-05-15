@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+#define isPad()             UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
+
+#define feedbackWidthMin            isPad() ? 450 : 300
+#define feedbackHeightMin           isPad() ? 350 : 200
+
+@class FeedbackBackgroundView;
+
 @protocol FeedbackDialogueDelegate <NSObject>
 
 -(void)feedbackDidSubmitText:(NSString*)feedbackText;
@@ -20,7 +27,7 @@
 @property (nonatomic, retain) UITextView *textView;
 @property (nonatomic, retain) UIButton *submitButton;
 @property (nonatomic, retain) UIButton *cancelButton;
-@property (nonatomic, retain) UIView *dialogueView;
+@property (nonatomic, retain) FeedbackBackgroundView *dialogueView;
 @property (nonatomic, retain) UILabel *feedbackTitle;
 @property (nonatomic, retain) UIView* headerView;
 @property (nonatomic, retain) UIView* overlayView;
