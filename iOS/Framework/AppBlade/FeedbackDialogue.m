@@ -33,6 +33,7 @@
         
         // overlay view
         self.backgroundColor = [UIColor clearColor];
+        self.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
         UIView *overlayView = [[UIView alloc] initWithFrame:self.frame];
         overlayView.alpha = 0.5;
         overlayView.backgroundColor = [UIColor blackColor];
@@ -107,8 +108,14 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
+    self.overlayView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
     
     [self addSubview:self.dialogueView];
+    
+    if (isPad()) {
+        self.dialogueView.autoresizingMask = (UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin);
+    }
+    
     [self.dialogueView addSubview:self.headerView];
     [self.dialogueView addSubview:self.textView];
     [self.dialogueView addSubview:self.cancelButton];
