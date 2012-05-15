@@ -94,6 +94,13 @@ static AppBlade *s_sharedManager = nil;
     return s_sharedManager;
 }
 
+
++ (NSString*)cachesDirectoryPath
+{
+    NSString* cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
+}
+
 - (id)init {
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
@@ -214,6 +221,7 @@ static AppBlade *s_sharedManager = nil;
         window = [[UIApplication sharedApplication].windows objectAtIndex:0];
     [[[window subviews] objectAtIndex:0] addSubview:feedback];   
     self.showingFeedbackDialogue = YES;
+    [feedback.textView becomeFirstResponder];
     
 }
 
@@ -237,6 +245,8 @@ static AppBlade *s_sharedManager = nil;
     self.tapRecognizer.numberOfTapsRequired = 2;
     self.tapRecognizer.numberOfTouchesRequired = 3;
     [window addGestureRecognizer:self.tapRecognizer];
+    
+    [self checkAndCreateAppBladeCacheDirectory];
     
     if ([self hasPendingFeedbackReports]) {
         [self handleBackloggedFeedback];
@@ -326,12 +336,6 @@ static AppBlade *s_sharedManager = nil;
             NSLog(@"Error creating directory %@", error);
         }
     }
-}
-
-+ (NSString*)cachesDirectoryPath
-{
-    NSString* cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
 }
 
 -(NSString *)captureScreen
@@ -565,7 +569,7 @@ static AppBlade *s_sharedManager = nil;
         
         BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
         if(!success){
-            NSLog(@"Error writing backup file.");
+            NSLog(@"Error writing backup file to %@", backupFilePath);
         }
     }
     if (isBacklog) {
