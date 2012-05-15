@@ -30,7 +30,6 @@ If you are upgrading from a previous version, delete the current AppBlade folder
 1.  Click your project file from the File Navigator and then select your app target from the list on the right.
 1.	Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
 1.  Select Security.framework from the list and click "Add".
-2.  Repeat steps 4 and 5, this time adding QuartzCore.framework (used for Feedback).
 1.  Configure the framework using the instructions in the *Configure AppBlade* section of this document.
 
 ####Xcode 3###
@@ -51,7 +50,6 @@ You can either download the compiled version from [our website](http://appblade.
 1.  Click your project file from the File Navigator and then select your app target from the list on the right.
 1.	Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
 1.  Select Security.framework from the list and click "Add".
-2.  Repeat steps 8 and 9, this time adding QuartzCore.framework (used for Feedback).
 6. Configure the framework using the instructions in the *Configure AppBlade* section of this document.
 
 ##Configure AppBlade#

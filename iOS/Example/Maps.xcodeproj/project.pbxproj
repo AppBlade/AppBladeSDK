@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7E47990F1533D95900A954D8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E47990E1533D95900A954D8 /* QuartzCore.framework */; };
 		A13A94DD1533B81B002CDC12 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A13A94DC1533B81B002CDC12 /* libz.dylib */; };
 		A13A94ED1533DCB2002CDC12 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A13A94EB1533DCB2002CDC12 /* MainWindow-iPad.xib */; };
 		CB18A57F13ACFBA400091131 /* CrashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A57D13ACFBA400091131 /* CrashViewController.m */; };
@@ -61,7 +60,6 @@
 /* Begin PBXFileReference section */
 		31B29E6B13FC1B4C00AF9D5D /* Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Maps.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6279A7C1141FA6FB0013F486 /* libAppBlade.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libAppBlade.a; path = "/Users/jkaufman/Library/Developer/Xcode/DerivedData/Maps-fxlsuaftoykwnsafsvdruvxaggxx/Build/Products/Release_Production-iphoneos/libAppBlade.a"; sourceTree = "<absolute>"; };
-		7E47990E1533D95900A954D8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A13A94DC1533B81B002CDC12 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		A13A94EC1533DCB2002CDC12 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "iPad/en.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		CB18A57C13ACFBA400091131 /* CrashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashViewController.h; sourceTree = "<group>"; };
@@ -100,7 +98,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E47990F1533D95900A954D8 /* QuartzCore.framework in Frameworks */,
 				A13A94DD1533B81B002CDC12 /* libz.dylib in Frameworks */,
 				CB51D33314293B0500A43CB5 /* libAppBlade.a in Frameworks */,
 				CB29776E1395C5340094C550 /* CoreGraphics.framework in Frameworks */,
@@ -128,7 +125,6 @@
 		CB29775A1395C5340094C550 = {
 			isa = PBXGroup;
 			children = (
-				7E47990E1533D95900A954D8 /* QuartzCore.framework */,
 				A13A94DC1533B81B002CDC12 /* libz.dylib */,
 				CB51D32414293AF200A43CB5 /* AppBlade.xcodeproj */,
 				CBF479861395CA3100949297 /* Images */,
