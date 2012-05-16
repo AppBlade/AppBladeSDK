@@ -181,6 +181,7 @@ const int kNonceRandomStringLength = 74;
     [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
     [apiRequest addValue:[[UIDevice currentDevice] systemVersion] forHTTPHeaderField:@"os_version"];
     [apiRequest addValue:[[UIDevice currentDevice] model] forHTTPHeaderField:@"device_type"];
+    [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
     
     NSString* bundleHash = [self hashExecutable];
     NSString* plistHash = [self hashInfoPlist];
