@@ -28,7 +28,7 @@ static NSString* const kAppBladeCacheDirectory;
 
 @end
 
-@interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate> {
+@interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> {
 
 @private
 
@@ -80,8 +80,12 @@ static NSString* const kAppBladeCacheDirectory;
 // Shows a feedback dialogue
 - (void)showFeedbackDialogue;
 + (NSString*)cachesDirectoryPath;
+
 // Sets up a 3-finger double tap for reporting feedback
 - (void)allowFeedbackReporting;
+
+// In case you only want feedback in a specific window.
+- (void)allowFeedbackReportingForWindow:(UIWindow*)window;
 
 
 @end

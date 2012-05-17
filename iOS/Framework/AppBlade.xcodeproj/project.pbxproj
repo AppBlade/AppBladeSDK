@@ -40,6 +40,10 @@
 		7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690DA31562A839009391BD /* FileMD5Hash.h */; };
 		7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
 		7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
+		7E71754D1565567400D810DF /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A0F13969C8B00949297 /* AppBlade.m */; };
+		7E71754F156556A500D810DF /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */; };
+		7E717550156556A800D810DF /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */; };
+		7E717551156556AC00D810DF /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; };
 		7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */; };
 		7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */; };
 		7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; };
@@ -422,6 +426,10 @@
 			files = (
 				7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */,
 				7EE6A17C1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
+				7E71754D1565567400D810DF /* AppBlade.m in Sources */,
+				7E71754F156556A500D810DF /* AppBladeSimpleKeychain.m in Sources */,
+				7E717550156556A800D810DF /* AppBladeWebClient.m in Sources */,
+				7E717551156556AC00D810DF /* FeedbackDialogue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

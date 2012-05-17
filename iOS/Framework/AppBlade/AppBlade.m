@@ -151,6 +151,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)catchAndReportCrashes
 {
+    NSLog(@"Catch and report crashes");
     [self validateProjectConfiguration];
 
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
@@ -241,9 +242,20 @@ static AppBlade *s_sharedManager = nil;
 - (void)allowFeedbackReporting
 {
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
+    if (window) {
+        [self allowFeedbackReportingForWindow:window];
+    }
+    else {
+        NSLog(@"Cannot setup for feeback. No keyWindow.");
+    }
+}
+
+- (void)allowFeedbackReportingForWindow:(UIWindow *)window
+{
     self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFeedback)] autorelease];
     self.tapRecognizer.numberOfTapsRequired = 2;
     self.tapRecognizer.numberOfTouchesRequired = 3;
+    self.tapRecognizer.delegate = self;
     [window addGestureRecognizer:self.tapRecognizer];
     
     [self checkAndCreateAppBladeCacheDirectory];
@@ -625,6 +637,13 @@ static AppBlade *s_sharedManager = nil;
     } else {
         exit(0);
     }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
 }
 
 @end
