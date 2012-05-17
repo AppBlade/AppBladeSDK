@@ -56,6 +56,8 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 - (BOOL)hasPendingFeedbackReports;
 - (void)handleBackloggedFeedback;
 
+- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
+
 @end
 
 
@@ -364,15 +366,70 @@ static AppBlade *s_sharedManager = nil;
 
 - (UIImage*)getContentBelowView
 {
-//    NSArray *windows = [[UIApplication sharedApplication] windows];
-//    UIWindow *keyWindow = [windows objectAtIndex:0];
     UIWindow* keyWindow = [[UIApplication sharedApplication] keyWindow];
     UIGraphicsBeginImageContext(keyWindow.bounds.size);
     [keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    return image;
     
+    UIImage* returnImage = nil;
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+            returnImage = [self rotateImage:image angle:270];
+            NSLog(@"Changing image orientation to left");
+        }
+        else {
+            returnImage = [self rotateImage:image angle:90];
+            NSLog(@"Changing image orientation to right");
+        }
+    }
+    else {
+        returnImage = image;
+    }
+    
+    return returnImage;
+    
+}
+
+// From: http://megasnippets.com/source-codes/objective_c/rotate_image
+- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle
+{
+    CGImageRef imgRef = [img CGImage];
+    CGContextRef context;
+    
+    switch (angle) {
+        case 90:
+            UIGraphicsBeginImageContext(CGSizeMake(img.size.height, img.size.width));
+            context = UIGraphicsGetCurrentContext();
+            CGContextTranslateCTM(context, img.size.height, img.size.width);
+            CGContextScaleCTM(context, 1.0, -1.0);
+            CGContextRotateCTM(context, M_PI/2.0);
+            break;
+        case 180:
+            UIGraphicsBeginImageContext(CGSizeMake(img.size.width, img.size.height));
+            context = UIGraphicsGetCurrentContext();
+            CGContextTranslateCTM(context, img.size.width, 0);
+            CGContextScaleCTM(context, 1.0, -1.0);
+            CGContextRotateCTM(context, -M_PI);
+            break;
+        case 270:
+            UIGraphicsBeginImageContext(CGSizeMake(img.size.height, img.size.width));
+            context = UIGraphicsGetCurrentContext();
+            CGContextScaleCTM(context, 1.0, -1.0);
+            CGContextRotateCTM(context, -M_PI/2.0);
+            break;
+        default:
+            return nil;
+    }  
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, img.size.width, img.size.height), imgRef);
+    UIImage *ret = UIGraphicsGetImageFromCurrentImageContext();  
+    
+    UIGraphicsEndImageContext();
+    return ret;
 }
 
 -(NSString *) randomString: (int) len {
