@@ -33,6 +33,6 @@
 @property (nonatomic, retain) UIView* overlayView;
 @property (nonatomic, assign)  id<FeedbackDialogueDelegate> delegate;
 
-
+- (void)closeDialogue;
 
 @end

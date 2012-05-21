@@ -65,6 +65,8 @@ You can either download the compiled version from [our website](http://appblade.
             blade.appBladeProjectToken = @"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
             blade.appBladeProjectSecret = @"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
             blade.appBladeProjectIssuedTimestamp = @"9999999999";
+            
+    You may also use a `plist` to load these keys by calling `loadSDKKeysFromPlist:` and pass in the path to the plist. See our example project for further details.
     
 1.  Enable crash logging
 
@@ -74,11 +76,11 @@ You can either download the compiled version from [our website](http://appblade.
 
             [[AppBlade sharedManager] checkApproval];
             
-1. To enable feedback reporting, add the following code to `-application:didFinishLaunchingWithOptions:`.
+1. To enable feedback reporting, add the following code to `-application:didFinishLaunchingWithOptions:`
 
             [[AppBlade sharedManager] allowFeedbackReporting];
             
-   **Note:** Feedback requires there be a `keyWindow`. Make sure to set this in `-application:didFinishLaunchingWithOptions:` as well.
+   **Note:** Feedback requires there be a `keyWindow`. Make sure to set this in `-application:didFinishLaunchingWithOptions:` as well. If you do not have a `keyWindow`, you can call `allowFeedbackReportingForWindow:` instead.
             
 
 #Android#

@@ -40,6 +40,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 @property (nonatomic, assign) BOOL showingFeedbackDialogue;
 @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
 @property (nonatomic, retain) NSMutableSet* feedbackRequests;
+@property (nonatomic, assign) UIWindow* window;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
@@ -73,6 +74,8 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 @synthesize showingFeedbackDialogue = _showingFeedbackDialogue;
 @synthesize tapRecognizer = _tapRecognizer;
 @synthesize feedbackRequests = _feedbackRequests;
+
+@synthesize window = _window;
 
 static AppBlade *s_sharedManager = nil;
 
@@ -118,7 +121,7 @@ static AppBlade *s_sharedManager = nil;
         [self raiseConfigurationExceptionWithFieldName:@"Project ID"];
     } else if (!self.appBladeProjectToken) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Token"];
-    } else if (!self.appBladeProjectToken) {
+    } else if (!self.appBladeProjectSecret) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Secret"];
     } else if (!self.appBladeProjectIssuedTimestamp) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
@@ -179,6 +182,7 @@ static AppBlade *s_sharedManager = nil;
     crashData = [crashReporter loadPendingCrashReportDataAndReturnError: &error];
     if (crashData == nil) {
         [crashReporter purgePendingCrashReport];
+        NSLog(@"Purged pending crash report");
         return;
     }
     
@@ -196,6 +200,15 @@ static AppBlade *s_sharedManager = nil;
 
 }
 
+- (void)loadSDKKeysFromPlist:(NSString *)plist
+{
+    NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
+    self.appBladeProjectID = [keys objectForKey:@"projectID"];
+    self.appBladeProjectToken = [keys objectForKey:@"token"];
+    self.appBladeProjectSecret = [keys objectForKey:@"secret"];
+    self.appBladeProjectIssuedTimestamp = [keys objectForKey:@"timestamp"];
+}
+
 #pragma mark Feedback
 
 - (BOOL)hasPendingFeedbackReports
@@ -205,9 +218,8 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)showFeedbackDialogue{
     
-    UIWindow* window = [UIApplication sharedApplication].keyWindow;
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGRect screenFrame = window.frame;
+    CGRect screenFrame = self.window.frame;
     
     if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
         // We need to react properly to interface orientations
@@ -220,9 +232,9 @@ static AppBlade *s_sharedManager = nil;
     feedback.delegate = self;
     
     // get the parent window
-    if (!window) 
-        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-    [[[window subviews] objectAtIndex:0] addSubview:feedback];   
+    if (!self.window) 
+        self.window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+    [[[self.window subviews] objectAtIndex:0] addSubview:feedback];   
     self.showingFeedbackDialogue = YES;
     [feedback.textView becomeFirstResponder];
     
@@ -254,6 +266,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window
 {
+    self.window = window;
     self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFeedback)] autorelease];
     self.tapRecognizer.numberOfTapsRequired = 2;
     self.tapRecognizer.numberOfTouchesRequired = 3;
@@ -379,11 +392,9 @@ static AppBlade *s_sharedManager = nil;
     if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
         if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
             returnImage = [self rotateImage:image angle:270];
-            NSLog(@"Changing image orientation to left");
         }
         else {
             returnImage = [self rotateImage:image angle:90];
-            NSLog(@"Changing image orientation to right");
         }
     }
     else {
@@ -515,6 +526,34 @@ static AppBlade *s_sharedManager = nil;
     }
     else if (client.api == AppBladeWebClientAPI_Feedback) {
         NSLog(@"ERROR sending feedback");
+        
+        BOOL isBacklog = [self.feedbackRequests containsObject:client];
+        if (!isBacklog) {
+            NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+            NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+            NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+            
+            [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+            
+            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+            NSMutableArray* backupFiles = [[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy];
+            if (!backupFiles) {
+                backupFiles = [NSMutableArray array];
+            }
+            
+            [backupFiles addObject:newFeedbackName];
+            
+            BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+            if(!success){
+                NSLog(@"Error writing backup file to %@", backupFilePath);
+            }
+            
+            self.feedbackDictionary = nil;
+        }
+        else {
+            [self.feedbackRequests removeObject:client];
+        }
+
     }
     
 }

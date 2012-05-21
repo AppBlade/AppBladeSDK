@@ -66,6 +66,9 @@ static NSString* const kAppBladeCacheDirectory;
 // AppBlade manager singleton.
 + (AppBlade *)sharedManager;
 
+// Pass in the full path to the plist
+- (void)loadSDKKeysFromPlist:(NSString*)plist;
+
 // Checks if any crashes have ocurred sends logs to AppBlade.
 - (void)catchAndReportCrashes;
 

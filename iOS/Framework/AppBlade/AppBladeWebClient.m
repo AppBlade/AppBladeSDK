@@ -346,6 +346,7 @@ static BOOL is_encrypted () {
     [_receivedData release];
     _receivedData = nil;
     
+    NSLog(@"AppBlade failed with error: %@", error.localizedDescription);
     [_delegate appBladeWebClientFailed:self];
     
     [_request release];
