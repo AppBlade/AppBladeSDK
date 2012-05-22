@@ -564,10 +564,9 @@ static AppBlade *s_sharedManager = nil;
     
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
     
-    if (errorString) {
-        if ([self withinStoredTTL]) {
-            [self closeTTLWindow];
-        }
+    if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
+        [self closeTTLWindow];
+    
         
         NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey, 
                                          NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
