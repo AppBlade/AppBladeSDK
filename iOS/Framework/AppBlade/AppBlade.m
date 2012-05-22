@@ -564,7 +564,7 @@ static AppBlade *s_sharedManager = nil;
     
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
     
-    if (errorString && [self withinStoredTTL]) {
+    if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
         [self closeTTLWindow];
     
         
@@ -577,7 +577,8 @@ static AppBlade *s_sharedManager = nil;
             [self.delegate appBlade:self applicationApproved:NO error:error];
         
         
-    } else {
+    } 
+    else {
         
         NSNumber *ttl = [permissions objectForKey:@"ttl"];
         if (ttl) {

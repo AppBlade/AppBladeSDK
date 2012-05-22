@@ -27,7 +27,6 @@ static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%
 @interface AppBladeWebClient ()
 
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
-@property (nonatomic, retain) NSDictionary* responseHeaders;
 
 // Request helper methods.
 - (NSString *)udid;
