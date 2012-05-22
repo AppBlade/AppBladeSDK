@@ -410,6 +410,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Maps/Maps-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../Framework/AppBlade/**";
 				INFOPLIST_FILE = "Maps/Maps-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -428,6 +429,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Maps/Maps-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../Framework/AppBlade/**";
 				INFOPLIST_FILE = "Maps/Maps-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
