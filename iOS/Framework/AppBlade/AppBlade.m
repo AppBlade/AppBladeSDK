@@ -564,9 +564,10 @@ static AppBlade *s_sharedManager = nil;
     
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
     
-    if (errorString && [self withinStoredTTL]) {
-        [self closeTTLWindow];
-    
+    if (errorString) {
+        if ([self withinStoredTTL]) {
+            [self closeTTLWindow];
+        }
         
         NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey, 
                                          NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
@@ -577,7 +578,8 @@ static AppBlade *s_sharedManager = nil;
             [self.delegate appBlade:self applicationApproved:NO error:error];
         
         
-    } else {
+    } 
+    else {
         
         NSNumber *ttl = [permissions objectForKey:@"ttl"];
         if (ttl) {
