@@ -99,9 +99,11 @@ static void populate_nserror (NSError **error, PLCrashReporterError code, NSStri
         goto error;
     
     /* Machine info */
-    _machineInfo = [[self extractMachineInfo: _decoder->crashReport->machine_info error: outError] retain];
-    if (!_machineInfo)
-        goto error;
+    if (_decoder->crashReport->machine_info != NULL) {
+        _machineInfo = [[self extractMachineInfo: _decoder->crashReport->machine_info error: outError] retain];
+        if (!_machineInfo)
+            goto error;
+    }
 
     /* Application info */
     _applicationInfo = [[self extractApplicationInfo: _decoder->crashReport->application_info error: outError] retain];
@@ -298,10 +300,10 @@ error:
         timestamp = [NSDate dateWithTimeIntervalSince1970: systemInfo->timestamp];
     
     /* Done */
-    return [[[PLCrashReportSystemInfo alloc] initWithOperatingSystem: systemInfo->operating_system
+    return [[[PLCrashReportSystemInfo alloc] initWithOperatingSystem: (PLCrashReportOperatingSystem) systemInfo->operating_system
                                               operatingSystemVersion: [NSString stringWithUTF8String: systemInfo->os_version]
                                                 operatingSystemBuild: osBuild
-                                                        architecture: systemInfo->architecture
+                                                        architecture: (PLCrashReportArchitecture) systemInfo->architecture
                                                            timestamp: timestamp] autorelease];
 }
 
@@ -317,7 +319,7 @@ error:
         return nil;
     }
 
-    return [[[PLCrashReportProcessorInfo alloc] initWithTypeEncoding: processorInfo->encoding
+    return [[[PLCrashReportProcessorInfo alloc] initWithTypeEncoding: (PLCrashReportProcessorTypeEncoding) processorInfo->encoding
                                                                 type: processorInfo->type
                                                              subtype: processorInfo->subtype] autorelease];
 }
@@ -435,6 +437,22 @@ error:
 }
 
 /**
+ * Extract stack frame information from the crash log. Returns nil on error, or a PLCrashReportStackFrameInfo
+ * instance on success.
+ */
+- (PLCrashReportStackFrameInfo *) extractStackFrameInfo: (Plcrash__CrashReport__Thread__StackFrame *) stackFrame error: (NSError **) outError {
+    /* There should be at least one thread */
+    if (stackFrame == NULL) {
+        populate_nserror(outError, PLCrashReporterErrorCrashReportInvalid,
+                         NSLocalizedString(@"Crash report is missing stack frame information",
+                                           @"Missing stack frame info in crash report"));
+        return nil;
+    }
+    
+    return [[[PLCrashReportStackFrameInfo alloc] initWithInstructionPointer: stackFrame->pc] autorelease];
+}
+
+/**
  * Extract thread information from the crash log. Returns nil on error, or an array of PLCrashLogThreadInfo
  * instances on success.
  */
@@ -456,9 +474,10 @@ error:
         NSMutableArray *frames = [NSMutableArray arrayWithCapacity: thread->n_frames];
         for (size_t frame_idx = 0; frame_idx < thread->n_frames; frame_idx++) {
             Plcrash__CrashReport__Thread__StackFrame *frame = thread->frames[frame_idx];
-            PLCrashReportStackFrameInfo *frameInfo;
+            PLCrashReportStackFrameInfo *frameInfo = [self extractStackFrameInfo: frame error: outError];
+            if (frameInfo == nil)
+                return nil;
 
-            frameInfo = [[[PLCrashReportStackFrameInfo alloc] initWithInstructionPointer: frame->pc] autorelease];
             [frames addObject: frameInfo];
         }
 
@@ -515,37 +534,27 @@ error:
             return nil;
         }
 
-        /* Convert UUID to hex string */
-        NSString *uuid = nil;
+        /* Extract UUID value */
+        NSData *uuid = nil;
         if (image->uuid.len == 0) {
             /* No UUID */
             uuid = nil;
-        } else if (image->uuid.len != IMAGE_UUID_DIGEST_LEN) {
-            /* Invalid UUID */
-            populate_nserror(outError, PLCrashReporterErrorCrashReportInvalid, @"Invalid image binary UUID length");
-            return nil;
-        } else if (image->uuid.len != 0) {
-            /* Valid UUID */
-    
-            /* Convert to ascii */
-            char output[(IMAGE_UUID_DIGEST_LEN * 2) + 1];
-            const char hex[] = "0123456789abcdef";
-
-            for (int i = 0; i < IMAGE_UUID_DIGEST_LEN; i++) {
-                unsigned char c = ((unsigned char *) image->uuid.data)[i];
-                output[i * 2 + 0] = hex[c >> 4];
-                output[i * 2 + 1] = hex[c & 0x0F];
-            }
-            output[sizeof(output)] = '\0';
-    
-            uuid = [[[NSString alloc] initWithBytes: output length: sizeof(output) - 1 encoding: NSASCIIStringEncoding] autorelease];
+        } else {
+            uuid = [NSData dataWithBytes: image->uuid.data length: image->uuid.len];
         }
-
         assert(image->uuid.len == 0 || uuid != nil);
-        imageInfo = [[[PLCrashReportBinaryImageInfo alloc] initWithImageBaseAddress: image->base_address 
-                                                                       imageSize: image->size 
-                                                                       imageName: [NSString stringWithUTF8String: image->name]
-                                                                       imageUUID: uuid] autorelease];
+        
+        /* Extract code type (if available). */
+        PLCrashReportProcessorInfo *codeType = nil;
+        if ((codeType = [self extractProcessorInfo: image->code_type error: outError]) == nil)
+            return nil;
+
+
+        imageInfo = [[[PLCrashReportBinaryImageInfo alloc] initWithCodeType: codeType
+                                                                baseAddress: image->base_address
+                                                                       size: image->size
+                                                                       name: [NSString stringWithUTF8String: image->name]
+                                                                       uuid: uuid] autorelease];
         [images addObject: imageInfo];
     }
 
@@ -586,7 +595,27 @@ error:
     NSString *name = [NSString stringWithUTF8String: exceptionInfo->name];
     NSString *reason = [NSString stringWithUTF8String: exceptionInfo->reason];
     
-    return [[[PLCrashReportExceptionInfo alloc] initWithExceptionName: name reason: reason] autorelease];
+    /* Fetch stack frames for this thread */
+    NSMutableArray *frames = nil;
+    if (exceptionInfo->n_frames > 0) {
+        frames = [NSMutableArray arrayWithCapacity: exceptionInfo->n_frames];
+        for (size_t frame_idx = 0; frame_idx < exceptionInfo->n_frames; frame_idx++) {
+            Plcrash__CrashReport__Thread__StackFrame *frame = exceptionInfo->frames[frame_idx];
+            PLCrashReportStackFrameInfo *frameInfo = [self extractStackFrameInfo: frame error: outError];
+            if (frameInfo == nil)
+                return nil;
+            
+            [frames addObject: frameInfo];
+        }
+    }
+
+    if (frames == nil) {
+        return [[[PLCrashReportExceptionInfo alloc] initWithExceptionName: name reason: reason] autorelease];
+    } else {
+        return [[[PLCrashReportExceptionInfo alloc] initWithExceptionName: name
+                                                                   reason: reason 
+                                                              stackFrames: frames] autorelease];
+    }
 }
 
 /**

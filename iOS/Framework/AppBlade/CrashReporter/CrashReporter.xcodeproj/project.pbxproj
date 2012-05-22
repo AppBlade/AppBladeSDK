@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -472,13 +472,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 05E731F20EFA1AAB005EDFB7;
 			remoteInfo = "CrashReporter-MacOSX-Static";
-		};
-		052A45DB1363542E00987004 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 058812B81040582D009128FB;
-			remoteInfo = "CrashReporter-iPhone";
 		};
 		052A46241363553400987004 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1551,7 +1544,6 @@
 				05E7320E0EFA1B60005EDFB7 /* PBXBuildRule */,
 			);
 			dependencies = (
-				052A45DC1363542E00987004 /* PBXTargetDependency */,
 			);
 			name = "CrashReporter-MacOSX-Static";
 			productName = "CrashReporter-MacOSX-Static";
@@ -1604,9 +1596,10 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
+				LastUpgradeCheck = 0420;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "CrashReporter" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -2077,11 +2070,6 @@
 			target = 05E731F20EFA1AAB005EDFB7 /* CrashReporter-MacOSX-Static */;
 			targetProxy = 050DE25C0F61B92C00152ED3 /* PBXContainerItemProxy */;
 		};
-		052A45DC1363542E00987004 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 058812B81040582D009128FB /* CrashReporter-iOS */;
-			targetProxy = 052A45DB1363542E00987004 /* PBXContainerItemProxy */;
-		};
 		052A46251363553400987004 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 05CD31510EE936A9000FDE88 /* CrashReporter-iOS-Device */;
@@ -2196,7 +2184,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = Tests;
 				ZERO_LINK = NO;
 			};
@@ -2209,7 +2196,6 @@
 				COPY_PHASE_STRIP = NO;
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2221,9 +2207,8 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "Fuzz Testing";
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2234,7 +2219,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
@@ -2245,9 +2229,8 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "Fuzz Testing";
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -2276,7 +2259,6 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "DemoCrash-iOS-Device";
 				SDKROOT = iphoneos;
 			};
@@ -2294,7 +2276,6 @@
 					"$(inherited)",
 					"$(BUILD_ROOT)",
 				);
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
 				INFOPLIST_FILE = "Resources/DemoCrash-Info.plist";
@@ -2306,7 +2287,6 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "DemoCrash-iOS-Device";
 				SDKROOT = iphoneos;
 				ZERO_LINK = NO;
@@ -2338,7 +2318,6 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "DemoCrash-iOS-Simulator";
 				SDKROOT = iphonesimulator;
 			};
@@ -2356,7 +2335,6 @@
 					"$(inherited)",
 					"$(BUILD_ROOT)",
 				);
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
 				INFOPLIST_FILE = "Resources/DemoCrash-Info.plist";
@@ -2369,7 +2347,6 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "DemoCrash-iOS-Simulator";
 				SDKROOT = iphonesimulator;
 				ZERO_LINK = NO;
@@ -2386,7 +2363,6 @@
 				EFFECTIVE_PLATFORM_NAME = "-iphone";
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2399,7 +2375,6 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = CrashReporter;
 			};
 			name = Debug;
@@ -2413,7 +2388,6 @@
 				DYLIB_CURRENT_VERSION = 1;
 				EFFECTIVE_PLATFORM_NAME = "-iphone";
 				FRAMEWORK_VERSION = A;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
@@ -2425,7 +2399,6 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = CrashReporter;
 				ZERO_LINK = NO;
 			};
@@ -2446,7 +2419,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = PLCrashReporter;
 				ZERO_LINK = NO;
 			};
@@ -2463,7 +2435,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				MACH_O_TYPE = mh_object;
+				MACH_O_TYPE = staticlib;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "CrashReporter${EFFECTIVE_PLATFORM_NAME}";
 				SDKROOT = iphoneos;
@@ -2479,10 +2451,9 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXPORTED_SYMBOLS_FILE = Resources/CrashReporter.exp;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				MACH_O_TYPE = mh_object;
+				MACH_O_TYPE = staticlib;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "CrashReporter${EFFECTIVE_PLATFORM_NAME}";
 				SDKROOT = iphoneos;
@@ -2503,9 +2474,8 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				MACH_O_TYPE = mh_object;
+				MACH_O_TYPE = staticlib;
 				ONLY_ACTIVE_ARCH = NO;
-				PREBINDING = NO;
 				PRODUCT_NAME = "CrashReporter${EFFECTIVE_PLATFORM_NAME}";
 				SDKROOT = iphonesimulator;
 				SKIP_INSTALL = NO;
@@ -2520,12 +2490,10 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXPORTED_SYMBOLS_FILE = Resources/CrashReporter.exp;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				MACH_O_TYPE = mh_object;
+				MACH_O_TYPE = staticlib;
 				ONLY_ACTIVE_ARCH = NO;
-				PREBINDING = NO;
 				PRODUCT_NAME = "CrashReporter${EFFECTIVE_PLATFORM_NAME}";
 				SDKROOT = iphonesimulator;
 				SKIP_INSTALL = NO;
@@ -2548,7 +2516,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PRODUCT_NAME = CrashReporter;
 				ZERO_LINK = NO;
 			};
@@ -2563,7 +2530,6 @@
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2577,10 +2543,10 @@
 					"-framework",
 					SenTestingKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "Tests-MacOSX";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				TEST_AFTER_BUILD = YES;
 				WARNING_CFLAGS = (
 					"$(inherited)",
 					"$(OTHER_WARNING_NO_ADDRESS)",
@@ -2598,7 +2564,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2611,10 +2576,10 @@
 					"-framework",
 					SenTestingKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "Tests-MacOSX";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				TEST_AFTER_BUILD = YES;
 				WARNING_CFLAGS = (
 					"$(inherited)",
 					"$(OTHER_WARNING_NO_ADDRESS)",
@@ -2646,10 +2611,10 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "Tests-iOS-Simulator";
 				SDKROOT = iphonesimulator;
 				SKIP_INSTALL = YES;
+				TEST_AFTER_BUILD = YES;
 				WARNING_CFLAGS = (
 					"$(inherited)",
 					"$(OTHER_WARNING_NO_ADDRESS)",
@@ -2665,7 +2630,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "Resources/Tests-iPhone-Info.plist";
@@ -2679,10 +2643,10 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "Tests-iOS-Simulator";
 				SDKROOT = iphonesimulator;
 				SKIP_INSTALL = YES;
+				TEST_AFTER_BUILD = YES;
 				WARNING_CFLAGS = (
 					"$(inherited)",
 					"$(OTHER_WARNING_NO_ADDRESS)",
@@ -2712,7 +2676,6 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "Tests-iOS-Device";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2732,7 +2695,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "Resources/Tests-iPhone-Info.plist";
@@ -2745,7 +2707,6 @@
 					"-framework",
 					UIKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "Tests-iOS-Device";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -2766,7 +2727,6 @@
 				COPY_PHASE_STRIP = NO;
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2778,9 +2738,8 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = plcrashutil;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2792,7 +2751,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
@@ -2803,9 +2761,8 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = plcrashutil;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -2819,7 +2776,6 @@
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
 				EXPORTED_SYMBOLS_FILE = Resources/CrashReporter.exp;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2832,7 +2788,6 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "CrashReporter$(EFFECTIVE_PLATFORM_NAME)-Static";
 				SDKROOT = macosx;
 			};
@@ -2847,7 +2802,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
 				EXPORTED_SYMBOLS_FILE = Resources/CrashReporter.exp;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
@@ -2859,7 +2813,6 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = "CrashReporter$(EFFECTIVE_PLATFORM_NAME)-Static";
 				SDKROOT = macosx;
 				ZERO_LINK = NO;
@@ -2874,7 +2827,6 @@
 				COPY_PHASE_STRIP = NO;
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2887,7 +2839,6 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = DemoCrash;
 				SDKROOT = "";
 				SKIP_INSTALL = YES;
@@ -2902,7 +2853,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EFFECTIVE_PLATFORM_NAME = "-MacOSX";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
@@ -2914,7 +2864,6 @@
 					"-framework",
 					AppKit,
 				);
-				PREBINDING = NO;
 				PRODUCT_NAME = DemoCrash;
 				SDKROOT = "";
 				SKIP_INSTALL = YES;
@@ -2934,7 +2883,6 @@
 				EXPORTED_SYMBOLS_FILE = Resources/CrashReporter.exp;
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2973,7 +2921,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = "1.1-beta1";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Dependencies/protobuf-2.0.3/include\"";
@@ -2984,8 +2932,7 @@
 					"-D$(PL_BUILD_CONFIG_FLAG)=1",
 				);
 				PL_BUILD_CONFIG_FLAG = PLCF_DEBUG_BUILD;
-				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 ppc armv7 armv6 x86_64";
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -2998,7 +2945,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = "1.1-beta1";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/$(DERIVED_FILES_DIR)\"",
@@ -3010,8 +2957,7 @@
 					"-D$(PL_BUILD_CONFIG_FLAG)=1",
 				);
 				PL_BUILD_CONFIG_FLAG = PLCF_RELEASE_BUILD;
-				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 ppc armv7 armv6 x86_64";
 				WARNING_CFLAGS = (
 					"-Wall",

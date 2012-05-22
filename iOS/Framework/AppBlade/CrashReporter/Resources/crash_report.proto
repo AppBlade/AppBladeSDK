@@ -182,9 +182,9 @@ message CrashReport {
         /* 128-bit object UUID (matches Mach-O DWARF dSYM files) */
         optional bytes uuid = 4;
 
-        /* The image's code type. If excluded the code type should be assumed to be equivalent to host
-         * processor. The code type may differ in the case of architectures with forwards-compatible
-         * code types, such as ARM, where armv6 and armv7 images may be freely mixed. */
+        /* The image's code type. Should be included in all v1.1+ crash reports. The code type may differ between
+         * binaries in the case of architectures with forwards-compatible code types, such as ARM, where armv6 and
+         * armv7 images may be mixed. */
         optional Processor code_type = 5;
     }
 
@@ -198,6 +198,10 @@ message CrashReport {
 
         /* The exception reason */
         required string reason = 2;
+        
+        /* The exception's original call stack, if available. This may be preserved across rethrow of an exception,
+         * and can be used to determine the original call stack. */
+        repeated Thread.StackFrame frames = 3;
     }
 
     /* The exception that triggered the crash (if any) */
