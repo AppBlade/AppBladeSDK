@@ -11,8 +11,10 @@
    - Capture, view & download crash logs via AppBlade  
  - **Application update notification**
    - On application start, users are automatically notified when an update is available
- - **Application Feedback** *(iOS Only)*
+ - **Application Feedback** *(iOS Only, added in v0.2)*
  	- At any point in the app, users can send a screenshot and a note to AppBlade by doing a three-finger double tap.
+
+###[Download compiled libraries v0.2](http://appblade.com/sdk/download)
 
 #iOS SDK#
 ##Add AppBlade to your project#
