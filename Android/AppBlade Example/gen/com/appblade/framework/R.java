@@ -18,6 +18,7 @@ public final class R {
         public static final int authContainer=0x7f050000;
         public static final int btnClearAuthData=0x7f050004;
         public static final int btnDivideByZero=0x7f050003;
+        public static final int btnFeedback=0x7f050005;
         public static final int imgLogo=0x7f050002;
         public static final int webview=0x7f050001;
     }

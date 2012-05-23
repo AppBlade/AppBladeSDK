@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
 	private void initControls() {
 		View btnDivideByZero = findViewById(R.id.btnDivideByZero);
 		View btnClearAuthData = findViewById(R.id.btnClearAuthData);
+		View btnFeedback = findViewById(R.id.btnFeedback);
 		
 		btnDivideByZero.setOnClickListener(new OnClickListener() {
 			
@@ -66,6 +67,12 @@ public class MainActivity extends Activity {
 					}
 				});
 				builder.show();
+			}
+		});
+		
+		btnFeedback.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AppBlade.doFeedback(MainActivity.this);
 			}
 		});
 	}

@@ -18,7 +18,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -35,6 +38,77 @@ public class AppBlade {
 	static String rootDir = null;
 	
 	static final String AppBladeExceptionsDirectory = "app_blade_exceptions";
+	
+	private static final String BOUNDARY = "---------------------------14737809831466499882746641449";
+	
+	public static void doFeedback(Context context) {
+		String[] permissions = appInfo.PackageInfo.requestedPermissions;
+		
+		String _consoleData = "";
+		for (String permission : permissions) {
+			if (permission.equals("android.permission.READ_LOGS"))
+			{
+				_consoleData = FeedbackHelper.getLogData();
+				break;
+			}
+		}
+		
+		
+		final String consoleData = _consoleData;
+		//postFeedback("Test Notes", "Test Console", null, null);
+		
+		FeedbackHelper.getFeedbackData(context, new OnFeedbackDataAcquiredListener() {
+			public void OnFeedbackDataAcquired(FeedbackData data) {
+				data.Console = consoleData;
+				postFeedback(data);
+			}
+		});
+	}
+	
+	private static void postFeedback(FeedbackData data) {
+		boolean success = false;
+		HttpClient client = HttpClientProvider.newInstance("Android");
+		
+		try
+		{
+				String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, appInfo.AppId, appInfo.Ext);
+				String url = WebServiceHelper.getUrl(urlPath);
+				
+				String content = FeedbackHelper.getPostFeedbackBody(data, BOUNDARY);
+				
+				String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, content, HttpMethod.POST);
+				
+				Log.d(LogTag, urlPath);
+				Log.d(LogTag, url);
+				Log.d(LogTag, authHeader);
+				
+				HttpPost request = new HttpPost();
+				request.setURI(new URI(url));
+				request.addHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
+				request.addHeader("Authorization", authHeader);
+				WebServiceHelper.addCommonHeaders(request);
+				
+				if(!StringUtils.isNullOrEmpty(content))
+					request.setEntity(new StringEntity(content));
+			    
+				HttpResponse response = null;
+			    response = client.execute(request);
+				if(response != null && response.getStatusLine() != null)
+				{
+					int statusCode = response.getStatusLine().getStatusCode();
+					int statusCategory = statusCode / 100;
+					
+					if(statusCategory == 2)
+						success = true;
+				}
+		}
+		catch(Exception ex)
+		{
+			Log.d(LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+		}
+		
+		IOUtils.safeClose(client);
+	}
 	
 	public static void register(Context context, String token, String secret, String uuid, String issuance)
 	{
@@ -69,7 +143,8 @@ public class AppBlade {
 		try
 		{
 			String packageName = context.getPackageName();
-			appInfo.PackageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+			int flags = PackageManager.GET_PERMISSIONS;
+			appInfo.PackageInfo = context.getPackageManager().getPackageInfo(packageName, flags);
 		}
 		catch (Exception ex) { }
 		
