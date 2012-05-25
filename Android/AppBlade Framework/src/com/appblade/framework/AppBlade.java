@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.util.Random;
 
 import org.apache.http.HttpResponse;
@@ -45,8 +44,6 @@ public class AppBlade {
 	static final String AppBladeExceptionsDirectory = "app_blade_exceptions";
 
 	private static final String BOUNDARY = "---------------------------14737809831466499882746641449";
-
-	private static SimpleDateFormat feedbackDateFormat = new SimpleDateFormat("MM-dd-yy-HH-mm");
 
 	/**
 	 * Gets feedback from the user via a dialog and posts the feedback along with log data to AppBlade.
@@ -127,7 +124,7 @@ public class AppBlade {
 		});
 	}
 
-	protected static void postFeedback(FeedbackData data) {
+	protected static boolean postFeedback(FeedbackData data) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance("Android");
 
@@ -170,11 +167,6 @@ public class AppBlade {
 			request.addHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
 			request.addHeader("Authorization", authHeader);
 			WebServiceHelper.addCommonHeaders(request);
-
-
-//			
-//			if(!StringUtils.isNullOrEmpty(content))
-//				request.setEntity(new StringEntity(content));
 			
 			
 			HttpResponse response = null;
@@ -194,6 +186,8 @@ public class AppBlade {
 		}
 
 		IOUtils.safeClose(client);
+		
+		return success;
 	}
 
 	public static void register(Context context, String token, String secret, String uuid, String issuance)

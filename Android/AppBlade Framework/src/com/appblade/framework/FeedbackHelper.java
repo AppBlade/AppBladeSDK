@@ -77,24 +77,10 @@ public class FeedbackHelper {
 	public static MultipartEntity getPostFeedbackBody(FeedbackData data, String boundary) {
 		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
 		
-		
-		
-		StringBuffer body = new StringBuffer();
-
-//		body.append("--" + boundary + "\r\n");
-//		body.append("Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n");
-//		body.append(data.Notes);
-//		body.append("\r\n");
-		
 		try
 		{
 		ContentBody notesBody = new StringBody(data.Notes);
 		entity.addPart("feedback[notes]", notesBody);
-		
-//		body.append("--" + boundary + "\r\n");
-//		body.append("Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n");
-//		body.append(data.Console);
-//		body.append("\r\n");
 
 		ContentBody consoleBody = new StringBody(data.Console);
 		entity.addPart("feedback[console]", consoleBody);
@@ -102,13 +88,6 @@ public class FeedbackHelper {
 		if (data.Screenshot != null) {
 			if (StringUtils.isNullOrEmpty(data.ScreenshotName))
 				data.ScreenshotName = "FeedbackScreenshot";
-//			body.append("--" + boundary + "\r\n");
-//			body.append(String.format(
-//					"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"%s\"\r\n",
-//					data.ScreenshotName));
-//			body.append("Content-Type: image/jpeg\r\n\r\n");
-//			body.append(new String(getBytesFromBitmap(data.Screenshot)));
-//			body.append("\r\n");
 			
 			byte[] screenshotBytes = getBytesFromBitmap(data.Screenshot);
 			ContentBody screenshotBody = new ByteArrayBody(screenshotBytes, "application/octet-stream");
@@ -117,9 +96,6 @@ public class FeedbackHelper {
 		} catch (IOException e) {
 			Log.d(AppBlade.LogTag, e.toString());
 		}
-		//body.append("--" + boundary + "--\r\n");
-
-		//return body.toString();
 		
 		return entity;
 	}
