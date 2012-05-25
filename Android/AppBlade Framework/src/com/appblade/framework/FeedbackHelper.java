@@ -4,20 +4,21 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
 
-import org.apache.http.client.HttpClient;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.StringBody;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.text.Layout;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class FeedbackHelper {
 
@@ -41,7 +42,7 @@ public class FeedbackHelper {
 		return "";
 	}
 
-	public static void getFeedbackData(Context context,
+	public static void getFeedbackData(Context context, FeedbackData data,
 			final OnFeedbackDataAcquiredListener listener) {
 
 		AlertDialog.Builder dialog = new AlertDialog.Builder(context);
@@ -56,11 +57,15 @@ public class FeedbackHelper {
 
 		dialog.setView(editText);
 		
+		if (data == null)
+			data = new FeedbackData();
+		
+		final FeedbackData fData = data;
+		
 		dialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				FeedbackData data = new FeedbackData();
-				data.Notes = editText.getText().toString();
-				listener.OnFeedbackDataAcquired(data);
+				fData.Notes = editText.getText().toString();
+				listener.OnFeedbackDataAcquired(fData);
 			}
 		});
 		
@@ -69,34 +74,54 @@ public class FeedbackHelper {
 		dialog.show();
 	}
 
-	public static String getPostFeedbackBody(FeedbackData data, String boundary) {
+	public static MultipartEntity getPostFeedbackBody(FeedbackData data, String boundary) {
+		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
+		
+		
+		
 		StringBuffer body = new StringBuffer();
 
-		body.append("--" + boundary + "\r\n");
-		body.append("Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n");
-		body.append(data.Notes);
-		body.append("\r\n");
+//		body.append("--" + boundary + "\r\n");
+//		body.append("Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n");
+//		body.append(data.Notes);
+//		body.append("\r\n");
+		
+		try
+		{
+		ContentBody notesBody = new StringBody(data.Notes);
+		entity.addPart("feedback[notes]", notesBody);
+		
+//		body.append("--" + boundary + "\r\n");
+//		body.append("Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n");
+//		body.append(data.Console);
+//		body.append("\r\n");
 
-		body.append("--" + boundary + "\r\n");
-		body.append("Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n");
-		body.append(data.Console);
-		body.append("\r\n");
-
+		ContentBody consoleBody = new StringBody(data.Console);
+		entity.addPart("feedback[console]", consoleBody);
+		
 		if (data.Screenshot != null) {
 			if (StringUtils.isNullOrEmpty(data.ScreenshotName))
 				data.ScreenshotName = "FeedbackScreenshot";
-			body.append("--" + boundary + "\n");
-			body.append(String.format(
-					"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"%@\"\r\n",
-					data.ScreenshotName));
-			body.append("Content-Type: application/octet-stream\n");
-			body.append(new String(getBytesFromBitmap(data.Screenshot)));
-			body.append("\r\n");
+//			body.append("--" + boundary + "\r\n");
+//			body.append(String.format(
+//					"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"%s\"\r\n",
+//					data.ScreenshotName));
+//			body.append("Content-Type: image/jpeg\r\n\r\n");
+//			body.append(new String(getBytesFromBitmap(data.Screenshot)));
+//			body.append("\r\n");
+			
+			byte[] screenshotBytes = getBytesFromBitmap(data.Screenshot);
+			ContentBody screenshotBody = new ByteArrayBody(screenshotBytes, "application/octet-stream");
+			entity.addPart("feedback[screenshot]", screenshotBody);
 		}
-		body.append("--" + boundary + "--\r\n");
+		} catch (IOException e) {
+			Log.d(AppBlade.LogTag, e.toString());
+		}
+		//body.append("--" + boundary + "--\r\n");
 
-
-		return body.toString();
+		//return body.toString();
+		
+		return entity;
 	}
 
 	public static byte[] getBytesFromBitmap(Bitmap bitmap) {

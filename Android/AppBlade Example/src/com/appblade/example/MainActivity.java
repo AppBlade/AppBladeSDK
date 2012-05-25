@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -25,7 +28,7 @@ public class MainActivity extends Activity {
     
     public void onResume() {
     	super.onResume();
-    	AppBlade.authorize(this);
+    	AppBlade.authorize(this, true);
     }
 
 	private void initControls() {
@@ -72,8 +75,30 @@ public class MainActivity extends Activity {
 		
 		btnFeedback.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				AppBlade.doFeedback(MainActivity.this);
+				//Bitmap bmp = BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.appblade_logo, null);
+				//AppBlade.doFeedbackWithScreenshot(MainActivity.this, MainActivity.this);
+				//AppBlade.doFeedback(MainActivity.this);
+				MainActivity.this.doFeedbackWithScreenshot();
 			}
 		});
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		int action = event.getAction();
+		switch(action & MotionEvent.ACTION_MASK)
+		{
+		case MotionEvent.ACTION_POINTER_DOWN:
+			if (event.getPointerCount() == 3) {
+				doFeedbackWithScreenshot();
+				return true;
+			}
+		}
+		
+		return super.onTouchEvent(event);
+	}
+	
+	private void doFeedbackWithScreenshot() {
+		AppBlade.doFeedbackWithScreenshot(this, this);
 	}
 }
