@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,9 +73,6 @@ public class MainActivity extends Activity {
 		
 		btnFeedback.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				//Bitmap bmp = BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.appblade_logo, null);
-				//AppBlade.doFeedbackWithScreenshot(MainActivity.this, MainActivity.this);
-				//AppBlade.doFeedback(MainActivity.this);
 				MainActivity.this.doFeedbackWithScreenshot();
 			}
 		});
