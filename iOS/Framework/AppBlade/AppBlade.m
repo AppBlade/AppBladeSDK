@@ -298,6 +298,8 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)handleFeedback
 {
+    
+#if !TARGET_IPHONE_SIMULATOR
     aslmsg q, m;
     int i;
     const char *key, *val;
@@ -329,7 +331,9 @@ static AppBlade *s_sharedManager = nil;
     [logs writeToFile:plistFilePath atomically:YES];
     
     self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:fileName forKey:kAppBladeFeedbackKeyConsole];
-    
+#else
+    self.feedbackDictionary = [NSMutableDictionary dictionary];
+#endif
     NSString* screenshotPath = [self captureScreen];
     
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
