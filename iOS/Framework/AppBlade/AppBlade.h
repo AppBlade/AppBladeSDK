@@ -60,6 +60,9 @@ static NSString* const kAppBladeCacheDirectory;
 // Returns SDK Version
 + (NSString*)sdkVersion;
 
+// Returns Caches Directory Path
++ (NSString*)cachesDirectoryPath;
+
 // Log SDK Version
 + (void)logSDKVersion;
 
@@ -80,9 +83,9 @@ static NSString* const kAppBladeCacheDirectory;
 // Checks with AppBlade to see if the app is allowed to run on this device.
 - (void)checkApproval;
 
-// Shows a feedback dialogue
+// Shows a feedback dialogue, with option to specify the window to capture/display in
 - (void)showFeedbackDialogue;
-+ (NSString*)cachesDirectoryPath;
+- (void)showFeedbackDialogueInWindow:(UIWindow*)window;
 
 // Sets up a 3-finger double tap for reporting feedback
 - (void)allowFeedbackReporting;

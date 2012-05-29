@@ -59,6 +59,8 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 
+- (void)displayFeedbackDialogue;
+
 @end
 
 
@@ -216,7 +218,8 @@ static AppBlade *s_sharedManager = nil;
     return [[NSFileManager defaultManager] fileExistsAtPath:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName]];
 }
 
-- (void)showFeedbackDialogue{
+- (void)displayFeedbackDialogue
+{
     
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     CGRect screenFrame = self.window.frame;
@@ -231,13 +234,26 @@ static AppBlade *s_sharedManager = nil;
     FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(0, 0, screenFrame.size.width, screenFrame.size.height)];
     feedback.delegate = self;
     
-    // get the parent window
-    if (!self.window) 
-        self.window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-    [[[self.window subviews] objectAtIndex:0] addSubview:feedback];   
+    [[[self.window subviews] lastObject] addSubview:feedback];   
     self.showingFeedbackDialogue = YES;
     [feedback.textView becomeFirstResponder];
     
+}
+
+- (void)showFeedbackDialogue
+{
+    if (!self.window) {
+        self.window = [[UIApplication sharedApplication] keyWindow];
+    }
+    
+    [self handleFeedback];
+}
+
+- (void)showFeedbackDialogueInWindow:(UIWindow *)window
+{
+    self.window = window;
+    
+    [self handleFeedback];
 }
 
 -(void)feedbackDidSubmitText:(NSString*)feedbackText{
@@ -318,7 +334,7 @@ static AppBlade *s_sharedManager = nil;
     
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
     
-    [self showFeedbackDialogue];
+    [self displayFeedbackDialogue];
 }
 
 - (void)handleBackloggedFeedback

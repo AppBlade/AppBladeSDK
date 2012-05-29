@@ -20,20 +20,13 @@
 {
     // Configure AppBlade
     AppBlade *blade = [AppBlade sharedManager];
-
-		// Populate with values from the project SDK settings or load keys from plist
-		// see README for details
-    blade.appBladeProjectID = @"";
-    blade.appBladeProjectToken = @"";
-    blade.appBladeProjectSecret = @"";
-    blade.appBladeProjectIssuedTimestamp = @"";
     
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
-//    [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]];
+    [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]];
 
     [blade catchAndReportCrashes];
-    [blade allowFeedbackReportingForWindow:self.window];
+//    [blade allowFeedbackReportingForWindow:self.window];
     
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
