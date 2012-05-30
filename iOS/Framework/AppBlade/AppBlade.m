@@ -40,7 +40,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 @property (nonatomic, assign) BOOL showingFeedbackDialogue;
 @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
 @property (nonatomic, retain) NSMutableSet* feedbackRequests;
-@property (nonatomic, assign) UIWindow* window;
+@property (nonatomic, assign) UIView* feedbackView;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
@@ -51,7 +51,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
 - (void)checkAndCreateAppBladeCacheDirectory;
 - (NSString*)captureScreen;
-- (UIImage*)getContentBelowView;
+- (UIImage*)getContentBelowView:(UIView*)view;
 - (NSString*)randomString:(int)length;
 
 - (BOOL)hasPendingFeedbackReports;
@@ -77,7 +77,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 @synthesize tapRecognizer = _tapRecognizer;
 @synthesize feedbackRequests = _feedbackRequests;
 
-@synthesize window = _window;
+@synthesize feedbackView = _feedbackView;
 
 static AppBlade *s_sharedManager = nil;
 
@@ -222,7 +222,7 @@ static AppBlade *s_sharedManager = nil;
 {
     
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGRect screenFrame = self.window.frame;
+    CGRect screenFrame = self.feedbackView.frame;
     
     if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
         // We need to react properly to interface orientations
@@ -234,7 +234,7 @@ static AppBlade *s_sharedManager = nil;
     FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(0, 0, screenFrame.size.width, screenFrame.size.height)];
     feedback.delegate = self;
     
-    [[[self.window subviews] lastObject] addSubview:feedback];   
+    [self.feedbackView addSubview:feedback];   
     self.showingFeedbackDialogue = YES;
     [feedback.textView becomeFirstResponder];
     
@@ -242,16 +242,16 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)showFeedbackDialogue
 {
-    if (!self.window) {
-        self.window = [[UIApplication sharedApplication] keyWindow];
+    if (!self.feedbackView) {
+        self.feedbackView = [[[[UIApplication sharedApplication] keyWindow] subviews] lastObject];
     }
     
     [self handleFeedback];
 }
 
-- (void)showFeedbackDialogueInWindow:(UIWindow *)window
+- (void)showFeedbackDialogueInView:(UIView *)view
 {
-    self.window = window;
+    self.feedbackView = view;
     
     [self handleFeedback];
 }
@@ -282,7 +282,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window
 {
-    self.window = window;
+    self.feedbackView = window;
     self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFeedback)] autorelease];
     self.tapRecognizer.numberOfTapsRequired = 2;
     self.tapRecognizer.numberOfTouchesRequired = 3;
@@ -388,7 +388,7 @@ static AppBlade *s_sharedManager = nil;
 -(NSString *)captureScreen
 {
     [self checkAndCreateAppBladeCacheDirectory];
-    UIImage *currentImage = [self getContentBelowView];
+    UIImage *currentImage = [self getContentBelowView:self.feedbackView];
     NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"png"];
 	NSString *pngFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
 	NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(currentImage)];
@@ -397,70 +397,16 @@ static AppBlade *s_sharedManager = nil;
     
 }
 
-- (UIImage*)getContentBelowView
+- (UIImage*)getContentBelowView:(UIView*)view
 {
-    UIWindow* keyWindow = [[UIApplication sharedApplication] keyWindow];
-    UIGraphicsBeginImageContext(keyWindow.bounds.size);
-    [keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIGraphicsBeginImageContext(view.bounds.size);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    UIImage* returnImage = nil;
-    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    return image;
     
-    if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
-        if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-            returnImage = [self rotateImage:image angle:270];
-        }
-        else {
-            returnImage = [self rotateImage:image angle:90];
-        }
-    }
-    else {
-        returnImage = image;
-    }
-    
-    return returnImage;
-    
-}
-
-// From: http://megasnippets.com/source-codes/objective_c/rotate_image
-- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle
-{
-    CGImageRef imgRef = [img CGImage];
-    CGContextRef context;
-    
-    switch (angle) {
-        case 90:
-            UIGraphicsBeginImageContext(CGSizeMake(img.size.height, img.size.width));
-            context = UIGraphicsGetCurrentContext();
-            CGContextTranslateCTM(context, img.size.height, img.size.width);
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextRotateCTM(context, M_PI/2.0);
-            break;
-        case 180:
-            UIGraphicsBeginImageContext(CGSizeMake(img.size.width, img.size.height));
-            context = UIGraphicsGetCurrentContext();
-            CGContextTranslateCTM(context, img.size.width, 0);
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextRotateCTM(context, -M_PI);
-            break;
-        case 270:
-            UIGraphicsBeginImageContext(CGSizeMake(img.size.height, img.size.width));
-            context = UIGraphicsGetCurrentContext();
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextRotateCTM(context, -M_PI/2.0);
-            break;
-        default:
-            return nil;
-    }  
-    
-    CGContextDrawImage(context, CGRectMake(0, 0, img.size.width, img.size.height), imgRef);
-    UIImage *ret = UIGraphicsGetImageFromCurrentImageContext();  
-    
-    UIGraphicsEndImageContext();
-    return ret;
 }
 
 -(NSString *) randomString: (int) len {

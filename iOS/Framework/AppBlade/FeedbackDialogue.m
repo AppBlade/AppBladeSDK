@@ -13,6 +13,8 @@
 
 @property (nonatomic, assign) BOOL closing;
 
+- (void)cancelPressed:(UIButton*)sender;
+
 @end
 
 @implementation FeedbackDialogue
@@ -48,6 +50,9 @@
         [self addSubview:overlayView];
         self.overlayView = overlayView;
         [overlayView release];
+        
+        UITapGestureRecognizer* tapGesture = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelPressed:)] autorelease];
+        [self.overlayView addGestureRecognizer:tapGesture];
         
         
         // overall dialogue view

@@ -67,7 +67,7 @@
 - (IBAction)presentFeedback:(id)sender {
     
     AppBlade *blade = [AppBlade sharedManager];
-    [blade showFeedbackDialogueInWindow:self.view.window];
+    [blade showFeedbackDialogueInView:self.view];
     
 }
 

@@ -85,7 +85,7 @@ static NSString* const kAppBladeCacheDirectory;
 
 // Shows a feedback dialogue, with option to specify the window to capture/display in
 - (void)showFeedbackDialogue;
-- (void)showFeedbackDialogueInWindow:(UIWindow*)window;
+- (void)showFeedbackDialogueInView:(UIView*)view;
 
 // Sets up a 3-finger double tap for reporting feedback
 - (void)allowFeedbackReporting;
