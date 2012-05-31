@@ -12,11 +12,16 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -27,6 +32,8 @@ public class KillSwitch {
 	private static final String PrefsKey = "AppBlade.KillSwitch.SharedPrefs";
 	private static final String PrefsKeyTTL = "AppBlade.KillSwitch.TTL";
 	private static final String PrefsKeyTTLUpdated = "AppBlade.KillSwitch.TTLUpdated";
+	
+	private static final int NotificationNewVersion = 0;
 	
 	private static int ttl = Integer.MIN_VALUE;
 	private static long ttlLastUpdated = Long.MIN_VALUE;
@@ -150,7 +157,12 @@ public class KillSwitch {
 					Log.d(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
 					JSONObject json = new JSONObject(data);
 					int timeToLive = json.getInt("ttl");
+					if(json.has("update"))
+						processUpdate(json);
 					save(timeToLive);
+					
+					// Should we kill the Activity context in all cases?
+					context.finish();
 				}
 				catch (IOException ex) { }
 				catch (JSONException ex) { }
@@ -192,6 +204,33 @@ public class KillSwitch {
 				});
 				builder.show();
 			}
+		}
+
+		private void processUpdate(JSONObject json) {
+			Log.d(AppBlade.LogTag, "KillSwitch.processUpdate");
+			try
+			{
+				JSONObject update = json.getJSONObject("update");
+				if(update != null) {
+					String url = update.getString("url");
+					String message = update.getString("message");
+					
+					@SuppressWarnings("unused")
+					String version = update.getString("version");
+					
+					if(context != null) {
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+						PendingIntent contentIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+						
+						NotificationManager notificationManager =
+								(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+						Notification notification = new Notification(R.drawable.ic_launcher, message, System.currentTimeMillis());
+						notification.setLatestEventInfo(context.getApplicationContext(), "Update", message, contentIntent);
+						notificationManager.notify(NotificationNewVersion, notification);
+					}
+				}
+			}
+			catch(JSONException ex) {}
 		}
 
 		private void save(int timeToLive) {

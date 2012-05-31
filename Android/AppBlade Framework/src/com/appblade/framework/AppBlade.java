@@ -427,7 +427,12 @@ public class AppBlade {
 		// If we do have enough information and the source of this call is from within AppBlade,
 		// close the activity context
 		else if (fromLoopBack)
+		{
+			Log.d(AppBlade.LogTag,
+					String.format("AppBlade.authorize: user is authorized, closing activity: %s",
+							activity.getLocalClassName()));
 			activity.finish();
+		}
 	}
 
 	private static boolean isAuthorized(Activity activity) {
