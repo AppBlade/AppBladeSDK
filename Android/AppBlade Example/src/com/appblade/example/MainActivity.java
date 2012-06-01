@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -31,6 +32,7 @@ public class MainActivity extends Activity {
 	private void initControls() {
 		View btnDivideByZero = findViewById(R.id.btnDivideByZero);
 		View btnClearAuthData = findViewById(R.id.btnClearAuthData);
+		View btnFeedback = findViewById(R.id.btnFeedback);
 		
 		btnDivideByZero.setOnClickListener(new OnClickListener() {
 			
@@ -68,5 +70,30 @@ public class MainActivity extends Activity {
 				builder.show();
 			}
 		});
+		
+		btnFeedback.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				MainActivity.this.doFeedbackWithScreenshot();
+			}
+		});
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		int action = event.getAction();
+		switch(action & MotionEvent.ACTION_MASK)
+		{
+		case MotionEvent.ACTION_POINTER_DOWN:
+			if (event.getPointerCount() == 3) {
+				doFeedbackWithScreenshot();
+				return true;
+			}
+		}
+		
+		return super.onTouchEvent(event);
+	}
+	
+	private void doFeedbackWithScreenshot() {
+		AppBlade.doFeedbackWithScreenshot(this, this);
 	}
 }

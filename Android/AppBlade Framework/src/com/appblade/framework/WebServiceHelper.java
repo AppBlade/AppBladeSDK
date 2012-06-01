@@ -21,6 +21,7 @@ class WebServiceHelper {
 	static final String ServiceHost = "appblade.com";
 	
 	protected static final String ServicePathCrashReportsFormat = "/api/2/projects/%s/devices/%s/crash_reports";
+	protected static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
 	protected static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
 	protected static final String ServicePathOauthTokens = "/oauth/tokens";
 

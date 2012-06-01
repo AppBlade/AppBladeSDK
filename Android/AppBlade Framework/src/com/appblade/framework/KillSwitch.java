@@ -107,7 +107,7 @@ public class KillSwitch {
 		return response;
 	}
 	
-	static class KillSwitchTask extends AsyncTask<Void, Void, HttpResponse> {
+	static class KillSwitchTask extends AsyncTask<Void, Void, Void> {
 
 		Activity context;
 		ProgressDialog progress;
@@ -123,9 +123,13 @@ public class KillSwitch {
 		}
 
 		@Override
-		protected HttpResponse doInBackground(Void... params) {
+		protected Void doInBackground(Void... params) {
 			HttpResponse response = getKillSwitchResponse();
-			return response;
+
+			Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			handleResponse(response);
+			
+			return null;
 		}
 		
 		@Override
@@ -134,13 +138,10 @@ public class KillSwitch {
 		}
 
 		@Override
-		protected void onPostExecute(HttpResponse response) {
+		protected void onPostExecute(Void unused) {
 			inProgress = false;
 			if(progress != null && progress.isShowing())
 				progress.dismiss();
-
-			Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
-			handleResponse(response);
 		}
 
 		private void handleResponse(HttpResponse response) {
@@ -150,6 +151,14 @@ public class KillSwitch {
 					Log.d(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
 					JSONObject json = new JSONObject(data);
 					int timeToLive = json.getInt("ttl");
+					if(json.has("update")) {
+						JSONObject update = json.getJSONObject("update");
+						if(update != null)
+							UpdatesHelper.processUpdate(context, update);
+					}
+					else
+						kill(context);
+						
 					save(timeToLive);
 				}
 				catch (IOException ex) { }
@@ -220,6 +229,19 @@ public class KillSwitch {
 			builder.show();
 		}
 		
+	}
+
+	public static void kill(Activity context) {
+		
+		// This feels a little hacky, but it serves the same purpose as passing the isLoopBack flag around
+		// which I'm not in love with either.  This basically addresses the need to shut down the 
+		// RemoteAuthorizationActivity when we require login info.  Once the whole process completes,
+		// this is basically the end of the road, and we need to shut down the activity and return to the 
+		// main application.  If remote auth is not required, the Activity context we have a reference to is the 
+		// main application's root activity that called to request authorization, and we definitely don't want
+		// to shut that one down.
+		if(context.getClass().equals(RemoteAuthorizeActivity.class))
+			context.finish();
 	}
 
 }

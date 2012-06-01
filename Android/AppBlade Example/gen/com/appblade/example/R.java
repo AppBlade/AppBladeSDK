@@ -13,11 +13,13 @@ public final class R {
     public static final class drawable {
         public static final int appblade_logo=0x7f020000;
         public static final int ic_launcher=0x7f020001;
+        public static final int notification_icon=0x7f020002;
     }
     public static final class id {
         public static final int authContainer=0x7f050000;
         public static final int btnClearAuthData=0x7f050004;
         public static final int btnDivideByZero=0x7f050003;
+        public static final int btnFeedback=0x7f050005;
         public static final int imgLogo=0x7f050002;
         public static final int webview=0x7f050001;
     }
