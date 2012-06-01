@@ -114,7 +114,7 @@ public class KillSwitch {
 		return response;
 	}
 	
-	static class KillSwitchTask extends AsyncTask<Void, Void, HttpResponse> {
+	static class KillSwitchTask extends AsyncTask<Void, Void, Void> {
 
 		Activity context;
 		ProgressDialog progress;
@@ -130,9 +130,13 @@ public class KillSwitch {
 		}
 
 		@Override
-		protected HttpResponse doInBackground(Void... params) {
+		protected Void doInBackground(Void... params) {
 			HttpResponse response = getKillSwitchResponse();
-			return response;
+
+			Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			handleResponse(response);
+			
+			return null;
 		}
 		
 		@Override
@@ -141,13 +145,10 @@ public class KillSwitch {
 		}
 
 		@Override
-		protected void onPostExecute(HttpResponse response) {
+		protected void onPostExecute(Void unused) {
 			inProgress = false;
 			if(progress != null && progress.isShowing())
 				progress.dismiss();
-
-			Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
-			handleResponse(response);
 		}
 
 		private void handleResponse(HttpResponse response) {

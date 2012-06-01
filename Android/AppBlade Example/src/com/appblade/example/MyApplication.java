@@ -11,7 +11,7 @@ public class MyApplication extends Application {
 		super.onCreate();
 	
 		// Populate with tokens from your application settings
-		// see README for details	
+		// see README for details		
 		String uuid = "";
 		String token = "";
 		String secret = "";
