@@ -17,6 +17,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -105,7 +106,7 @@ public class AppBlade {
 
 		String consoleData = "";
 		for (String permission : permissions) {
-			if (permission.equals("android.permission.READ_LOGS"))
+			if (permission.equals(Manifest.permission.READ_LOGS))
 			{
 				consoleData = FeedbackHelper.getLogData();
 				break;
