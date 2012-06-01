@@ -12,6 +12,7 @@ public final class R {
     }
     public static final class drawable {
         public static int ic_launcher=0x7f020000;
+        public static int notification_icon=0x7f020001;
     }
     public static final class id {
         public static int authContainer=0x7f050000;

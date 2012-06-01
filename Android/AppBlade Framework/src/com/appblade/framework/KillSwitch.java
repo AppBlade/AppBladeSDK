@@ -161,8 +161,15 @@ public class KillSwitch {
 						processUpdate(json);
 					save(timeToLive);
 					
-					// Should we kill the Activity context in all cases?
-					context.finish();
+					// This feels a little hacky, but it serves the same purpose as passing the isLoopBack flag around
+					// which I'm not in love with either.  This basically addresses the need to shut down the 
+					// RemoteAuthorizationActivity when we require login info.  Once the whole process completes,
+					// this is basically the end of the road, and we need to shut down the activity and return to the 
+					// main application.  If remote auth is not required, the Activity context we have a reference to is the 
+					// main application's root activity that called to request authorization, and we definitely don't want
+					// to shut that one down.
+					if(context.getClass().equals(RemoteAuthorizeActivity.class))
+						context.finish();
 				}
 				catch (IOException ex) { }
 				catch (JSONException ex) { }
@@ -224,7 +231,7 @@ public class KillSwitch {
 						
 						NotificationManager notificationManager =
 								(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-						Notification notification = new Notification(R.drawable.ic_launcher, message, System.currentTimeMillis());
+						Notification notification = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
 						notification.setLatestEventInfo(context.getApplicationContext(), "Update", message, contentIntent);
 						notificationManager.notify(NotificationNewVersion, notification);
 					}
