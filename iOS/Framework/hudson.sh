@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_NAME=$(echo ${JOB_NAME} | tr -s '[:blank:]' '_')
+PROJECT_NAME=AppBlade
 
 XCODE_PROJECT_NAME=${PROJECT_NAME}.xcodeproj
 
@@ -8,12 +8,12 @@ SCHEME=AppBladeUniversal
 
 CONFIGURATION=Release_Production
 
-BUILD_DIR=${WORKSPACE}/iOS/Framework/build
+BUILD_DIR=build
 
 ###
 # Begin Build Script
 ###
-cd ${WORKSPACE}/iOS/Framework
+#cd ${WORKSPACE}/iOS/Framework
 
 # clean all targets to be safe
 xcodebuild -project ${XCODE_PROJECT_NAME} -alltargets clean
@@ -22,7 +22,7 @@ xcodebuild -project ${XCODE_PROJECT_NAME} -alltargets clean
 rm -rf ${BUILD_DIR}
 
 # build the Distribution configuration of the library
-xcodebuild -workspace ${XCODE_PROJECT_NAME}/project.xcworkspace/ -scheme ${SCHEME} -configuration ${CONFIGURATION} SYMROOT=${BUILD_DIR}
+xcodebuild -workspace ${XCODE_PROJECT_NAME}/project.xcworkspace -scheme ${SCHEME} -configuration ${CONFIGURATION} SYMROOT=${BUILD_DIR}
 
 # Package compiled AppBlade library and resources
 ARCHIVE_DIR=AppBlade
@@ -35,7 +35,7 @@ mkdir -p ${ARCHIVE_DIR}/AppBlade
 cd ${CONFIGURATION}-universal
 cp *.a *.h ../${ARCHIVE_DIR}/AppBlade/
 # cp ${WORKSPACE}/iOS/Framework/AppBlade/*.config ../${ARCHIVE_DIR}/AppBlade/ # TODO: restore config
-cp ${WORKSPACE}/README.mdown ../${ARCHIVE_DIR}/
+cp $../../README.mdown ../${ARCHIVE_DIR}/
 cd ..
 
 zip -r AppBlade.zip ${ARCHIVE_DIR}

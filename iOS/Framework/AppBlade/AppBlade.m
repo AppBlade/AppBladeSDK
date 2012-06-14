@@ -235,31 +235,55 @@ static AppBlade *s_sharedManager = nil;
     feedback.delegate = self;
     
     [self.feedbackView addSubview:feedback];   
-    self.showingFeedbackDialogue = YES;
     [feedback.textView becomeFirstResponder];
     
 }
 
 - (void)showFeedbackDialogue
 {
-    if (!self.feedbackView) {
-        self.feedbackView = [[[[UIApplication sharedApplication] keyWindow] subviews] lastObject];
-    }
-    
-    [self handleFeedback];
+    [self showFeedbackDialogueWithScreenshot:YES inView:nil];
 }
 
 - (void)showFeedbackDialogueInView:(UIView *)view
 {
-    self.feedbackView = view;
-    
-    [self handleFeedback];
+    [self showFeedbackDialogueWithScreenshot:YES inView:view];
 }
+
+- (void)showFeedbackDialogueWithScreenshot:(BOOL)takeScreenshot
+{
+    [self showFeedbackDialogueWithScreenshot:takeScreenshot inView:nil];
+}
+
+- (void)showFeedbackDialogueWithScreenshot:(BOOL)takeScreenshot inView:(UIView *)view
+{
+    // Any time the feedback dialogue is shown, this method gets called.
+    if (self.showingFeedbackDialogue) {
+        return;
+    }
+    
+    if (!view && !self.feedbackView) {
+        self.feedbackView = [[[[UIApplication sharedApplication] keyWindow] subviews] lastObject];
+    }
+    else if (view) {
+        self.feedbackView = view;
+    }
+    
+    if (takeScreenshot) {
+        [self handleFeedback];
+    }
+    else {
+        [self displayFeedbackDialogue];
+    }
+    
+}
+
+#pragma mark -
 
 -(void)feedbackDidSubmitText:(NSString*)feedbackText{
     
-    NSLog(@"AppBlade received %@", feedbackText);
+//    NSLog(@"AppBlade received %@", feedbackText);
     [self reportFeedback:feedbackText];
+    self.showingFeedbackDialogue = NO;
 }
 
 - (void)feedbackDidCancel
@@ -267,6 +291,7 @@ static AppBlade *s_sharedManager = nil;
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot]];
     [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
     self.feedbackDictionary = nil;
+    self.showingFeedbackDialogue = NO;
 }
 
 - (void)allowFeedbackReporting
@@ -298,7 +323,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)handleFeedback
 {
-    
+    self.showingFeedbackDialogue = YES;
 #if !TARGET_IPHONE_SIMULATOR
     aslmsg q, m;
     int i;
@@ -329,6 +354,7 @@ static AppBlade *s_sharedManager = nil;
     NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"plist"];
 	NSString *plistFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
     [logs writeToFile:plistFilePath atomically:YES];
+    [plistFilePath release];
     
     self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:fileName forKey:kAppBladeFeedbackKeyConsole];
 #else
@@ -339,7 +365,6 @@ static AppBlade *s_sharedManager = nil;
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
     
     [self displayFeedbackDialogue];
-    [plistFilePath release];
 }
 
 - (void)handleBackloggedFeedback

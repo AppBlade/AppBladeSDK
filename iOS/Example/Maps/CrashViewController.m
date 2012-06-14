@@ -7,7 +7,7 @@
 //
 
 #import "CrashViewController.h"
-
+#import "AppBlade.h"
 
 @implementation CrashViewController
 
@@ -49,6 +49,8 @@
                         @"SIGPIPE",
                         @"SIGSEGV",
                         @"NSException", 
+                        @"Feedback With Screenshot",
+                        @"Feedback Without Screenshot",
                    nil] ;
 
 }
@@ -171,6 +173,12 @@
             break;
         case 6:
             [self throwNSException];
+            break;
+        case 7:
+            [[AppBlade sharedManager] showFeedbackDialogueInView:self.view];
+            break;
+        case 8:
+            [[AppBlade sharedManager] showFeedbackDialogueWithScreenshot:NO];
             break;
         default:
             break;
