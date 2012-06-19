@@ -42,13 +42,18 @@ public class AuthHelper {
 		}
 		
 	}
+	
+	public static void checkRegistration(final Activity activity)
+	{
+		KillSwitch.authorize(activity, true);
+	}
 
 	private static void authorize(Activity activity) {
 		
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
 		
 		if(!StringUtils.isNullOrEmpty(accessToken)) {
-			KillSwitch.authorize(activity);
+			KillSwitch.authorize(activity, false);
 		}
 		else {
 			Intent intent = new Intent(activity, RemoteAuthorizeActivity.class);

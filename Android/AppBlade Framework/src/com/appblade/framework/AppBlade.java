@@ -219,8 +219,6 @@ public class AppBlade {
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
 		setDeviceId(accessToken);
 
-		registerExceptionHandler();
-
 		try
 		{
 			String packageName = context.getPackageName();
@@ -245,7 +243,7 @@ public class AppBlade {
 	/**
 	 * Register default exception handler on current thread
 	 */
-	private static void registerExceptionHandler() {
+	public static void registerExceptionHandler() {
 		UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
 		if(! (current instanceof AppBladeExceptionHandler))
 		{
@@ -433,6 +431,13 @@ public class AppBlade {
 					String.format("AppBlade.authorize: user is authorized, closing activity: %s",
 							activity.getLocalClassName()));
 			activity.finish();
+		}
+	}
+	
+	public static void registerDevice(Activity activity) {
+		if(!isAuthorized(activity))
+		{
+			AuthHelper.checkRegistration(activity);
 		}
 	}
 
