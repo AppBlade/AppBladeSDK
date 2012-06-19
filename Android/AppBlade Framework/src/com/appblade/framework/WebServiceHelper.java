@@ -24,6 +24,7 @@ class WebServiceHelper {
 	protected static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
 	protected static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
 	protected static final String ServicePathOauthTokens = "/oauth/tokens";
+	protected static final String ServicePathRegisterDevice = "/api/1/projects/%s/devices/%s";
 
 	protected static String getHMACAuthHeader(AppInfo appInfo, String urlPath, String contents, HttpMethod method) {
 		

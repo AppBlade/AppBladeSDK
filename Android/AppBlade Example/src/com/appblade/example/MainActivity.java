@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
     
     public void onResume() {
     	super.onResume();
-    	AppBlade.authorize(this);
+    	AppBlade.registerDevice(this);
     }
 
 	private void initControls() {
