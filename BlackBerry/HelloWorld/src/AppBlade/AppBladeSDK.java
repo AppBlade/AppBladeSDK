@@ -2,11 +2,12 @@ package AppBlade;
 
 import java.io.*;
 
+import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
 import net.rim.device.api.applicationcontrol.ApplicationPermissions;
 import net.rim.device.api.applicationcontrol.ApplicationPermissionsManager;
-import net.rim.device.api.io.transport.ConnectionFactory;
+//import net.rim.device.api.io.transport.ConnectionFactory;
 import net.rim.device.api.servicebook.ServiceBook;
 import net.rim.device.api.servicebook.ServiceRecord;
 import net.rim.device.api.system.ApplicationDescriptor;
@@ -39,39 +40,40 @@ public final class AppBladeSDK implements DialogClosedListener
 	
 	public void authorize()
 	{
-		String URL = AppBladeSDK.BASE_URL + this._projectuuid + AppBladeSDK.APPROVAL_URL + DeviceInfo.getDeviceId() + ".json" + this.getConnectionString();
-		byte responseData[] = null;
+		String URL = AppBladeSDK.BASE_URL + this._projectuuid + AppBladeSDK.APPROVAL_URL + DeviceInfo.getDeviceId() + ".json?" + this.getConnectionString();
+		int response = -1;
 		try
 		{
-			HttpConnection connection = (HttpConnection) new ConnectionFactory().getConnection(URL).getConnection();
+			HttpConnection connection = (HttpConnection)Connector.open(URL);
+			connection.setRequestMethod(HttpConnection.GET);
 			this.addHeadersToConnection(connection);
-			int len = (int) connection.getLength();
-            responseData = new byte[len];
-            DataInputStream dis;
-            dis = new DataInputStream(connection.openInputStream());
-            dis.readFully(responseData);
+			response = connection.getResponseCode();
+			
+            connection.close();
 		}
 		catch (Exception e)
 		{
-			
+			AppBladeSDK.logMessage("Exception trying to connect to server: " + e.toString());
 		}
 		
-		final byte[] responseDataToProcess = responseData;
+		AppBladeSDK.logMessage("Response code was " + response);
 		
-		UiApplication.getUiApplication().invokeLater(new Runnable() {
-            public void run() {
-                AppBladeSDK._sdk.processAuthorizeResponse(responseDataToProcess);
-            }
-        });
-	}
-	
-	public void processAuthorizeResponse(byte[] responseData)
-	{
-		if (responseData != null) {
-			String str = new String(responseData);
-    		System.out.println("Response:\n" + str);
+		if (response > 0) {
+			final int status = response;
+			UiApplication.getUiApplication().invokeLater(new Runnable() {
+	            public void run() {
+	                AppBladeSDK._sdk.processAuthorizeResponse(status);
+	            }
+	        });
 		}
 		else {
+			AppBladeSDK.logMessage("We did not connect to the server.");
+		}
+	}
+	
+	public void processAuthorizeResponse(int statusCode)
+	{
+		if (statusCode != HttpConnection.HTTP_OK) {
 			Dialog myDialog = new Dialog(Dialog.OK, "You are not authorized to use this application.", 0, Bitmap.getPredefinedBitmap(Bitmap.EXCLAMATION), Dialog.GLOBAL_STATUS);
 			myDialog.setDialogClosedListener(this);
 			myDialog.show();
@@ -99,7 +101,10 @@ public final class AppBladeSDK implements DialogClosedListener
 	        connection.setRequestProperty("device_id", "" + DeviceInfo.getDeviceId());
 	        connection.setRequestProperty("bundle_identifier", ApplicationDescriptor.currentApplicationDescriptor().getName());
 	        connection.setRequestProperty("bundle_version", ApplicationDescriptor.currentApplicationDescriptor().getVersion());
-	        connection.setRequestProperty("Content-type", "application/json");
+	        connection.setRequestProperty("DEVICE_MFG", "RIM");
+	        connection.setRequestProperty("DEVICE_BRAND", DeviceInfo.getManufacturerName());
+	        connection.setRequestProperty("SOFTWARE_VERSION", DeviceInfo.getSoftwareVersion());
+	        connection.setRequestProperty("Accept", "application/json");
     	}
     	catch (IOException e)
     	{
@@ -128,12 +133,12 @@ public final class AppBladeSDK implements DialogClosedListener
             if(AppBladeSDK.USE_MDS_IN_SIMULATOR)
             {
                     logMessage("Device is a simulator and USE_MDS_IN_SIMULATOR is true");
-                    connectionString = "?deviceside=false";                 
+                    connectionString = ";deviceside=false";                 
             }
             else
             {
                     logMessage("Device is a simulator and USE_MDS_IN_SIMULATOR is false");
-                    connectionString = "?deviceside=true";
+                    connectionString = ";deviceside=true";
             }
         }                                        
                 
@@ -141,7 +146,7 @@ public final class AppBladeSDK implements DialogClosedListener
         else if(WLANInfo.getWLANState() == WLANInfo.WLAN_STATE_CONNECTED)
         {
             logMessage("Device is connected via Wifi.");
-            connectionString = "?interface=wifi";
+            connectionString = ";interface=wifi";
         }
                         
         // Is the carrier network the only way to connect?
@@ -154,13 +159,13 @@ public final class AppBladeSDK implements DialogClosedListener
             {
                 // Has carrier coverage, but not BIBS.  So use the carrier's TCP network
                 logMessage("No Uid");
-                connectionString = "?deviceside=true";
+                connectionString = ";deviceside=true";
             }
             else 
             {
                 // otherwise, use the Uid to construct a valid carrier BIBS request
                 logMessage("uid is: " + carrierUid);
-                connectionString = "?deviceside=false;connectionUID="+carrierUid + ";ConnectionType=mds-public";
+                connectionString = ";deviceside=false;connectionUID="+carrierUid + ";ConnectionType=mds-public";
             }
         }                
         
@@ -168,7 +173,7 @@ public final class AppBladeSDK implements DialogClosedListener
         else if((CoverageInfo.getCoverageStatus() & CoverageInfo.COVERAGE_MDS) == CoverageInfo.COVERAGE_MDS)
         {
             logMessage("MDS coverage found");
-            connectionString = "?deviceside=false";
+            connectionString = ";deviceside=false";
         }
         
         // If there is no connection available abort to avoid bugging the user unnecssarily.
@@ -181,7 +186,7 @@ public final class AppBladeSDK implements DialogClosedListener
         else
         {
             logMessage("no other options found, assuming device.");
-            connectionString = "?deviceside=true";
+            connectionString = ";deviceside=true";
         }        
         
         return connectionString;
@@ -212,9 +217,18 @@ public final class AppBladeSDK implements DialogClosedListener
     
     private static void _permissions() {
     	ApplicationPermissionsManager apm = ApplicationPermissionsManager.getInstance();
-    	ApplicationPermissions permRequest = new ApplicationPermissions();
-    	permRequest.addPermission(ApplicationPermissions.PERMISSION_INTERNET);
-    	permRequest.addPermission(ApplicationPermissions.PERMISSION_WIFI);
-    	apm.invokePermissionsRequest(permRequest);
+    	
+    	int internet = apm.getPermission(ApplicationPermissions.PERMISSION_INTERNET);
+    	int wifi = apm.getPermission(ApplicationPermissions.PERMISSION_WIFI);
+    	int server = apm.getPermission(ApplicationPermissions.PERMISSION_SERVER_NETWORK);
+    	
+    	if (internet != ApplicationPermissions.VALUE_ALLOW || wifi != ApplicationPermissions.VALUE_ALLOW || server != ApplicationPermissions.VALUE_ALLOW)
+    	{
+	    	ApplicationPermissions permRequest = new ApplicationPermissions();
+	    	permRequest.addPermission(ApplicationPermissions.PERMISSION_INTERNET);
+	    	permRequest.addPermission(ApplicationPermissions.PERMISSION_WIFI);
+	    	permRequest.addPermission(ApplicationPermissions.PERMISSION_SERVER_NETWORK);
+	    	apm.invokePermissionsRequest(permRequest);
+    	}
     }
 }
