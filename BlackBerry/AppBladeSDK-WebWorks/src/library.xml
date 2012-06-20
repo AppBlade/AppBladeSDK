@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <extension>
+        <entryClass>appblade.AppBladeExtension</entryClass>
+    </extension>
+    <features>
+        <feature id="appblade.authorize" version="1.0.0" >AppBlade</feature>
+    </features>
+</library>
