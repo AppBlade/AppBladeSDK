@@ -57,6 +57,9 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 - (BOOL)hasPendingFeedbackReports;
 - (void)handleBackloggedFeedback;
 
+- (void)showFeedbackDialogue;
+- (void)showFeedbackDialogueWithScreenshot:(BOOL)takeScreenshot;
+
 //- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 
 - (void)displayFeedbackDialogue;

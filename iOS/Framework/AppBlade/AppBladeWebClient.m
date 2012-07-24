@@ -19,9 +19,9 @@ static NSString *approvalURLFormat = @"http://staging.appblade.com/api/projects/
 static NSString *reportCrashURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@/crash_reports";
 static NSString *reportFeedbackURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@/feedback";
 #else
-static NSString *approvalURLFormat = @"https://appblade.com/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat = @"https://appblade.com/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%@/devices/%@/feedback";
+static NSString *approvalURLFormat = @"http://gallifrey.local:3000/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat = @"http://gallifrey.local:3000/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat = @"http://gallifrey.local:3000/api/projects/%@/devices/%@/feedback";
 #endif
 
 @interface AppBladeWebClient ()
@@ -276,7 +276,7 @@ static BOOL is_encrypted () {
     NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectIssuedTimestamp], randomString];
     
     // Set port number based on the scheme
-    NSString* port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
+    NSString* port = [scheme isEqualToString:@"https"] ? @"443" : @"3000";
     
     NSString* ext = [self udid];
 

@@ -84,9 +84,7 @@ static NSString* const kAppBladeCacheDirectory;
 - (void)checkApproval;
 
 // Shows a feedback dialogue, with option to specify the view and whether or not to take a screenshot.
-- (void)showFeedbackDialogue;
 - (void)showFeedbackDialogueInView:(UIView*)view;
-- (void)showFeedbackDialogueWithScreenshot:(BOOL)takeScreenshot;
 - (void)showFeedbackDialogueWithScreenshot:(BOOL)takeScreenshot inView:(UIView*)view;
 
 // Sets up a 3-finger double tap for reporting feedback
