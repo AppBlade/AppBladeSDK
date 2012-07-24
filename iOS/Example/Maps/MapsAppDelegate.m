@@ -26,7 +26,7 @@
     [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]];
 
     [blade catchAndReportCrashes];
-//    [blade allowFeedbackReportingForWindow:self.window];
+    [blade allowFeedbackReportingForWindow:self.window];
     
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];

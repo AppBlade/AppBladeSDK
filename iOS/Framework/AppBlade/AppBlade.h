@@ -53,6 +53,8 @@ static NSString* const kAppBladeCacheDirectory;
 // AppBlade API project issued time.
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
 
+@property (nonatomic, retain, readonly) NSDictionary* appBladeParams;
+
 // The AppBlade delegate receives messages regarding device authentication and other events.
 // See protocol declaration, above.
 @property (nonatomic, assign) id<AppBladeDelegate> delegate;
@@ -92,6 +94,17 @@ static NSString* const kAppBladeCacheDirectory;
 
 // In case you only want feedback in a specific window.
 - (void)allowFeedbackReportingForWindow:(UIWindow*)window;
+
+// Update custom params dictionary sent to AppBlade
+
+// Will overrite everything
+- (void)setCustomParams:(NSDictionary*)params; 
+
+// Update a single key/value pair
+- (void)updateCustomParam:(id)key withValue:(id)value;
+
+// Clears everything
+- (void)clearAllCustomParams;
 
 
 @end

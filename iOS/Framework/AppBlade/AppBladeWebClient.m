@@ -19,9 +19,9 @@ static NSString *approvalURLFormat = @"http://staging.appblade.com/api/projects/
 static NSString *reportCrashURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@/crash_reports";
 static NSString *reportFeedbackURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@/feedback";
 #else
-static NSString *approvalURLFormat = @"http://gallifrey.local:3000/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat = @"http://gallifrey.local:3000/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat = @"http://gallifrey.local:3000/api/projects/%@/devices/%@/feedback";
+static NSString *approvalURLFormat = @"https://appblade.com/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat = @"https://appblade.com/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%@/devices/%@/feedback";
 #endif
 
 @interface AppBladeWebClient ()
@@ -145,9 +145,12 @@ static BOOL is_encrypted () {
     [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
 }
 
-- (void)reportCrash:(NSString *)crashReport {
+- (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params {
     _api = AppBladeWebClientAPI_ReportCrash;
 
+    // Change this to multipart form so we can upload params. Need to figure out HMAC for this.
+//    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    
     // Retrieve UDID, used in URL.
     NSString* udid = [self udid];
 
@@ -168,13 +171,15 @@ static BOOL is_encrypted () {
     [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease]; 
 }
 
-- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console
+- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console params:(NSDictionary *)params
 {
     _api = AppBladeWebClientAPI_Feedback;
     
     NSString* udid = [self udid];
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
     NSData* consoleContent = [NSData dataWithContentsOfFile:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:console]];
+    NSError* error = nil;
+    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Build report URL.
     NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeProjectID], udid];
@@ -201,6 +206,10 @@ static BOOL is_encrypted () {
     [body appendData:[[NSString stringWithString:@"Content-Type: application/octet-stream\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
 
     [body appendData:[NSData dataWithContentsOfFile:screenshotPath]];
+    
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithString:@"Content-Disposition: form-data; name=\"feedback[params]\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:paramsData];
     
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
 

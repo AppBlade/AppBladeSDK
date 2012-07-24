@@ -52,6 +52,7 @@
 
 - (IBAction)done:(id)sender
 {
+    [[AppBlade sharedManager] updateCustomParam:@"View" withValue:@"Main"];
     [self.delegate flipsideViewControllerDidFinish:self];
 }
 

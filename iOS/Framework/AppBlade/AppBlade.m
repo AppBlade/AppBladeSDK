@@ -41,6 +41,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
 @property (nonatomic, retain) NSMutableSet* feedbackRequests;
 @property (nonatomic, assign) UIView* feedbackView;
+@property (nonatomic, retain, readwrite) NSDictionary* appBladeParams;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
@@ -79,6 +80,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 @synthesize showingFeedbackDialogue = _showingFeedbackDialogue;
 @synthesize tapRecognizer = _tapRecognizer;
 @synthesize feedbackRequests = _feedbackRequests;
+@synthesize appBladeParams = _appBladeParams;
 
 @synthesize feedbackView = _feedbackView;
 
@@ -214,7 +216,7 @@ static AppBlade *s_sharedManager = nil;
     self.appBladeProjectIssuedTimestamp = [keys objectForKey:@"timestamp"];
 }
 
-#pragma mark Feedback
+#pragma mark - Feedback
 
 - (BOOL)hasPendingFeedbackReports
 {
@@ -382,7 +384,7 @@ static AppBlade *s_sharedManager = nil;
         if (feedback) {
             AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
             client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
-            [client sendFeedbackWithScreenshot:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot] note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:[feedback objectForKey:kAppBladeFeedbackKeyConsole]];
+            [client sendFeedbackWithScreenshot:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot] note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:[feedback objectForKey:kAppBladeFeedbackKeyConsole] params:self.appBladeParams];
             
             if (!self.feedbackRequests) {
                 self.feedbackRequests = [NSMutableSet set];
@@ -397,7 +399,7 @@ static AppBlade *s_sharedManager = nil;
 {
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyConsole]];
+    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyConsole] params:self.appBladeParams];
 }
 
 - (void)checkAndCreateAppBladeCacheDirectory
@@ -485,6 +487,37 @@ static AppBlade *s_sharedManager = nil;
     }
     
     return YES;
+}
+
+#pragma mark - Custom Params
+
+- (void)setCustomParams:(NSDictionary *)params
+{
+    self.appBladeParams = params;
+}
+
+- (void)updateCustomParam:(id)key withValue:(id)value
+{
+    NSMutableDictionary* mutableParams = [[self.appBladeParams mutableCopy] autorelease];
+    
+    if (!mutableParams) {
+        mutableParams = [NSMutableDictionary dictionary];
+    }
+    
+    if (key && value) {
+         [mutableParams setObject:value forKey:key];
+    }
+    else if (key && !value) {
+        [mutableParams removeObjectForKey:key];
+    }
+    else {
+        NSLog(@"AppBlade - Attempted to update params with nil key and nil value");
+    }
+}
+
+- (void)clearAllCustomParams
+{
+    self.appBladeParams = nil;
 }
 
 #pragma mark - AppBladeWebClient
