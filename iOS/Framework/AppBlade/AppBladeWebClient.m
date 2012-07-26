@@ -38,7 +38,6 @@ static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%
 - (NSString *)SHA_Base64:(NSString *)raw;
 - (NSString *)encodeBase64WithData:(NSData *)objData;
 - (NSString *)genRandStringLength:(int)len;
-- (NSString *)urlEncodeValue:(NSString*)string;
 
 - (NSString *)hashFile:(NSString*)filePath;
 - (NSString *)hashExecutable;
@@ -54,6 +53,8 @@ static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%
 @synthesize userInfo = _userInfo;
 
 const int kNonceRandomStringLength = 74;
+
+static NSString* s_boundary = @"---------------------------14737809831466499882746641449";
 
 #pragma mark - Fairplay
 
@@ -148,7 +149,7 @@ static BOOL is_encrypted () {
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params {
     _api = AppBladeWebClientAPI_ReportCrash;
 
-    // Change this to multipart form so we can upload params. Need to figure out HMAC for this.
+//    NSError* error = nil;
 //    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Retrieve UDID, used in URL.
@@ -161,9 +162,27 @@ static BOOL is_encrypted () {
     // Create the API request.
     NSMutableURLRequest* apiRequest = [self requestForURL:urlCrashReport];
     [apiRequest setHTTPMethod:@"POST"];       
-
+    [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:s_boundary] forHTTPHeaderField:@"Content-Type"];
+    
+    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"crash_report[file]\"; filename=\"\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
     NSData* data = [crashReport dataUsingEncoding:NSUTF8StringEncoding];
-    [apiRequest setHTTPBody:data];
+    
+    [body appendData:data];
+    
+//    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [body appendData:[@"Content-Disposition: form-data; name=\"crash_report[custom_keys]\"; filename=\"\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//    [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//    
+//    [body appendData:paramsData];
+    
+    [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    
+    [apiRequest setHTTPBody:body];
+    [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
 
     [self addSecurityToRequest:apiRequest];
 
@@ -178,8 +197,8 @@ static BOOL is_encrypted () {
     NSString* udid = [self udid];
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
     NSData* consoleContent = [NSData dataWithContentsOfFile:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:console]];
-    NSError* error = nil;
-    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+//    NSError* error = nil;
+//    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Build report URL.
     NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeProjectID], udid];
@@ -187,34 +206,35 @@ static BOOL is_encrypted () {
     
     // Create the API request.
     NSMutableURLRequest* apiRequest = [self requestForURL:reportURL];
-    NSString *boundary = @"---------------------------14737809831466499882746641449";
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-    [apiRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
+    [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:s_boundary] forHTTPHeaderField:@"Content-Type"];
+    [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [apiRequest setHTTPMethod:@"POST"]; 
     
-    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithString:@"Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
 
     [body appendData:[note dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithString:@"Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:consoleContent];
     
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"%@\"\r\n", screenshot] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithString:@"Content-Type: application/octet-stream\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"base64:%@\"\r\n", screenshot] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
 
-    [body appendData:[NSData dataWithContentsOfFile:screenshotPath]];
+    NSData* screenshotData = [[self encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
+    [body appendData:screenshotData];
     
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithString:@"Content-Disposition: form-data; name=\"feedback[params]\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:paramsData];
+//    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//    [body appendData:[@"Content-Disposition: form-data; name=\"feedback[custom_params]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//    [body appendData:paramsData];
     
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
 
     
     [apiRequest setHTTPBody:body];
+    [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
     
     [self addSecurityToRequest:apiRequest];
     
@@ -277,6 +297,11 @@ static BOOL is_encrypted () {
         [requestBodyRaw appendFormat:@"?%@", dataString];
     }
     
+    // Need to mirror the Rails side
+    if ([[request URL] query]) {
+        [requestBodyRaw appendFormat:@"?%@", [[request URL] query]];
+    }
+    
     NSString *requestBodyHash = [self SHA_Base64:requestBodyRaw];
     
     // Construct the nonce (salt). First part of the salt is the delta of the current time and the stored time the
@@ -285,7 +310,7 @@ static BOOL is_encrypted () {
     NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectIssuedTimestamp], randomString];
     
     // Set port number based on the scheme
-    NSString* port = [scheme isEqualToString:@"https"] ? @"443" : @"3000";
+    NSString* port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
     
     NSString* ext = [self udid];
 
@@ -302,6 +327,8 @@ static BOOL is_encrypted () {
     // Digest the normalized request body.
     NSString* mac = [self HMAC_SHA256_Base64:request_body with_key:[_delegate appBladeProjectSecret]];
     
+    NSLog(@"MAC: %@", mac);
+    NSLog(@"Hash: %@", requestBodyHash);
     NSMutableString *authHeader = [NSMutableString stringWithString:@"HMAC "];
     [authHeader appendFormat:@"id=\"%@\"", [_delegate appBladeProjectToken]];
     [authHeader appendFormat:@", nonce=\"%@\"", nonce];

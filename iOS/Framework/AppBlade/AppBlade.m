@@ -203,7 +203,7 @@ static AppBlade *s_sharedManager = nil;
     
     NSString* reportString = [PLCrashReportTextFormatter stringValueForCrashReport: report withTextFormat: PLCrashReportTextFormatiOS];
     AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [client reportCrash:reportString];
+    [client reportCrash:reportString withParams:self.appBladeParams];
 
 }
 
