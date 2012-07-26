@@ -28,6 +28,8 @@ public class KillSwitch {
 	private static final String PrefsKeyTTL = "AppBlade.KillSwitch.TTL";
 	private static final String PrefsKeyTTLUpdated = "AppBlade.KillSwitch.TTLUpdated";
 	
+	private static final String DefaultAccessRevokedMessage = "Your access have been revoked";
+	
 	private static int ttl = Integer.MIN_VALUE;
 	private static long ttlLastUpdated = Long.MIN_VALUE;
 	
@@ -60,6 +62,7 @@ public class KillSwitch {
 
 		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d", ttl, ttlLastUpdated));
 		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate? %b", shouldUpdate));
+		
 		return shouldUpdate;
 	}
 
@@ -145,6 +148,7 @@ public class KillSwitch {
 		}
 
 		private void handleResponse(HttpResponse response) {
+			
 			if(HttpUtils.isOK(response)) {
 				try {
 					String data = StringUtils.readStream(response.getEntity().getContent());
@@ -168,39 +172,61 @@ public class KillSwitch {
 			if(HttpUtils.isUnauthorized(response)) {
 				
 				// display modal dialog that finishes the activity
-				String message = null;
-				try {
-					String data = StringUtils.readStream(response.getEntity().getContent());
-					Log.d(AppBlade.LogTag, String.format("KillSwitch response unauthorized %s", data));
-					JSONObject json = new JSONObject(data);
-					message = json.getString("error");
-					Log.d(AppBlade.LogTag, json.toString());
-				}
-				catch (IOException ex) { }
-				catch (JSONException ex) { }
-				
-				if(StringUtils.isNullOrEmpty(message))
-					message = "Your access have been revoked";
-				
-				AlertDialog.Builder builder = new Builder(context);
-				builder.setMessage(message);
-				builder.setCancelable(false);
-				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						context.finish();
-					}
-				});
-				builder.setNegativeButton("Try Again", new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						RemoteAuthHelper.clear(context);
-						KillSwitch.clear(context);
-						AuthHelper.checkAuthorization(context, false);
-					}
-				});
-				builder.show();
+				String message = getKillSwitchUnauthorizedMessage(response);
+				displayUnauthorizedDialog(message);
 			}
+		}
+
+		/**
+		 * Attempts to pull a friendly message out of a web response
+		 * and optionally falls back to a default
+		 * @param response
+		 * @return
+		 */
+		public static String getKillSwitchUnauthorizedMessage(HttpResponse response) {
+			String message = null;
+			try {
+				String data = StringUtils.readStream(response.getEntity().getContent());
+				Log.d(AppBlade.LogTag, String.format("KillSwitch response unauthorized %s", data));
+				JSONObject json = new JSONObject(data);
+				message = json.getString("error");
+				Log.d(AppBlade.LogTag, json.toString());
+			}
+			catch (IOException ex) { }
+			catch (JSONException ex) { }
+			
+			if(StringUtils.isNullOrEmpty(message))
+				message = DefaultAccessRevokedMessage;
+			
+			return message;
+		}
+
+		private void displayUnauthorizedDialog(final String message) {
+			
+			context.runOnUiThread(new Runnable() {
+				
+				public void run() {
+					
+					AlertDialog.Builder builder = new Builder(context);
+					builder.setMessage(message);
+					builder.setCancelable(false);
+					builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							context.finish();
+						}
+					});
+					builder.setNegativeButton("Try Again", new DialogInterface.OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							RemoteAuthHelper.clear(context);
+							KillSwitch.clear(context);
+							AuthHelper.checkAuthorization(context, false);
+						}
+					});
+					builder.show();
+				}
+			});
 		}
 
 		private void save(int timeToLive) {
