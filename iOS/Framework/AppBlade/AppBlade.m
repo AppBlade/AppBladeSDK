@@ -30,6 +30,7 @@ static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
 static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
+static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
@@ -44,7 +45,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 @property (nonatomic, retain, readwrite) NSDictionary* appBladeParams;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
-- (void)handleCrashReport;
+- (void)handleCrashReportWithParams:(NSDictionary*)params;
 - (void)handleFeedback;
 
 - (void)showFeedbackDialogue;
@@ -85,6 +86,16 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 @synthesize feedbackView = _feedbackView;
 
 static AppBlade *s_sharedManager = nil;
+
+/* A custom post-crash callback */
+void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
+    
+    // Save out our custom fields
+    NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
+    
+    [[[AppBlade sharedManager] appBladeParams] writeToFile:paramsPath atomically:YES];
+    
+}
 
 #pragma mark - Lifecycle
 
@@ -165,13 +176,32 @@ static AppBlade *s_sharedManager = nil;
 {
     NSLog(@"Catch and report crashes");
     [self validateProjectConfiguration];
+    
+    NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
+    NSDictionary* crashedFields = nil;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
+        // Do not put in our persistent params so we do not overwrite
+        crashedFields = [NSDictionary dictionaryWithContentsOfFile:paramsPath];
+        
+        // After reading out values, remove file.
+        [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
+    }
+    
 
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     NSError *error;
     
     // Check if we previously crashed
     if ([crashReporter hasPendingCrashReport])
-        [self handleCrashReport];
+        [self handleCrashReportWithParams:crashedFields];
+    
+    PLCrashReporterCallbacks cb = {
+        .version = 0,
+        .context = (void *) 0xABABABAB,
+        .handleSignal = post_crash_callback
+    };
+    
+    [crashReporter setCrashCallbacks: &cb];
     
     // Enable the Crash Reporter
     if (![crashReporter enableCrashReporterAndReturnError: &error])
@@ -179,7 +209,7 @@ static AppBlade *s_sharedManager = nil;
  
 }
 
-- (void)handleCrashReport
+- (void)handleCrashReportWithParams:(NSDictionary *)params
 {
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     NSData *crashData;
@@ -203,7 +233,7 @@ static AppBlade *s_sharedManager = nil;
     
     NSString* reportString = [PLCrashReportTextFormatter stringValueForCrashReport: report withTextFormat: PLCrashReportTextFormatiOS];
     AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [client reportCrash:reportString withParams:self.appBladeParams];
+    [client reportCrash:reportString withParams:params];
 
 }
 
@@ -513,6 +543,8 @@ static AppBlade *s_sharedManager = nil;
     else {
         NSLog(@"AppBlade - Attempted to update params with nil key and nil value");
     }
+    
+    self.appBladeParams = mutableParams;
 }
 
 - (void)clearAllCustomParams

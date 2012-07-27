@@ -149,8 +149,8 @@ static BOOL is_encrypted () {
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params {
     _api = AppBladeWebClientAPI_ReportCrash;
 
-//    NSError* error = nil;
-//    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    NSError* error = nil;
+    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Retrieve UDID, used in URL.
     NSString* udid = [self udid];
@@ -172,11 +172,10 @@ static BOOL is_encrypted () {
     
     [body appendData:data];
     
-//    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-//    [body appendData:[@"Content-Disposition: form-data; name=\"crash_report[custom_keys]\"; filename=\"\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-//    [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-//    
-//    [body appendData:paramsData];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:paramsData];
     
     [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -197,8 +196,8 @@ static BOOL is_encrypted () {
     NSString* udid = [self udid];
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
     NSData* consoleContent = [NSData dataWithContentsOfFile:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:console]];
-//    NSError* error = nil;
-//    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    NSError* error = nil;
+    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Build report URL.
     NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeProjectID], udid];
@@ -226,9 +225,9 @@ static BOOL is_encrypted () {
     NSData* screenshotData = [[self encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
     [body appendData:screenshotData];
     
-//    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-//    [body appendData:[@"Content-Disposition: form-data; name=\"feedback[custom_params]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-//    [body appendData:paramsData];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:paramsData];
     
     [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
 
