@@ -12,6 +12,8 @@ import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -86,8 +88,10 @@ public class FeedbackHelper {
 		ContentBody consoleBody = new StringBody(data.Console);
 		entity.addPart("feedback[console]", consoleBody);
 		
+		JSONObject customParams = new JSONObject(AppBlade.customFields);
+		
 		// from: http://stackoverflow.com/questions/5474916/multipartentity-not-creating-good-request
-		ContentBody fieldsBody = new StringBody(AppBlade.customFields.toString(),"application/json",Charset.forName("UTF-8"));
+		ContentBody fieldsBody = new StringBody(customParams.toString(),"application/json",Charset.forName("UTF-8"));
 		entity.addPart("custom_params", fieldsBody);
 		
 		if (data.Screenshot != null) {
