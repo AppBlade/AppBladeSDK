@@ -17,8 +17,8 @@ class WebServiceHelper {
 	}
 	
 	static final int NonceRandomStringLength = 74;
-	static final String ServiceScheme = "https://";
-	static final String ServiceHost = "appblade.com";
+	static final String ServiceScheme = "http://";
+	static final String ServiceHost = "10.0.2.2:3000";
 	
 	protected static final String ServicePathCrashReportsFormat = "/api/2/projects/%s/devices/%s/crash_reports";
 	protected static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
@@ -44,7 +44,7 @@ class WebServiceHelper {
 		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
 		
 		String requestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
-				nonce, methodName, requestBodyRaw, ServiceHost, "443", requestBodyHash, appInfo.Ext);
+				nonce, methodName, requestBodyRaw, "10.0.2.2", "3000", requestBodyHash, appInfo.Ext);
 		String mac = StringUtils.hmacSha256(appInfo.Secret, requestBody).trim();
 		
 		byte[] normalizedRequestBodySha256 = StringUtils.sha256(requestBody);

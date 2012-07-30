@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
+import java.util.Hashtable;
 import java.util.Random;
 
 import org.apache.http.HttpResponse;
@@ -38,6 +39,7 @@ public class AppBlade {
 	public static String LogTag = "AppBlade";
 
 	protected static AppInfo appInfo;
+	protected static Hashtable customFields;
 
 	static boolean canWriteToDisk = false;
 	static String rootDir = null;
@@ -123,6 +125,20 @@ public class AppBlade {
 				new PostFeedbackTask(context).execute(data);
 			}
 		});
+	}
+	
+	/**
+	 * Adds a new key/value pair for our custom fields
+	 * @param key
+	 * @param value
+	 */
+	
+	public static void setCustomField(String key, String value) {
+		if (customFields == null) {
+			customFields = new Hashtable();
+		}
+		
+		customFields.put(key, value);
 	}
 
 	protected static boolean postFeedback(FeedbackData data) {
