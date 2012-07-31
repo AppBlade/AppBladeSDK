@@ -13,6 +13,8 @@
 #import <dlfcn.h>
 #import <mach-o/dyld.h>
 #import <TargetConditionals.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 #if STAGING
 static NSString *approvalURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@.plist";
@@ -27,6 +29,9 @@ static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%
 @interface AppBladeWebClient ()
 
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
+
+- (NSString*)osVersionBuild;
+- (NSString*)platform;
 
 // Request helper methods.
 - (NSString *)udid;
@@ -106,6 +111,37 @@ static BOOL is_encrypted () {
     
     /* Encryption info not found */
     return NO;
+}
+
+// From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
+- (NSString *)osVersionBuild {
+    int mib[2] = {CTL_KERN, KERN_OSVERSION};
+    u_int namelen = sizeof(mib) / sizeof(mib[0]);
+    size_t bufferSize = 0;
+    
+    NSString *osBuildVersion = nil;
+    
+    // Get the size for the buffer
+    sysctl(mib, namelen, NULL, &bufferSize, NULL, 0);
+    
+    u_char buildBuffer[bufferSize];
+    int result = sysctl(mib, namelen, buildBuffer, &bufferSize, NULL, 0);
+    
+    if (result >= 0) {
+        osBuildVersion = [[[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding] autorelease];
+    }
+    
+    return osBuildVersion;
+}
+
+- (NSString *) platform{
+	size_t size;
+	sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char *machine = malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString *platform = [NSString stringWithCString:machine];
+    free(machine);
+    return platform;
 }
 
 #pragma mark - Lifecycle
@@ -262,8 +298,8 @@ static BOOL is_encrypted () {
     // set up various headers on the request.
     [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"bundle_identifier"];
     [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
-    [apiRequest addValue:[[UIDevice currentDevice] systemVersion] forHTTPHeaderField:@"os_version"];
-    [apiRequest addValue:[[UIDevice currentDevice] model] forHTTPHeaderField:@"device_type"];
+    [apiRequest addValue:[self osVersionBuild] forHTTPHeaderField:@"IOS_RELEASE"];
+    [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
     
     NSString* bundleHash = [self hashExecutable];
