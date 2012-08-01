@@ -15,6 +15,7 @@
 #import "FeedbackDialogue.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
+#import "FBEncryptorAES.h"
 
 static NSString* const s_sdkVersion                     = @"0.3";
 
@@ -30,7 +31,8 @@ static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
 static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
-static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
+static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.txt";
+static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8deARKsWp";
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
@@ -62,7 +64,6 @@ static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields
 - (void)showFeedbackDialogue;
 - (void)showFeedbackDialogueWithScreenshot:(BOOL)takeScreenshot;
 
-//- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 
 - (void)displayFeedbackDialogue;
 
@@ -93,7 +94,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     // Save out our custom fields
     NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
     
-    [[[AppBlade sharedManager] appBladeParams] writeToFile:paramsPath atomically:YES];
+    NSData* paramsData = [NSKeyedArchiver archivedDataWithRootObject:[[AppBlade sharedManager] appBladeParams]];
+    NSData* encryptedData = [FBEncryptorAES encryptData:paramsData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    
+    [encryptedData writeToFile:paramsPath atomically:YES];
     
 }
 
@@ -144,6 +148,16 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     } else if (!self.appBladeProjectIssuedTimestamp) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
     }
+//    
+//    NSString* testString = @"ABCDEFGHIJKLMNOP";
+//    NSString* key = @"test";
+//    NSData* stringData = [testString dataUsingEncoding:NSUTF8StringEncoding];
+//    NSData* encryptedData = [FBEncryptorAES encryptData:stringData key:[key dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+//    NSData* unencryptedData = [FBEncryptorAES decryptData:encryptedData key:[key dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+//    NSString* output = [[NSString alloc] initWithData:unencryptedData encoding:NSUTF8StringEncoding];
+//    
+//    NSLog(@"Input string: %@\nOutput string: %@", testString, output);
+    
 }
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
@@ -178,22 +192,27 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self validateProjectConfiguration];
     
     NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
-    NSDictionary* crashedFields = nil;
-    if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
-        // Do not put in our persistent params so we do not overwrite
-        crashedFields = [NSDictionary dictionaryWithContentsOfFile:paramsPath];
-        
-        // After reading out values, remove file.
-        [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
-    }
     
 
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     NSError *error;
     
     // Check if we previously crashed
-    if ([crashReporter hasPendingCrashReport])
+    if ([crashReporter hasPendingCrashReport]) {
+        
+        NSDictionary* crashedFields = nil;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
+            NSData* encryptedData = [NSData dataWithContentsOfFile:paramsPath];
+            NSData* paramsData = [FBEncryptorAES decryptData:encryptedData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+            // Do not put in our persistent params so we do not overwrite
+            crashedFields = [NSKeyedUnarchiver unarchiveObjectWithData:paramsData];
+            
+            // After reading out values, remove file.
+            [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
+        }
+        
         [self handleCrashReportWithParams:crashedFields];
+    }
     
     PLCrashReporterCallbacks cb = {
         .version = 0,
