@@ -38,12 +38,13 @@ public class KillSwitch {
 	
 	private static boolean inProgress = false;
 	
-	public static synchronized void authorize(Activity activity) {
+	public static synchronized void authorize(Activity activity, boolean useOldAPI) {
 		
 		reloadSharedPrefs(activity);
 		
 		if(shouldUpdate() && !inProgress) {
 			KillSwitchTask task = new KillSwitchTask(activity);
+			task.useOldAPI = useOldAPI;
 			task.execute();
 		}
 	}
@@ -83,11 +84,18 @@ public class KillSwitch {
 		ttlLastUpdated = Long.MIN_VALUE;
 	}
 
-	public static synchronized HttpResponse getKillSwitchResponse() {
+	public static synchronized HttpResponse getKillSwitchResponse(final boolean useOldAPI) {
 		HttpResponse response = null;
 		HttpClient client = HttpClientProvider.newInstance("Android");
-
-		String urlPath = String.format(WebServiceHelper.ServicePathKillSwitchFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+		String urlPath = null;
+		
+		if (!useOldAPI) {
+			urlPath = String.format(WebServiceHelper.ServicePathKillSwitchFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+		}
+		else {
+			urlPath = String.format(WebServiceHelper.ServicePathRegisterDevice, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+		}
+		
 		String url = WebServiceHelper.getUrl(urlPath);
 		String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, null, HttpMethod.GET);
 		
@@ -114,6 +122,8 @@ public class KillSwitch {
 
 		Activity context;
 		ProgressDialog progress;
+		
+		public boolean useOldAPI;
 
 		public KillSwitchTask(Activity context) {
 			this.context = context;
@@ -127,7 +137,7 @@ public class KillSwitch {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			HttpResponse response = getKillSwitchResponse();
+			HttpResponse response = getKillSwitchResponse(this.useOldAPI);
 
 			Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
 			handleResponse(response);

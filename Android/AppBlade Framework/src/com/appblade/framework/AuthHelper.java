@@ -1,10 +1,15 @@
 package com.appblade.framework;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.os.Build;
 
 public class AuthHelper {
 	
@@ -42,18 +47,44 @@ public class AuthHelper {
 		}
 		
 	}
+	
+	public static void checkRegistration(final Activity activity)
+	{
+		String accessToken = RemoteAuthHelper.getAccessToken(activity);
+		if (accessToken == null || accessToken.length() == 0)
+		{
+			String tempToken = AuthHelper.MD5_Hash(Build.ID);
+			RemoteAuthHelper.store(activity, tempToken);
+		}
+		
+		KillSwitch.authorize(activity, true);
+	}
 
 	private static void authorize(Activity activity) {
 		
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
 		
 		if(!StringUtils.isNullOrEmpty(accessToken)) {
-			KillSwitch.authorize(activity);
+			KillSwitch.authorize(activity, false);
 		}
 		else {
 			Intent intent = new Intent(activity, RemoteAuthorizeActivity.class);
 			activity.startActivity(intent);
 		}
+	}
+	
+	public static String MD5_Hash(String s) {
+        MessageDigest m = null;
+
+        try {
+                m = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+        }
+
+        m.update(s.getBytes(),0,s.length());
+        String hash = new BigInteger(1, m.digest()).toString(16);
+        return hash;
 	}
 
 }
