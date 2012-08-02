@@ -37,6 +37,7 @@ import com.appblade.framework.WebServiceHelper.HttpMethod;
 public class AppBlade {
 
 	public static String LogTag = "AppBlade";
+//	public static double SDKVersion = 0.3;
 
 	protected static AppInfo appInfo;
 	protected static Hashtable customFields;

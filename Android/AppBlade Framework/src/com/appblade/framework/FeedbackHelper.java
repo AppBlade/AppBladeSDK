@@ -88,18 +88,21 @@ public class FeedbackHelper {
 		ContentBody consoleBody = new StringBody(data.Console);
 		entity.addPart("feedback[console]", consoleBody);
 		
-		JSONObject customParams = new JSONObject(AppBlade.customFields);
-		
-		// from: http://stackoverflow.com/questions/5474916/multipartentity-not-creating-good-request
-		ContentBody fieldsBody = new StringBody(customParams.toString(),"application/json",Charset.forName("UTF-8"));
-		entity.addPart("custom_params", fieldsBody);
+//		JSONObject customParams = new JSONObject(AppBlade.customFields);
+//		
+//		// from: http://stackoverflow.com/questions/5474916/multipartentity-not-creating-good-request
+//		ContentBody fieldsBody = new StringBody(customParams.toString(),"application/json",Charset.forName("UTF-8"));
+//		entity.addPart("custom_params", fieldsBody);
 		
 		if (data.Screenshot != null) {
 			if (StringUtils.isNullOrEmpty(data.ScreenshotName))
 				data.ScreenshotName = "FeedbackScreenshot";
 			
 			byte[] screenshotBytes = getBytesFromBitmap(data.Screenshot);
-			ContentBody screenshotBody = new ByteArrayBody(screenshotBytes, "application/octet-stream");
+			
+			String encodedImage = Base64.encodeToString(screenshotBytes, Base64.DEFAULT);
+			String fileName = String.format("base64:%s", data.ScreenshotName);
+			ContentBody screenshotBody = new ByteArrayBody(encodedImage.getBytes(), "application/octet-stream", fileName);
 			entity.addPart("feedback[screenshot]", screenshotBody);
 		}
 		} catch (IOException e) {
