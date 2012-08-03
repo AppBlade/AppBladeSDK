@@ -15,7 +15,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.ByteArrayEntity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -134,31 +134,16 @@ public class AppBlade {
 			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, appInfo.AppId, appInfo.Ext);
 			String url = WebServiceHelper.getUrl(urlPath);
 
-			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, BOUNDARY);
+			byte[] content = FeedbackHelper.getPostFeedbackBody(data, BOUNDARY);
+			
+			ByteArrayEntity entity = new ByteArrayEntity(content);
 
 			HttpPost request = new HttpPost();
-			request.setEntity(content);
+			request.setEntity(entity);
 			
-			final CircularByteBuffer contentCBB = new CircularByteBuffer(16384);
-			new Thread(new Runnable() {
-				public void run() {
-					try {
-						content.writeTo(contentCBB.getOutputStream());
-						contentCBB.getOutputStream().close();
-					} catch (IOException e) {
-						Log.d(LogTag, e.getMessage());
-					}
-				}
-			}).start();
+			String contentBody = new String(content, "UTF-8");
 			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(contentCBB.getInputStream()));
-			StringBuilder contentBuilder = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-			    contentBuilder.append(line);
-			}
-			
-			String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, contentBuilder.toString(), HttpMethod.POST);
+			String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, contentBody, HttpMethod.POST);
 
 			Log.d(LogTag, urlPath);
 			Log.d(LogTag, url);
@@ -331,6 +316,7 @@ public class AppBlade {
 				HttpPost request = new HttpPost();
 				request.setURI(new URI(url));
 				request.addHeader("Authorization", authHeader);
+				request.addHeader("Content-Type", "text/xml");
 				WebServiceHelper.addCommonHeaders(request);
 
 				if(!StringUtils.isNullOrEmpty(content))

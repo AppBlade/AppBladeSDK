@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.http.entity.ByteArrayEntity;
+
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
@@ -74,31 +76,54 @@ public class FeedbackHelper {
 		dialog.show();
 	}
 
-	public static MultipartEntity getPostFeedbackBody(FeedbackData data, String boundary) {
-		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
+	public static byte[] getPostFeedbackBody(FeedbackData data, String boundary) {
 		
-		try
-		{
-		ContentBody notesBody = new StringBody(data.Notes);
-		entity.addPart("feedback[notes]", notesBody);
-
-		ContentBody consoleBody = new StringBody(data.Console);
-		entity.addPart("feedback[console]", consoleBody);
+		
+		byte[] contentByte = String.format("--%s\r\n", boundary).getBytes();
+		
+		byte[] notesHeaderByte = String.format("Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n").getBytes();
+		contentByte = FeedbackHelper.concatenateByteArrays(contentByte, notesHeaderByte);
+		
+		byte[] noteByte = data.Notes.getBytes();
+		contentByte = FeedbackHelper.concatenateByteArrays(contentByte, noteByte);
+		
+		byte[] boundaryByte = String.format("\r\n--%s\r\n", boundary).getBytes();
+		contentByte = FeedbackHelper.concatenateByteArrays(contentByte, boundaryByte);
+		
+		byte[] consoleHeaderByte = String.format("Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n").getBytes();
+		contentByte = FeedbackHelper.concatenateByteArrays(contentByte, consoleHeaderByte);
+		byte[] consoleByte = data.Console.getBytes();
+		contentByte = FeedbackHelper.concatenateByteArrays(contentByte, consoleByte);
+		
 		
 		if (data.Screenshot != null) {
+			
+			contentByte = FeedbackHelper.concatenateByteArrays(contentByte, boundaryByte);
+			
 			if (StringUtils.isNullOrEmpty(data.ScreenshotName))
 				data.ScreenshotName = "FeedbackScreenshot";
 			
-			byte[] screenshotBytes = getBytesFromBitmap(data.Screenshot);
-			ContentBody screenshotBody = new ByteArrayBody(screenshotBytes, "application/octet-stream");
-			entity.addPart("feedback[screenshot]", screenshotBody);
-		}
-		} catch (IOException e) {
-			Log.d(AppBlade.LogTag, e.toString());
+			byte[] screenshotHeaderByte = String.format("Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"base64:%s\"\r\nContent-Type: application/octet-stream\r\n\r\n", data.ScreenshotName).getBytes();
+			contentByte = FeedbackHelper.concatenateByteArrays(contentByte, screenshotHeaderByte);
+			byte[] screenshotRawBytes = getBytesFromBitmap(data.Screenshot);
+			String encodedImage = Base64.encodeToString(screenshotRawBytes, Base64.DEFAULT);
+			
+			byte[] screenshotByte = encodedImage.getBytes();
+			contentByte = FeedbackHelper.concatenateByteArrays(contentByte, screenshotByte);
 		}
 		
-		return entity;
+		byte[] boundaryEndByte = String.format("\r\n--%s--", boundary).getBytes();
+		contentByte = FeedbackHelper.concatenateByteArrays(contentByte, boundaryEndByte);
+		
+		return contentByte;
 	}
+	
+	public static byte[] concatenateByteArrays(byte[] a, byte[] b) {
+	    byte[] result = new byte[a.length + b.length]; 
+	    System.arraycopy(a, 0, result, 0, a.length); 
+	    System.arraycopy(b, 0, result, a.length, b.length); 
+	    return result;
+	} 
 
 	public static byte[] getBytesFromBitmap(Bitmap bitmap) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
