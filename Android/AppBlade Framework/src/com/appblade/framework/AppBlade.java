@@ -1,12 +1,8 @@
 package com.appblade.framework;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
 import java.util.Random;
@@ -14,7 +10,6 @@ import java.util.Random;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.ByteArrayEntity;
 
 import android.Manifest;
@@ -298,48 +293,45 @@ public class AppBlade {
 	private static synchronized void sendExceptionData(File f) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance("Android");
-
-		try
-		{
-			FileInputStream fis = new FileInputStream(f);
-			String content = StringUtils.readStream(fis);
-			if(!StringUtils.isNullOrEmpty(content))
+		
+		try {
+			byte[] content = ExceptionUtils.buildExceptionBody(f, BOUNDARY);
+	
+			ByteArrayEntity entity = new ByteArrayEntity(content);
+	
+			HttpPost request = new HttpPost();
+			request.setEntity(entity);
+			
+			String contentBody = new String(content, "UTF-8");
+			
+			String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat, appInfo.AppId, appInfo.Ext);
+			String url = WebServiceHelper.getUrl(urlPath);
+			String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, contentBody, HttpMethod.POST);
+	
+			Log.d(LogTag, urlPath);
+			Log.d(LogTag, url);
+			Log.d(LogTag, authHeader);
+	
+			request.setURI(new URI(url));
+			request.addHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
+			request.addHeader("Authorization", authHeader);
+			WebServiceHelper.addCommonHeaders(request);
+			
+			HttpResponse response = null;
+			response = client.execute(request);
+			if(response != null && response.getStatusLine() != null)
 			{
-				String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat, appInfo.AppId, appInfo.Ext);
-				String url = WebServiceHelper.getUrl(urlPath);
-				String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, content, HttpMethod.POST);
-
-				Log.d(LogTag, urlPath);
-				Log.d(LogTag, url);
-				Log.d(LogTag, authHeader);
-
-				HttpPost request = new HttpPost();
-				request.setURI(new URI(url));
-				request.addHeader("Authorization", authHeader);
-				request.addHeader("Content-Type", "text/xml");
-				WebServiceHelper.addCommonHeaders(request);
-
-				if(!StringUtils.isNullOrEmpty(content))
-					request.setEntity(new StringEntity(content));
-
-				HttpResponse response = null;
-				response = client.execute(request);
-				if(response != null && response.getStatusLine() != null)
-				{
-					int statusCode = response.getStatusLine().getStatusCode();
-					int statusCategory = statusCode / 100;
-
-					if(statusCategory == 2)
-						success = true;
-				}
+				int statusCode = response.getStatusLine().getStatusCode();
+				int statusCategory = statusCode / 100;
+	
+				if(statusCategory == 2)
+					success = true;
 			}
 		}
 		catch(Exception ex)
 		{
 			Log.d(LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
-
-		IOUtils.safeClose(client);
 
 		// delete the file
 		if(success && f.exists())
