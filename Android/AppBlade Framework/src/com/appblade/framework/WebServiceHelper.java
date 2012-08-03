@@ -41,7 +41,7 @@ class WebServiceHelper {
 		String nonce = String.format("%d:%s", seconds, getRandomNonceString(WebServiceHelper.NonceRandomStringLength));
 		
 		String methodName = method.name().trim();
-		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
+//		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
 		
 		String requestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
 				nonce, methodName, requestBodyRaw, "10.0.2.2", "3000", requestBodyHash, appInfo.Ext);
@@ -50,11 +50,11 @@ class WebServiceHelper {
 		byte[] normalizedRequestBodySha256 = StringUtils.sha256(requestBody);
 		String normalizedRequestBodyHash = Base64.encodeToString(normalizedRequestBodySha256, 0);
 
-		Log.d(AppBlade.LogTag, String.format("requestBody: %s", requestBody));
-		Log.d(AppBlade.LogTag, String.format("requestBody length: %d", requestBody.length()));
-		Log.d(AppBlade.LogTag, String.format("requestBody sha256+base64: %s", normalizedRequestBodyHash));
-		Log.d(AppBlade.LogTag, String.format("requestBody sha256+base64 length: %d", normalizedRequestBodyHash.length()));
-		Log.d(AppBlade.LogTag, String.format("mac: %s", mac));
+//		Log.d(AppBlade.LogTag, String.format("requestBody: %s", requestBody));
+//		Log.d(AppBlade.LogTag, String.format("requestBody length: %d", requestBody.length()));
+//		Log.d(AppBlade.LogTag, String.format("requestBody sha256+base64: %s", normalizedRequestBodyHash));
+//		Log.d(AppBlade.LogTag, String.format("requestBody sha256+base64 length: %d", normalizedRequestBodyHash.length()));
+//		Log.d(AppBlade.LogTag, String.format("mac: %s", mac));
 		
 		StringBuilder builder = new StringBuilder();
 		builder.append("HMAC ");
@@ -98,5 +98,12 @@ class WebServiceHelper {
 		request.addHeader("device_fingerprint", Build.FINGERPRINT);
 //		request.addHeader("sdk_version", String.format("%d",AppBlade.SDKVersion));
 	}
+	
+	public static byte[] concatenateByteArrays(byte[] a, byte[] b) {
+	    byte[] result = new byte[a.length + b.length]; 
+	    System.arraycopy(a, 0, result, 0, a.length); 
+	    System.arraycopy(b, 0, result, a.length, b.length); 
+	    return result;
+	} 
 
 }

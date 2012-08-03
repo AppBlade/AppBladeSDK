@@ -4,13 +4,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.StringBody;
 
 import org.json.JSONObject;
 
@@ -19,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.util.Log;
 import android.view.Gravity;
 import android.widget.EditText;
 
@@ -77,39 +69,53 @@ public class FeedbackHelper {
 		dialog.show();
 	}
 
-	public static MultipartEntity getPostFeedbackBody(FeedbackData data, String boundary) {
-		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
+	public static byte[] getPostFeedbackBody(FeedbackData data, String boundary) {
 		
-		try
-		{
-		ContentBody notesBody = new StringBody(data.Notes);
-		entity.addPart("feedback[notes]", notesBody);
-
-		ContentBody consoleBody = new StringBody(data.Console);
-		entity.addPart("feedback[console]", consoleBody);
 		
-//		JSONObject customParams = new JSONObject(AppBlade.customFields);
-//		
-//		// from: http://stackoverflow.com/questions/5474916/multipartentity-not-creating-good-request
-//		ContentBody fieldsBody = new StringBody(customParams.toString(),"application/json",Charset.forName("UTF-8"));
-//		entity.addPart("custom_params", fieldsBody);
+		byte[] contentByte = String.format("--%s\r\n", boundary).getBytes();
+		
+		byte[] notesHeaderByte = String.format("Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n").getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, notesHeaderByte);
+		
+		byte[] noteByte = data.Notes.getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, noteByte);
+		
+		byte[] boundaryByte = String.format("\r\n--%s\r\n", boundary).getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, boundaryByte);
+		
+		byte[] consoleHeaderByte = String.format("Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n").getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, consoleHeaderByte);
+		byte[] consoleByte = data.Console.getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, consoleByte);
+		
+		byte[] paramsHeaderByte = String.format("Content-Disposition: form-data; name=\"custom_params\"\r\nContent-Type: application/json\r\n\r\n").getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsHeaderByte);
+		JSONObject customParams = new JSONObject(AppBlade.customFields);
+		
+		byte[] paramsByte = customParams.toString().getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsByte);
+		
 		
 		if (data.Screenshot != null) {
+			
+			contentByte = WebServiceHelper.concatenateByteArrays(contentByte, boundaryByte);
+			
 			if (StringUtils.isNullOrEmpty(data.ScreenshotName))
 				data.ScreenshotName = "FeedbackScreenshot";
 			
-			byte[] screenshotBytes = getBytesFromBitmap(data.Screenshot);
+			byte[] screenshotHeaderByte = String.format("Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"base64:%s\"\r\nContent-Type: application/octet-stream\r\n\r\n", data.ScreenshotName).getBytes();
+			contentByte = WebServiceHelper.concatenateByteArrays(contentByte, screenshotHeaderByte);
 			
-			String encodedImage = Base64.encodeToString(screenshotBytes, Base64.DEFAULT);
-			String fileName = String.format("base64:%s", data.ScreenshotName);
-			ContentBody screenshotBody = new ByteArrayBody(encodedImage.getBytes(), "application/octet-stream", fileName);
-			entity.addPart("feedback[screenshot]", screenshotBody);
-		}
-		} catch (IOException e) {
-			Log.d(AppBlade.LogTag, e.toString());
+			byte[] screenshotRawBytes = getBytesFromBitmap(data.Screenshot);
+			String encodedImage = Base64.encodeToString(screenshotRawBytes, Base64.NO_WRAP);
+			byte[] screenshotByte = encodedImage.getBytes();
+			contentByte = WebServiceHelper.concatenateByteArrays(contentByte, screenshotByte);
 		}
 		
-		return entity;
+		byte[] boundaryEndByte = String.format("\r\n--%s--", boundary).getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, boundaryEndByte);
+		
+		return contentByte;
 	}
 
 	public static byte[] getBytesFromBitmap(Bitmap bitmap) {

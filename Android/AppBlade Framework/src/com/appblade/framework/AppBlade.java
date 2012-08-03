@@ -1,12 +1,8 @@
 package com.appblade.framework;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
 import java.util.Hashtable;
@@ -15,8 +11,7 @@ import java.util.Random;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.ByteArrayEntity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,10 +32,9 @@ import com.appblade.framework.WebServiceHelper.HttpMethod;
 public class AppBlade {
 
 	public static String LogTag = "AppBlade";
-//	public static double SDKVersion = 0.3;
 
 	protected static AppInfo appInfo;
-	protected static Hashtable customFields;
+	protected static Hashtable<String, String> customFields;
 
 	static boolean canWriteToDisk = false;
 	static String rootDir = null;
@@ -48,6 +42,20 @@ public class AppBlade {
 	static final String AppBladeExceptionsDirectory = "app_blade_exceptions";
 
 	private static final String BOUNDARY = "---------------------------14737809831466499882746641449";
+	
+	/**
+	 * Adds a new key/value pair for our custom fields
+	 * @param key
+	 * @param value
+	 */
+
+	public static void setCustomField(String key, String value) {
+		if (customFields == null) {
+			customFields = new Hashtable<String, String>();
+		}
+
+		customFields.put(key, value);
+	}
 
 	/**
 	 * Gets feedback from the user via a dialog and posts the feedback along with log data to AppBlade.
@@ -127,20 +135,6 @@ public class AppBlade {
 			}
 		});
 	}
-	
-	/**
-	 * Adds a new key/value pair for our custom fields
-	 * @param key
-	 * @param value
-	 */
-	
-	public static void setCustomField(String key, String value) {
-		if (customFields == null) {
-			customFields = new Hashtable();
-		}
-		
-		customFields.put(key, value);
-	}
 
 	protected static boolean postFeedback(FeedbackData data) {
 		boolean success = false;
@@ -151,31 +145,16 @@ public class AppBlade {
 			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, appInfo.AppId, appInfo.Ext);
 			String url = WebServiceHelper.getUrl(urlPath);
 
-			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, BOUNDARY);
+			byte[] content = FeedbackHelper.getPostFeedbackBody(data, BOUNDARY);
+			
+			ByteArrayEntity entity = new ByteArrayEntity(content);
 
 			HttpPost request = new HttpPost();
-			request.setEntity(content);
+			request.setEntity(entity);
 			
-			final CircularByteBuffer contentCBB = new CircularByteBuffer(16384);
-			new Thread(new Runnable() {
-				public void run() {
-					try {
-						content.writeTo(contentCBB.getOutputStream());
-						contentCBB.getOutputStream().close();
-					} catch (IOException e) {
-						Log.d(LogTag, e.getMessage());
-					}
-				}
-			}).start();
+			String contentBody = new String(content, "UTF-8");
 			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(contentCBB.getInputStream()));
-			StringBuilder contentBuilder = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-			    contentBuilder.append(line);
-			}
-			
-			String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, contentBuilder.toString(), HttpMethod.POST);
+			String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, contentBody, HttpMethod.POST);
 
 			Log.d(LogTag, urlPath);
 			Log.d(LogTag, url);
@@ -330,47 +309,45 @@ public class AppBlade {
 	private static synchronized void sendExceptionData(File f) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance("Android");
-
-		try
-		{
-			FileInputStream fis = new FileInputStream(f);
-			String content = StringUtils.readStream(fis);
-			if(!StringUtils.isNullOrEmpty(content))
+		
+		try {
+			byte[] content = ExceptionUtils.buildExceptionBody(f, BOUNDARY);
+	
+			ByteArrayEntity entity = new ByteArrayEntity(content);
+	
+			HttpPost request = new HttpPost();
+			request.setEntity(entity);
+			
+			String contentBody = new String(content, "UTF-8");
+			
+			String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat, appInfo.AppId, appInfo.Ext);
+			String url = WebServiceHelper.getUrl(urlPath);
+			String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, contentBody, HttpMethod.POST);
+	
+			Log.d(LogTag, urlPath);
+			Log.d(LogTag, url);
+			Log.d(LogTag, authHeader);
+	
+			request.setURI(new URI(url));
+			request.addHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
+			request.addHeader("Authorization", authHeader);
+			WebServiceHelper.addCommonHeaders(request);
+			
+			HttpResponse response = null;
+			response = client.execute(request);
+			if(response != null && response.getStatusLine() != null)
 			{
-				String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat, appInfo.AppId, appInfo.Ext);
-				String url = WebServiceHelper.getUrl(urlPath);
-				String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, content, HttpMethod.POST);
-
-				Log.d(LogTag, urlPath);
-				Log.d(LogTag, url);
-				Log.d(LogTag, authHeader);
-
-				HttpPost request = new HttpPost();
-				request.setURI(new URI(url));
-				request.addHeader("Authorization", authHeader);
-				WebServiceHelper.addCommonHeaders(request);
-
-				if(!StringUtils.isNullOrEmpty(content))
-					request.setEntity(new StringEntity(content));
-
-				HttpResponse response = null;
-				response = client.execute(request);
-				if(response != null && response.getStatusLine() != null)
-				{
-					int statusCode = response.getStatusLine().getStatusCode();
-					int statusCategory = statusCode / 100;
-
-					if(statusCategory == 2)
-						success = true;
-				}
+				int statusCode = response.getStatusLine().getStatusCode();
+				int statusCategory = statusCode / 100;
+	
+				if(statusCategory == 2)
+					success = true;
 			}
 		}
 		catch(Exception ex)
 		{
 			Log.d(LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
-
-		IOUtils.safeClose(client);
 
 		// delete the file
 		if(success && f.exists())
