@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -86,6 +88,13 @@ public class FeedbackHelper {
 		byte[] consoleByte = data.Console.getBytes();
 		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, consoleByte);
 		
+		byte[] paramsHeaderByte = String.format("Content-Disposition: form-data; name=\"custom_params\"\r\nContent-Type: application/json\r\n\r\n").getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsHeaderByte);
+		JSONObject customParams = new JSONObject(AppBlade.customFields);
+		
+		byte[] paramsByte = customParams.toString().getBytes();
+		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsByte);
+		
 		
 		if (data.Screenshot != null) {
 			
@@ -96,9 +105,9 @@ public class FeedbackHelper {
 			
 			byte[] screenshotHeaderByte = String.format("Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"base64:%s\"\r\nContent-Type: application/octet-stream\r\n\r\n", data.ScreenshotName).getBytes();
 			contentByte = WebServiceHelper.concatenateByteArrays(contentByte, screenshotHeaderByte);
-			byte[] screenshotRawBytes = getBytesFromBitmap(data.Screenshot);
-			String encodedImage = Base64.encodeToString(screenshotRawBytes, Base64.DEFAULT);
 			
+			byte[] screenshotRawBytes = getBytesFromBitmap(data.Screenshot);
+			String encodedImage = Base64.encodeToString(screenshotRawBytes, Base64.NO_WRAP);
 			byte[] screenshotByte = encodedImage.getBytes();
 			contentByte = WebServiceHelper.concatenateByteArrays(contentByte, screenshotByte);
 		}

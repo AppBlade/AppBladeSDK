@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
+import java.util.Hashtable;
 import java.util.Random;
 
 import org.apache.http.HttpResponse;
@@ -33,6 +34,7 @@ public class AppBlade {
 	public static String LogTag = "AppBlade";
 
 	protected static AppInfo appInfo;
+	protected static Hashtable<String, String> customFields;
 
 	static boolean canWriteToDisk = false;
 	static String rootDir = null;
@@ -40,6 +42,20 @@ public class AppBlade {
 	static final String AppBladeExceptionsDirectory = "app_blade_exceptions";
 
 	private static final String BOUNDARY = "---------------------------14737809831466499882746641449";
+	
+	/**
+	 * Adds a new key/value pair for our custom fields
+	 * @param key
+	 * @param value
+	 */
+
+	public static void setCustomField(String key, String value) {
+		if (customFields == null) {
+			customFields = new Hashtable<String, String>();
+		}
+
+		customFields.put(key, value);
+	}
 
 	/**
 	 * Gets feedback from the user via a dialog and posts the feedback along with log data to AppBlade.
