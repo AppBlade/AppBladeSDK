@@ -17,7 +17,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "FBEncryptorAES.h"
 
-static NSString* const s_sdkVersion                     = @"0.3";
+static NSString* const s_sdkVersion                     = @"0.3.1";
 
 const int kUpdateAlertTag                               = 316;
 
@@ -64,8 +64,9 @@ static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8de
 - (void)showFeedbackDialogue;
 - (void)showFeedbackDialogueWithScreenshot:(BOOL)takeScreenshot;
 
-
 - (void)displayFeedbackDialogue;
+
+- (NSObject*)readFile:(NSString*)filePath;
 
 @end
 
@@ -148,15 +149,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     } else if (!self.appBladeProjectIssuedTimestamp) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
     }
-//    
-//    NSString* testString = @"ABCDEFGHIJKLMNOP";
-//    NSString* key = @"test";
-//    NSData* stringData = [testString dataUsingEncoding:NSUTF8StringEncoding];
-//    NSData* encryptedData = [FBEncryptorAES encryptData:stringData key:[key dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
-//    NSData* unencryptedData = [FBEncryptorAES decryptData:encryptedData key:[key dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
-//    NSString* output = [[NSString alloc] initWithData:unencryptedData encoding:NSUTF8StringEncoding];
-//    
-//    NSLog(@"Input string: %@\nOutput string: %@", testString, output);
     
 }
 
@@ -202,10 +194,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         
         NSDictionary* crashedFields = nil;
         if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
-            NSData* encryptedData = [NSData dataWithContentsOfFile:paramsPath];
-            NSData* paramsData = [FBEncryptorAES decryptData:encryptedData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
-            // Do not put in our persistent params so we do not overwrite
-            crashedFields = [NSKeyedUnarchiver unarchiveObjectWithData:paramsData];
+            crashedFields = (NSDictionary*)[self readFile:paramsPath];
             
             // After reading out values, remove file.
             [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
@@ -407,10 +396,14 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     aslresponse_free(r);
     NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"plist"];
 	NSString *plistFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
-    [logs writeToFile:plistFilePath atomically:YES];
-    [plistFilePath release];
+    NSData* consoleData = [NSKeyedArchiver archivedDataWithRootObject:logs];
+    NSData* encryptedData = [FBEncryptorAES encryptData:consoleData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    [encryptedData writeToFile:plistFilePath atomically:YES];
     
     self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:fileName forKey:kAppBladeFeedbackKeyConsole];
+    
+    [plistFilePath release];
+
 #else
     self.feedbackDictionary = [NSMutableDictionary dictionary];
 #endif
@@ -424,16 +417,23 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)handleBackloggedFeedback
 {
     NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-    NSMutableArray* backupFiles = [[[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy] autorelease];
+
+    NSMutableArray* backupFiles = [[[self readFile:backupFilePath] mutableCopy] autorelease];
+    
     if (backupFiles.count > 0) {
         NSString* fileName = [backupFiles objectAtIndex:0];
         NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
         
-        NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
+        NSDictionary* feedback = (NSDictionary*)[self readFile:feedbackPath];
         if (feedback) {
+            NSArray* consoleContent = (NSArray*)[self readFile:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyConsole]]];
+            NSError* error = nil;
+            NSData* consoleData = [NSPropertyListSerialization dataWithPropertyList:consoleContent format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+            // TODO: Error handling
+            
             AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
             client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
-            [client sendFeedbackWithScreenshot:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot] note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:[feedback objectForKey:kAppBladeFeedbackKeyConsole] params:self.appBladeParams];
+            [client sendFeedbackWithScreenshot:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot] note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:consoleData params:self.appBladeParams];
             
             if (!self.feedbackRequests) {
                 self.feedbackRequests = [NSMutableSet set];
@@ -447,8 +447,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)reportFeedback:(NSString *)feedback
 {
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
+    
+    NSArray* consoleContent = (NSArray*)[self readFile:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyConsole]]];
+    NSError* error = nil;
+    NSData* consoleData = [NSPropertyListSerialization dataWithPropertyList:consoleContent format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    
     AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyConsole] params:self.appBladeParams];
+    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:consoleData params:self.appBladeParams];
 }
 
 - (void)checkAndCreateAppBladeCacheDirectory
@@ -612,17 +617,26 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
             NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
             
-            [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+            NSData* feedbackData = [NSKeyedArchiver archivedDataWithRootObject:self.feedbackDictionary];
+            NSData* encryptedData = [FBEncryptorAES encryptData:feedbackData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+            
+            [encryptedData writeToFile:feedbackPath atomically:YES];
             
             NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [[[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy] autorelease];
+            
+            
+            NSMutableArray* backupFiles = [[[self readFile:backupFilePath] mutableCopy] autorelease];
+
             if (!backupFiles) {
                 backupFiles = [NSMutableArray array];
             }
             
             [backupFiles addObject:newFeedbackName];
             
-            BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+            NSData* newBackupData = [NSKeyedArchiver archivedDataWithRootObject:backupFiles];
+            NSData* encryptedNewBackupData = [FBEncryptorAES encryptData:newBackupData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+            
+            BOOL success = [encryptedNewBackupData writeToFile:backupFilePath atomically:YES];
             if(!success){
                 NSLog(@"Error writing backup file to %@", backupFilePath);
             }
@@ -708,7 +722,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         
         if (isBacklog) {
             NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+            
+            NSMutableArray* backups = [[[self readFile:backupFilePath] mutableCopy] autorelease];
+            
             NSString* fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
             NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
             
@@ -721,7 +737,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             [backups removeObject:fileName];
             
             if (backups.count > 0) {
-                [backups writeToFile:backupFilePath atomically:YES];
+                NSData* newBackupData = [NSKeyedArchiver archivedDataWithRootObject:backups];
+                NSData* encryptedNewBackupData = [FBEncryptorAES encryptData:newBackupData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+                
+                [encryptedNewBackupData writeToFile:backupFilePath atomically:YES];
             }
             else {
                 error = nil;
@@ -820,6 +839,29 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+}
+
+#pragma mark - Encryption
+
+- (NSObject*)readFile:(NSString *)filePath
+{
+    NSData* encryptedData = [NSData dataWithContentsOfFile:filePath];
+    NSData* unencryptedData = [FBEncryptorAES decryptData:encryptedData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    NSObject* returnObject = nil;
+    
+    if (unencryptedData) {
+        returnObject = [NSKeyedUnarchiver unarchiveObjectWithData:unencryptedData];
+    }
+    else {
+        // File was not encrypted
+        NSError* error = nil;
+        
+        if (![[NSFileManager defaultManager] removeItemAtPath:filePath error:&error]) {
+            NSLog(@"AppBlade cannot remove file %@", [filePath lastPathComponent]);
+        }
+    }
+    
+    return returnObject;
 }
 
 @end

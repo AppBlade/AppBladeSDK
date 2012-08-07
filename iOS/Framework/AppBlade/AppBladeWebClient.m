@@ -226,13 +226,12 @@ static BOOL is_encrypted () {
     [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease]; 
 }
 
-- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console params:(NSDictionary *)params
+- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSData *)console params:(NSDictionary *)params
 {
     _api = AppBladeWebClientAPI_Feedback;
     
     NSString* udid = [self udid];
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
-    NSData* consoleContent = [NSData dataWithContentsOfFile:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:console]];
     NSError* error = nil;
     NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
@@ -253,7 +252,7 @@ static BOOL is_encrypted () {
     
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:consoleContent];
+    [body appendData:console];
     
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"base64:%@\"\r\n", screenshot] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -334,11 +333,6 @@ static BOOL is_encrypted () {
         [requestBodyRaw appendFormat:@"?%@", dataString];
     }
     
-    // Need to mirror the Rails side
-    if ([[request URL] query]) {
-        [requestBodyRaw appendFormat:@"?%@", [[request URL] query]];
-    }
-    
     NSString *requestBodyHash = [self SHA_Base64:requestBodyRaw];
     
     // Construct the nonce (salt). First part of the salt is the delta of the current time and the stored time the
@@ -364,8 +358,6 @@ static BOOL is_encrypted () {
     // Digest the normalized request body.
     NSString* mac = [self HMAC_SHA256_Base64:request_body with_key:[_delegate appBladeProjectSecret]];
     
-    NSLog(@"MAC: %@", mac);
-    NSLog(@"Hash: %@", requestBodyHash);
     NSMutableString *authHeader = [NSMutableString stringWithString:@"HMAC "];
     [authHeader appendFormat:@"id=\"%@\"", [_delegate appBladeProjectToken]];
     [authHeader appendFormat:@", nonce=\"%@\"", nonce];

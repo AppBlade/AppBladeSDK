@@ -60,7 +60,7 @@ typedef enum {
 // AppBlade API.
 - (void)checkPermissions;
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary*)params;
-- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)params;
+- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSData*)console params:(NSDictionary*)params;
 
 - (NSString*)urlEncodeValue:(NSString*)value;
 
