@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.EditText;
 
@@ -60,6 +61,7 @@ public class FeedbackHelper {
 		dialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				fData.Notes = editText.getText().toString();
+				fData.CustomParams = AppBlade.customFields;
 				listener.OnFeedbackDataAcquired(fData);
 			}
 		});
@@ -90,7 +92,7 @@ public class FeedbackHelper {
 		
 		byte[] paramsHeaderByte = String.format("Content-Disposition: form-data; name=\"custom_params\"\r\nContent-Type: application/json\r\n\r\n").getBytes();
 		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsHeaderByte);
-		JSONObject customParams = new JSONObject(AppBlade.customFields);
+		JSONObject customParams = new JSONObject(data.CustomParams);
 		
 		byte[] paramsByte = customParams.toString().getBytes();
 		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsByte);
@@ -123,4 +125,10 @@ public class FeedbackHelper {
 		bitmap.compress(CompressFormat.PNG, 100, out);
 		return out.toByteArray();
 	}
+	
+	public static String GetFileExt(String FileName)
+    {       
+         String ext = FileName.substring((FileName.lastIndexOf(".") + 1), FileName.length());
+         return ext;
+    }
 }

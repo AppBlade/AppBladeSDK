@@ -1,17 +1,33 @@
 package com.appblade.framework;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Random;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.Manifest;
 import android.app.Activity;
@@ -22,6 +38,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -32,14 +49,18 @@ import com.appblade.framework.WebServiceHelper.HttpMethod;
 public class AppBlade {
 
 	public static String LogTag = "AppBlade";
+	public static byte[] ivBytes = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+	public static String AESkey = "e8ffc7e56311679f12b6fc91aa77a5eb";
 
 	protected static AppInfo appInfo;
 	protected static Hashtable<String, String> customFields;
 
 	static boolean canWriteToDisk = false;
 	static String rootDir = null;
+	static String feedbackDir = null;
 
 	static final String AppBladeExceptionsDirectory = "app_blade_exceptions";
+	static final String AppBladeFeedbackDirectory = "app_blade_feedback";
 
 	private static final String BOUNDARY = "---------------------------14737809831466499882746641449";
 	
@@ -186,6 +207,91 @@ public class AppBlade {
 		
 		return success;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static void postFeedbackToServer()
+	{
+		Log.d(LogTag, "Posting backlogged feedback.");
+		File dir = new File(feedbackDir);
+		if(dir.exists() && dir.isDirectory()) {
+			File[] feedback = dir.listFiles();
+			for(File f : feedback) {
+				if(f.exists() && f.isFile() && FeedbackHelper.GetFileExt(f.getName()).equals("json")) {
+
+					try {
+						InputStream inputStream = new FileInputStream(f);
+						BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
+						StringBuilder total = new StringBuilder();
+						String line;
+						while ((line = r.readLine()) != null) {
+						    total.append(line);
+						}
+						
+						
+						byte[] unencodedData = Base64.decode(total.toString(), Base64.DEFAULT);
+						
+						byte[] unencryptedData = AES256Cipher.decrypt(ivBytes, AESkey.getBytes("UTF-8"), unencodedData);
+						String jsonString = new String(unencryptedData);
+						
+						JSONObject feedbackJSON = new JSONObject(jsonString);
+						
+						FeedbackData data = new FeedbackData();
+						data.Console = feedbackJSON.getString(FeedbackData.CONSOLE_KEY);
+						data.Notes = feedbackJSON.getString(FeedbackData.NOTES_KEY);
+						data.ScreenshotName = feedbackJSON.getString(FeedbackData.SCREENSHOT_NAME_KEY);
+						data.SavedName = f.getName();
+						
+						JSONObject jsonParams = (JSONObject) feedbackJSON.getJSONObject(FeedbackData.PARAMS_KEY);
+						Hashtable <String, String> params = new Hashtable<String, String>();
+						Iterator<String> paramsIterator = jsonParams.keys();
+						while(paramsIterator.hasNext())
+						{
+							String key = (String)paramsIterator.next();
+							try {
+								params.put(key, jsonParams.getString(key));
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+						
+						data.CustomParams = params;
+						
+						
+						String screenshotPath = String.format("%s/%s", AppBlade.feedbackDir, data.ScreenshotName);
+						// Get screenshot bitmap
+						
+						BitmapFactory.Options options = new BitmapFactory.Options();
+						options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+						Bitmap bitmap = BitmapFactory.decodeFile(screenshotPath, options);
+						data.Screenshot = bitmap;
+						
+						postFeedback(data);
+						
+					} catch (FileNotFoundException e) {
+						Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", e.getClass().getCanonicalName(), e.getMessage()));
+					} catch (IOException e) {
+						Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", e.getClass().getCanonicalName(), e.getMessage()));
+					} catch (InvalidKeyException e) {
+						Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", e.getClass().getCanonicalName(), e.getMessage()));
+					} catch (NoSuchAlgorithmException e) {
+						Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", e.getClass().getCanonicalName(), e.getMessage()));
+					} catch (NoSuchPaddingException e) {
+						Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", e.getClass().getCanonicalName(), e.getMessage()));
+					} catch (InvalidAlgorithmParameterException e) {
+						Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", e.getClass().getCanonicalName(), e.getMessage()));
+					} catch (IllegalBlockSizeException e) {
+						Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", e.getClass().getCanonicalName(), e.getMessage()));
+					} catch (BadPaddingException e) {
+						Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", e.getClass().getCanonicalName(), e.getMessage()));
+					} catch (JSONException e) {
+						Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", e.getClass().getCanonicalName(), e.getMessage()));
+					}
+					
+					
+				}
+			}
+		}
+	}
 
 	public static void register(Context context, String token, String secret, String uuid, String issuance)
 	{
@@ -229,6 +335,13 @@ public class AppBlade {
 		File exceptionsDirectory = new File(rootDir);
 		exceptionsDirectory.mkdirs();
 		canWriteToDisk = exceptionsDirectory.exists();
+		
+		feedbackDir = String.format("%s/%s",
+				context.getFilesDir().getAbsolutePath(),
+				AppBladeFeedbackDirectory);
+		File feedbackDirectory = new File(feedbackDir);
+		feedbackDirectory.mkdirs();
+
 	}
 
 	public boolean isRegistered() {
@@ -378,7 +491,7 @@ public class AppBlade {
 	 * @param fromLoopBack
 	 */
 	public static void authorize(final Activity activity, boolean fromLoopBack) {
-
+		
 		// If we don't have enough stored information to authorize the curent user,
 		// delegate to the AuthHelper
 		if(!isAuthorized(activity))
@@ -425,6 +538,10 @@ public class AppBlade {
 					String.format("AppBlade.authorize: user is authorized, closing activity: %s",
 							activity.getLocalClassName()));
 			activity.finish();
+		}
+		
+		else {
+			postFeedbackToServer();
 		}
 	}
 	
