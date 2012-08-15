@@ -847,11 +847,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 }
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedOAuthToken:(NSString *)token
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedOAuthToken:(NSDictionary *)token
 {
     if (token) {
-        NSLog(@"TOKEN: %@", token);
-        [AppBladeSimpleKeychain save:@"appBladeOAuth" data:token];
+        [AppBladeSimpleKeychain save:@"appBladeOAuth" data:[token objectForKey:@"access_token"]];
     }
 
 }

@@ -37,7 +37,7 @@ static NSString* AppBladeHost = @"https://appblade.com";
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary*)permissions;
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient*)client withSuccess:(BOOL)success;
-- (void)appBladeWebClient:(AppBladeWebClient*)client receivedOAuthToken:(NSString*)token;
+- (void)appBladeWebClient:(AppBladeWebClient*)client receivedOAuthToken:(NSDictionary*)token;
 
 @end
 

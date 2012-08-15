@@ -277,10 +277,14 @@ static BOOL is_encrypted () {
     _api = AppBladeWebClientOAuth_Token;
     
     NSURL* tokenURL = [NSURL URLWithString:[NSString stringWithFormat:oAuthTokenURLFormat, AppBladeHost]];
+    NSLog(@"Token URL: %@", [tokenURL absoluteString]);
     
     NSMutableURLRequest* request = [self requestForURL:tokenURL];
     [request setHTTPMethod:@"POST"];
-//    [request setValue:@"Content-Type: text/xml" forHTTPHeaderField:@"Content-Type"];
+    
+    // With OAuth, this is the only place we access UDID.
+    [request setValue:[[UIDevice currentDevice] uniqueIdentifier] forHTTPHeaderField:@"DEVICE_FINGERPRINT"];
+    [request setValue:@"text/xml" forHTTPHeaderField:@"Accept"];
     
     NSString* string = [NSString stringWithFormat:@"code=%@&client_id=%@&client_secret=%@", code, [self urlEncodeValue:[self.delegate appBladeProjectToken]], [self urlEncodeValue:[self.delegate appBladeProjectSecret]]];
     
@@ -452,12 +456,20 @@ static BOOL is_encrypted () {
     else if (_api == AppBladeWebClientOAuth_Token) {
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         
-        NSString* finalToken = nil;
+        NSDictionary* finalToken = nil;
         
         if (status == 200) {
-            NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
-            NSLog(@"Received Response from AppBlade: %@", string);
+            NSString *error;
+            NSPropertyListFormat format;
+            
+            NSDictionary *plist = [NSPropertyListSerialization propertyListFromData:_receivedData mutabilityOption:NSPropertyListImmutable format:&format errorDescription:&error];
+            
+            finalToken = plist;
+
         }
+        
+        [_receivedData release];
+        _receivedData = nil;
         
         [self.delegate appBladeWebClient:self receivedOAuthToken:finalToken];
     }
