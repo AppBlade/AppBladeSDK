@@ -390,7 +390,7 @@ static BOOL is_encrypted () {
     _receivedData = [[NSMutableData alloc] init];
     NSMutableDictionary* headers = [NSMutableDictionary dictionaryWithDictionary:[(NSHTTPURLResponse *)response allHeaderFields]];
     [headers setObject:[NSNumber numberWithInteger:[(NSHTTPURLResponse *)response statusCode]] forKey:@"statusCode"];
-     self.responseHeaders = headers;
+    self.responseHeaders = headers;
 }
 
 

@@ -11,12 +11,15 @@
 @protocol AppBladeOAuthViewDelegate <NSObject>
 
 @required
-- (void)finishedOAuthWithToken:(NSString*)token;
+- (void)finishedOAuthWithCode:(NSString*)code;
 
 @end
 
 @interface AppBladeOAuthView : UIView <UIWebViewDelegate>
 
 @property (nonatomic, assign) id <AppBladeOAuthViewDelegate> delegate;
+
+- (void)reset;
+- (void)closeOAuthView;
 
 @end

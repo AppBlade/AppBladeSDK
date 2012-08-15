@@ -115,7 +115,7 @@ static NSString* const kAppBladeCacheDirectory;
  */
 
 - (void)showOAuthSheet;
-
+- (void)clearOAuthSession;
 
 /*
  * Device

@@ -23,6 +23,7 @@ static NSString* const s_sdkVersion                     = @"0.3.1";
 const int kUpdateAlertTag                               = 316;
 const int kNewAuthAlertTag                              = 556;
 const int kExpiredAuthAlertTag                          = 243;
+const int kFailedAuthAlertTag                           = 824;
 
 static NSString* const kAppBladeErrorDomain             = @"com.appblade.sdk";
 static const int kAppBladeOfflineError                  = 1200;
@@ -47,8 +48,11 @@ static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8de
 @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
 @property (nonatomic, retain) NSMutableSet* feedbackRequests;
 @property (nonatomic, assign) UIView* feedbackView;
+
 @property (nonatomic, retain, readwrite) NSDictionary* appBladeParams;
+
 @property (nonatomic, assign) BOOL useOAuth;
+@property (nonatomic, retain) AppBladeOAuthView* oAuthView;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReportWithParams:(NSDictionary*)params;
@@ -91,6 +95,7 @@ static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8de
 
 @synthesize feedbackView = _feedbackView;
 @synthesize useOAuth = _useOAuth;
+@synthesize oAuthView = _oAuthView;
 
 static AppBlade *s_sharedManager = nil;
 
@@ -170,6 +175,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [_upgradeLink release];
     [_feedbackDictionary release];
     [_feedbackRequests release];
+    [_oAuthView release];
     [super dealloc];
 }
 
@@ -604,23 +610,37 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)showOAuthSheet
 {
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    AppBladeOAuthView* view = [[AppBladeOAuthView alloc] initWithFrame:window.bounds];
-    view.delegate = self;
-    [window addSubview:view];
-    [window bringSubviewToFront:view];
+    if (!self.oAuthView) {
+        self.oAuthView = [[AppBladeOAuthView alloc] initWithFrame:window.bounds];
+        self.oAuthView.delegate = self;
+        [window addSubview:self.oAuthView];
+        [window bringSubviewToFront:self.oAuthView];
+    }
+    else {
+        [self.oAuthView reset];
+    }
+
 }
 
-- (void)finishedOAuthWithToken:(NSString *)token
+- (void)finishedOAuthWithCode:(NSString *)code
 {
-    if (token) {
-//        [AppBladeSimpleKeychain save:@"appBladeOAuth" data:token];
+    if (code) {
+        
+        // We get an authorization code, used for token generation
+        // Get the actual token
+        
         AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-        [client getOAuthTokenWithCode:token];
+        [client getOAuthTokenWithCode:code];
     }
     else {
         [self.delegate appBlade:self applicationApproved:NO error:nil];
     }
     
+}
+
+- (void)clearOAuthSession
+{
+    [self closeTTLWindow];
 }
 
 - (NSString*)deviceIdentifier
@@ -706,6 +726,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             [self.feedbackRequests removeObject:client];
         }
 
+    }
+    else if (client.api == AppBladeWebClientOAuth_Token) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Authorization Failed" message:@"Would you like to try again?" delegate:self cancelButtonTitle:@"No thanks" otherButtonTitles:@"Try Again", nil];
+        alert.tag = kFailedAuthAlertTag;
+        [alert show];
+        [alert release];
     }
     
 }
@@ -851,6 +877,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
     if (token) {
         [AppBladeSimpleKeychain save:@"appBladeOAuth" data:[token objectForKey:@"access_token"]];
+        [self.oAuthView closeOAuthView];
     }
 
 }
@@ -907,6 +934,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             exit(0);
         }
 
+    }
+    else if (alertView.tag = kFailedAuthAlertTag && buttonIndex != [alertView cancelButtonIndex])
+    {
+        [self showOAuthSheet];
     }
     else {
         exit(0);

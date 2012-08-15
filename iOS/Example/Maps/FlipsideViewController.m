@@ -68,8 +68,14 @@
 - (IBAction)presentFeedback:(id)sender {
     
     AppBlade *blade = [AppBlade sharedManager];
-    [blade showFeedbackDialogue];
+    [blade showFeedbackDialogueInView:self.view];
     
+}
+
+- (IBAction)presentOAuthSheet:(id)sender
+{
+    AppBlade* blade = [AppBlade sharedManager];
+    [blade clearOAuthSession];
 }
 
 @end
