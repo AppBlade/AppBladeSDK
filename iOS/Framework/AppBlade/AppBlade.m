@@ -878,6 +878,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     if (token) {
         [AppBladeSimpleKeychain save:@"appBladeOAuth" data:[token objectForKey:@"access_token"]];
         [self.oAuthView closeOAuthView];
+        self.oAuthView = nil;
     }
 
 }
@@ -891,7 +892,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                                                          message:[error localizedDescription] 
                                                         delegate:self 
                                                cancelButtonTitle:@"Exit"
-                                               otherButtonTitles: nil] autorelease];
+                                               otherButtonTitles: @"Re-authenticae", nil] autorelease];
+        alert.tag = kFailedAuthAlertTag;
         [alert show];
     }
     
