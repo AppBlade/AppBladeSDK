@@ -53,6 +53,7 @@ static NSString* const kAppBladeCacheDirectory;
 // AppBlade API project issued time.
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
 
+// AppBlade custom fields 
 @property (nonatomic, retain, readonly) NSDictionary* appBladeParams;
 
 // The AppBlade delegate receives messages regarding device authentication and other events.
@@ -82,8 +83,11 @@ static NSString* const kAppBladeCacheDirectory;
  *    store with a call to |-checkApproval|, for example, could result in app termination or rejection.
  */
 
-// Checks with AppBlade to see if the app is allowed to run on this device.
+// Checks for OAuth token, if none shows an OAuth sheet to authenticate
 - (void)checkApproval;
+
+// Pass in NO to use the old system which uses UDID. Passing in YES is the same as -checkApproval
+- (void)checkApprovalWithOAuth:(BOOL)useOAuth;
 
 // Shows a feedback dialogue, with option to specify the view and whether or not to take a screenshot.
 - (void)showFeedbackDialogueInView:(UIView*)view;
@@ -106,5 +110,18 @@ static NSString* const kAppBladeCacheDirectory;
 // Clears everything
 - (void)clearAllCustomParams;
 
+/*
+ * OAuth
+ */
+
+- (void)showOAuthSheet;
+
+
+/*
+ * Device
+ */
+
+//  Returns either an OAuth token, or UDID if OAuth is disabled
+- (NSString*)deviceIdentifier;
 
 @end

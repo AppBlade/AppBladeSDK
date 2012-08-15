@@ -63,6 +63,10 @@
 		F606A1EE15C9A01F00E280BF /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = F606A1EB15C9A01F00E280BF /* NSData+Base64.h */; };
 		F606A1EF15C9A01F00E280BF /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = F606A1EC15C9A01F00E280BF /* NSData+Base64.m */; };
 		F606A1F015C9A01F00E280BF /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = F606A1EC15C9A01F00E280BF /* NSData+Base64.m */; };
+		F65B9CE215DB133200F0DE2B /* AppBladeOAuthView.m in Sources */ = {isa = PBXBuildFile; fileRef = F65B9CE115DB133200F0DE2B /* AppBladeOAuthView.m */; };
+		F65B9CE315DB133200F0DE2B /* AppBladeOAuthView.m in Sources */ = {isa = PBXBuildFile; fileRef = F65B9CE115DB133200F0DE2B /* AppBladeOAuthView.m */; };
+		F6B112EE15D9930300741D7E /* AppBladeOAuthView.h in Headers */ = {isa = PBXBuildFile; fileRef = F6B112EC15D9930300741D7E /* AppBladeOAuthView.h */; };
+		F6B112EF15D9930300741D7E /* AppBladeOAuthView.h in Headers */ = {isa = PBXBuildFile; fileRef = F6B112EC15D9930300741D7E /* AppBladeOAuthView.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -159,6 +163,8 @@
 		F606A1E615C9A00800E280BF /* FBEncryptorAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBEncryptorAES.m; sourceTree = "<group>"; };
 		F606A1EB15C9A01F00E280BF /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		F606A1EC15C9A01F00E280BF /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		F65B9CE115DB133200F0DE2B /* AppBladeOAuthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeOAuthView.m; sourceTree = "<group>"; };
+		F6B112EC15D9930300741D7E /* AppBladeOAuthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeOAuthView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -320,6 +326,8 @@
 				A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */,
 				7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */,
 				7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */,
+				F6B112EC15D9930300741D7E /* AppBladeOAuthView.h */,
+				F65B9CE115DB133200F0DE2B /* AppBladeOAuthView.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -336,6 +344,7 @@
 				7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
 				F606A1E815C9A00800E280BF /* FBEncryptorAES.h in Headers */,
 				F606A1EE15C9A01F00E280BF /* NSData+Base64.h in Headers */,
+				F6B112EF15D9930300741D7E /* AppBladeOAuthView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +357,7 @@
 				7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
 				F606A1E715C9A00800E280BF /* FBEncryptorAES.h in Headers */,
 				F606A1ED15C9A01F00E280BF /* NSData+Base64.h in Headers */,
+				F6B112EE15D9930300741D7E /* AppBladeOAuthView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,6 +462,7 @@
 				7E717551156556AC00D810DF /* FeedbackDialogue.m in Sources */,
 				F606A1EA15C9A00800E280BF /* FBEncryptorAES.m in Sources */,
 				F606A1F015C9A01F00E280BF /* NSData+Base64.m in Sources */,
+				F65B9CE315DB133200F0DE2B /* AppBladeOAuthView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,6 +505,7 @@
 				7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
 				F606A1E915C9A00800E280BF /* FBEncryptorAES.m in Sources */,
 				F606A1EF15C9A01F00E280BF /* NSData+Base64.m in Sources */,
+				F65B9CE215DB133200F0DE2B /* AppBladeOAuthView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

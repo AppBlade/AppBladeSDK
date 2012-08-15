@@ -16,10 +16,13 @@
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
 #import "FBEncryptorAES.h"
+#import "AppBladeOAuthView.h"
 
 static NSString* const s_sdkVersion                     = @"0.3.1";
 
 const int kUpdateAlertTag                               = 316;
+const int kNewAuthAlertTag                              = 556;
+const int kExpiredAuthAlertTag                          = 243;
 
 static NSString* const kAppBladeErrorDomain             = @"com.appblade.sdk";
 static const int kAppBladeOfflineError                  = 1200;
@@ -34,7 +37,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.txt";
 static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8deARKsWp";
 
-@interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
+@interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate, AppBladeOAuthViewDelegate>
 
 @property (nonatomic, retain) NSURL* upgradeLink;
 
@@ -45,6 +48,7 @@ static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8de
 @property (nonatomic, retain) NSMutableSet* feedbackRequests;
 @property (nonatomic, assign) UIView* feedbackView;
 @property (nonatomic, retain, readwrite) NSDictionary* appBladeParams;
+@property (nonatomic, assign) BOOL useOAuth;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReportWithParams:(NSDictionary*)params;
@@ -86,6 +90,7 @@ static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8de
 @synthesize appBladeParams = _appBladeParams;
 
 @synthesize feedbackView = _feedbackView;
+@synthesize useOAuth = _useOAuth;
 
 static AppBlade *s_sharedManager = nil;
 
@@ -172,10 +177,27 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)checkApproval
 {
-    [self validateProjectConfiguration];
+    [self checkApprovalWithOAuth:YES];
+}
 
-    AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [client checkPermissions];    
+- (void)checkApprovalWithOAuth:(BOOL)useOAuth
+{
+    [self validateProjectConfiguration];
+    
+    self.useOAuth = useOAuth;
+    
+    if (self.useOAuth && ![self deviceIdentifier]) {
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Authorization Required" message:@"Application secured by AppBlade.\nPlease enter your AppBlade credentials on the next screen." delegate:self cancelButtonTitle:@"No thanks" otherButtonTitles:@"Continue", nil];
+        alert.tag = kNewAuthAlertTag;
+        [alert show];
+        [alert release];
+        
+    }
+    else {
+        AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        [client checkPermissions];
+    }
 }
 
 - (void)catchAndReportCrashes
@@ -508,6 +530,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)closeTTLWindow
 {
     [AppBladeSimpleKeychain delete:@"appBlade"];
+    [AppBladeSimpleKeychain delete:@"appBladeOAuth"];
 }
 
 - (void)updateTTL:(NSNumber*)ttl
@@ -574,6 +597,42 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)clearAllCustomParams
 {
     self.appBladeParams = nil;
+}
+
+#pragma mark - OAuth
+
+- (void)showOAuthSheet
+{
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    AppBladeOAuthView* view = [[AppBladeOAuthView alloc] initWithFrame:window.bounds];
+    view.delegate = self;
+    [window addSubview:view];
+    [window bringSubviewToFront:view];
+}
+
+- (void)finishedOAuthWithToken:(NSString *)token
+{
+    if (token) {
+//        [AppBladeSimpleKeychain save:@"appBladeOAuth" data:token];
+        AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        [client getOAuthTokenWithCode:token];
+    }
+    else {
+        [self.delegate appBlade:self applicationApproved:NO error:nil];
+    }
+    
+}
+
+- (NSString*)deviceIdentifier
+{
+    if (self.useOAuth) {
+        return [AppBladeSimpleKeychain load:@"appBladeOAuth"];
+    }
+#if TARGET_IPHONE_SIMULATOR
+    return @"0000000000000000000000000000000000000000";
+#else
+    return [[UIDevice currentDevice] uniqueIdentifier];
+#endif
 }
 
 #pragma mark - AppBladeWebClient
@@ -788,6 +847,15 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 }
 
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedOAuthToken:(NSString *)token
+{
+    if (token) {
+        NSLog(@"TOKEN: %@", token);
+        [AppBladeSimpleKeychain save:@"appBladeOAuth" data:token];
+    }
+
+}
+
 #pragma mark - AppBladeDelegate
 - (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
 {
@@ -821,6 +889,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
 }
 
+#pragma mark - UIAlertViewDelegate
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == kUpdateAlertTag) {
@@ -829,7 +899,17 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             self.upgradeLink = nil;   
             exit(0);
         }
-    } else {
+    }
+    else if (alertView.tag = kNewAuthAlertTag) {
+        if (buttonIndex != [alertView cancelButtonIndex]) {
+            [self showOAuthSheet];
+        }
+        else {
+            exit(0);
+        }
+
+    }
+    else {
         exit(0);
     }
 }

@@ -16,15 +16,10 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-#if STAGING
-static NSString *approvalURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@/feedback";
-#else
-static NSString *approvalURLFormat = @"https://appblade.com/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat = @"https://appblade.com/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%@/devices/%@/feedback";
-#endif
+static NSString *approvalURLFormat = @"%@/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat = @"%@/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat = @"%@/api/projects/%@/devices/%@/feedback";
+static NSString *oAuthTokenURLFormat = @"%@/oauth/tokens";
 
 @interface AppBladeWebClient ()
 
@@ -34,7 +29,6 @@ static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%
 - (NSString*)platform;
 
 // Request helper methods.
-- (NSString *)udid;
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url;
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request;
 
@@ -171,8 +165,8 @@ static BOOL is_encrypted () {
     _api = AppBladeWebClientAPI_Permissions;
 
     // Create the request.
-    NSString* udid = [self udid];
-    NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [_delegate appBladeProjectID], udid];
+    NSString* udid = [[AppBlade sharedManager] deviceIdentifier];
+    NSString* urlString = [NSString stringWithFormat:approvalURLFormat, AppBladeHost, [_delegate appBladeProjectID], udid];
     NSURL* projectUrl = [NSURL URLWithString:urlString];
     NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
     [apiRequest setHTTPMethod:@"GET"];
@@ -189,10 +183,10 @@ static BOOL is_encrypted () {
     NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Retrieve UDID, used in URL.
-    NSString* udid = [self udid];
+    NSString* udid = [[AppBlade sharedManager] deviceIdentifier];
 
     // Build report URL.
-    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [_delegate appBladeProjectID], udid];
+    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, AppBladeHost, [_delegate appBladeProjectID], udid];
     NSURL* urlCrashReport = [NSURL URLWithString:urlCrashReportString];    
 
     // Create the API request.
@@ -230,13 +224,13 @@ static BOOL is_encrypted () {
 {
     _api = AppBladeWebClientAPI_Feedback;
     
-    NSString* udid = [self udid];
+    NSString* udid = [[AppBlade sharedManager] deviceIdentifier];
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
     NSError* error = nil;
     NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Build report URL.
-    NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeProjectID], udid];
+    NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, AppBladeHost, [_delegate appBladeProjectID], udid];
     NSURL* reportURL = [NSURL URLWithString:reportString];    
     
     // Create the API request.
@@ -278,16 +272,25 @@ static BOOL is_encrypted () {
     [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease]; 
 }
 
-#pragma mark - Request helper methods.
-
-- (NSString *)udid
+- (void)getOAuthTokenWithCode:(NSString *)code
 {
-#if TARGET_IPHONE_SIMULATOR
-    return @"0000000000000000000000000000000000000000";
-#else
-    return [[UIDevice currentDevice] uniqueIdentifier];
-#endif
+    _api = AppBladeWebClientOAuth_Token;
+    
+    NSURL* tokenURL = [NSURL URLWithString:[NSString stringWithFormat:oAuthTokenURLFormat, AppBladeHost]];
+    
+    NSMutableURLRequest* request = [self requestForURL:tokenURL];
+    [request setHTTPMethod:@"POST"];
+//    [request setValue:@"Content-Type: text/xml" forHTTPHeaderField:@"Content-Type"];
+    
+    NSString* string = [NSString stringWithFormat:@"code=%@&client_id=%@&client_secret=%@", code, [self urlEncodeValue:[self.delegate appBladeProjectToken]], [self urlEncodeValue:[self.delegate appBladeProjectSecret]]];
+    
+    NSData* body = [string dataUsingEncoding:NSUTF8StringEncoding];
+    
+    [request setHTTPBody:body];
+    [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease]; 
 }
+
+#pragma mark - Request helper methods.
 
 // Creates a preformatted request with appblade headers.
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url
@@ -343,8 +346,7 @@ static BOOL is_encrypted () {
     // Set port number based on the scheme
     NSString* port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
     
-    NSString* ext = [self udid];
-
+    NSString* ext = [[AppBlade sharedManager] deviceIdentifier];
     // Compose the normalized request body.
     NSMutableString* request_body = [NSMutableString stringWithFormat:@"%@\n%@\n%@\n%@\n%@\n%@\n%@\n",
                                      nonce,
@@ -446,6 +448,18 @@ static BOOL is_encrypted () {
         BOOL success = status == 201 ? YES : NO;
         
         [_delegate appBladeWebClientSentFeedback:self withSuccess:success];
+    }
+    else if (_api == AppBladeWebClientOAuth_Token) {
+        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
+        
+        NSString* finalToken = nil;
+        
+        if (status == 200) {
+            NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
+            NSLog(@"Received Response from AppBlade: %@", string);
+        }
+        
+        [self.delegate appBladeWebClient:self receivedOAuthToken:finalToken];
     }
     
     [_request release];
