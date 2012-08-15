@@ -53,6 +53,8 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 			request.setURI(new URI(url));
 			WebServiceHelper.addCommonHeaders(request);
 			
+			request.addHeader("Accept", "application/json");
+			
 			List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 			postParams.add(new BasicNameValuePair("code", code));
 			postParams.add(new BasicNameValuePair("client_id", AppBlade.appInfo.Token));
