@@ -11,12 +11,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -386,7 +387,11 @@ public class AppBlade {
 
 			if(!StringUtils.isNullOrEmpty(stackTrace))
 			{
-				int r = new Random().nextInt(9999);
+				SecureRandom random = new SecureRandom();
+//				random.generateSeed(4);
+				byte[] randomBytes = null;
+				random.nextBytes(randomBytes);
+				int r = ByteBuffer.wrap(randomBytes).getInt();
 				String filename = String.format("%s/ex-%d-%d.txt",
 						rootDir, System.currentTimeMillis(), r);
 

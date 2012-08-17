@@ -1,12 +1,11 @@
 package com.appblade.framework;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 import org.apache.http.HttpRequest;
 
 import android.content.pm.PackageInfo;
 import android.os.Build;
-import android.util.Log;
 
 
 class WebServiceHelper {
@@ -69,9 +68,9 @@ class WebServiceHelper {
 	}
 
 	private static String getRandomNonceString(int length) {
-		String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		String letters = "AvqVewXGfYZJr34ThQLnbaFUpisB5P0OkdRm8jI71SDlgx9MoyNWuEzK6Ctc2H";
 		StringBuilder builder = new StringBuilder();
-		Random random = new Random();
+		SecureRandom random = new SecureRandom();
 		for(int i = 0; i < length; i++)
 		{
 			builder.append(letters.charAt(random.nextInt(letters.length())));

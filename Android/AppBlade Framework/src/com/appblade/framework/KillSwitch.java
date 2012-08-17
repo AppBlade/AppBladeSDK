@@ -18,6 +18,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.appblade.framework.WebServiceHelper.HttpMethod;
@@ -197,6 +198,9 @@ public class KillSwitch {
 			String message = null;
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
+				data.replaceAll("\n", "");
+				data.replaceAll("\r", "");
+				data = TextUtils.htmlEncode(data);
 				Log.d(AppBlade.LogTag, String.format("KillSwitch response unauthorized %s", data));
 				JSONObject json = new JSONObject(data);
 				message = json.getString("error");
