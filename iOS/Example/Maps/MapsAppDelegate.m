@@ -48,6 +48,7 @@
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
+    [AppBlade endSession];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -65,7 +66,7 @@
     
     // Check the app blade status of this application.
     [[AppBlade sharedManager] checkApproval];
-    
+    [AppBlade startSession];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

@@ -18,6 +18,8 @@
 #import "FBEncryptorAES.h"
 #import "AppBladeOAuthView.h"
 
+#pragma mark TODO break this out into multiple files. It's getting unwieldly.
+
 static NSString* const s_sdkVersion                     = @"0.3.1";
 
 const int kUpdateAlertTag                               = 316;
@@ -36,6 +38,7 @@ static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.txt";
+static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
 static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8deARKsWp";
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate, AppBladeOAuthViewDelegate>
@@ -51,7 +54,9 @@ static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8de
 
 @property (nonatomic, retain, readwrite) NSDictionary* appBladeParams;
 
-@property (nonatomic, assign) BOOL useOAuth;
+@property (nonatomic, retain) NSDate* sessionStartDate;
+
+@property (nonatomic, assign, readwrite) BOOL useOAuth;
 @property (nonatomic, retain) AppBladeOAuthView* oAuthView;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
@@ -76,8 +81,10 @@ static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8de
 
 - (NSObject*)readFile:(NSString*)filePath;
 
-@end
+- (void)logSessionStart;
+- (void)logSessionEnd;
 
+@end
 
 @implementation AppBlade
 
@@ -94,6 +101,9 @@ static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8de
 @synthesize appBladeParams = _appBladeParams;
 
 @synthesize feedbackView = _feedbackView;
+
+@synthesize sessionStartDate = _sessionStartDate;
+
 @synthesize useOAuth = _useOAuth;
 @synthesize oAuthView = _oAuthView;
 
@@ -101,6 +111,8 @@ static AppBlade *s_sharedManager = nil;
 
 /* A custom post-crash callback */
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
+    
+    [[AppBlade sharedManager] logSessionEnd];
     
     // Save out our custom fields
     NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
@@ -176,6 +188,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [_feedbackDictionary release];
     [_feedbackRequests release];
     [_oAuthView release];
+    [_sessionStartDate release];
     [super dealloc];
 }
 
@@ -655,6 +668,56 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 #endif
 }
 
+
+#pragma mark - Analytics
+
++ (void)startSession
+{
+    [[AppBlade sharedManager] logSessionStart];
+}
+
++ (void)endSession
+{
+    [[AppBlade sharedManager] logSessionEnd];
+}
+
+- (void)logSessionStart
+{
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        
+        AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        [client postSessions:sessions];
+    }
+    
+    self.sessionStartDate = [NSDate date];
+    
+}
+
+- (void)logSessionEnd
+{
+    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", nil];
+    
+    NSMutableArray* pastSessions = nil;
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        pastSessions = [[sessions mutableCopy] autorelease];
+    }
+    else {
+        pastSessions = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [pastSessions addObject:sessionDict];
+    
+    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
+    NSData* encryptedData = [FBEncryptorAES encryptData:sessionData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    
+    [encryptedData writeToFile:sessionFilePath atomically:YES];
+}
+
 #pragma mark - AppBladeWebClient
 -(void) appBladeWebClientFailed:(AppBladeWebClient *)client
 {
@@ -881,6 +944,18 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         self.oAuthView = nil;
     }
 
+}
+
+- (void)appBladeWebClientSessionsPosted:(AppBladeWebClient*) client
+{
+    NSLog(@"Posted sessions");
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    
+    NSError* error = nil;
+    if (![[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&error]) {
+        NSLog(@"Error deleting sessions: %@", error);
+    }
+    
 }
 
 #pragma mark - AppBladeDelegate

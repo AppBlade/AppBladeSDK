@@ -15,7 +15,8 @@ typedef enum {
 	AppBladeWebClientAPI_Permissions,
     AppBladeWebClientAPI_ReportCrash,
     AppBladeWebClientAPI_Feedback,
-    AppBladeWebClientOAuth_Token
+    AppBladeWebClientOAuth_Token,
+    AppBladeWebClientAPI_Sessions
 } AppBladeWebClientAPI;
 
 #if STAGING
@@ -38,6 +39,7 @@ static NSString* AppBladeHost = @"https://appblade.com";
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient*)client withSuccess:(BOOL)success;
 - (void)appBladeWebClient:(AppBladeWebClient*)client receivedOAuthToken:(NSDictionary*)token;
+- (void)appBladeWebClientSessionsPosted:(AppBladeWebClient*) client;
 
 @end
 
@@ -70,6 +72,7 @@ static NSString* AppBladeHost = @"https://appblade.com";
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary*)params;
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSData*)console params:(NSDictionary*)params;
 - (void)getOAuthTokenWithCode:(NSString*)code;
+- (void)postSessions:(NSArray*)sessions;
 
 - (NSString*)urlEncodeValue:(NSString*)value;
 

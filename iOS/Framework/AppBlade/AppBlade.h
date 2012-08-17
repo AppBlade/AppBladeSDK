@@ -56,6 +56,9 @@ static NSString* const kAppBladeCacheDirectory;
 // AppBlade custom fields 
 @property (nonatomic, retain, readonly) NSDictionary* appBladeParams;
 
+// Should OAuth be used to authenticate. Default is YES.
+@property (nonatomic, assign, readonly) BOOL useOAuth;
+
 // The AppBlade delegate receives messages regarding device authentication and other events.
 // See protocol declaration, above.
 @property (nonatomic, assign) id<AppBladeDelegate> delegate;
@@ -71,6 +74,8 @@ static NSString* const kAppBladeCacheDirectory;
 
 // AppBlade manager singleton.
 + (AppBlade *)sharedManager;
+
+#pragma mark TODO: Make all of these class methods.
 
 // Pass in the full path to the plist
 - (void)loadSDKKeysFromPlist:(NSString*)plist;
@@ -123,5 +128,12 @@ static NSString* const kAppBladeCacheDirectory;
 
 //  Returns either an OAuth token, or UDID if OAuth is disabled
 - (NSString*)deviceIdentifier;
+
+/*
+ * Session counting
+ */
+
++ (void)startSession;
++ (void)endSession;
 
 @end

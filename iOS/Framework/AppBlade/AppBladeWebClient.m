@@ -16,10 +16,11 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-static NSString *approvalURLFormat = @"%@/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat = @"%@/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat = @"%@/api/projects/%@/devices/%@/feedback";
-static NSString *oAuthTokenURLFormat = @"%@/oauth/tokens";
+static NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
+static NSString *oAuthTokenURLFormat        = @"%@/oauth/tokens";
+static NSString *sessionURLFormat           = @"%@/api/user_sessions";
 
 @interface AppBladeWebClient ()
 
@@ -277,7 +278,6 @@ static BOOL is_encrypted () {
     _api = AppBladeWebClientOAuth_Token;
     
     NSURL* tokenURL = [NSURL URLWithString:[NSString stringWithFormat:oAuthTokenURLFormat, AppBladeHost]];
-    NSLog(@"Token URL: %@", [tokenURL absoluteString]);
     
     NSMutableURLRequest* request = [self requestForURL:tokenURL];
     [request setHTTPMethod:@"POST"];
@@ -292,6 +292,49 @@ static BOOL is_encrypted () {
     
     [request setHTTPBody:body];
     [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease]; 
+}
+
+- (void)postSessions:(NSArray *)sessions
+{
+    _api = AppBladeWebClientAPI_Sessions;
+    
+    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, AppBladeHost];
+    NSURL* sessionURL = [NSURL URLWithString:sessionString];
+    
+    NSMutableURLRequest* request = [self requestForURL:sessionURL];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:s_boundary] forHTTPHeaderField:@"Content-Type"];
+    
+    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"device_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[[AppBlade sharedManager] deviceIdentifier] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"project_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[[AppBlade sharedManager] appBladeProjectID] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSError* error = nil;
+    
+    NSData* requestData = [NSPropertyListSerialization dataWithPropertyList:sessions format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    
+    if (requestData) {
+        [body appendData:requestData];
+        [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [request setHTTPBody:body];
+        [self addSecurityToRequest:request];
+        [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease]; 
+    }
+    else {
+        NSLog(@"Error sending session data");
+        [self.delegate appBladeWebClientFailed:self];
+        [_request release];
+    }
+    
 }
 
 #pragma mark - Request helper methods.
@@ -472,6 +515,15 @@ static BOOL is_encrypted () {
         _receivedData = nil;
         
         [self.delegate appBladeWebClient:self receivedOAuthToken:finalToken];
+    }
+    else if (_api == AppBladeWebClientAPI_Sessions) {
+        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
+        if (status == 201) {
+            [self.delegate appBladeWebClientSessionsPosted:self];
+        }
+        else {
+            [self.delegate appBladeWebClientFailed:self];
+        }
     }
     
     [_request release];
