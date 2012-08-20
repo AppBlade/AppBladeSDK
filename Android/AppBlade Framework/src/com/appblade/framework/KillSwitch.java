@@ -139,8 +139,10 @@ public class KillSwitch {
 		@Override
 		protected Void doInBackground(Void... params) {
 			HttpResponse response = getKillSwitchResponse(this.useOldAPI);
-
-			Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			
+			if (response != null)
+				Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			
 			handleResponse(response);
 			
 			return null;
