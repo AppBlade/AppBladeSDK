@@ -75,8 +75,29 @@ public class AppBlade {
 		if (customFields == null) {
 			customFields = new Hashtable<String, String>();
 		}
-
-		customFields.put(key, value);
+		
+		if (key != null && value == null && customFields.containsKey(key)) {
+			customFields.remove(key);
+		}
+		else if (key != null && value != null) {
+			customFields.put(key, value);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	
+	public static void setCustomFields(Hashtable<String, String> table) {
+		customFields = table;
+	}
+	
+	/**
+	 * Clears all custom fields
+	 */
+	
+	public static void clearCustomFields() {
+		customFields = null;
 	}
 
 	/**

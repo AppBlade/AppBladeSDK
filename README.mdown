@@ -83,6 +83,14 @@ You can either download the compiled version from [our website](http://appblade.
             [[AppBlade sharedManager] allowFeedbackReporting];
             
    **Note:** Feedback requires there be a `keyWindow`. Make sure to set this in `-application:didFinishLaunchingWithOptions:` as well. If you do not have a `keyWindow`, you can call `allowFeedbackReportingForWindow:` instead.
+   
+##Using Custom Fields##
+The AppBladeSDK now gives you the option to include custom fields in your crash reports and feedback. This requires the 0.3.1b version of the SDK.
+
+- To populate a new dictionary of custom fields, call `setCustomParams:`. This will overwrite all existing fields.
+- To add or update a single field call `updateCustomParam:withValue`.
+- To clear a single key/value pair, pass a `nil` `value` into `updateCustomParam:withValue:`.
+- To clear all key/value pairs, call `clearAllCustomParams`.
             
 
 #Android#
@@ -124,6 +132,14 @@ You can download a compiled .jar from [our website](http://appblade.com/sdk/down
 5. Be sure that your application has permission to access the internet to allow the AppBlade SDK to communicate with our servers by adding the following permission to the manifest:
 
 		<uses-permission android:name="android.permission.INTERNET" />
+
+##Using Custom Fields##
+The AppBladeSDK now gives you the option to include custom fields in your crash reports and feedback. This requires the 0.3.1b version of the SDK.
+
+- To populate a new hashtable of custom fields, call `setCustomFields:`. This will overwrite all existing fields.
+- To add or update a single field call `setCustomField(key,  value)`.
+- To clear a single key/value pair, pass a `null` `value` into `setCustomField(key,  value)`.
+- To clear all key/value pairs, call `clearCustomFields`.
 
 #Resources:#
 ###[AppBlade.com](https://appblade.com/)###
