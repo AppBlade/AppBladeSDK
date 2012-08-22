@@ -409,10 +409,7 @@ public class AppBlade {
 			if(!StringUtils.isNullOrEmpty(stackTrace))
 			{
 				SecureRandom random = new SecureRandom();
-//				random.generateSeed(4);
-				byte[] randomBytes = null;
-				random.nextBytes(randomBytes);
-				int r = ByteBuffer.wrap(randomBytes).getInt();
+				int r = random.nextInt(9999);
 				String filename = String.format("%s/ex-%d-%d.txt",
 						rootDir, System.currentTimeMillis(), r);
 

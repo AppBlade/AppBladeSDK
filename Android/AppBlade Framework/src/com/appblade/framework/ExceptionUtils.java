@@ -42,18 +42,20 @@ class ExceptionUtils {
 		
 		byte[] contentByte = String.format("--%s\r\n", boundary).getBytes();
 		
-		byte[] paramsHeaderByte = String.format("Content-Disposition: form-data; name=\"custom_params\"\r\nContent-Type: application/json\r\n\r\n").getBytes();
-		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsHeaderByte);
-		JSONObject customParams = new JSONObject(AppBlade.customFields);
-		
-		// from: http://stackoverflow.com/questions/5474916/multipartentity-not-creating-good-request
-		byte[] paramsByte = customParams.toString().getBytes();
-		contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsByte);
-		
 		
 		try {
-			byte[] boundaryByte = String.format("\r\n--%s\r\n", boundary).getBytes();
-			contentByte = WebServiceHelper.concatenateByteArrays(contentByte, boundaryByte);
+			if (AppBlade.customFields != null) {
+				byte[] paramsHeaderByte = String.format("Content-Disposition: form-data; name=\"custom_params\"\r\nContent-Type: application/json\r\n\r\n").getBytes();
+				contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsHeaderByte);
+				JSONObject customParams = new JSONObject(AppBlade.customFields);
+				
+				// from: http://stackoverflow.com/questions/5474916/multipartentity-not-creating-good-request
+				byte[] paramsByte = customParams.toString().getBytes();
+				contentByte = WebServiceHelper.concatenateByteArrays(contentByte, paramsByte);
+				
+				byte[] boundaryByte = String.format("\r\n--%s\r\n", boundary).getBytes();
+				contentByte = WebServiceHelper.concatenateByteArrays(contentByte, boundaryByte);
+			}
 			
 			byte[] exceptionHeaderByte = String.format("Content-Disposition: form-data; name=\"file\"; filename=\"report.crash\"\r\nContent-Type: text/plain\r\n\r\n").getBytes();
 			
