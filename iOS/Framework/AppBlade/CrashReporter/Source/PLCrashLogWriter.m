@@ -265,8 +265,12 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer, NSString 
             _NSGetExecutablePath(NULL, &process_path_len);
             if (process_path_len > 0) {
                 process_path = malloc(process_path_len);
-                _NSGetExecutablePath(process_path, &process_path_len);
-                writer->process_info.process_path = process_path;
+                
+                if (process_path != 0) {
+                    _NSGetExecutablePath(process_path, &process_path_len);
+                    writer->process_info.process_path = process_path;
+                }
+                
             }
         }
 

@@ -36,6 +36,8 @@
 #import <fcntl.h>
 #import <mach-o/dyld.h>
 
+#import "FBEncryptorAES.h"
+
 #define NSDEBUG(msg, args...) {\
     NSLog(@"[PLCrashReporter] " msg, ## args); \
 }
@@ -51,6 +53,11 @@ static NSString *PLCRASH_LIVE_CRASHREPORT = @"live_report.plcrash";
 /** @internal
  * Directory containing crash reports queued for sending. */
 static NSString *PLCRASH_QUEUED_DIR = @"queued_reports";
+
+
+/** @internal
+ * AES Key. */
+static NSString* const kPLCrashReporterAESKey                  = @"wqRvPVG(bQrk@8ZX%#h#ChZvU";
 
 /** @internal
  * Maximum number of bytes that will be written to the crash report.
@@ -126,6 +133,14 @@ static void signal_handler_callback (int signal, siginfo_t *info, ucontext_t *ua
     /* Finished */
     plcrash_async_file_flush(&file);
     plcrash_async_file_close(&file);
+    
+    /* After writing the file (in C) encrypt it in Obj-C */
+    
+    NSError* error = nil;
+    NSData* data = [NSData dataWithContentsOfFile: [[PLCrashReporter sharedReporter] crashReportPath] options: NSMappedRead error:&error];
+    NSData* encryptedData = [FBEncryptorAES encryptData:data key:[kPLCrashReporterAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    
+    [encryptedData writeToFile:[[PLCrashReporter sharedReporter] crashReportPath] atomically:YES];
 
     /* Call any post-crash callback */
     if (crashCallbacks.handleSignal != NULL)
@@ -236,8 +251,18 @@ static void uncaught_exception_handler (NSException *exception) {
  * @return Returns nil if the crash report data could not be loaded.
  */
 - (NSData *) loadPendingCrashReportDataAndReturnError: (NSError **) outError {
+    
+    NSData* fileData = [NSData dataWithContentsOfFile: [self crashReportPath] options: NSMappedRead error: outError];
+    
+    NSData* unencryptedData = nil;
+    if (fileData) {
+        
+        /* If file was not encrypted, it returns nil */
+        unencryptedData = [FBEncryptorAES decryptData:fileData key:[kPLCrashReporterAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    }
+    
     /* Load the (memory mapped) data */
-    return [NSData dataWithContentsOfFile: [self crashReportPath] options: NSMappedRead error: outError];
+    return unencryptedData;
 }
 
 
