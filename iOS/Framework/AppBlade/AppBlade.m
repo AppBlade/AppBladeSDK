@@ -223,15 +223,14 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
     NSLog(@"Catch and report crashes");
     [self validateProjectConfiguration];
-    
-    NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
-    
 
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    NSError *error;
+    NSError *error = nil;
     
     // Check if we previously crashed
     if ([crashReporter hasPendingCrashReport]) {
+        
+        NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
         
         NSDictionary* crashedFields = nil;
         if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
@@ -261,21 +260,21 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)handleCrashReportWithParams:(NSDictionary *)params
 {
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    NSData *crashData;
-    NSError *error;
+    NSData *crashData = nil;
+    NSError *error = nil;
     
     // Try loading the crash report
     crashData = [crashReporter loadPendingCrashReportDataAndReturnError: &error];
     if (crashData == nil) {
         [crashReporter purgePendingCrashReport];
-        NSLog(@"Purged pending crash report");
+        NSLog(@"Error loading crash report: %@\nPurged pending crash report", [error localizedDescription]);
         return;
     }
     
     // try to parse the crash data into a PLCrashReport. 
     PLCrashReport *report = [[[PLCrashReport alloc] initWithData: crashData error: &error] autorelease];
     if (report == nil) {
-        NSLog(@"Could not parse crash report");
+        NSLog(@"Error parsing crash report: %@\nCould not parse crash report", [error localizedDescription]);
         [crashReporter purgePendingCrashReport];
         return;
     }
