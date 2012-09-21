@@ -86,9 +86,12 @@ typedef enum {
     
     /** ARMv7 */
     PLCrashReportArchitectureARMv7 = 5,
-    
+
+    /** ARMv7s */
+    PLCrashReportArchitectureARMv7s = 6,
+
     /** Unknown */
-    PLCrashReportArchitectureUnknown = 6
+    PLCrashReportArchitectureUnknown = 7
 } PLCrashReportArchitecture;
 
 

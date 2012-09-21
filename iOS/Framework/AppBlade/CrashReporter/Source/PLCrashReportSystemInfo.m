@@ -61,6 +61,8 @@ PLCrashReportArchitecture PLCrashReportHostArchitecture =
     PLCrashReportArchitectureARMv6;
 #elif defined(__ARM_ARCH_7A__)
     PLCrashReportArchitectureARMv7;
+#elif defined(__ARM_ARCH_7S__)
+    PLCrashReportArchitectureARMv7s;
 #elif defined(__ppc__)
     PLCrashReportArchitecturePPC;
 #else
