@@ -49,8 +49,11 @@ enum Architecture {
     /* ARMv7 */
     ARMV7 = 5;
 
+    /* ARMv7s */
+    ARMV7S = 6;
+
     /* Unknown processor type. */
-    ARCHITECTURE_UNKNOWN = 6;
+    ARCHITECTURE_UNKNOWN = 7;
 }
 
 /* A crash report */
