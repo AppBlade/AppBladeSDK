@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31C55D4D1610F61E0032EE2A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31C55D4C1610F61E0032EE2A /* Default-568h@2x.png */; };
 		7E791281156A80E900DDC67D /* AppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7E791280156A80E900DDC67D /* AppBladeKeys.plist */; };
 		A13A94DD1533B81B002CDC12 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A13A94DC1533B81B002CDC12 /* libz.dylib */; };
 		A13A94ED1533DCB2002CDC12 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A13A94EB1533DCB2002CDC12 /* MainWindow-iPad.xib */; };
@@ -60,6 +61,7 @@
 
 /* Begin PBXFileReference section */
 		31B29E6B13FC1B4C00AF9D5D /* Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Maps.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		31C55D4C1610F61E0032EE2A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		6279A7C1141FA6FB0013F486 /* libAppBlade.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libAppBlade.a; path = "/Users/jkaufman/Library/Developer/Xcode/DerivedData/Maps-fxlsuaftoykwnsafsvdruvxaggxx/Build/Products/Release_Production-iphoneos/libAppBlade.a"; sourceTree = "<absolute>"; };
 		7E791280156A80E900DDC67D /* AppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppBladeKeys.plist; sourceTree = "<group>"; };
 		A13A94DC1533B81B002CDC12 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -127,6 +129,7 @@
 		CB29775A1395C5340094C550 = {
 			isa = PBXGroup;
 			children = (
+				31C55D4C1610F61E0032EE2A /* Default-568h@2x.png */,
 				A13A94DC1533B81B002CDC12 /* libz.dylib */,
 				CB51D32414293AF200A43CB5 /* AppBlade.xcodeproj */,
 				CBF479861395CA3100949297 /* Images */,
@@ -304,6 +307,7 @@
 				CB18A58013ACFBA400091131 /* CrashViewController.xib in Resources */,
 				A13A94ED1533DCB2002CDC12 /* MainWindow-iPad.xib in Resources */,
 				7E791281156A80E900DDC67D /* AppBladeKeys.plist in Resources */,
+				31C55D4D1610F61E0032EE2A /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
