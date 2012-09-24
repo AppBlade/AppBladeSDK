@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31800B4E1610DA9C009AD737 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31800B4D1610DA9C009AD737 /* Default-568h@2x.png */; };
+		31800B501610DB62009AD737 /* libAppBlade.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C8931014100DA900F1C147 /* libAppBlade.a */; };
 		62C892D7140FF07400F1C147 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C892D6140FF07400F1C147 /* UIKit.framework */; };
 		62C892D9140FF07400F1C147 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C892D8140FF07400F1C147 /* Foundation.framework */; };
 		62C892DB140FF07400F1C147 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C892DA140FF07400F1C147 /* CoreGraphics.framework */; };
@@ -16,11 +18,11 @@
 		62C892EA140FF07400F1C147 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62C892E8140FF07400F1C147 /* MainWindow.xib */; };
 		62C892ED140FF07400F1C147 /* CrashSampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62C892EC140FF07400F1C147 /* CrashSampleViewController.m */; };
 		62C892F0140FF07400F1C147 /* CrashSampleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62C892EE140FF07400F1C147 /* CrashSampleViewController.xib */; };
-		62C8931114100DA900F1C147 /* libAppBlade.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C8931014100DA900F1C147 /* libAppBlade.a */; };
 		62C8931414100E7B00F1C147 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C8931314100E7B00F1C147 /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		31800B4D1610DA9C009AD737 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		62C892D2140FF07400F1C147 /* CrashSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrashSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62C892D6140FF07400F1C147 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		62C892D8140FF07400F1C147 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -45,11 +47,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31800B501610DB62009AD737 /* libAppBlade.a in Frameworks */,
 				62C8931414100E7B00F1C147 /* Security.framework in Frameworks */,
 				62C892D7140FF07400F1C147 /* UIKit.framework in Frameworks */,
 				62C892D9140FF07400F1C147 /* Foundation.framework in Frameworks */,
 				62C892DB140FF07400F1C147 /* CoreGraphics.framework in Frameworks */,
-				62C8931114100DA900F1C147 /* libAppBlade.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +104,7 @@
 		62C892DD140FF07400F1C147 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				31800B4D1610DA9C009AD737 /* Default-568h@2x.png */,
 				62C892DE140FF07400F1C147 /* CrashSample-Info.plist */,
 				62C892DF140FF07400F1C147 /* InfoPlist.strings */,
 				62C892E2140FF07400F1C147 /* CrashSample-Prefix.pch */,
@@ -144,6 +147,9 @@
 /* Begin PBXProject section */
 		62C892C9140FF07300F1C147 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+			};
 			buildConfigurationList = 62C892CC140FF07300F1C147 /* Build configuration list for PBXProject "CrashSample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -169,6 +175,7 @@
 				62C892E1140FF07400F1C147 /* InfoPlist.strings in Resources */,
 				62C892EA140FF07400F1C147 /* MainWindow.xib in Resources */,
 				62C892F0140FF07400F1C147 /* CrashSampleViewController.xib in Resources */,
+				31800B4E1610DA9C009AD737 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,7 +231,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -238,7 +245,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -255,12 +262,14 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CrashSample/CrashSample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "CrashSample/CrashSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/AppBlade\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -272,6 +281,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CrashSample/CrashSample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "CrashSample/CrashSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -279,6 +289,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

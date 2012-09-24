@@ -189,18 +189,23 @@ static BOOL is_encrypted () {
     [apiRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
     [apiRequest setHTTPMethod:@"POST"]; 
     
+    
+    NSString *feedbackNotes = @"Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n";
     NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithString:@"Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[feedbackNotes dataUsingEncoding:NSUTF8StringEncoding]];
 
     [body appendData:[note dataUsingEncoding:NSUTF8StringEncoding]];
     
+    
+    NSString *feedbackConsole = @"Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n";
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithString:@"Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[feedbackConsole dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:consoleContent];
     
+    NSString *feedbackScreenshotStream = @"Content-Type: application/octet-stream\r\n\r\n";
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"%@\"\r\n", screenshot] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithString:@"Content-Type: application/octet-stream\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[feedbackScreenshotStream dataUsingEncoding:NSUTF8StringEncoding]];
 
     [body appendData:[NSData dataWithContentsOfFile:screenshotPath]];
     

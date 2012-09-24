@@ -16,7 +16,11 @@
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
 
+<<<<<<< HEAD
 static NSString* const s_sdkVersion                     = @"0.2.1";
+=======
+static NSString* const s_sdkVersion                     = @"0.2.2";
+>>>>>>> Updated GCC to LLVM. Incremented Version number. Updated example projects to also run in Xcode 4.5
 
 const int kUpdateAlertTag                               = 316;
 
@@ -553,6 +557,9 @@ static AppBlade *s_sharedManager = nil;
         else {
             [self.feedbackRequests removeObject:client];
         }
+
+    }else {
+        NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
 
     }
     
