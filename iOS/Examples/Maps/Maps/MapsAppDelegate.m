@@ -23,10 +23,10 @@
 
 		// Populate with values from the project SDK settings or load keys from plist
 		// see README for details
-    blade.appBladeProjectID = @"72143191-43cd-4d5a-a996-cfc10b25441a";
-    blade.appBladeProjectToken = @"d6ed480ad269f6899083f24a2abf3265";
-    blade.appBladeProjectSecret = @"7b8d05dd90f463736766591ce2654d88";
-    blade.appBladeProjectIssuedTimestamp = @"1328631126";
+    blade.appBladeProjectID = @""; //UUID
+    blade.appBladeProjectToken = @""; //Token
+    blade.appBladeProjectSecret = @""; //Secret
+    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
     
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
