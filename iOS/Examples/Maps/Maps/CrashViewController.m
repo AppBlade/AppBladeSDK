@@ -20,13 +20,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [super dealloc];
-    
-    [crashLabels release];
-}
-
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -67,7 +60,7 @@
 }
 
 - (IBAction)cancelPressed:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -111,9 +104,8 @@
 - (void)sigsegv
 {
     // This actually raises a SIGBUS.
-    NSString *str = [[NSString alloc] initWithUTF8String:"SIGSEGV STRING"];
-    [str release];
-    NSLog(@"String %@", str);
+    NSException *e = [NSException exceptionWithName:@"SIGSEGV" reason:@"Dummy SIGSEGV Reason" userInfo:nil];
+    @throw e;
 }
 
 - (void)throwNSException
@@ -138,7 +130,7 @@
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if(nil == cell)
     {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     
     cell.textLabel.text = [crashLabels objectAtIndex:indexPath.row];

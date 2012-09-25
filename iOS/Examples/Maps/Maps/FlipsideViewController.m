@@ -16,7 +16,6 @@
 
 - (void)dealloc
 {
-    [super dealloc];
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,8 +56,8 @@
 
 - (IBAction)crashException:(id)sender {
     
-    CrashViewController* crashVC = [[[CrashViewController alloc] initWithNibName:@"CrashViewController" bundle:nil] autorelease];
-    [self presentModalViewController:crashVC animated:YES];
+    CrashViewController* crashVC = [[CrashViewController alloc] initWithNibName:@"CrashViewController" bundle:nil];
+    [self presentViewController:crashVC animated:YES completion:nil];
         
     //NSException *e = [NSException exceptionWithName:@"TestException" reason:@"Testing Appblade Crash" userInfo:nil];
     //@throw e;
