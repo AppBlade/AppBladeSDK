@@ -14,7 +14,7 @@
  - **Application Feedback** *(iOS Only, added in v0.2)*
  	- At any point in the app, users can send a screenshot and a note to AppBlade by doing a three-finger double tap.
 
-###[Download compiled libraries v0.2](http://appblade.com/sdk/download)
+###[Download compiled libraries v0.2.1](http://appblade.com/sdk/download)
 
 #iOS SDK#
 ##Add AppBlade to your project#
@@ -28,7 +28,6 @@ Starting on iOS 6 and Xcode 4.5, Apple has officially dropped support for armv6 
 Here at AppBlade we have been forced to follow suit, and now support armv7 and armv7s processors for iOS 4.3 and above.
 For those who would like to continue to use older versions of Xcode or iOS for legacy purposes, [we have included a git tag of what you'll need](https://github.com/AppBlade/SDK/zipball/pre-xcode4.5).  
 
-
 ####Xcode 4###
 
 1. Download and unzip the AppBlade framework, then drag the inner AppBlade folder into the left-hand File Navigator of your application's Xcode project.
@@ -38,12 +37,6 @@ For those who would like to continue to use older versions of Xcode or iOS for l
 1.  Click your project file from the File Navigator and then select your app target from the list on the right.
 1.	Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
 1.  Select Security.framework from the list and click "Add".
-1.  Configure the framework using the instructions in the *Configure AppBlade* section of this document.
-
-####Xcode 3###
-1.  If you are upgrading from a previous version, delete the current AppBlade folder and its contents. Download and unzip the AppBlade framework, then drag the folder into the left-hand Project Navigator of your application's Xcode project.
-1.  Right click the "Frameworks" group in the Project Navigator and select "Add" > "Existing Frameworks".
-1.  Select "Security.framework" and click "Add".
 1.  Configure the framework using the instructions in the *Configure AppBlade* section of this document.
 
 ###Including AppBlade Binary in Xcode 4##
