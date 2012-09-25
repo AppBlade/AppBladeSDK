@@ -255,12 +255,16 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)allowFeedbackReporting
 {
+    NSLog(@"allowFeedbackReporting");
+
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     if (window) {
         [self allowFeedbackReportingForWindow:window];
+        NSLog(@"Allowing feedback.");
+
     }
     else {
-        NSLog(@"Cannot setup for feeback. No keyWindow.");
+        NSLog(@"Cannot setup for feedback. No keyWindow.");
     }
 }
 
@@ -373,6 +377,7 @@ static AppBlade *s_sharedManager = nil;
 	NSString *pngFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
 	NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(currentImage)];
 	[data1 writeToFile:pngFilePath atomically:YES];
+    NSLog(@"Screen captured in fileName %@", fileName);
     return [pngFilePath autorelease];
     
 }
@@ -553,6 +558,9 @@ static AppBlade *s_sharedManager = nil;
         else {
             [self.feedbackRequests removeObject:client];
         }
+
+    }else {
+        NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
 
     }
     
