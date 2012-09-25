@@ -13,6 +13,7 @@
    - On application start, users are automatically notified when an update is available
  - **Application Feedback** *(iOS Only, added in v0.2)*
  	- At any point in the app, users can send a screenshot and a note to AppBlade by doing a three-finger double tap.
+	- v0.2.1 is required to submit feedback with screenshots, due to security changes on the AppBlade API
 
 ###[Download compiled libraries v0.2.1](http://appblade.com/sdk/download)
 
