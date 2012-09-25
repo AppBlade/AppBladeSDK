@@ -23,6 +23,12 @@ There are two ways to include AppBlade in your project, as source or a compiled 
 ###Including AppBlade Source##
 If you are upgrading from a previous version, delete the current AppBlade folder and its contents before updating.
 
+######A Note on Xcode 4.5 and Above###
+Starting on iOS 6 and Xcode 4.5, Apple has officially dropped support for armv6 processors (And, subsequently, the ability to exclusively publish to iPhone 3G and below) in order to make way for its armv7s processors in the iPhone 5.
+Here at AppBlade we have been forced to follow suit, and now support armv7 and armv7s processors for iOS 4.3 and above.
+For those who would like to continue to use older versions of Xcode or iOS for legacy prurposes, we have included a git tag of what you'll need.  
+
+
 ####Xcode 4###
 
 1. Download and unzip the AppBlade framework, then drag the inner AppBlade folder into the left-hand File Navigator of your application's Xcode project.
