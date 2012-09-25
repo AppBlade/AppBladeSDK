@@ -14,10 +14,6 @@
 
 @synthesize delegate=_delegate;
 
-- (void)dealloc
-{
-}
-
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -57,7 +53,7 @@
 - (IBAction)crashException:(id)sender {
     
     CrashViewController* crashVC = [[CrashViewController alloc] initWithNibName:@"CrashViewController" bundle:nil];
-    [self presentViewController:crashVC animated:YES completion:nil];
+    [self presentModalViewController:crashVC animated:YES];
         
     //NSException *e = [NSException exceptionWithName:@"TestException" reason:@"Testing Appblade Crash" userInfo:nil];
     //@throw e;

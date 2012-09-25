@@ -20,7 +20,7 @@
 
 - (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (IBAction)showInfo:(id)sender
@@ -29,7 +29,7 @@
     controller.delegate = self;
     
     controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    [self presentViewController:controller animated:YES completion:nil];
+    [self presentModalViewController:controller animated:YES];
     
 }
 
@@ -55,9 +55,5 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)dealloc
-{
-
-}
 
 @end
