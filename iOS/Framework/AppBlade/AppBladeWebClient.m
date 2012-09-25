@@ -26,6 +26,9 @@ static NSString *reportCrashURLFormat = @"https://appblade.com/api/projects/%@/d
 static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%@/devices/%@/feedback";
 #endif
 
+static NSString* s_boundary = @"---------------------------14737809831466499882746641449";
+
+
 @interface AppBladeWebClient ()
 
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
@@ -177,47 +180,49 @@ static BOOL is_encrypted () {
     NSString* udid = [self udid];
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
     NSData* consoleContent = [NSData dataWithContentsOfFile:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:console]];
+    //    NSError* error = nil;
+    //    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Build report URL.
     NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeProjectID], udid];
-    NSURL* reportURL = [NSURL URLWithString:reportString];    
+    NSURL* reportURL = [NSURL URLWithString:reportString];
     
     // Create the API request.
     NSMutableURLRequest* apiRequest = [self requestForURL:reportURL];
-    NSString *boundary = @"---------------------------14737809831466499882746641449";
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-    [apiRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
-    [apiRequest setHTTPMethod:@"POST"]; 
+    [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:s_boundary] forHTTPHeaderField:@"Content-Type"];
+    [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [apiRequest setHTTPMethod:@"POST"];
     
+    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
-    NSString *feedbackNotes = @"Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n";
-    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[feedbackNotes dataUsingEncoding:NSUTF8StringEncoding]];
-
     [body appendData:[note dataUsingEncoding:NSUTF8StringEncoding]];
     
-    
-    NSString *feedbackConsole = @"Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n";
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[feedbackConsole dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:consoleContent];
     
-    NSString *feedbackScreenshotStream = @"Content-Type: application/octet-stream\r\n\r\n";
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"%@\"\r\n", screenshot] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[feedbackScreenshotStream dataUsingEncoding:NSUTF8StringEncoding]];
-
-    [body appendData:[NSData dataWithContentsOfFile:screenshotPath]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"base64:%@\"\r\n", screenshot] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-
+    NSData* screenshotData = [[self encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
+    [body appendData:screenshotData];
+    
+    //    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    //    [body appendData:[@"Content-Disposition: form-data; name=\"feedback[custom_params]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    //    [body appendData:paramsData];
+    
+    [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+    
     
     [apiRequest setHTTPBody:body];
+    [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
     
     [self addSecurityToRequest:apiRequest];
     
     // Issue the request.
-    [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease]; 
+    [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
 }
 
 #pragma mark - Request helper methods.

@@ -21,15 +21,17 @@
 {
 		// Populate with values from the project SDK settings
 		// see README for details
-    [[AppBlade sharedManager] setAppBladeProjectID:@""];
-    [[AppBlade sharedManager] setAppBladeProjectToken:@""];
-    [[AppBlade sharedManager] setAppBladeProjectSecret:@""];
-    [[AppBlade sharedManager] setAppBladeProjectIssuedTimestamp:@""];
+    [[AppBlade sharedManager] setAppBladeProjectID:@"72143191-43cd-4d5a-a996-cfc10b25441a"];
+    [[AppBlade sharedManager] setAppBladeProjectToken:@"d6ed480ad269f6899083f24a2abf3265"];
+    [[AppBlade sharedManager] setAppBladeProjectSecret:@"7b8d05dd90f463736766591ce2654d88"];
+    [[AppBlade sharedManager] setAppBladeProjectIssuedTimestamp:@"1328631126"];
     
     [[AppBlade sharedManager] catchAndReportCrashes];
-     
+
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    [[AppBlade sharedManager] allowFeedbackReporting];
+
     return YES;
 }
 
