@@ -88,6 +88,7 @@ static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8de
 
 @implementation AppBlade
 
+@synthesize appBladeHost = _appBladeHost;
 @synthesize appBladeProjectID = _appBladeProjectID;
 @synthesize appBladeProjectToken = _appBladeProjectToken;
 @synthesize appBladeProjectSecret = _appBladeProjectSecret;
@@ -162,7 +163,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)validateProjectConfiguration
 {
     // Validate AppBlade project settings. This should be executed by every public method before proceding.
-    if(!self.appBladeProjectID) {
+    if(!self.appBladeHost) {
+        [self raiseConfigurationExceptionWithFieldName:@"Host"];
+    } else if (!self.appBladeProjectID) {
         [self raiseConfigurationExceptionWithFieldName:@"Project ID"];
     } else if (!self.appBladeProjectToken) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Token"];
@@ -288,6 +291,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)loadSDKKeysFromPlist:(NSString *)plist
 {
     NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
+    self.appBladeHost = [keys objectForKey:@"host"];
     self.appBladeProjectID = [keys objectForKey:@"projectID"];
     self.appBladeProjectToken = [keys objectForKey:@"token"];
     self.appBladeProjectSecret = [keys objectForKey:@"secret"];

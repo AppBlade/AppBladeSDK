@@ -34,12 +34,16 @@ static NSString* const kAppBladeCacheDirectory;
 
     id<AppBladeDelegate> _delegate;
     NSURL *_upgradeLink;
-    
+   
+    NSString *_appBladeHost;
     NSString *_appBladeProjectID;
     NSString *_appBladeProjectToken;
     NSString *_appBladeProjectSecret;
     NSString *_appBladeProjectIssuedTimestamp;
 }
+
+// AppBlade host name
+@property (nonatomic, retain) NSString* appBladeHost;
 
 // UUID of the project on AppBlade.
 @property (nonatomic, retain) NSString* appBladeProjectID;

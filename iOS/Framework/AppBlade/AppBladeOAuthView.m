@@ -10,7 +10,7 @@
 #import "AppBladeWebClient.h"
 #import "AppBlade.h"
 
-static NSString* AppBladeOAuthFormat = @"%@/oauth/authorization/new?client_id=%@";
+static NSString* AppBladeOAuthFormat = @"https://%@/oauth/authorization/new?client_id=%@";
 
 const int kProgressViewSizeHeight       = 80;
 const int kProgressViewSizeWidth        = 200;
@@ -81,7 +81,7 @@ const int kProgressViewSizeWidth        = 200;
     [self addSubview:self.progressView];
     [self addSubview:self.webView];
     
-    NSString* oauthString = [NSString stringWithFormat:AppBladeOAuthFormat, AppBladeHost, [[AppBlade sharedManager] appBladeProjectToken]];
+    NSString* oauthString = [NSString stringWithFormat:AppBladeOAuthFormat, [[AppBlade sharedManager] appBladeHost], [[AppBlade sharedManager] appBladeProjectToken]];
     NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:oauthString]];
     [self.webView loadRequest:request];
     
@@ -122,7 +122,7 @@ const int kProgressViewSizeWidth        = 200;
     
     [self addSubview:self.webView];
     
-    NSString* oauthString = [NSString stringWithFormat:AppBladeOAuthFormat, AppBladeHost, [[AppBlade sharedManager] appBladeProjectToken]];
+    NSString* oauthString = [NSString stringWithFormat:AppBladeOAuthFormat, [[AppBlade sharedManager] appBladeHost], [[AppBlade sharedManager] appBladeProjectToken]];
     NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:oauthString]];
     [self.webView loadRequest:request];
     

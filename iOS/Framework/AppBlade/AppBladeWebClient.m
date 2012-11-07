@@ -16,11 +16,11 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-static NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
-static NSString *oAuthTokenURLFormat        = @"%@/oauth/tokens";
-static NSString *sessionURLFormat           = @"%@/api/user_sessions";
+static NSString *approvalURLFormat          = @"https://%@/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat       = @"https://%@/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat    = @"https://%@/api/projects/%@/devices/%@/feedback";
+static NSString *oAuthTokenURLFormat        = @"https://%@/oauth/tokens";
+static NSString *sessionURLFormat           = @"https://%@/api/user_sessions";
 
 @interface AppBladeWebClient ()
 
@@ -167,7 +167,7 @@ static BOOL is_encrypted () {
 
     // Create the request.
     NSString* udid = [[AppBlade sharedManager] deviceIdentifier];
-    NSString* urlString = [NSString stringWithFormat:approvalURLFormat, AppBladeHost, [_delegate appBladeProjectID], udid];
+    NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* projectUrl = [NSURL URLWithString:urlString];
     NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
     [apiRequest setHTTPMethod:@"GET"];
@@ -190,7 +190,7 @@ static BOOL is_encrypted () {
     NSString* udid = [[AppBlade sharedManager] deviceIdentifier];
 
     // Build report URL.
-    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, AppBladeHost, [_delegate appBladeProjectID], udid];
+    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* urlCrashReport = [NSURL URLWithString:urlCrashReportString];    
 
     // Create the API request.
@@ -237,7 +237,7 @@ static BOOL is_encrypted () {
     NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Build report URL.
-    NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, AppBladeHost, [_delegate appBladeProjectID], udid];
+    NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* reportURL = [NSURL URLWithString:reportString];    
     
     // Create the API request.
@@ -283,7 +283,7 @@ static BOOL is_encrypted () {
 {
     _api = AppBladeWebClientOAuth_Token;
     
-    NSURL* tokenURL = [NSURL URLWithString:[NSString stringWithFormat:oAuthTokenURLFormat, AppBladeHost]];
+    NSURL* tokenURL = [NSURL URLWithString:[NSString stringWithFormat:oAuthTokenURLFormat, [_delegate appBladeHost]]];
     
     NSMutableURLRequest* request = [self requestForURL:tokenURL];
     [request setHTTPMethod:@"POST"];
@@ -304,7 +304,7 @@ static BOOL is_encrypted () {
 {
     _api = AppBladeWebClientAPI_Sessions;
     
-    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, AppBladeHost];
+    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [_delegate appBladeHost]];
     NSURL* sessionURL = [NSURL URLWithString:sessionString];
     
     NSMutableURLRequest* request = [self requestForURL:sessionURL];

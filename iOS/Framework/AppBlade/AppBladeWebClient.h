@@ -19,16 +19,11 @@ typedef enum {
     AppBladeWebClientAPI_Sessions
 } AppBladeWebClientAPI;
 
-#if STAGING
-static NSString* AppBladeHost = @"http://staging.appblade.com";
-#else
-static NSString* AppBladeHost = @"https://appblade.com";
-#endif
-
 @protocol AppBladeWebClientDelegate <NSObject>
 
 @required
 
+- (NSString *)appBladeHost;
 - (NSString *)appBladeProjectID;
 - (NSString *)appBladeProjectToken;
 - (NSString *)appBladeProjectSecret;
