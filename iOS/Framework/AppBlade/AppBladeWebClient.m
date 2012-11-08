@@ -28,6 +28,7 @@ static NSString *sessionURLFormat           = @"https://%@/api/user_sessions";
 
 - (NSString*)osVersionBuild;
 - (NSString*)platform;
+- (NSString *) deviceName;
 
 // Request helper methods.
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url;
@@ -138,6 +139,15 @@ static BOOL is_encrypted () {
     free(machine);
     return platform;
 }
+
+- (NSString *) deviceName {
+    #if TARGET_IPHONE_SIMULATOR
+        return @"No Name (Simulator)";
+    #else
+        return [[UIDevice currentDevice] name];
+    #endif
+}
+
 
 #pragma mark - Lifecycle
 
@@ -356,6 +366,8 @@ static BOOL is_encrypted () {
     [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
     [apiRequest addValue:[self osVersionBuild] forHTTPHeaderField:@"IOS_RELEASE"];
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
+    [apiRequest addValue:[self deviceName] forHTTPHeaderField:@"MONIKER"];
+    
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
     
     NSString* bundleHash = [self hashExecutable];
