@@ -41,6 +41,8 @@ static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields
 static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
 static NSString* const kAppBladeAESKey                  = @"y8g74@J1@%rqy3%(x8deARKsWp";
 
+static NSString* const kAppBladeDefaultHost             = @"www.appblade.com"; 
+
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate, AppBladeOAuthViewDelegate>
 
 @property (nonatomic, retain) NSURL* upgradeLink;
@@ -162,10 +164,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)validateProjectConfiguration
 {
-    // Validate AppBlade project settings. This should be executed by every public method before proceding.
     if(!self.appBladeHost) {
-        [self raiseConfigurationExceptionWithFieldName:@"Host"];
-    } else if (!self.appBladeProjectID) {
+        //Fall back to the default
+        NSLog(@"Host not set manually, falling back to default host (%@)", kAppBladeDefaultHost);
+        self.appBladeHost = kAppBladeDefaultHost;
+    }
+    // Validate AppBlade project settings. This should be executed by every public method before proceding.
+    if (!self.appBladeProjectID) {
         [self raiseConfigurationExceptionWithFieldName:@"Project ID"];
     } else if (!self.appBladeProjectToken) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Token"];
@@ -196,6 +201,16 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 #pragma mark
+
+- (void)loadSDKKeysFromPlist:(NSString *)plist
+{
+    NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
+    self.appBladeHost = [keys objectForKey:@"host"];
+    self.appBladeProjectID = [keys objectForKey:@"projectID"];
+    self.appBladeProjectToken = [keys objectForKey:@"token"];
+    self.appBladeProjectSecret = [keys objectForKey:@"secret"];
+    self.appBladeProjectIssuedTimestamp = [keys objectForKey:@"timestamp"];
+}
 
 - (void)checkApproval
 {
@@ -288,17 +303,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 }
 
-- (void)loadSDKKeysFromPlist:(NSString *)plist
-{
-    NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
-    self.appBladeHost = [keys objectForKey:@"host"];
-    self.appBladeProjectID = [keys objectForKey:@"projectID"];
-    self.appBladeProjectToken = [keys objectForKey:@"token"];
-    self.appBladeProjectSecret = [keys objectForKey:@"secret"];
-    self.appBladeProjectIssuedTimestamp = [keys objectForKey:@"timestamp"];
-}
 
-#pragma mark - Feedback
+#pragma mark - Feedback Dialogue
 
 - (BOOL)hasPendingFeedbackReports
 {
@@ -364,7 +370,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
 }
 
-#pragma mark -
+#pragma mark - Feedback 
 
 -(void)feedbackDidSubmitText:(NSString*)feedbackText{
     
