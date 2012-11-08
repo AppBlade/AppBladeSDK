@@ -393,20 +393,21 @@ static BOOL is_encrypted () {
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     if(_api == AppBladeWebClientAPI_Permissions) {
-        NSString *error;
+        NSError *error;
         NSPropertyListFormat format;
         
         NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSLog(@"Received Response from AppBlade: %@", string);
-        
-        NSDictionary *plist = [NSPropertyListSerialization propertyListFromData:_receivedData mutabilityOption:NSPropertyListImmutable format:&format errorDescription:&error];
+                
+        NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:_receivedData options:NSPropertyListImmutable format:&format error:&error];
         
         [_receivedData release];
         _receivedData = nil;
         
-        if (plist) {
+        if (plist && error == NULL) {
             [_delegate appBladeWebClient:self receivedPermissions:plist];
         } else {
+            NSLog(@"Error parsing permisions plist: %@", [error debugDescription]);
             [_delegate appBladeWebClientFailed:self];
         }
         
@@ -416,7 +417,7 @@ static BOOL is_encrypted () {
     else if (_api == AppBladeWebClientAPI_Feedback) {
         
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
-        BOOL success = status == 201 ? YES : NO;
+        BOOL success = status == 201 || status == 200 ? YES : NO;
         
         [_delegate appBladeWebClientSentFeedback:self withSuccess:success];
     }
