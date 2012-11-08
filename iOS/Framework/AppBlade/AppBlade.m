@@ -117,13 +117,13 @@ static AppBlade *s_sharedManager = nil;
 - (void)validateProjectConfiguration
 {
     // Validate AppBlade project settings. This should be executed by every public method before proceding.
-    if(!self.appBladeProjectID) {
+    if(!self.appBladeProjectID || self.appBladeProjectID.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project ID"];
-    } else if (!self.appBladeProjectToken) {
+    } else if (!self.appBladeProjectToken || self.appBladeProjectToken.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Token"];
-    } else if (!self.appBladeProjectSecret) {
+    } else if (!self.appBladeProjectSecret || self.appBladeProjectSecret.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Secret"];
-    } else if (!self.appBladeProjectIssuedTimestamp) {
+    } else if (!self.appBladeProjectIssuedTimestamp || self.appBladeProjectIssuedTimestamp.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
     }
 }
@@ -510,6 +510,7 @@ static AppBlade *s_sharedManager = nil;
         // prevent the app from running until the request completes successfully. This will prevent
         // users from unlocking an app by simply changing their clock.
         if ([self withinStoredTTL]) {
+            NSLog(@"Within TTL");
             if(signalDelegate) {
                 [self.delegate appBlade:self applicationApproved:YES error:nil];
             }
