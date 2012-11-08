@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7E791281156A80E900DDC67D /* AppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7E791280156A80E900DDC67D /* AppBladeKeys.plist */; };
+		31A5823B164C062200316D45 /* AppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5823A164C062200316D45 /* AppBladeKeys.plist */; };
 		A13A94DD1533B81B002CDC12 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A13A94DC1533B81B002CDC12 /* libz.dylib */; };
 		A13A94ED1533DCB2002CDC12 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A13A94EB1533DCB2002CDC12 /* MainWindow-iPad.xib */; };
 		CB18A57F13ACFBA400091131 /* CrashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A57D13ACFBA400091131 /* CrashViewController.m */; };
@@ -59,9 +59,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		31A5823A164C062200316D45 /* AppBladeKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = AppBladeKeys.plist; sourceTree = SOURCE_ROOT; };
 		31B29E6B13FC1B4C00AF9D5D /* Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Maps.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6279A7C1141FA6FB0013F486 /* libAppBlade.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libAppBlade.a; path = "/Users/jkaufman/Library/Developer/Xcode/DerivedData/Maps-fxlsuaftoykwnsafsvdruvxaggxx/Build/Products/Release_Production-iphoneos/libAppBlade.a"; sourceTree = "<absolute>"; };
-		7E791280156A80E900DDC67D /* AppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppBladeKeys.plist; sourceTree = "<group>"; };
 		A13A94DC1533B81B002CDC12 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		A13A94EC1533DCB2002CDC12 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "iPad/en.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		CB18A57C13ACFBA400091131 /* CrashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashViewController.h; sourceTree = "<group>"; };
@@ -189,7 +189,7 @@
 				CB2977721395C5340094C550 /* InfoPlist.strings */,
 				CB2977751395C5340094C550 /* Maps-Prefix.pch */,
 				CB2977761395C5340094C550 /* main.m */,
-				7E791280156A80E900DDC67D /* AppBladeKeys.plist */,
+				31A5823A164C062200316D45 /* AppBladeKeys.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -303,7 +303,7 @@
 				CBF4798C1395CA6700949297 /* Icon@2x.png in Resources */,
 				CB18A58013ACFBA400091131 /* CrashViewController.xib in Resources */,
 				A13A94ED1533DCB2002CDC12 /* MainWindow-iPad.xib in Resources */,
-				7E791281156A80E900DDC67D /* AppBladeKeys.plist in Resources */,
+				31A5823B164C062200316D45 /* AppBladeKeys.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
