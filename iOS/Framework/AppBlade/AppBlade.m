@@ -64,6 +64,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
 @implementation AppBlade
 
+@synthesize appBladeHost = _appBladeHost;
 @synthesize appBladeProjectID = _appBladeProjectID;
 @synthesize appBladeProjectToken = _appBladeProjectToken;
 @synthesize appBladeProjectSecret = _appBladeProjectSecret;
@@ -203,6 +204,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)loadSDKKeysFromPlist:(NSString *)plist
 {
     NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
+    self.appBladeHost = [keys objectForKey:@"host"];
     self.appBladeProjectID = [keys objectForKey:@"projectID"];
     self.appBladeProjectToken = [keys objectForKey:@"token"];
     self.appBladeProjectSecret = [keys objectForKey:@"secret"];
