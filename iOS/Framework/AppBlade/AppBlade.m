@@ -120,6 +120,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)validateProjectConfiguration
 {
+    
     // Validate AppBlade project settings. This should be executed by every public method before proceding.
     if(!self.appBladeHost) {
         NSLog(@"Host not being ovewritten, falling back to default host (%@)", kAppBladeDefaultHost);
@@ -519,7 +520,6 @@ static AppBlade *s_sharedManager = nil;
         // prevent the app from running until the request completes successfully. This will prevent
         // users from unlocking an app by simply changing their clock.
         if ([self withinStoredTTL]) {
-            NSLog(@"Within TTL");
             if(signalDelegate) {
                 [self.delegate appBlade:self applicationApproved:YES error:nil];
             }

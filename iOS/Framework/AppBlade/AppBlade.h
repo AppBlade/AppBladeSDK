@@ -42,7 +42,7 @@ static NSString* const kAppBladeCacheDirectory;
     NSString *_appBladeProjectIssuedTimestamp;
 }
 
-// AppBlade host name //Include neither http:// nor https://, we'll handle that.
+// AppBlade host name
 @property (nonatomic, retain) NSString* appBladeHost;
 
 // UUID of the project on AppBlade.
