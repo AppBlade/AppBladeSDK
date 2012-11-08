@@ -16,15 +16,9 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-#if STAGING
-static NSString *approvalURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat = @"http://staging.appblade.com/api/projects/%@/devices/%@/feedback";
-#else
-static NSString *approvalURLFormat = @"https://appblade.com/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat = @"https://appblade.com/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat = @"https://appblade.com/api/projects/%@/devices/%@/feedback";
-#endif
+static NSString *approvalURLFormat          = @"https://%@/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat       = @"https://%@/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat    = @"https://%@/api/projects/%@/devices/%@/feedback";
 
 static NSString* s_boundary = @"---------------------------14737809831466499882746641449";
 
@@ -32,6 +26,11 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 @interface AppBladeWebClient ()
 
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
+
+
+- (NSString*)osVersionBuild;
+- (NSString*)platform;
+
 
 // Request helper methods.
 - (NSString *)udid;
@@ -112,6 +111,36 @@ static BOOL is_encrypted () {
     return NO;
 }
 
+// From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
+- (NSString *)osVersionBuild {
+    int mib[2] = {CTL_KERN, KERN_OSVERSION};
+    u_int namelen = sizeof(mib) / sizeof(mib[0]);
+    size_t bufferSize = 0;
+    
+    NSString *osBuildVersion = nil;
+    
+    // Get the size for the buffer
+    sysctl(mib, namelen, NULL, &bufferSize, NULL, 0);
+    
+    u_char buildBuffer[bufferSize];
+    int result = sysctl(mib, namelen, buildBuffer, &bufferSize, NULL, 0);
+    
+    if (result >= 0) {
+        osBuildVersion = [[[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding] autorelease];
+    }
+    
+    return osBuildVersion;
+}
+
+- (NSString *) platform{
+	size_t size;
+	sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char *machine = malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+    free(machine);
+    return platform;
+}
 
 #pragma mark - Lifecycle
 
@@ -141,7 +170,7 @@ static BOOL is_encrypted () {
 
     // Create the request.
     NSString* udid = [self udid];
-    NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [_delegate appBladeProjectID], udid];
+    NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* projectUrl = [NSURL URLWithString:urlString];
     NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
     [apiRequest setHTTPMethod:@"GET"];
@@ -158,7 +187,7 @@ static BOOL is_encrypted () {
     NSString* udid = [self udid];
 
     // Build report URL.
-    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [_delegate appBladeProjectID], udid];
+    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* urlCrashReport = [NSURL URLWithString:urlCrashReportString];    
 
     // Create the API request.
@@ -185,7 +214,7 @@ static BOOL is_encrypted () {
     //    NSData* paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
     
     // Build report URL.
-    NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeProjectID], udid];
+    NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* reportURL = [NSURL URLWithString:reportString];
     
     // Create the API request.
@@ -230,37 +259,6 @@ static BOOL is_encrypted () {
 #else
     return [[UIDevice currentDevice] uniqueIdentifier];
 #endif
-}
-
-// From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
-- (NSString *)osVersionBuild {
-    int mib[2] = {CTL_KERN, KERN_OSVERSION};
-    u_int namelen = sizeof(mib) / sizeof(mib[0]);
-    size_t bufferSize = 0;
-    
-    NSString *osBuildVersion = nil;
-    
-    // Get the size for the buffer
-    sysctl(mib, namelen, NULL, &bufferSize, NULL, 0);
-    
-    u_char buildBuffer[bufferSize];
-    int result = sysctl(mib, namelen, buildBuffer, &bufferSize, NULL, 0);
-    
-    if (result >= 0) {
-        osBuildVersion = [[[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding] autorelease];
-    }
-    
-    return osBuildVersion;
-}
-
-- (NSString *) platform{
-	size_t size;
-	sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-    char *machine = malloc(size);
-    sysctlbyname("hw.machine", machine, &size, NULL, 0);
-    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-    free(machine);
-    return platform;
 }
 
 // Creates a preformatted request with appblade headers.
