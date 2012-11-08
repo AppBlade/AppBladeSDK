@@ -31,6 +31,9 @@ static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
+static NSString* const kAppBladeDefaultHost             = @"appblade.com";
+
+
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
 @property (nonatomic, retain) NSURL* upgradeLink;
@@ -118,7 +121,12 @@ static AppBlade *s_sharedManager = nil;
 - (void)validateProjectConfiguration
 {
     // Validate AppBlade project settings. This should be executed by every public method before proceding.
-    if(!self.appBladeProjectID || self.appBladeProjectID.length == 0) {
+    if(!self.appBladeHost) {
+        NSLog(@"Host not being ovewritten, falling back to default host (%@)", kAppBladeDefaultHost);
+        self.appBladeHost = kAppBladeDefaultHost;
+    }
+    
+    if (!self.appBladeProjectID) {
         [self raiseConfigurationExceptionWithFieldName:@"Project ID"];
     } else if (!self.appBladeProjectToken || self.appBladeProjectToken.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Token"];
