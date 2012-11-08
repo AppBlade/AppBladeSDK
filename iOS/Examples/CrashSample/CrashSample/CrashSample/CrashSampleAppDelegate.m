@@ -21,10 +21,10 @@
 {
 		// Populate with values from the project SDK settings
 		// see README for details
-    [[AppBlade sharedManager] setAppBladeProjectID:@""];  //UUID
-    [[AppBlade sharedManager] setAppBladeProjectToken:@""]; //Token
-    [[AppBlade sharedManager] setAppBladeProjectSecret:@""]; //Secret
-    [[AppBlade sharedManager] setAppBladeProjectIssuedTimestamp:@""]; //Issued at
+    [[AppBlade sharedManager] setAppBladeProjectID:@"ca460dcb-b7c2-43c1-ba50-8b6cda63f369"];  //UUID
+    [[AppBlade sharedManager] setAppBladeProjectToken:@"8f1792db8a39108c14fa8c89663eec98"]; //Token
+    [[AppBlade sharedManager] setAppBladeProjectSecret:@"c8536a333fb292ba46fc98719c1cfdf6"]; //Secret
+    [[AppBlade sharedManager] setAppBladeProjectIssuedTimestamp:@"1316609918"]; //Issued at
     
     [[AppBlade sharedManager] catchAndReportCrashes];
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		317FC8F2164C379600A3ED96 /* AppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 317FC8F1164C379600A3ED96 /* AppBladeKeys.plist */; };
 		31817BF5161202EB00392343 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817BF4161202EB00392343 /* UIKit.framework */; };
 		31817BF7161202EB00392343 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817BF6161202EB00392343 /* Foundation.framework */; };
 		31817BF9161202EB00392343 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817BF8161202EB00392343 /* CoreGraphics.framework */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		317FC8F1164C379600A3ED96 /* AppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppBladeKeys.plist; sourceTree = "<group>"; };
 		31817BF0161202EB00392343 /* Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Maps.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31817BF4161202EB00392343 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		31817BF6161202EB00392343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -131,6 +133,7 @@
 		31817BFB161202EB00392343 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				317FC8F1164C379600A3ED96 /* AppBladeKeys.plist */,
 				31817BFC161202EB00392343 /* Maps-Info.plist */,
 				31817BFD161202EB00392343 /* InfoPlist.strings */,
 				31817C00161202EB00392343 /* main.m */,
@@ -221,6 +224,7 @@
 				31817C291612040700392343 /* MainView.xib in Resources */,
 				31817C3B1612082F00392343 /* MainWindow-iPad.xib in Resources */,
 				31D6BF9716120A5A0051283A /* MainWindow.xib in Resources */,
+				317FC8F2164C379600A3ED96 /* AppBladeKeys.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,7 +266,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -290,7 +294,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

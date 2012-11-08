@@ -139,8 +139,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
 {
-    NSString *exceptionMessageFormat = @"App Blade %@ not set. Configure the shared AppBlade manager from within your "
-                                        "application delegate.";
+    NSString *exceptionMessageFormat = @"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.";
     [NSException raise:@"AppBladeException" format:exceptionMessageFormat, name];
     abort();
 }
