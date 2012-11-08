@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF8"?>
+<!DOCTYPE plist PUBLIC "//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- Required keys -->
+  <key>projectID</key>
+  <string></string>
+  <key>token</key>
+  <string></string>
+  <key>secret</key>
+  <string></string>
+  <key>timestamp</key>
+  <string></string>
+  <!-- Optional keys -->
+  <!-- Host key, for a dynamic url 
+  <key>host</key>
+  <string>http://optional.com</string> 
+  -->
+</dict>
+</plist>
