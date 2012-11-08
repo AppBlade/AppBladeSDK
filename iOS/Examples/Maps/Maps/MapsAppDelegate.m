@@ -30,7 +30,7 @@
   
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
-    [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]];
+    [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]];  //Fill AppBladeKeys.plist with your own credentials to test
 
     [blade catchAndReportCrashes];
     
