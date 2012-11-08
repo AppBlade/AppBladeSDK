@@ -122,12 +122,12 @@ static AppBlade *s_sharedManager = nil;
 {
     
     // Validate AppBlade project settings. This should be executed by every public method before proceding.
-    if(!self.appBladeHost) {
+    if(!self.appBladeHost || self.appBladeHost.length == 0) {
         NSLog(@"Host not being ovewritten, falling back to default host (%@)", kAppBladeDefaultHost);
         self.appBladeHost = kAppBladeDefaultHost;
     }
     
-    if (!self.appBladeProjectID) {
+    if (!self.appBladeProjectID || self.appBladeProjectID.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project ID"];
     } else if (!self.appBladeProjectToken || self.appBladeProjectToken.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Token"];
