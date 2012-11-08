@@ -1,3 +1,5 @@
 AppBladeKeys.plist
 .DS_Store
 *.xcuserdatad
+
+/iOS/Framework/AppBlade.xcodeproj/project.xcworkspace/xcuserdata
