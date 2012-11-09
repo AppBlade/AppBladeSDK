@@ -31,6 +31,9 @@ static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
+static NSString* const kAppBladeDefaultHost             = @"appblade.com";
+
+
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
 @property (nonatomic, retain) NSURL* upgradeLink;
@@ -64,6 +67,7 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
 @implementation AppBlade
 
+@synthesize appBladeHost = _appBladeHost;
 @synthesize appBladeProjectID = _appBladeProjectID;
 @synthesize appBladeProjectToken = _appBladeProjectToken;
 @synthesize appBladeProjectSecret = _appBladeProjectSecret;
@@ -116,8 +120,14 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)validateProjectConfiguration
 {
+    
     // Validate AppBlade project settings. This should be executed by every public method before proceding.
-    if(!self.appBladeProjectID || self.appBladeProjectID.length == 0) {
+    if(!self.appBladeHost || self.appBladeHost.length == 0) {
+        NSLog(@"Host not being ovewritten, falling back to default host (%@)", kAppBladeDefaultHost);
+        self.appBladeHost = kAppBladeDefaultHost;
+    }
+    
+    if (!self.appBladeProjectID || self.appBladeProjectID.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project ID"];
     } else if (!self.appBladeProjectToken || self.appBladeProjectToken.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Token"];
@@ -130,8 +140,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
 {
-    NSString *exceptionMessageFormat = @"App Blade %@ not set. Configure the shared AppBlade manager from within your "
-                                        "application delegate.";
+    NSString *exceptionMessageFormat = @"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.";
     [NSException raise:@"AppBladeException" format:exceptionMessageFormat, name];
     abort();
 }
@@ -141,6 +150,18 @@ static AppBlade *s_sharedManager = nil;
     [_upgradeLink release];
     [_feedbackDictionary release];
     [_feedbackRequests release];
+    [_appBladeHost release];
+    [_appBladeProjectID release];
+    [_appBladeProjectToken release];
+    [_appBladeProjectSecret release];
+    [_appBladeProjectIssuedTimestamp release];
+    [_delegate release];
+    [_upgradeLink release];
+    [_feedbackDictionary release];
+    [_tapRecognizer release];
+    [_feedbackRequests release];
+    [_window release];
+
     [super dealloc];
 }
 
@@ -203,6 +224,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)loadSDKKeysFromPlist:(NSString *)plist
 {
     NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
+    self.appBladeHost = [keys objectForKey:@"host"];
     self.appBladeProjectID = [keys objectForKey:@"projectID"];
     self.appBladeProjectToken = [keys objectForKey:@"token"];
     self.appBladeProjectSecret = [keys objectForKey:@"secret"];
@@ -313,7 +335,7 @@ static AppBlade *s_sharedManager = nil;
     }
     aslresponse_free(r);
     NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"plist"];
-	NSString *plistFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
+	NSString *plistFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
     [logs writeToFile:plistFilePath atomically:YES];
     
     self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:fileName forKey:kAppBladeFeedbackKeyConsole];
@@ -328,7 +350,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)handleBackloggedFeedback
 {
     NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-    NSMutableArray* backupFiles = [[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy];
+    NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
     if (backupFiles.count > 0) {
         NSString* fileName = [backupFiles objectAtIndex:0];
         NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
@@ -510,7 +532,6 @@ static AppBlade *s_sharedManager = nil;
         // prevent the app from running until the request completes successfully. This will prevent
         // users from unlocking an app by simply changing their clock.
         if ([self withinStoredTTL]) {
-            NSLog(@"Within TTL");
             if(signalDelegate) {
                 [self.delegate appBlade:self applicationApproved:YES error:nil];
             }
@@ -542,7 +563,7 @@ static AppBlade *s_sharedManager = nil;
             [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
             
             NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy];
+            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
             if (!backupFiles) {
                 backupFiles = [NSMutableArray array];
             }
@@ -553,7 +574,6 @@ static AppBlade *s_sharedManager = nil;
             if(!success){
                 NSLog(@"Error writing backup file to %@", backupFilePath);
             }
-            
             self.feedbackDictionary = nil;
         }
         else {
@@ -678,7 +698,7 @@ static AppBlade *s_sharedManager = nil;
         [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
         
         NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-        NSMutableArray* backupFiles = [[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy];
+        NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
         if (!backupFiles) {
             backupFiles = [NSMutableArray array];
         }

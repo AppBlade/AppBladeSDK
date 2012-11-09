@@ -21,16 +21,16 @@
     // Configure AppBlade
     AppBlade *blade = [AppBlade sharedManager];
 
-		// Populate with values from the project SDK settings or load keys from plist
-		// see README for details
-    blade.appBladeProjectID = @""; //UUID
-    blade.appBladeProjectToken = @""; //Token
-    blade.appBladeProjectSecret = @""; //Secret
-    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
-    
+    // Populate with values from the project SDK settings or load keys from plist
+    // see README for details
+//    blade.appBladeProjectID = @""; //UUID
+//    blade.appBladeProjectToken = @""; //Token
+//    blade.appBladeProjectSecret = @""; //Secret
+//    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
+  
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
-//    [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]];
+    [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]];  //Fill AppBladeKeys.plist with your own credentials to test
 
     [blade catchAndReportCrashes];
     

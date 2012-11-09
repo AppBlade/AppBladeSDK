@@ -25,7 +25,12 @@
     [[AppBlade sharedManager] setAppBladeProjectToken:@""]; //Token
     [[AppBlade sharedManager] setAppBladeProjectSecret:@""]; //Secret
     [[AppBlade sharedManager] setAppBladeProjectIssuedTimestamp:@""]; //Issued at
+
     
+    // See AppBladeKeys.plist for the format in which to send your keys.
+    // This is optional, but you should not set the keys yourself AND use the plist.
+    //[[AppBlade sharedManager] loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]];  //Fill AppBladeKeys.plist with your own credentials to test
+
     [[AppBlade sharedManager] catchAndReportCrashes];
 
     self.window.rootViewController = self.viewController;

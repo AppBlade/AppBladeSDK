@@ -28,18 +28,10 @@ static NSString* const kAppBladeCacheDirectory;
 
 @end
 
-@interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> {
+@interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> 
 
-@private
-
-    id<AppBladeDelegate> _delegate;
-    NSURL *_upgradeLink;
-    
-    NSString *_appBladeProjectID;
-    NSString *_appBladeProjectToken;
-    NSString *_appBladeProjectSecret;
-    NSString *_appBladeProjectIssuedTimestamp;
-}
+// AppBlade host name //Include neither http:// nor https://, we'll handle that.
+@property (nonatomic, retain) NSString* appBladeHost;
 
 // UUID of the project on AppBlade.
 @property (nonatomic, retain) NSString* appBladeProjectID;

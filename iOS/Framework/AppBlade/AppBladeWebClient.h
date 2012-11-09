@@ -21,6 +21,7 @@ typedef enum {
 
 @required
 
+- (NSString *)appBladeHost;
 - (NSString *)appBladeProjectID;
 - (NSString *)appBladeProjectToken;
 - (NSString *)appBladeProjectSecret;
