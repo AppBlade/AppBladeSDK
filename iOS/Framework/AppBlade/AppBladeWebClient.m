@@ -543,6 +543,7 @@ static BOOL is_encrypted () {
 
 
 #pragma mark Executable UUID
+//_mh_execute_header is declared in mach-o/ldsyms.h (and not an iVar as you might have thought). 
 -(NSString *)executableUUID
 {
     if(_executableUUID == nil){
