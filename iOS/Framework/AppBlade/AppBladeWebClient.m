@@ -142,7 +142,7 @@ static BOOL is_encrypted () {
         sysctlbyname("hw.machine", NULL, &size, NULL, 0);
         char *machine = malloc(size);
         sysctlbyname("hw.machine", machine, &size, NULL, 0);
-        _platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+        _platform = [[NSString stringWithCString:machine encoding:NSUTF8StringEncoding] retain];
         free(machine);
     }
     return _platform;
