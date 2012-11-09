@@ -27,9 +27,8 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
 
-
-- (NSString*)osVersionBuild;
-- (NSString*)platform;
+@property (nonatomic, readonly) NSString* osVersionBuild;
+@property (nonatomic, readonly) NSString* platform;
 
 
 // Request helper methods.
@@ -51,6 +50,9 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 @end
 
 @implementation AppBladeWebClient
+
+@synthesize osVersionBuild = _osVersionBuild;
+@synthesize platform = _platform;
 
 @synthesize delegate = _delegate;
 @synthesize api = _api;
