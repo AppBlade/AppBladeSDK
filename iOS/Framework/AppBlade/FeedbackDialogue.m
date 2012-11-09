@@ -53,7 +53,7 @@
         // overall dialogue view
         int width = feedbackWidthMin;
         int originX = floor(self.frame.size.width / 2 - width / 2);
-        self.dialogueView = [[FeedbackBackgroundView alloc] initWithFrame:CGRectMake(originX, 0, width, feedbackHeightMin)];
+        self.dialogueView = [[[FeedbackBackgroundView alloc] initWithFrame:CGRectMake(originX, 0, width, feedbackHeightMin)] autorelease];
         [self.dialogueView setBackgroundColor:[UIColor clearColor]];
         
         if (isPad()) {
@@ -64,11 +64,11 @@
         }
         
         // Header bar
-        self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, submitButtonHeight)];
+        self.headerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, submitButtonHeight)]  autorelease];
         
         
         // header text
-        self.feedbackTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, 44) ];
+        self.feedbackTitle = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, 44) ] autorelease];
         [self.feedbackTitle setTextAlignment:UITextAlignmentCenter ];
         self.feedbackTitle.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0f];
         self.feedbackTitle.text = @"Feedback";
@@ -76,7 +76,7 @@
         self.feedbackTitle.backgroundColor = [UIColor clearColor];
         
         
-        self.textView = [[UITextView alloc] initWithFrame:CGRectMake(textViewHorizontalOffset, textViewVerticalOffset, self.dialogueView.frame.size.width - (2*textViewHorizontalOffset), self.dialogueView.frame.size.height - textViewVerticalOffset - 10)];
+        self.textView = [[[UITextView alloc] initWithFrame:CGRectMake(textViewHorizontalOffset, textViewVerticalOffset, self.dialogueView.frame.size.width - (2*textViewHorizontalOffset), self.dialogueView.frame.size.height - textViewVerticalOffset - 10)] autorelease];
         [self.textView setContentInset:UIEdgeInsetsMake(10, 10, 10, 10)];
         
         // submit button

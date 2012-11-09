@@ -335,7 +335,7 @@ static AppBlade *s_sharedManager = nil;
     }
     aslresponse_free(r);
     NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"plist"];
-	NSString *plistFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
+	NSString *plistFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
     [logs writeToFile:plistFilePath atomically:YES];
     
     self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:fileName forKey:kAppBladeFeedbackKeyConsole];
@@ -345,13 +345,12 @@ static AppBlade *s_sharedManager = nil;
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
     
     [self showFeedbackDialogue];
-    [plistFilePath autorelease];
 }
 
 - (void)handleBackloggedFeedback
 {
     NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-    NSMutableArray* backupFiles = [[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy];
+    NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
     if (backupFiles.count > 0) {
         NSString* fileName = [backupFiles objectAtIndex:0];
         NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
@@ -369,7 +368,6 @@ static AppBlade *s_sharedManager = nil;
             [self.feedbackRequests addObject:client];
         }
     }
-    [backupFiles autorelease];
 }
 
 - (void)reportFeedback:(NSString *)feedback
@@ -565,7 +563,7 @@ static AppBlade *s_sharedManager = nil;
             [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
             
             NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy];
+            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
             if (!backupFiles) {
                 backupFiles = [NSMutableArray array];
             }
@@ -700,7 +698,7 @@ static AppBlade *s_sharedManager = nil;
         [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
         
         NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-        NSMutableArray* backupFiles = [[NSArray arrayWithContentsOfFile:backupFilePath] mutableCopy];
+        NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
         if (!backupFiles) {
             backupFiles = [NSMutableArray array];
         }
