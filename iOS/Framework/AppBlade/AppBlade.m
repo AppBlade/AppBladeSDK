@@ -150,6 +150,18 @@ static AppBlade *s_sharedManager = nil;
     [_upgradeLink release];
     [_feedbackDictionary release];
     [_feedbackRequests release];
+    [_appBladeHost release];
+    [_appBladeProjectID release];
+    [_appBladeProjectToken release];
+    [_appBladeProjectSecret release];
+    [_appBladeProjectIssuedTimestamp release];
+    [_delegate release];
+    [_upgradeLink release];
+    [_feedbackDictionary release];
+    [_tapRecognizer release];
+    [_feedbackRequests release];
+    [_window release];
+
     [super dealloc];
 }
 
@@ -333,6 +345,7 @@ static AppBlade *s_sharedManager = nil;
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
     
     [self showFeedbackDialogue];
+    [plistFilePath autorelease];
 }
 
 - (void)handleBackloggedFeedback
@@ -356,6 +369,7 @@ static AppBlade *s_sharedManager = nil;
             [self.feedbackRequests addObject:client];
         }
     }
+    [backupFiles autorelease];
 }
 
 - (void)reportFeedback:(NSString *)feedback
@@ -562,7 +576,6 @@ static AppBlade *s_sharedManager = nil;
             if(!success){
                 NSLog(@"Error writing backup file to %@", backupFilePath);
             }
-            
             self.feedbackDictionary = nil;
         }
         else {
