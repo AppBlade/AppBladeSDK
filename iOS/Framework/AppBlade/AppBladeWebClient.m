@@ -115,33 +115,37 @@ static BOOL is_encrypted () {
 
 // From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
 - (NSString *)osVersionBuild {
-    int mib[2] = {CTL_KERN, KERN_OSVERSION};
-    u_int namelen = sizeof(mib) / sizeof(mib[0]);
-    size_t bufferSize = 0;
-    
-    NSString *osBuildVersion = nil;
-    
-    // Get the size for the buffer
-    sysctl(mib, namelen, NULL, &bufferSize, NULL, 0);
-    
-    u_char buildBuffer[bufferSize];
-    int result = sysctl(mib, namelen, buildBuffer, &bufferSize, NULL, 0);
-    
-    if (result >= 0) {
-        osBuildVersion = [[[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding] autorelease];
+    if(_osVersionBuild == nil){
+        int mib[2] = {CTL_KERN, KERN_OSVERSION};
+        u_int namelen = sizeof(mib) / sizeof(mib[0]);
+        size_t bufferSize = 0;
+        
+        NSString *osBuildVersion = nil;
+        
+        // Get the size for the buffer
+        sysctl(mib, namelen, NULL, &bufferSize, NULL, 0);
+        
+        u_char buildBuffer[bufferSize];
+        int result = sysctl(mib, namelen, buildBuffer, &bufferSize, NULL, 0);
+        
+        if (result >= 0) {
+            osBuildVersion = [[[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding] autorelease];
+        }
+        _osVersionBuild = osBuildVersion;
     }
-    
-    return osBuildVersion;
+    return _osVersionBuild;
 }
 
 - (NSString *) platform{
-	size_t size;
-	sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-    char *machine = malloc(size);
-    sysctlbyname("hw.machine", machine, &size, NULL, 0);
-    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-    free(machine);
-    return platform;
+    if(_platform == nil){
+        size_t size;
+        sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+        char *machine = malloc(size);
+        sysctlbyname("hw.machine", machine, &size, NULL, 0);
+        _platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+        free(machine);
+    }
+    return _platform;
 }
 
 #pragma mark - Lifecycle
