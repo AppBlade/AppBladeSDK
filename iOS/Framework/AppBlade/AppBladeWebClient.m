@@ -33,12 +33,17 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 
 
 @property (nonatomic, readonly) NSString *executableUUID;
+
+
 // Request helper methods.
+
 - (NSString *)udid;
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url;
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request;
 
+
 // Crypto helper methods.
+
 - (NSString *)HMAC_SHA256_Base64:(NSString *)data with_key:(NSString *)key;
 - (NSString *)SHA_Base64:(NSString *)raw;
 - (NSString *)encodeBase64WithData:(NSData *)objData;
@@ -172,6 +177,8 @@ static BOOL is_encrypted () {
     [_userInfo release];
     [_osVersionBuild release];
     [_platform release];
+    [_executableUUID release];
+    
     [super dealloc];
 }
 
@@ -551,12 +558,12 @@ static BOOL is_encrypted () {
         for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx) {
             if (((const struct load_command *)command)->cmd == LC_UUID) {
                 command += sizeof(struct load_command);
-            _executableUUID = [NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+            _executableUUID = [[NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
                         command[0], command[1], command[2], command[3],
                         command[4], command[5],
                         command[6], command[7],
                         command[8], command[9],
-                        command[10], command[11], command[12], command[13], command[14], command[15]];
+                        command[10], command[11], command[12], command[13], command[14], command[15]] retain];
             } else {
                 command += ((const struct load_command *)command)->cmdsize;
             }
