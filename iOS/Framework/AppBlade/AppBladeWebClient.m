@@ -32,6 +32,7 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 @property (nonatomic, readonly) NSString* platform;
 
 
+@property (nonatomic, readonly) NSString *executableUUID;
 // Request helper methods.
 - (NSString *)udid;
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url;
@@ -48,7 +49,6 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 - (NSString *)hashExecutable;
 - (NSString *)hashInfoPlist;
 
--(NSString *)executableUUID;
 
 
 @end
@@ -62,6 +62,7 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 @synthesize api = _api;
 @synthesize responseHeaders = _responseHeaders;
 @synthesize userInfo = _userInfo;
+@synthesize executableUUID = _executableUUID;
 
 const int kNonceRandomStringLength = 74;
 
@@ -544,21 +545,23 @@ static BOOL is_encrypted () {
 #pragma mark Executable UUID
 -(NSString *)executableUUID
 {
-    const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
-    for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx) {
-        if (((const struct load_command *)command)->cmd == LC_UUID) {
-            command += sizeof(struct load_command);
-            return [NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
-                    command[0], command[1], command[2], command[3],
-                    command[4], command[5],
-                    command[6], command[7],
-                    command[8], command[9],
-                    command[10], command[11], command[12], command[13], command[14], command[15]];
-        } else {
-            command += ((const struct load_command *)command)->cmdsize;
+    if(_executableUUID == nil){
+        const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
+        for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx) {
+            if (((const struct load_command *)command)->cmd == LC_UUID) {
+                command += sizeof(struct load_command);
+            _executableUUID = [NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+                        command[0], command[1], command[2], command[3],
+                        command[4], command[5],
+                        command[6], command[7],
+                        command[8], command[9],
+                        command[10], command[11], command[12], command[13], command[14], command[15]];
+            } else {
+                command += ((const struct load_command *)command)->cmdsize;
+            }
         }
     }
-    return nil;
+    return _executableUUID;
 }
 
 @end
