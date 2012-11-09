@@ -112,6 +112,7 @@ static BOOL is_encrypted () {
     return NO;
 }
 
+
 #pragma mark - Lifecycle
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate
@@ -273,6 +274,7 @@ static BOOL is_encrypted () {
     [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
     [apiRequest addValue:[self osVersionBuild] forHTTPHeaderField:@"IOS_RELEASE"];
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
+    [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
     
     NSString* bundleHash = [self hashExecutable];
