@@ -131,7 +131,7 @@ static BOOL is_encrypted () {
         if (result >= 0) {
             osBuildVersion = [[[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding] autorelease];
         }
-        _osVersionBuild = osBuildVersion;
+        _osVersionBuild = [osBuildVersion retain];
     }
     return _osVersionBuild;
 }
@@ -165,6 +165,8 @@ static BOOL is_encrypted () {
     [_receivedData release];
     [_responseHeaders release];
     [_userInfo release];
+    [_osVersionBuild release];
+    [_platform release];
     [super dealloc];
 }
 
