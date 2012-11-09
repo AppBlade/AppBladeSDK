@@ -53,8 +53,8 @@
         // overall dialogue view
         int width = feedbackWidthMin;
         int originX = floor(self.frame.size.width / 2 - width / 2);
-        self.dialogueView = [[FeedbackBackgroundView alloc] initWithFrame:CGRectMake(originX, 0, width, feedbackHeightMin)];
-        self.dialogueView.backgroundColor = [UIColor clearColor];
+        self.dialogueView = [[[FeedbackBackgroundView alloc] initWithFrame:CGRectMake(originX, 0, width, feedbackHeightMin)] autorelease];
+        [self.dialogueView setBackgroundColor:[UIColor clearColor]];
         
         if (isPad()) {
             CGRect dialogueFrame = self.dialogueView.frame;
@@ -64,19 +64,19 @@
         }
         
         // Header bar
-        self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, submitButtonHeight)];
+        self.headerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, submitButtonHeight)]  autorelease];
         
         
         // header text
-        self.feedbackTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, 44) ];
-        self.feedbackTitle.textAlignment = UITextAlignmentCenter;
+        self.feedbackTitle = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, 44) ] autorelease];
+        [self.feedbackTitle setTextAlignment:UITextAlignmentCenter ];
         self.feedbackTitle.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0f];
         self.feedbackTitle.text = @"Feedback";
         self.feedbackTitle.textColor = [UIColor colorWithRed:175/255.0f green:33/255.0f blue:41/255.0f alpha:1.0];
         self.feedbackTitle.backgroundColor = [UIColor clearColor];
         
         
-        self.textView = [[UITextView alloc] initWithFrame:CGRectMake(textViewHorizontalOffset, textViewVerticalOffset, self.dialogueView.frame.size.width - (2*textViewHorizontalOffset), self.dialogueView.frame.size.height - textViewVerticalOffset - 10)];
+        self.textView = [[[UITextView alloc] initWithFrame:CGRectMake(textViewHorizontalOffset, textViewVerticalOffset, self.dialogueView.frame.size.width - (2*textViewHorizontalOffset), self.dialogueView.frame.size.height - textViewVerticalOffset - 10)] autorelease];
         [self.textView setContentInset:UIEdgeInsetsMake(10, 10, 10, 10)];
         
         // submit button
@@ -184,13 +184,7 @@
     
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
-        NSValue *frame = [[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey];
-        CGRect keyboardInFrame = [frame CGRectValue];
         
-        int newY = CGRectGetMinY(keyboardInFrame) - feedbackHeightMin - 10;
-        newY = CGRectGetMinX(keyboardInFrame) - feedbackHeightMin - 10;
-    
-    
         CGRect finalFrame = self.dialogueView.frame;
         finalFrame.origin.y = 0;
         
