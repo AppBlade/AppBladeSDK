@@ -417,7 +417,7 @@ static BOOL is_encrypted () {
     else if (_api == AppBladeWebClientAPI_Feedback) {
         
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
-        BOOL success = status == 201 || status == 200 ? YES : NO;
+        BOOL success = (status == 201 || status == 200);
         
         [_delegate appBladeWebClientSentFeedback:self withSuccess:success];
     }
