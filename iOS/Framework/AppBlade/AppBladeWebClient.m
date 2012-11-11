@@ -15,6 +15,7 @@
 #import <TargetConditionals.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#import <mach-o/ldsyms.h>
 
 static NSString *approvalURLFormat          = @"https://%@/api/projects/%@/devices/%@.plist";
 static NSString *reportCrashURLFormat       = @"https://%@/api/projects/%@/devices/%@/crash_reports";
@@ -31,12 +32,18 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 @property (nonatomic, readonly) NSString* platform;
 
 
+@property (nonatomic, readonly) NSString *executableUUID;
+
+
 // Request helper methods.
+
 - (NSString *)udid;
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url;
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request;
 
+
 // Crypto helper methods.
+
 - (NSString *)HMAC_SHA256_Base64:(NSString *)data with_key:(NSString *)key;
 - (NSString *)SHA_Base64:(NSString *)raw;
 - (NSString *)encodeBase64WithData:(NSData *)objData;
@@ -46,6 +53,8 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 - (NSString *)hashFile:(NSString*)filePath;
 - (NSString *)hashExecutable;
 - (NSString *)hashInfoPlist;
+
+
 
 @end
 
@@ -58,6 +67,7 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 @synthesize api = _api;
 @synthesize responseHeaders = _responseHeaders;
 @synthesize userInfo = _userInfo;
+@synthesize executableUUID = _executableUUID;
 
 const int kNonceRandomStringLength = 74;
 
@@ -167,6 +177,8 @@ static BOOL is_encrypted () {
     [_userInfo release];
     [_osVersionBuild release];
     [_platform release];
+    [_executableUUID release];
+    
     [super dealloc];
 }
 
@@ -197,7 +209,7 @@ static BOOL is_encrypted () {
     // Build report URL.
     NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* urlCrashReport = [NSURL URLWithString:urlCrashReportString];    
-
+    
     // Create the API request.
     NSMutableURLRequest* apiRequest = [self requestForURL:urlCrashReport];
     [apiRequest setHTTPMethod:@"POST"];       
@@ -282,6 +294,8 @@ static BOOL is_encrypted () {
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
     [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
+
+    [apiRequest addValue:[self executableUUID] forHTTPHeaderField:@"executable_UUID"];
     
     NSString* bundleHash = [self hashExecutable];
     NSString* plistHash = [self hashInfoPlist];
@@ -532,6 +546,30 @@ static BOOL is_encrypted () {
 {
     NSString *plistPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Info.plist"];
     return [self hashFile:plistPath];
+}
+
+
+#pragma mark Executable UUID
+//_mh_execute_header is declared in mach-o/ldsyms.h (and not an iVar as you might have thought). 
+-(NSString *)executableUUID
+{
+    if(_executableUUID == nil){
+        const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
+        for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx) {
+            if (((const struct load_command *)command)->cmd == LC_UUID) {
+                command += sizeof(struct load_command);
+            _executableUUID = [[NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+                        command[0], command[1], command[2], command[3],
+                        command[4], command[5],
+                        command[6], command[7],
+                        command[8], command[9],
+                        command[10], command[11], command[12], command[13], command[14], command[15]] retain];
+            } else {
+                command += ((const struct load_command *)command)->cmdsize;
+            }
+        }
+    }
+    return _executableUUID;
 }
 
 @end
