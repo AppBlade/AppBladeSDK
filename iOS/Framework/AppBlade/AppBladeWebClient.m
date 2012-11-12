@@ -20,6 +20,7 @@
 static NSString *approvalURLFormat          = @"https://%@/api/projects/%@/devices/%@.plist";
 static NSString *reportCrashURLFormat       = @"https://%@/api/projects/%@/devices/%@/crash_reports";
 static NSString *reportFeedbackURLFormat    = @"https://%@/api/projects/%@/devices/%@/feedback";
+static NSString *sessionURLFormat           = @"https://%@/api/user_sessions";
 
 static NSString* s_boundary = @"---------------------------14737809831466499882746641449";
 

@@ -62,5 +62,6 @@ typedef enum {
 - (void)checkPermissions;
 - (void)reportCrash:(NSString *)crashReport;
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console;
+- (void)postSessions:(NSArray *)sessions;
 
 @end

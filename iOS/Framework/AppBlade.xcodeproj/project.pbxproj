@@ -50,6 +50,10 @@
 		7EE6A17C1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; };
 		8DAF96D7165156A70064555F /* FBEncryptorAES.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DAF96D5165156A70064555F /* FBEncryptorAES.h */; };
 		8DAF96D8165156A70064555F /* FBEncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DAF96D6165156A70064555F /* FBEncryptorAES.m */; };
+		8DAF96F116515A570064555F /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DAF96EF16515A570064555F /* NSData+Base64.h */; };
+		8DAF96F216515A570064555F /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DAF96EF16515A570064555F /* NSData+Base64.h */; };
+		8DAF96F316515A570064555F /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DAF96F016515A570064555F /* NSData+Base64.m */; };
+		8DAF96F416515A570064555F /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DAF96F016515A570064555F /* NSData+Base64.m */; };
 		A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */ = {isa = PBXBuildFile; fileRef = A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */; };
 		A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; };
 		CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */; };
@@ -139,6 +143,8 @@
 		7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackBackgroundView.m; sourceTree = "<group>"; };
 		8DAF96D5165156A70064555F /* FBEncryptorAES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBEncryptorAES.h; sourceTree = "<group>"; };
 		8DAF96D6165156A70064555F /* FBEncryptorAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBEncryptorAES.m; sourceTree = "<group>"; };
+		8DAF96EF16515A570064555F /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		8DAF96F016515A570064555F /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackDialogue.h; sourceTree = "<group>"; };
 		A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackDialogue.m; sourceTree = "<group>"; };
 		CB18A56D13ACE77C00091131 /* AppBladeWebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeWebClient.h; sourceTree = "<group>"; };
@@ -303,6 +309,8 @@
 		CBF479FE13969C2B00949297 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8DAF96EF16515A570064555F /* NSData+Base64.h */,
+				8DAF96F016515A570064555F /* NSData+Base64.m */,
 				CBF479FF13969C2B00949297 /* AppBlade-Prefix.pch */,
 				A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */,
 				A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */,
@@ -324,6 +332,7 @@
 				CB51D33514293D0600A43CB5 /* AppBlade.h in Headers */,
 				7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */,
 				7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
+				8DAF96F216515A570064555F /* NSData+Base64.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +344,7 @@
 				7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */,
 				7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
 				8DAF96D7165156A70064555F /* FBEncryptorAES.h in Headers */,
+				8DAF96F116515A570064555F /* NSData+Base64.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +448,7 @@
 				7E71754F156556A500D810DF /* AppBladeSimpleKeychain.m in Sources */,
 				7E717550156556A800D810DF /* AppBladeWebClient.m in Sources */,
 				7E717551156556AC00D810DF /* FeedbackDialogue.m in Sources */,
+				8DAF96F416515A570064555F /* NSData+Base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +490,7 @@
 				7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */,
 				7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
 				8DAF96D8165156A70064555F /* FBEncryptorAES.m in Sources */,
+				8DAF96F316515A570064555F /* NSData+Base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
