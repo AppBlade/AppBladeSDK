@@ -33,6 +33,8 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
 static NSString* const kAppBladeDefaultHost             = @"appblade.com";
 
+static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
+
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
@@ -518,6 +520,54 @@ static AppBlade *s_sharedManager = nil;
     
     return YES;
 }
+#pragma mark - Analytics
+
++ (void)startSession
+{
+    [[AppBlade sharedManager] logSessionStart];
+}
+
++ (void)endSession
+{
+    [[AppBlade sharedManager] logSessionEnd];
+}
+
+- (void)logSessionStart
+{
+//    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+//    
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+//        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+//        
+//        AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+//        [client postSessions:sessions];
+//    }
+//    
+//    self.sessionStartDate = [NSDate date];
+}
+
+- (void)logSessionEnd
+{
+//    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", nil];
+//    
+//    NSMutableArray* pastSessions = nil;
+//    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+//        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+//        pastSessions = [[sessions mutableCopy] autorelease];
+//    }
+//    else {
+//        pastSessions = [NSMutableArray arrayWithCapacity:1];
+//    }
+//    
+//    [pastSessions addObject:sessionDict];
+//    
+//    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
+//    NSData* encryptedData = [FBEncryptorAES encryptData:sessionData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+//    
+//    [encryptedData writeToFile:sessionFilePath atomically:YES];
+}
+
 
 #pragma mark - AppBladeWebClient
 -(void) appBladeWebClientFailed:(AppBladeWebClient *)client
