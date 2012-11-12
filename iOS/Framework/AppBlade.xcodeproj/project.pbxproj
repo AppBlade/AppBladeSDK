@@ -48,6 +48,8 @@
 		7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */; };
 		7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; };
 		7EE6A17C1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; };
+		8DAF96D7165156A70064555F /* FBEncryptorAES.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DAF96D5165156A70064555F /* FBEncryptorAES.h */; };
+		8DAF96D8165156A70064555F /* FBEncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DAF96D6165156A70064555F /* FBEncryptorAES.m */; };
 		A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */ = {isa = PBXBuildFile; fileRef = A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */; };
 		A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; };
 		CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */; };
@@ -135,6 +137,8 @@
 		7E690DA41562A839009391BD /* FileMD5Hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FileMD5Hash.c; sourceTree = "<group>"; };
 		7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackBackgroundView.h; sourceTree = "<group>"; };
 		7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackBackgroundView.m; sourceTree = "<group>"; };
+		8DAF96D5165156A70064555F /* FBEncryptorAES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBEncryptorAES.h; sourceTree = "<group>"; };
+		8DAF96D6165156A70064555F /* FBEncryptorAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBEncryptorAES.m; sourceTree = "<group>"; };
 		A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackDialogue.h; sourceTree = "<group>"; };
 		A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackDialogue.m; sourceTree = "<group>"; };
 		CB18A56D13ACE77C00091131 /* AppBladeWebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeWebClient.h; sourceTree = "<group>"; };
@@ -304,6 +308,8 @@
 				A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */,
 				7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */,
 				7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */,
+				8DAF96D5165156A70064555F /* FBEncryptorAES.h */,
+				8DAF96D6165156A70064555F /* FBEncryptorAES.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -328,6 +334,7 @@
 				A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */,
 				7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */,
 				7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
+				8DAF96D7165156A70064555F /* FBEncryptorAES.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +478,7 @@
 				A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */,
 				7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */,
 				7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
+				8DAF96D8165156A70064555F /* FBEncryptorAES.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
