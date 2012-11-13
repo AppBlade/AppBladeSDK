@@ -28,19 +28,7 @@ static NSString* const kAppBladeCacheDirectory;
 
 @end
 
-@interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> {
-
-@private
-
-    id<AppBladeDelegate> _delegate;
-    NSURL *_upgradeLink;
-   
-    NSString *_appBladeHost;
-    NSString *_appBladeProjectID;
-    NSString *_appBladeProjectToken;
-    NSString *_appBladeProjectSecret;
-    NSString *_appBladeProjectIssuedTimestamp;
-}
+@interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> 
 
 // AppBlade host name //Include neither http:// nor https://, we'll handle that.
 @property (nonatomic, retain) NSString* appBladeHost;
@@ -93,6 +81,13 @@ static NSString* const kAppBladeCacheDirectory;
 
 // In case you only want feedback in a specific window.
 - (void)allowFeedbackReportingForWindow:(UIWindow*)window;
+
+/*
+ * Session counting
+ */
+
++ (void)startSession;
++ (void)endSession;
 
 
 @end
