@@ -17,10 +17,10 @@
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
-static NSString *approvalURLFormat          = @"https://%@/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat       = @"https://%@/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat    = @"https://%@/api/projects/%@/devices/%@/feedback";
-static NSString *sessionURLFormat           = @"https://%@/api/user_sessions";
+static NSString *approvalURLFormat          = @"http://%@/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat       = @"http://%@/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat    = @"http://%@/api/projects/%@/devices/%@/feedback";
+static NSString *sessionURLFormat           = @"http://%@/api/user_sessions";
 
 static NSString* s_boundary = @"---------------------------14737809831466499882746641449";
 
@@ -610,6 +610,8 @@ static BOOL is_encrypted () {
         [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [request setHTTPBody:body];
+        NSLog(@"Sending session data with body: %@", [request HTTPBody]  );
+
         [self addSecurityToRequest:request];
         [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
     }
