@@ -620,4 +620,5 @@ static BOOL is_encrypted () {
     }
     
 }
+
 @end
