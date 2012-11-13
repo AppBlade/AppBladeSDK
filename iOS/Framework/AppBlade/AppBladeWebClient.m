@@ -54,6 +54,8 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 - (NSString *)hashExecutable;
 - (NSString *)hashInfoPlist;
 
+//other device info methods
+- (NSString *)genExecutableUUID;
 
 
 @end
@@ -294,9 +296,11 @@ static BOOL is_encrypted () {
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
     [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
-
-    [apiRequest addValue:[self executableUUID] forHTTPHeaderField:@"executable_UUID"];
-    
+    #if TARGET_IPHONE_SIMULATOR
+        [apiRequest addValue:@"00000-0000-0000-0000-00000000" forHTTPHeaderField:@"executable_UUID"];
+    #else
+        [apiRequest addValue:[self genExecutableUUID] forHTTPHeaderField:@"executable_UUID"];
+    #endif
     NSString* bundleHash = [self hashExecutable];
     NSString* plistHash = [self hashInfoPlist];
     [apiRequest addValue:bundleHash forHTTPHeaderField:@"bundleexecutable_hash"];
@@ -551,7 +555,7 @@ static BOOL is_encrypted () {
 
 #pragma mark Executable UUID
 //_mh_execute_header is declared in mach-o/ldsyms.h (and not an iVar as you might have thought). 
--(NSString *)executableUUID
+-(NSString *)genExecutableUUID //will break in simulator, please be careful
 {
   if(_executableUUID == nil){
         const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
