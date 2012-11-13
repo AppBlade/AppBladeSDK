@@ -14,7 +14,8 @@
 typedef enum {
 	AppBladeWebClientAPI_Permissions,
     AppBladeWebClientAPI_ReportCrash,
-    AppBladeWebClientAPI_Feedback
+    AppBladeWebClientAPI_Feedback,
+    AppBladeWebClientAPI_Sessions
 } AppBladeWebClientAPI;
 
 @protocol AppBladeWebClientDelegate <NSObject>
@@ -62,5 +63,6 @@ typedef enum {
 - (void)checkPermissions;
 - (void)reportCrash:(NSString *)crashReport;
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console;
+- (void)postSessions:(NSArray *)sessions;
 
 @end

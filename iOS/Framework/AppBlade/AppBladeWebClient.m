@@ -17,9 +17,10 @@
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
-static NSString *approvalURLFormat          = @"https://%@/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat       = @"https://%@/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat    = @"https://%@/api/projects/%@/devices/%@/feedback";
+static NSString *approvalURLFormat          = @"http://%@/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat       = @"http://%@/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat    = @"http://%@/api/projects/%@/devices/%@/feedback";
+static NSString *sessionURLFormat           = @"http://%@/api/user_sessions";
 
 static NSString* s_boundary = @"---------------------------14737809831466499882746641449";
 
@@ -576,4 +577,50 @@ static BOOL is_encrypted () {
     }
     return _executableUUID;
 }
+
+- (void)postSessions:(NSArray *)sessions
+{
+    _api = AppBladeWebClientAPI_Sessions;
+    
+    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [_delegate appBladeHost]];
+    NSURL* sessionURL = [NSURL URLWithString:sessionString];
+    
+    NSMutableURLRequest* request = [self requestForURL:sessionURL];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:s_boundary] forHTTPHeaderField:@"Content-Type"];
+    
+    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"device_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[[UIDevice currentDevice] uniqueIdentifier] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"project_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[[AppBlade sharedManager] appBladeProjectID] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSError* error = nil;
+    
+    NSData* requestData = [NSPropertyListSerialization dataWithPropertyList:sessions format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    
+    if (requestData) {
+        [body appendData:requestData];
+        [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [request setHTTPBody:body];
+        NSLog(@"Sending session data with body: %@", [request HTTPBody]  );
+
+        [self addSecurityToRequest:request];
+        [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+    }
+    else {
+        NSLog(@"Error sending session data");
+        [self.delegate appBladeWebClientFailed:self];
+        [_request release];
+    }
+    
+}
+
 @end

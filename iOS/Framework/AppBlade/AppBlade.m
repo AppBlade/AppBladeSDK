@@ -15,6 +15,7 @@
 #import "FeedbackDialogue.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
+#import "FBEncryptorAES.h"
 
 static NSString* const s_sdkVersion                     = @"0.2.1";
 
@@ -33,6 +34,9 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
 static NSString* const kAppBladeDefaultHost             = @"appblade.com";
 
+static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
+static NSString* const kAppBladeAESKey                  = @"AppBladeSessions.txt";
+
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
@@ -44,6 +48,8 @@ static NSString* const kAppBladeDefaultHost             = @"appblade.com";
 @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
 @property (nonatomic, retain) NSMutableSet* feedbackRequests;
 @property (nonatomic, assign) UIWindow* window;
+
+@property (nonatomic, retain) NSDate *sessionStartDate;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
@@ -78,6 +84,8 @@ static NSString* const kAppBladeDefaultHost             = @"appblade.com";
 @synthesize showingFeedbackDialogue = _showingFeedbackDialogue;
 @synthesize tapRecognizer = _tapRecognizer;
 @synthesize feedbackRequests = _feedbackRequests;
+
+@synthesize sessionStartDate = _sessionStartDate;
 
 @synthesize window = _window;
 
@@ -161,6 +169,8 @@ static AppBlade *s_sharedManager = nil;
     [_tapRecognizer release];
     [_feedbackRequests release];
     [_window release];
+    
+    [_sessionStartDate release];
 
     [super dealloc];
 }
@@ -518,6 +528,58 @@ static AppBlade *s_sharedManager = nil;
     
     return YES;
 }
+#pragma mark - Analytics
+
++ (void)startSession
+{
+    NSLog(@"Starting Session Logging");
+    [[AppBlade sharedManager] logSessionStart];
+}
+
++ (void)endSession
+{
+    NSLog(@"Ended Session Logging");
+    [[AppBlade sharedManager] logSessionEnd];
+}
+
+- (void)logSessionStart
+{
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    NSLog(@"Checking Session Path: %@", sessionFilePath);
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        NSLog(@"%d Sessions Exist, posting them", [sessions count]);
+        
+        AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        [client postSessions:sessions];
+    }
+    
+    self.sessionStartDate = [NSDate date];
+}
+
+- (void)logSessionEnd
+{
+    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", nil];
+    
+    NSMutableArray* pastSessions = nil;
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        pastSessions = [[sessions mutableCopy] autorelease];
+    }
+    else {
+        pastSessions = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [pastSessions addObject:sessionDict];
+    
+    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
+    NSData* encryptedData = [FBEncryptorAES encryptData:sessionData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    
+    [encryptedData writeToFile:sessionFilePath atomically:YES];
+}
+
 
 #pragma mark - AppBladeWebClient
 -(void) appBladeWebClientFailed:(AppBladeWebClient *)client
@@ -771,5 +833,30 @@ static AppBlade *s_sharedManager = nil;
 {
     return YES;
 }
+
+
+#pragma mark - Encryption
+
+- (NSObject*)readFile:(NSString *)filePath
+{
+    NSData* encryptedData = [NSData dataWithContentsOfFile:filePath];
+    NSData* unencryptedData = [FBEncryptorAES decryptData:encryptedData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    NSObject* returnObject = nil;
+    
+    if (unencryptedData) {
+        returnObject = [NSKeyedUnarchiver unarchiveObjectWithData:unencryptedData];
+    }
+    else {
+        // File was not encrypted
+        NSError* error = nil;
+        
+        if (![[NSFileManager defaultManager] removeItemAtPath:filePath error:&error]) {
+            NSLog(@"AppBlade cannot remove file %@", [filePath lastPathComponent]);
+        }
+    }
+    
+    return returnObject;
+}
+
 
 @end

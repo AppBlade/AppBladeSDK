@@ -82,5 +82,8 @@ static NSString* const kAppBladeCacheDirectory;
 // In case you only want feedback in a specific window.
 - (void)allowFeedbackReportingForWindow:(UIWindow*)window;
 
++ (void)startSession;
++ (void)endSession;
+
 
 @end
