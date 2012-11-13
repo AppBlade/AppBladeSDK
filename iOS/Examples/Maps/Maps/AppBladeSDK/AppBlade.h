@@ -82,10 +82,6 @@ static NSString* const kAppBladeCacheDirectory;
 // In case you only want feedback in a specific window.
 - (void)allowFeedbackReportingForWindow:(UIWindow*)window;
 
-/*
- * Session counting
- */
-
 + (void)startSession;
 + (void)endSession;
 
