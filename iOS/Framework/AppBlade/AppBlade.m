@@ -49,6 +49,8 @@ static NSString* const kAppBladeAESKey                  = @"AppBladeSessions.txt
 @property (nonatomic, retain) NSMutableSet* feedbackRequests;
 @property (nonatomic, assign) UIWindow* window;
 
+@property (nonatomic, retain) NSDate *sessionStartDate;
+
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
 - (void)handleFeedback;
@@ -82,6 +84,8 @@ static NSString* const kAppBladeAESKey                  = @"AppBladeSessions.txt
 @synthesize showingFeedbackDialogue = _showingFeedbackDialogue;
 @synthesize tapRecognizer = _tapRecognizer;
 @synthesize feedbackRequests = _feedbackRequests;
+
+@synthesize sessionStartDate = _sessionStartDate;
 
 @synthesize window = _window;
 
@@ -165,6 +169,8 @@ static AppBlade *s_sharedManager = nil;
     [_tapRecognizer release];
     [_feedbackRequests release];
     [_window release];
+    
+    [_sessionStartDate release];
 
     [super dealloc];
 }
@@ -526,48 +532,52 @@ static AppBlade *s_sharedManager = nil;
 
 + (void)startSession
 {
+    NSLog(@"Starting Session Logging");
     [[AppBlade sharedManager] logSessionStart];
 }
 
 + (void)endSession
 {
+    NSLog(@"Ended Session Logging");
     [[AppBlade sharedManager] logSessionEnd];
 }
 
 - (void)logSessionStart
 {
-//    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-//    
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-//        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
-//        
-//        AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-//        [client postSessions:sessions];
-//    }
-//    
-//    self.sessionStartDate = [NSDate date];
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    NSLog(@"Checking Session Path: %@", sessionFilePath);
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        NSLog(@"%d Sessions Exist, posting them", [sessions count]);
+        
+        AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        [client postSessions:sessions];
+    }
+    
+    self.sessionStartDate = [NSDate date];
 }
 
 - (void)logSessionEnd
 {
-//    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", nil];
-//    
-//    NSMutableArray* pastSessions = nil;
-//    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-//        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
-//        pastSessions = [[sessions mutableCopy] autorelease];
-//    }
-//    else {
-//        pastSessions = [NSMutableArray arrayWithCapacity:1];
-//    }
-//    
-//    [pastSessions addObject:sessionDict];
-//    
-//    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
-//    NSData* encryptedData = [FBEncryptorAES encryptData:sessionData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
-//    
-//    [encryptedData writeToFile:sessionFilePath atomically:YES];
+    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", nil];
+    
+    NSMutableArray* pastSessions = nil;
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        pastSessions = [[sessions mutableCopy] autorelease];
+    }
+    else {
+        pastSessions = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [pastSessions addObject:sessionDict];
+    
+    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
+    NSData* encryptedData = [FBEncryptorAES encryptData:sessionData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    
+    [encryptedData writeToFile:sessionFilePath atomically:YES];
 }
 
 
