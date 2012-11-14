@@ -15,7 +15,6 @@
 #import "FeedbackDialogue.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
-#import "FBEncryptorAES.h"
 
 static NSString* const s_sdkVersion                     = @"0.2.1";
 
@@ -35,7 +34,6 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 static NSString* const kAppBladeDefaultHost             = @"appblade.com";
 
 static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
-static NSString* const kAppBladeAESKey                  = @"AppBladeSessions.txt";
 
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
@@ -575,9 +573,7 @@ static AppBlade *s_sharedManager = nil;
     [pastSessions addObject:sessionDict];
     
     NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
-    NSData* encryptedData = [FBEncryptorAES encryptData:sessionData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
-    
-    [encryptedData writeToFile:sessionFilePath atomically:YES];
+    [sessionData writeToFile:sessionFilePath atomically:YES];
 }
 
 
@@ -839,12 +835,11 @@ static AppBlade *s_sharedManager = nil;
 
 - (NSObject*)readFile:(NSString *)filePath
 {
-    NSData* encryptedData = [NSData dataWithContentsOfFile:filePath];
-    NSData* unencryptedData = [FBEncryptorAES decryptData:encryptedData key:[kAppBladeAESKey dataUsingEncoding:NSUTF8StringEncoding] iv:nil];
+    NSData* fileData = [NSData dataWithContentsOfFile:filePath];
     NSObject* returnObject = nil;
     
-    if (unencryptedData) {
-        returnObject = [NSKeyedUnarchiver unarchiveObjectWithData:unencryptedData];
+    if (fileData) {
+        returnObject = [NSKeyedUnarchiver unarchiveObjectWithData:fileData];
     }
     else {
         // File was not encrypted
