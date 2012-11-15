@@ -321,8 +321,10 @@ static BOOL is_encrypted () {
     NSString* scheme = [[request URL] scheme];
     NSString* preparedHostName = [NSString stringWithFormat:@"%@://%@", scheme, [[request URL] host] ];
     
+    NSString* port = nil;
     if ([[request URL] port]) {
-        preparedHostName = [preparedHostName stringByAppendingFormat:@":%@", [[request URL] port]];
+        port = [[request URL] port];
+        preparedHostName = [preparedHostName stringByAppendingFormat:@":%@", port];
     }
     
     // Construct the relative URL path, followed by the body if POST.
@@ -341,7 +343,9 @@ static BOOL is_encrypted () {
     NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectIssuedTimestamp], randomString];
     
     // Set port number based on the scheme
-    NSString* port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
+    if(port == nil){
+        port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
+    }
     
     NSString* ext = [self udid];
 
