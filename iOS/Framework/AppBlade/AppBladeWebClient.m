@@ -17,10 +17,11 @@
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
-static NSString *approvalURLFormat          = @"http://%@/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat       = @"http://%@/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat    = @"http://%@/api/projects/%@/devices/%@/feedback";
-static NSString *sessionURLFormat           = @"http://%@/api/user_sessions";
+static NSString *defaultURLScheme           = @"https";
+static NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
+static NSString *sessionURLFormat           = @"%@/api/user_sessions";
 
 static NSString* s_boundary = @"---------------------------14737809831466499882746641449";
 
@@ -317,15 +318,21 @@ static BOOL is_encrypted () {
 }
 
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request
-{    
+{    //determine http or https
     NSString* scheme = [[request URL] scheme];
+    if(scheme == nil){
+        scheme = defaultURLScheme;
+    }
     NSString* preparedHostName = [NSString stringWithFormat:@"%@://%@", scheme, [[request URL] host] ];
-    
+    //find port number
     NSString* port = nil;
     if ([[request URL] port]) {
-        port = [[request URL] port];
+        port = [[[request URL] port] stringValue];
         preparedHostName = [preparedHostName stringByAppendingFormat:@":%@", port];
+    }else {   // Set port number based on the scheme
+        port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
     }
+
     
     // Construct the relative URL path, followed by the body if POST.
     NSMutableString *requestBodyRaw = [NSMutableString stringWithString:[[[request URL] absoluteString] substringFromIndex:[preparedHostName length]]];
@@ -341,12 +348,7 @@ static BOOL is_encrypted () {
     // version was issued at, then a colon, then a random string of a certain length.
     NSString* randomString = [self genRandStringLength:kNonceRandomStringLength];
     NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectIssuedTimestamp], randomString];
-    
-    // Set port number based on the scheme
-    if(port == nil){
-        port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
-    }
-    
+        
     NSString* ext = [self udid];
 
     // Compose the normalized request body.
