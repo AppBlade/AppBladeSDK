@@ -32,6 +32,8 @@ typedef enum {
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary*)permissions;
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient*)client withSuccess:(BOOL)success;
+- (void)appBladeWebClientSentSessions:(AppBladeWebClient*)client withSuccess:(BOOL)success;
+
 
 @end
 

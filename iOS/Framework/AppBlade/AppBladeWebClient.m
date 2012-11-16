@@ -408,6 +408,7 @@ static BOOL is_encrypted () {
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
+
 	[_receivedData appendData:data];
 }
 
@@ -453,6 +454,14 @@ static BOOL is_encrypted () {
         BOOL success = (status == 201 || status == 200);
         
         [_delegate appBladeWebClientSentFeedback:self withSuccess:success];
+    }else if (_api == AppBladeWebClientAPI_Sessions) {
+        NSString* receivedDataString = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
+        NSLog(@"Received Response from AppBlade Sessions %@", receivedDataString);
+        
+        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
+        BOOL success = (status == 201 || status == 200);
+
+        [_delegate appBladeWebClientSentSessions:self withSuccess:success];
     }
     
     [_request release];
