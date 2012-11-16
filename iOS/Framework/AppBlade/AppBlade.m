@@ -49,6 +49,9 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 
 @property (nonatomic, retain) NSDate *sessionStartDate;
 
+@property (nonatomic, retain) NSMutableSet* activeClients;
+
+
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
 - (void)handleFeedback;
@@ -87,6 +90,10 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 
 @synthesize window = _window;
 
+@synthesize activeClients = _activeClients;
+
+
+
 static AppBlade *s_sharedManager = nil;
 
 #pragma mark - Lifecycle
@@ -120,6 +127,7 @@ static AppBlade *s_sharedManager = nil;
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         _delegate = self;
+        _activeClients = [[[NSMutableSet alloc] init] retain];
     }
     return self;
 }
@@ -170,6 +178,8 @@ static AppBlade *s_sharedManager = nil;
     
     [_sessionStartDate release];
 
+    [_activeClients release];
+    
     [super dealloc];
 }
 
@@ -179,7 +189,8 @@ static AppBlade *s_sharedManager = nil;
 {
     [self validateProjectConfiguration];
 
-    AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
     [client checkPermissions];    
 }
 
@@ -224,7 +235,8 @@ static AppBlade *s_sharedManager = nil;
     }
     
     NSString* reportString = [PLCrashReportTextFormatter stringValueForCrashReport: report withTextFormat: PLCrashReportTextFormatiOS];
-    AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
     [client reportCrash:reportString];
 
 }
@@ -365,8 +377,9 @@ static AppBlade *s_sharedManager = nil;
         
         NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
         if (feedback) {
-            AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+            AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
             client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
+            [self.activeClients addObject:client];
             [client sendFeedbackWithScreenshot:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot] note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:[feedback objectForKey:kAppBladeFeedbackKeyConsole]];
             
             if (!self.feedbackRequests) {
@@ -381,7 +394,8 @@ static AppBlade *s_sharedManager = nil;
 - (void)reportFeedback:(NSString *)feedback
 {
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
-    AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
     [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyConsole]];
 }
 
@@ -549,7 +563,8 @@ static AppBlade *s_sharedManager = nil;
         NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
         NSLog(@"%d Sessions Exist, posting them", [sessions count]);
         
-        AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        [self.activeClients addObject:client];
         [client postSessions:sessions];
     }
     
@@ -640,9 +655,9 @@ static AppBlade *s_sharedManager = nil;
 
     }else {
         NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
-
     }
     
+    [self.activeClients removeObject:client];
 }
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
@@ -691,7 +706,8 @@ static AppBlade *s_sharedManager = nil;
         }
     }
 
-    
+    [self.activeClients removeObject:client];
+
     
 }
 
@@ -700,6 +716,7 @@ static AppBlade *s_sharedManager = nil;
     // purge the crash report that was just reported. 
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     [crashReporter purgePendingCrashReport];
+    [self.activeClients removeObject:client];
 }
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success
@@ -774,10 +791,10 @@ static AppBlade *s_sharedManager = nil;
     else {
         self.feedbackDictionary = nil;
     }
-
+    [self.activeClients removeObject:client];
 }
 
-- (void)appBladeWebClientSentSessions:(AppBladeWebClient*)client withSuccess:(BOOL)success
+- (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success
 {
     //delete existing sessions, as we have reported them
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
@@ -789,6 +806,7 @@ static AppBlade *s_sharedManager = nil;
             NSLog(@"Error deleting Session log: %@", deleteError.debugDescription);
         }
     }
+    [self.activeClients removeObject:client];
 }
 
 
