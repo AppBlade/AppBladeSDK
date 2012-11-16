@@ -713,9 +713,14 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
 {
-    // purge the crash report that was just reported. 
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    [crashReporter purgePendingCrashReport];
+    // purge the crash report that was just reported.
+    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+    BOOL success = (status == 201 || status == 200);
+    if(success){ //we don't need to hold onto this crash.
+        [[PLCrashReporter sharedReporter] purgePendingCrashReport];
+    }else{
+        NSLog(@"Appblade: error sending crash report, response status code: %d", status);
+    }
     [self.activeClients removeObject:client];
 }
 
