@@ -871,25 +871,20 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-#pragma mark - Encryption
 
 - (NSObject*)readFile:(NSString *)filePath
 {
     NSData* fileData = [NSData dataWithContentsOfFile:filePath];
     NSObject* returnObject = nil;
-    
     if (fileData) {
         returnObject = [NSKeyedUnarchiver unarchiveObjectWithData:fileData];
     }
     else {
-        // File was not encrypted
         NSError* error = nil;
-        
         if (![[NSFileManager defaultManager] removeItemAtPath:filePath error:&error]) {
             NSLog(@"AppBlade cannot remove file %@", [filePath lastPathComponent]);
         }
     }
-    
     return returnObject;
 }
 
