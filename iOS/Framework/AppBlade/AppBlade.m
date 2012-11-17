@@ -273,10 +273,12 @@ static AppBlade *s_sharedManager = nil;
     FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(0, 0, screenFrame.size.width, screenFrame.size.height)];
     feedback.delegate = self;
     
-    // get the parent window
-    if (!self.window) 
+    // get the first window in the application if one was not supplied.
+    if (!self.window){
         self.window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-    [[[self.window subviews] objectAtIndex:0] addSubview:feedback];   
+        NSLog(@"Feedback window not defined, using default (Images might not come through.)");
+    }
+    [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
     self.showingFeedbackDialogue = YES;
     [feedback.textView becomeFirstResponder];
     
