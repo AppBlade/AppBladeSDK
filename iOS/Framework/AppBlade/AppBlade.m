@@ -127,7 +127,7 @@ static AppBlade *s_sharedManager = nil;
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         _delegate = self;
-        _activeClients = [[[NSMutableSet alloc] init] retain];
+        _activeClients = [[NSMutableSet alloc] init];
     }
     return self;
 }
