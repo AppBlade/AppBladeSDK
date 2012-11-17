@@ -322,6 +322,8 @@ static BOOL is_encrypted () {
     NSString* scheme = [[request URL] scheme];
     if(scheme == nil){
         scheme = defaultURLScheme;
+    }else {
+        scheme = [scheme lowercaseString]; //for string comparison sanity
     }
     NSString* preparedHostName = [NSString stringWithFormat:@"%@://%@", scheme, [[request URL] host] ];
     //find port number
