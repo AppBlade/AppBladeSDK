@@ -348,20 +348,24 @@ static BOOL is_encrypted () {
     NSString* scheme = [[request URL] scheme];
     if(scheme == nil){
         scheme = defaultURLScheme;
-    }else {
+    }
+    else
+    {
         scheme = [scheme lowercaseString]; //for string comparison sanity
     }
     NSString* preparedHostName = [NSString stringWithFormat:@"%@://%@", scheme, [[request URL] host] ];
+    
     //find port number
     NSString* port = nil;
     if ([[request URL] port]) {
         port = [[[request URL] port] stringValue];
         preparedHostName = [preparedHostName stringByAppendingFormat:@":%@", port];
-    }else {   // Set port number based on the scheme
+    }
+    else
+    {   // Set port number based on the scheme
         port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
     }
 
-    
     // Construct the relative URL path, followed by the body if POST.
     NSMutableString *requestBodyRaw = [NSMutableString stringWithString:[[[request URL] absoluteString] substringFromIndex:[preparedHostName length]]];
     if([request HTTPBody]) {
