@@ -18,6 +18,7 @@
 #import <mach-o/ldsyms.h>
 
 static NSString *defaultURLScheme           = @"https";
+static NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
 static NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
 static NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
 static NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
@@ -185,6 +186,31 @@ static BOOL is_encrypted () {
     
     [super dealloc];
 }
+
+
++ (NSString *)buildHostURL:(NSString *)customURLString
+{
+    if(customURLString == nil){
+        NSLog(@"No custom URL: defaulting to %@", defaultAppBladeHostURL);
+        return defaultAppBladeHostURL;
+    }
+    
+    NSString* preparedHostName = nil;
+    //build a request to check if the supplied url is valid
+    NSURL *requestURL = [[NSURL alloc] initWithString:customURLString];
+    if(requestURL == nil)
+    {
+        NSLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
+        preparedHostName = defaultAppBladeHostURL;
+    }else {
+        NSLog(@"Found custom URL %@", customURLString);
+        preparedHostName = customURLString;
+    }
+
+    NSLog(@"built host URL: %@", preparedHostName);
+    return preparedHostName;
+}
+
 
 #pragma mark - AppBlade API
 

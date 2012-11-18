@@ -38,7 +38,7 @@ typedef enum {
 
 @end
 
-@interface AppBladeWebClient : NSObject {
+@interface AppBladeWebClient : NSObject {    
 
 @private
 
@@ -55,12 +55,15 @@ typedef enum {
     NSMutableData *_receivedData;
 }
 
+
 @property (nonatomic, assign) id<AppBladeWebClientDelegate> delegate;
 @property (nonatomic, readonly) AppBladeWebClientAPI api;
 @property (nonatomic, retain) NSDictionary* userInfo;
 @property (nonatomic, retain) NSDictionary* responseHeaders;
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
+
++ (NSString *)buildHostURL:(NSString *)customURLString;
 
 // AppBlade API.
 - (void)checkPermissions;
