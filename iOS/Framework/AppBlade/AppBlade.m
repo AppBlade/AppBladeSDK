@@ -54,9 +54,9 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
-- (void)handleFeedback;
-
 - (void)showFeedbackDialogue;
+
+- (void)promptFeedbackDialogue;
 - (void)reportFeedback:(NSString*)feedback;
 
 - (void)checkAndCreateAppBladeCacheDirectory;
@@ -263,8 +263,8 @@ static AppBlade *s_sharedManager = nil;
     return [[NSFileManager defaultManager] fileExistsAtPath:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName]];
 }
 
-- (void)showFeedbackDialogue{
-    
+- (void)promptFeedbackDialogue
+{
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     CGRect screenFrame = self.window.frame;
     
@@ -320,7 +320,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window
 {
     self.window = window;
-    self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFeedback)] autorelease];
+    self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] autorelease];
     self.tapRecognizer.numberOfTapsRequired = 2;
     self.tapRecognizer.numberOfTouchesRequired = 3;
     self.tapRecognizer.delegate = self;
@@ -337,7 +337,7 @@ static AppBlade *s_sharedManager = nil;
 {
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     if (window) {
-        [self setupCustomFeedbackReportingForWindow:[[UIApplication sharedApplication] keyWindow]];
+        [self setupCustomFeedbackReportingForWindow:window];
         NSLog(@"Allowing custom feedback.");
         
     }
@@ -349,7 +349,19 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window
 {
-    self.window = window;
+    if (window) {
+        NSLog(@"Allowing custom feedback for window %@", window);
+        self.window = window;
+    }
+    else {
+        NSLog(@"Cannot setup for custom feedback. Not a valid window.");
+        return;
+    }
+    [self checkAndCreateAppBladeCacheDirectory];
+    if ([self hasPendingFeedbackReports]) {
+        [self handleBackloggedFeedback];
+    }
+
     [self checkAndCreateAppBladeCacheDirectory];
     if ([self hasPendingFeedbackReports]) {
         [self handleBackloggedFeedback];
@@ -357,7 +369,7 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-- (void)handleFeedback
+- (void)showFeedbackDialogue
 {
     aslmsg q, m;
     int i;
@@ -392,10 +404,9 @@ static AppBlade *s_sharedManager = nil;
     self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:fileName forKey:kAppBladeFeedbackKeyConsole];
     
     NSString* screenshotPath = [self captureScreen];
-    
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
     
-    [self showFeedbackDialogue];
+    [self promptFeedbackDialogue];
 }
 
 - (void)handleBackloggedFeedback

@@ -85,7 +85,7 @@ static NSString* const kAppBladeCacheDirectory;
 
 - (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window;
 
-// Shows a feedback dialogue 
+// Shows a feedback dialogue and handles screenshot
 - (void)showFeedbackDialogue;
 
 
