@@ -67,6 +67,10 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 - (BOOL)hasPendingFeedbackReports;
 - (void)handleBackloggedFeedback;
 
+- (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType;
+- (BOOL)hasPendingSessions;
+
+
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 
 @end
@@ -398,6 +402,7 @@ static AppBlade *s_sharedManager = nil;
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
+    NSLog(@"Sending screenshot");
     [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyConsole]];
 }
 
@@ -543,6 +548,11 @@ static AppBlade *s_sharedManager = nil;
     return YES;
 }
 #pragma mark - Analytics
+- (BOOL)hasPendingSessions
+{   //check active clients for API_Sessions
+    NSInteger sessionClients = [self activeClientsOfType:AppBladeWebClientAPI_Sessions];
+    return sessionClients > 0;
+}
 
 + (void)startSession
 {
@@ -887,6 +897,22 @@ static AppBlade *s_sharedManager = nil;
     }
     return returnObject;
 }
+
+#pragma mark - Helper Files
+- (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType {
+    if(clientType == AppBladeWebClientAPI_AllTypes){
+        return [self.activeClients count];
+    }
+
+    NSInteger amtToReturn = 0;
+    for(AppBladeWebClient *c in self.activeClients){
+        if(c.api == clientType){
+            amtToReturn++;
+        }
+    }
+    return amtToReturn;
+}
+
 
 
 @end
