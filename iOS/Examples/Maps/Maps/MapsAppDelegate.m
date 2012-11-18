@@ -37,7 +37,7 @@
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
     
-    [blade allowFeedbackReporting];
+    [blade setupCustomFeedbackReporting];
 
     return YES;
 }
