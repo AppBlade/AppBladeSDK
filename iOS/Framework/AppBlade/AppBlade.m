@@ -138,9 +138,9 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)validateProjectConfiguration
 {
-    
     // Validate AppBlade project settings. This should be executed by every public method before proceding.
     if(!self.appBladeHost || self.appBladeHost.length == 0) {
+        //could be redundant now that we are handling host building from the webclient
         NSLog(@"Host not being ovewritten, falling back to default host (%@)", kAppBladeDefaultHost);
         self.appBladeHost = kAppBladeDefaultHost;
     }
@@ -248,12 +248,13 @@ static AppBlade *s_sharedManager = nil;
 - (void)loadSDKKeysFromPlist:(NSString *)plist
 {
     NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
-    self.appBladeHost = [keys objectForKey:@"host"];
+    self.appBladeHost =  [AppBladeWebClient buildHostURL:[keys objectForKey:@"host"]];
     self.appBladeProjectID = [keys objectForKey:@"projectID"];
     self.appBladeProjectToken = [keys objectForKey:@"token"];
     self.appBladeProjectSecret = [keys objectForKey:@"secret"];
     self.appBladeProjectIssuedTimestamp = [keys objectForKey:@"timestamp"];
 }
+
 
 #pragma mark Feedback
 
@@ -331,6 +332,30 @@ static AppBlade *s_sharedManager = nil;
         [self handleBackloggedFeedback];
     }
 }
+
+- (void)setupCustomFeedbackReporting
+{
+    UIWindow* window = [[UIApplication sharedApplication] keyWindow];
+    if (window) {
+        [self setupCustomFeedbackReportingForWindow:[[UIApplication sharedApplication] keyWindow]];
+        NSLog(@"Allowing custom feedback.");
+        
+    }
+    else {
+        NSLog(@"Cannot setup for custom feedback. No keyWindow.");
+    }
+
+}
+
+- (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window
+{
+    self.window = window;
+    [self checkAndCreateAppBladeCacheDirectory];
+    if ([self hasPendingFeedbackReports]) {
+        [self handleBackloggedFeedback];
+    }
+}
+
 
 - (void)handleFeedback
 {
@@ -571,13 +596,15 @@ static AppBlade *s_sharedManager = nil;
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     NSLog(@"Checking Session Path: %@", sessionFilePath);
 
-    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath] && self ) {
         NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
         NSLog(@"%d Sessions Exist, posting them", [sessions count]);
         
         AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
         [self.activeClients addObject:client];
-        [client postSessions:sessions];
+        if(![self hasPendingSessions]){
+            [client postSessions:sessions];
+        }
     }
     
     self.sessionStartDate = [NSDate date];
@@ -665,7 +692,9 @@ static AppBlade *s_sharedManager = nil;
             [self.feedbackRequests removeObject:client];
         }
 
-    }else {
+    }else if(client.api == AppBladeWebClientAPI_Sessions){
+        NSLog(@"ERROR sending sessions");
+    }else{
         NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
     }
     
@@ -675,7 +704,6 @@ static AppBlade *s_sharedManager = nil;
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
 {
     NSString *errorString = [permissions objectForKey:@"error"];
-    
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
     
     if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {

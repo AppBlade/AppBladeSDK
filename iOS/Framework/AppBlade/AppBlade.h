@@ -65,22 +65,29 @@ static NSString* const kAppBladeCacheDirectory;
 - (void)catchAndReportCrashes;
 
 /*
- *    WARNING: The following features are only for ad hoc and enterprise applications. Shipping an app to the iTunes App
+ *    WARNING: The following features below are only for ad hoc and enterprise applications. Shipping an app to the iTunes App
  *    store with a call to |-checkApproval|, for example, could result in app termination or rejection.
  */
 
 // Checks with AppBlade to see if the app is allowed to run on this device.
 - (void)checkApproval;
 
-// Shows a feedback dialogue
-- (void)showFeedbackDialogue;
 + (NSString*)cachesDirectoryPath;
 
 // Sets up a 3-finger double tap for reporting feedback
 - (void)allowFeedbackReporting;
 
-// In case you only want feedback in a specific window.
+// In case you only want 3-finger double tap feedback in a specific window.
 - (void)allowFeedbackReportingForWindow:(UIWindow*)window;
+
+// In case you want feedback but want to handle prompting it yourself (no 3-finger double tap).
+- (void)setupCustomFeedbackReporting;
+
+- (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window;
+
+// Shows a feedback dialogue 
+- (void)showFeedbackDialogue;
+
 
 + (void)startSession;
 + (void)endSession;
