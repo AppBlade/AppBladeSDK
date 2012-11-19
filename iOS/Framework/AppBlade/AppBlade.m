@@ -31,7 +31,7 @@ static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
-static NSString* const kAppBladeDefaultHost             = @"appblade.com";
+static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
 
 static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
 
