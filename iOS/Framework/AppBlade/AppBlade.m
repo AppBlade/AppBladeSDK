@@ -952,15 +952,15 @@ static AppBlade *s_sharedManager = nil;
 
 #pragma mark - Helper Files
 - (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType {
-    if(clientType == AppBladeWebClientAPI_AllTypes){
-        return [self.activeClients count];
-    }
-
     NSInteger amtToReturn = 0;
-    for(AppBladeWebClient *c in self.activeClients){
-        if(c.api == clientType){
-            amtToReturn++;
-        }
+
+    if(clientType == AppBladeWebClientAPI_AllTypes){
+        amtToReturn = [self.activeClients count];
+    }
+    else
+    {
+        NSSet* clientsOfType = [self.activeClients filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", clientType ]];
+        amtToReturn = clientsOfType.count;
     }
     return amtToReturn;
 }
