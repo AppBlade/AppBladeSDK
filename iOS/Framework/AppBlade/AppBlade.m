@@ -313,7 +313,7 @@ static AppBlade *s_sharedManager = nil;
 
 -(void)feedbackDidSubmitText:(NSString*)feedbackText{
     
-    NSLog(@"AppBlade received %@", feedbackText);
+    NSLog(@"reporting text %@", feedbackText);
     [self reportFeedback:feedbackText];
 }
 
@@ -896,7 +896,7 @@ static AppBlade *s_sharedManager = nil;
             if(!success){
                 NSLog(@"Error writing backup file to %@", backupFilePath);
             }
-        }
+        } //It's failed and already in the backlog. Keep it there.
 
         if (!isBacklog) {
             self.feedbackDictionary = nil;
