@@ -190,25 +190,26 @@ static BOOL is_encrypted () {
 
 + (NSString *)buildHostURL:(NSString *)customURLString
 {
+    NSString* preparedHostName = nil;
     if(customURLString == nil){
         NSLog(@"No custom URL: defaulting to %@", defaultAppBladeHostURL);
-        return defaultAppBladeHostURL;
-    }
-    
-    NSString* preparedHostName = nil;
-    //build a request to check if the supplied url is valid
-    NSURL *requestURL = [[NSURL alloc] initWithString:customURLString];
-    if(requestURL == nil)
-    {
-        NSLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
         preparedHostName = defaultAppBladeHostURL;
     }
     else
     {
-        NSLog(@"Found custom URL %@", customURLString);
-        preparedHostName = customURLString;
+        //build a request to check if the supplied url is valid
+        NSURL *requestURL = [[NSURL alloc] initWithString:customURLString];
+        if(requestURL == nil)
+        {
+            NSLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
+            preparedHostName = defaultAppBladeHostURL;
+        }
+        else
+        {
+            NSLog(@"Found custom URL %@", customURLString);
+            preparedHostName = customURLString;
+        }
     }
-
     NSLog(@"built host URL: %@", preparedHostName);
     return preparedHostName;
 }
