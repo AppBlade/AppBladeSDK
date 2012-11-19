@@ -280,12 +280,16 @@ static AppBlade *s_sharedManager = nil;
     
     // get the first window in the application if one was not supplied.
     if (!self.window){
-        self.window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        self.window = [[UIApplication sharedApplication] keyWindow];
         NSLog(@"Feedback window not defined, using default (Images might not come through.)");
     }
-    [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
-    self.showingFeedbackDialogue = YES;
-    [feedback.textView becomeFirstResponder];
+    if([[self.window subviews] count] > 0){
+        [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
+        self.showingFeedbackDialogue = YES;
+        [feedback.textView becomeFirstResponder];
+    }else{
+        NSLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
+    }
     
 }
 
