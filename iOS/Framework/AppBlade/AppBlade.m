@@ -16,7 +16,7 @@
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
 
-static NSString* const s_sdkVersion                     = @"0.2.1";
+static NSString* const s_sdkVersion                     = @"0.3.0";
 
 const int kUpdateAlertTag                               = 316;
 

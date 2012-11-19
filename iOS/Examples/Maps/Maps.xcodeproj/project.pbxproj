@@ -17,7 +17,7 @@
 		31817C07161202EB00392343 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 31817C06161202EB00392343 /* Default.png */; };
 		31817C09161202EB00392343 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31817C08161202EB00392343 /* Default@2x.png */; };
 		31817C0B161202EB00392343 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31817C0A161202EB00392343 /* Default-568h@2x.png */; };
-		31817C1B161203D000392343 /* libAppBlade.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817C1A161203D000392343 /* libAppBlade.a */; };
+		31817C1B161203D000392343 /* libAppBladeUniversal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817C1A161203D000392343 /* libAppBladeUniversal.a */; };
 		31817C251612040700392343 /* CrashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31817C1D1612040700392343 /* CrashViewController.m */; };
 		31817C261612040700392343 /* CrashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31817C1E1612040700392343 /* CrashViewController.xib */; };
 		31817C271612040700392343 /* FlipsideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31817C1F1612040700392343 /* FlipsideView.xib */; };
@@ -46,7 +46,7 @@
 		31817C08161202EB00392343 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		31817C0A161202EB00392343 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		31817C19161203D000392343 /* AppBlade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
-		31817C1A161203D000392343 /* libAppBlade.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppBlade.a; sourceTree = "<group>"; };
+		31817C1A161203D000392343 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppBladeUniversal.a; sourceTree = "<group>"; };
 		31817C1C1612040700392343 /* CrashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashViewController.h; sourceTree = "<group>"; };
 		31817C1D1612040700392343 /* CrashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashViewController.m; sourceTree = "<group>"; };
 		31817C1E1612040700392343 /* CrashViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrashViewController.xib; sourceTree = "<group>"; };
@@ -72,7 +72,7 @@
 				31817BF5161202EB00392343 /* UIKit.framework in Frameworks */,
 				31817BF7161202EB00392343 /* Foundation.framework in Frameworks */,
 				31817BF9161202EB00392343 /* CoreGraphics.framework in Frameworks */,
-				31817C1B161203D000392343 /* libAppBlade.a in Frameworks */,
+				31817C1B161203D000392343 /* libAppBladeUniversal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,7 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				31817C19161203D000392343 /* AppBlade.h */,
-				31817C1A161203D000392343 /* libAppBlade.a */,
+				31817C1A161203D000392343 /* libAppBladeUniversal.a */,
 			);
 			name = AppBladeSDK;
 			path = Maps/AppBladeSDK;

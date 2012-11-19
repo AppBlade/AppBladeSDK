@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		31800B4E1610DA9C009AD737 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31800B4D1610DA9C009AD737 /* Default-568h@2x.png */; };
-		31800B501610DB62009AD737 /* libAppBlade.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C8931014100DA900F1C147 /* libAppBlade.a */; };
+		31800B501610DB62009AD737 /* libAppBladeUniversal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C8931014100DA900F1C147 /* libAppBladeUniversal.a */; };
 		62C892D7140FF07400F1C147 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C892D6140FF07400F1C147 /* UIKit.framework */; };
 		62C892D9140FF07400F1C147 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C892D8140FF07400F1C147 /* Foundation.framework */; };
 		62C892DB140FF07400F1C147 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C892DA140FF07400F1C147 /* CoreGraphics.framework */; };
@@ -38,7 +38,7 @@
 		62C892EC140FF07400F1C147 /* CrashSampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CrashSampleViewController.m; sourceTree = "<group>"; };
 		62C892EF140FF07400F1C147 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CrashSampleViewController.xib; sourceTree = "<group>"; };
 		62C8930F14100DA900F1C147 /* AppBlade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
-		62C8931014100DA900F1C147 /* libAppBlade.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppBlade.a; sourceTree = "<group>"; };
+		62C8931014100DA900F1C147 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppBladeUniversal.a; sourceTree = "<group>"; };
 		62C8931314100E7B00F1C147 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -47,7 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31800B501610DB62009AD737 /* libAppBlade.a in Frameworks */,
+				31800B501610DB62009AD737 /* libAppBladeUniversal.a in Frameworks */,
 				62C8931414100E7B00F1C147 /* Security.framework in Frameworks */,
 				62C892D7140FF07400F1C147 /* UIKit.framework in Frameworks */,
 				62C892D9140FF07400F1C147 /* Foundation.framework in Frameworks */,
@@ -117,7 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				62C8930F14100DA900F1C147 /* AppBlade.h */,
-				62C8931014100DA900F1C147 /* libAppBlade.a */,
+				62C8931014100DA900F1C147 /* libAppBladeUniversal.a */,
 			);
 			path = AppBlade;
 			sourceTree = "<group>";
