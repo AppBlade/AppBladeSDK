@@ -613,7 +613,7 @@ static AppBlade *s_sharedManager = nil;
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     NSLog(@"Checking Session Path: %@", sessionFilePath);
 
-    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath] && self ) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
         NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
         NSLog(@"%d Sessions Exist, posting them", [sessions count]);
         
