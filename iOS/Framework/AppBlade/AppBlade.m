@@ -33,6 +33,8 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 
 static NSString* const kAppBladeDefaultHost             = @"appblade.com";
 
+static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
+
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
@@ -45,11 +47,16 @@ static NSString* const kAppBladeDefaultHost             = @"appblade.com";
 @property (nonatomic, retain) NSMutableSet* feedbackRequests;
 @property (nonatomic, assign) UIWindow* window;
 
+@property (nonatomic, retain) NSDate *sessionStartDate;
+
+@property (nonatomic, retain) NSMutableSet* activeClients;
+
+
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
-- (void)handleFeedback;
-
 - (void)showFeedbackDialogue;
+
+- (void)promptFeedbackDialogue;
 - (void)reportFeedback:(NSString*)feedback;
 
 - (void)checkAndCreateAppBladeCacheDirectory;
@@ -59,6 +66,10 @@ static NSString* const kAppBladeDefaultHost             = @"appblade.com";
 
 - (BOOL)hasPendingFeedbackReports;
 - (void)handleBackloggedFeedback;
+
+- (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType;
+- (BOOL)hasPendingSessions;
+
 
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 
@@ -79,7 +90,13 @@ static NSString* const kAppBladeDefaultHost             = @"appblade.com";
 @synthesize tapRecognizer = _tapRecognizer;
 @synthesize feedbackRequests = _feedbackRequests;
 
+@synthesize sessionStartDate = _sessionStartDate;
+
 @synthesize window = _window;
+
+@synthesize activeClients = _activeClients;
+
+
 
 static AppBlade *s_sharedManager = nil;
 
@@ -114,15 +131,16 @@ static AppBlade *s_sharedManager = nil;
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         _delegate = self;
+        _activeClients = [[NSMutableSet alloc] init];
     }
     return self;
 }
 
 - (void)validateProjectConfiguration
 {
-    
     // Validate AppBlade project settings. This should be executed by every public method before proceding.
     if(!self.appBladeHost || self.appBladeHost.length == 0) {
+        //could be redundant now that we are handling host building from the webclient
         NSLog(@"Host not being ovewritten, falling back to default host (%@)", kAppBladeDefaultHost);
         self.appBladeHost = kAppBladeDefaultHost;
     }
@@ -161,7 +179,11 @@ static AppBlade *s_sharedManager = nil;
     [_tapRecognizer release];
     [_feedbackRequests release];
     [_window release];
+    
+    [_sessionStartDate release];
 
+    [_activeClients release];
+    
     [super dealloc];
 }
 
@@ -171,7 +193,8 @@ static AppBlade *s_sharedManager = nil;
 {
     [self validateProjectConfiguration];
 
-    AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
     [client checkPermissions];    
 }
 
@@ -216,7 +239,8 @@ static AppBlade *s_sharedManager = nil;
     }
     
     NSString* reportString = [PLCrashReportTextFormatter stringValueForCrashReport: report withTextFormat: PLCrashReportTextFormatiOS];
-    AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
     [client reportCrash:reportString];
 
 }
@@ -224,12 +248,13 @@ static AppBlade *s_sharedManager = nil;
 - (void)loadSDKKeysFromPlist:(NSString *)plist
 {
     NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
-    self.appBladeHost = [keys objectForKey:@"host"];
+    self.appBladeHost =  [AppBladeWebClient buildHostURL:[keys objectForKey:@"host"]];
     self.appBladeProjectID = [keys objectForKey:@"projectID"];
     self.appBladeProjectToken = [keys objectForKey:@"token"];
     self.appBladeProjectSecret = [keys objectForKey:@"secret"];
     self.appBladeProjectIssuedTimestamp = [keys objectForKey:@"timestamp"];
 }
+
 
 #pragma mark Feedback
 
@@ -238,8 +263,8 @@ static AppBlade *s_sharedManager = nil;
     return [[NSFileManager defaultManager] fileExistsAtPath:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName]];
 }
 
-- (void)showFeedbackDialogue{
-    
+- (void)promptFeedbackDialogue
+{
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     CGRect screenFrame = self.window.frame;
     
@@ -253,12 +278,20 @@ static AppBlade *s_sharedManager = nil;
     FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(0, 0, screenFrame.size.width, screenFrame.size.height)];
     feedback.delegate = self;
     
-    // get the parent window
-    if (!self.window) 
-        self.window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-    [[[self.window subviews] objectAtIndex:0] addSubview:feedback];   
-    self.showingFeedbackDialogue = YES;
-    [feedback.textView becomeFirstResponder];
+    // get the first window in the application if one was not supplied.
+    if (!self.window){
+        self.window = [[UIApplication sharedApplication] keyWindow];
+        NSLog(@"Feedback window not defined, using default (Images might not come through.)");
+    }
+    if([[self.window subviews] count] > 0){
+        [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
+        self.showingFeedbackDialogue = YES;
+        [feedback.textView becomeFirstResponder];
+    }
+    else
+    {
+        NSLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
+    }
     
 }
 
@@ -293,7 +326,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window
 {
     self.window = window;
-    self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFeedback)] autorelease];
+    self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] autorelease];
     self.tapRecognizer.numberOfTapsRequired = 2;
     self.tapRecognizer.numberOfTouchesRequired = 3;
     self.tapRecognizer.delegate = self;
@@ -306,7 +339,43 @@ static AppBlade *s_sharedManager = nil;
     }
 }
 
-- (void)handleFeedback
+- (void)setupCustomFeedbackReporting
+{
+    UIWindow* window = [[UIApplication sharedApplication] keyWindow];
+    if (window) {
+        [self setupCustomFeedbackReportingForWindow:window];
+        NSLog(@"Allowing custom feedback.");
+        
+    }
+    else {
+        NSLog(@"Cannot setup for custom feedback. No keyWindow.");
+    }
+
+}
+
+- (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window
+{
+    if (window) {
+        NSLog(@"Allowing custom feedback for window %@", window);
+        self.window = window;
+    }
+    else {
+        NSLog(@"Cannot setup for custom feedback. Not a valid window.");
+        return;
+    }
+    [self checkAndCreateAppBladeCacheDirectory];
+    if ([self hasPendingFeedbackReports]) {
+        [self handleBackloggedFeedback];
+    }
+
+    [self checkAndCreateAppBladeCacheDirectory];
+    if ([self hasPendingFeedbackReports]) {
+        [self handleBackloggedFeedback];
+    }
+}
+
+
+- (void)showFeedbackDialogue
 {
     aslmsg q, m;
     int i;
@@ -341,10 +410,9 @@ static AppBlade *s_sharedManager = nil;
     self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:fileName forKey:kAppBladeFeedbackKeyConsole];
     
     NSString* screenshotPath = [self captureScreen];
-    
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
     
-    [self showFeedbackDialogue];
+    [self promptFeedbackDialogue];
 }
 
 - (void)handleBackloggedFeedback
@@ -357,8 +425,9 @@ static AppBlade *s_sharedManager = nil;
         
         NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
         if (feedback) {
-            AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+            AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
             client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
+            [self.activeClients addObject:client];
             [client sendFeedbackWithScreenshot:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot] note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:[feedback objectForKey:kAppBladeFeedbackKeyConsole]];
             
             if (!self.feedbackRequests) {
@@ -373,7 +442,9 @@ static AppBlade *s_sharedManager = nil;
 - (void)reportFeedback:(NSString *)feedback
 {
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
-    AppBladeWebClient* client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
+    NSLog(@"Sending screenshot");
     [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyConsole]];
 }
 
@@ -518,6 +589,64 @@ static AppBlade *s_sharedManager = nil;
     
     return YES;
 }
+#pragma mark - Analytics
+- (BOOL)hasPendingSessions
+{   //check active clients for API_Sessions
+    NSInteger sessionClients = [self activeClientsOfType:AppBladeWebClientAPI_Sessions];
+    return sessionClients > 0;
+}
+
++ (void)startSession
+{
+    NSLog(@"Starting Session Logging");
+    [[AppBlade sharedManager] logSessionStart];
+}
+
++ (void)endSession
+{
+    NSLog(@"Ended Session Logging");
+    [[AppBlade sharedManager] logSessionEnd];
+}
+
+- (void)logSessionStart
+{
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    NSLog(@"Checking Session Path: %@", sessionFilePath);
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        NSLog(@"%d Sessions Exist, posting them", [sessions count]);
+        
+        AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        [self.activeClients addObject:client];
+        if(![self hasPendingSessions]){
+            [client postSessions:sessions];
+        }
+    }
+    
+    self.sessionStartDate = [NSDate date];
+}
+
+- (void)logSessionEnd
+{
+    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", nil];
+    
+    NSMutableArray* pastSessions = nil;
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        pastSessions = [[sessions mutableCopy] autorelease];
+    }
+    else {
+        pastSessions = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [pastSessions addObject:sessionDict];
+    
+    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
+    [sessionData writeToFile:sessionFilePath atomically:YES];
+}
+
 
 #pragma mark - AppBladeWebClient
 -(void) appBladeWebClientFailed:(AppBladeWebClient *)client
@@ -580,17 +709,21 @@ static AppBlade *s_sharedManager = nil;
             [self.feedbackRequests removeObject:client];
         }
 
-    }else {
+    }
+    else if(client.api == AppBladeWebClientAPI_Sessions){
+        NSLog(@"ERROR sending sessions");
+    }
+    else
+    {
         NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
-
     }
     
+    [self.activeClients removeObject:client];
 }
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
 {
     NSString *errorString = [permissions objectForKey:@"error"];
-    
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
     
     if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
@@ -633,15 +766,24 @@ static AppBlade *s_sharedManager = nil;
         }
     }
 
-    
+    [self.activeClients removeObject:client];
+
     
 }
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
 {
-    // purge the crash report that was just reported. 
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    [crashReporter purgePendingCrashReport];
+    // purge the crash report that was just reported.
+    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+    BOOL success = (status == 201 || status == 200);
+    if(success){ //we don't need to hold onto this crash.
+        [[PLCrashReporter sharedReporter] purgePendingCrashReport];
+    }
+    else
+    {
+        NSLog(@"Appblade: error sending crash report, response status code: %d", status);
+    }
+    [self.activeClients removeObject:client];
 }
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success
@@ -716,8 +858,24 @@ static AppBlade *s_sharedManager = nil;
     else {
         self.feedbackDictionary = nil;
     }
-
+    [self.activeClients removeObject:client];
 }
+
+- (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success
+{
+    //delete existing sessions, as we have reported them
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSError *deleteError = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
+        
+        if(deleteError){
+            NSLog(@"Error deleting Session log: %@", deleteError.debugDescription);
+        }
+    }
+    [self.activeClients removeObject:client];
+}
+
 
 #pragma mark - AppBladeDelegate
 - (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
@@ -760,7 +918,9 @@ static AppBlade *s_sharedManager = nil;
             self.upgradeLink = nil;   
             exit(0);
         }
-    } else {
+    }
+    else
+    {
         exit(0);
     }
 }
@@ -771,5 +931,40 @@ static AppBlade *s_sharedManager = nil;
 {
     return YES;
 }
+
+
+
+- (NSObject*)readFile:(NSString *)filePath
+{
+    NSData* fileData = [NSData dataWithContentsOfFile:filePath];
+    NSObject* returnObject = nil;
+    if (fileData) {
+        returnObject = [NSKeyedUnarchiver unarchiveObjectWithData:fileData];
+    }
+    else {
+        NSError* error = nil;
+        if (![[NSFileManager defaultManager] removeItemAtPath:filePath error:&error]) {
+            NSLog(@"AppBlade cannot remove file %@", [filePath lastPathComponent]);
+        }
+    }
+    return returnObject;
+}
+
+#pragma mark - Helper Files
+- (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType {
+    NSInteger amtToReturn = 0;
+
+    if(clientType == AppBladeWebClientAPI_AllTypes){
+        amtToReturn = [self.activeClients count];
+    }
+    else
+    {
+        NSSet* clientsOfType = [self.activeClients filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", clientType ]];
+        amtToReturn = clientsOfType.count;
+    }
+    return amtToReturn;
+}
+
+
 
 @end

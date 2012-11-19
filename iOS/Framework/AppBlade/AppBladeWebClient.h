@@ -14,7 +14,9 @@
 typedef enum {
 	AppBladeWebClientAPI_Permissions,
     AppBladeWebClientAPI_ReportCrash,
-    AppBladeWebClientAPI_Feedback
+    AppBladeWebClientAPI_Feedback,
+    AppBladeWebClientAPI_Sessions,
+    AppBladeWebClientAPI_AllTypes
 } AppBladeWebClientAPI;
 
 @protocol AppBladeWebClientDelegate <NSObject>
@@ -30,11 +32,13 @@ typedef enum {
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client;
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary*)permissions;
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
-- (void)appBladeWebClientSentFeedback:(AppBladeWebClient*)client withSuccess:(BOOL)success;
+- (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success;
+- (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success;
+
 
 @end
 
-@interface AppBladeWebClient : NSObject {
+@interface AppBladeWebClient : NSObject {    
 
 @private
 
@@ -51,6 +55,7 @@ typedef enum {
     NSMutableData *_receivedData;
 }
 
+
 @property (nonatomic, assign) id<AppBladeWebClientDelegate> delegate;
 @property (nonatomic, readonly) AppBladeWebClientAPI api;
 @property (nonatomic, retain) NSDictionary* userInfo;
@@ -58,9 +63,12 @@ typedef enum {
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
 
++ (NSString *)buildHostURL:(NSString *)customURLString;
+
 // AppBlade API.
 - (void)checkPermissions;
 - (void)reportCrash:(NSString *)crashReport;
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console;
+- (void)postSessions:(NSArray *)sessions;
 
 @end
