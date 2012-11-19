@@ -24,8 +24,6 @@ static NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/cr
 static NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
 static NSString *sessionURLFormat           = @"%@/api/user_sessions";
 
-static NSString* s_boundary = @"---------------------------14737809831466499882746641449";
-
 
 @interface AppBladeWebClient ()
 
@@ -52,6 +50,7 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 - (NSString *)SHA_Base64:(NSString *)raw;
 - (NSString *)encodeBase64WithData:(NSData *)objData;
 - (NSString *)genRandStringLength:(int)len;
+- (NSString *)genRandNumberLength:(int)len;
 - (NSString *)urlEncodeValue:(NSString*)string;
 
 - (NSString *)hashFile:(NSString*)filePath;
@@ -277,29 +276,30 @@ static BOOL is_encrypted () {
     
     NSLog(@"reportString %@", reportString);
 
+    NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
     
     // Create the API request.
     NSMutableURLRequest* apiRequest = [self requestForURL:reportURL];
-    [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:s_boundary] forHTTPHeaderField:@"Content-Type"];
+    [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
     [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [apiRequest setHTTPMethod:@"POST"];
     
-    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
     [body appendData:[note dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Disposition: form-data; name=\"feedback[console]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:consoleContent];
     
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"base64:%@\"\r\n", screenshot] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSData* screenshotData = [[self encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
     [body appendData:screenshotData];
-    [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
     
     
     [apiRequest setHTTPBody:body];
@@ -385,7 +385,6 @@ static BOOL is_encrypted () {
         [requestBodyRaw appendFormat:@"?%@", dataString];
     }
     
-    NSString *requestBodyHash = [self SHA_Base64:requestBodyRaw];
     
     // Construct the nonce (salt). First part of the salt is the delta of the current time and the stored time the
     // version was issued at, then a colon, then a random string of a certain length.
@@ -393,19 +392,21 @@ static BOOL is_encrypted () {
     NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectIssuedTimestamp], randomString];
         
     NSString* ext = [self udid];
-
-    //remove newlines from beginning / end of raw request
-    NSString *trimmedRequestBodyRaw = [requestBodyRaw stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    NSString *requestBodyHash = [self SHA_Base64:requestBodyRaw];
+    NSLog(@"%d", [requestBodyRaw length]);
     
     // Compose the normalized request body.
     NSMutableString* request_body = [NSMutableString stringWithFormat:@"%@\n%@\n%@\n%@\n%@\n%@\n%@\n",
                                      nonce,
                                      [request HTTPMethod],
-                                     trimmedRequestBodyRaw,
+                                     requestBodyRaw,
                                      [[request URL] host],
                                      port,
                                      requestBodyHash,
                                      ext];
+    NSLog(@"%@", requestBodyHash);
+    NSLog(@"%@", [requestBodyRaw substringToIndex:MIN([requestBodyRaw length], 1000)]);
     
     // Digest the normalized request body.
     NSString* mac = [self HMAC_SHA256_Base64:request_body with_key:[_delegate appBladeProjectSecret]];
@@ -593,6 +594,17 @@ static BOOL is_encrypted () {
     return [[randomString copy] autorelease];
 }
 
+// Derived from http://stackoverflow.com/q/2633801/2633948#2633948
+- (NSString *)genRandNumberLength:(int)len
+{
+    NSString *letters = @"123456789";
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random()%[letters length]] ];
+    }
+    return [[randomString copy] autorelease];
+}
+
 #pragma mark - MD5 Hashing
 
 - (NSString*)hashFile:(NSString *)filePath
@@ -655,19 +667,21 @@ static BOOL is_encrypted () {
     NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [_delegate appBladeHost]];
     NSURL* sessionURL = [NSURL URLWithString:sessionString];
     
+    NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
+    
     NSMutableURLRequest* request = [self requestForURL:sessionURL];
     [request setHTTPMethod:@"PUT"];
-    [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:s_boundary] forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
     
-    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Disposition: form-data; name=\"device_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[[UIDevice currentDevice] uniqueIdentifier] dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Disposition: form-data; name=\"project_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[[[AppBlade sharedManager] appBladeProjectID] dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -677,7 +691,7 @@ static BOOL is_encrypted () {
     
     if (requestData) {
         [body appendData:requestData];
-        [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [request setHTTPBody:body];
         [self addSecurityToRequest:request];
