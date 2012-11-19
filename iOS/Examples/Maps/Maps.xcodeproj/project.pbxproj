@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3110533A165AD258008FC128 /* libAppBlade.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D434EA165AD0940075D028 /* libAppBlade.a */; };
 		317FC8F2164C379600A3ED96 /* AppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 317FC8F1164C379600A3ED96 /* AppBladeKeys.plist */; };
 		31817BF5161202EB00392343 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817BF4161202EB00392343 /* UIKit.framework */; };
 		31817BF7161202EB00392343 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817BF6161202EB00392343 /* Foundation.framework */; };
@@ -17,7 +18,6 @@
 		31817C07161202EB00392343 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 31817C06161202EB00392343 /* Default.png */; };
 		31817C09161202EB00392343 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31817C08161202EB00392343 /* Default@2x.png */; };
 		31817C0B161202EB00392343 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31817C0A161202EB00392343 /* Default-568h@2x.png */; };
-		31817C1B161203D000392343 /* libAppBladeUniversal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817C1A161203D000392343 /* libAppBladeUniversal.a */; };
 		31817C251612040700392343 /* CrashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31817C1D1612040700392343 /* CrashViewController.m */; };
 		31817C261612040700392343 /* CrashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31817C1E1612040700392343 /* CrashViewController.xib */; };
 		31817C271612040700392343 /* FlipsideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31817C1F1612040700392343 /* FlipsideView.xib */; };
@@ -29,6 +29,30 @@
 		31817C3B1612082F00392343 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31817C3A1612082F00392343 /* MainWindow-iPad.xib */; };
 		31D6BF9716120A5A0051283A /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D6BF9616120A5A0051283A /* MainWindow.xib */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		31105338165AD0F6008FC128 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31D434E4165AD0940075D028 /* AppBlade.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = CBF479F713969C2B00949297;
+			remoteInfo = AppBlade;
+		};
+		31D434E9165AD0940075D028 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31D434E4165AD0940075D028 /* AppBlade.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CBF479F813969C2B00949297;
+			remoteInfo = AppBlade;
+		};
+		31D434EB165AD0940075D028 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31D434E4165AD0940075D028 /* AppBlade.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CB51D2FC1429274C00A43CB5;
+			remoteInfo = AppBladeUniversal;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		317FC8F1164C379600A3ED96 /* AppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppBladeKeys.plist; sourceTree = "<group>"; };
@@ -45,8 +69,6 @@
 		31817C06161202EB00392343 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		31817C08161202EB00392343 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		31817C0A161202EB00392343 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		31817C19161203D000392343 /* AppBlade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
-		31817C1A161203D000392343 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppBladeUniversal.a; sourceTree = "<group>"; };
 		31817C1C1612040700392343 /* CrashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashViewController.h; sourceTree = "<group>"; };
 		31817C1D1612040700392343 /* CrashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashViewController.m; sourceTree = "<group>"; };
 		31817C1E1612040700392343 /* CrashViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrashViewController.xib; sourceTree = "<group>"; };
@@ -59,6 +81,7 @@
 		31817C35161207D000392343 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		31817C37161207E000392343 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		31817C3A1612082F00392343 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		31D434E4165AD0940075D028 /* AppBlade.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AppBlade.xcodeproj; path = ../../Framework/AppBlade.xcodeproj; sourceTree = "<group>"; };
 		31D6BF9616120A5A0051283A /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,12 +90,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3110533A165AD258008FC128 /* libAppBlade.a in Frameworks */,
 				31817C38161207E000392343 /* MapKit.framework in Frameworks */,
 				31817C36161207D000392343 /* Security.framework in Frameworks */,
 				31817BF5161202EB00392343 /* UIKit.framework in Frameworks */,
 				31817BF7161202EB00392343 /* Foundation.framework in Frameworks */,
 				31817BF9161202EB00392343 /* CoreGraphics.framework in Frameworks */,
-				31817C1B161203D000392343 /* libAppBladeUniversal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +105,7 @@
 		31817BE5161202EB00392343 = {
 			isa = PBXGroup;
 			children = (
+				31D434E4165AD0940075D028 /* AppBlade.xcodeproj */,
 				31817BFA161202EB00392343 /* Maps */,
 				31817BF3161202EB00392343 /* Frameworks */,
 				31817BF1161202EB00392343 /* Products */,
@@ -101,7 +125,6 @@
 			children = (
 				31817C35161207D000392343 /* Security.framework */,
 				31817C37161207E000392343 /* MapKit.framework */,
-				31817C18161203D000392343 /* AppBladeSDK */,
 				31817BF4161202EB00392343 /* UIKit.framework */,
 				31817BF6161202EB00392343 /* Foundation.framework */,
 				31817BF8161202EB00392343 /* CoreGraphics.framework */,
@@ -145,22 +168,21 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		31817C18161203D000392343 /* AppBladeSDK */ = {
-			isa = PBXGroup;
-			children = (
-				31817C19161203D000392343 /* AppBlade.h */,
-				31817C1A161203D000392343 /* libAppBladeUniversal.a */,
-			);
-			name = AppBladeSDK;
-			path = Maps/AppBladeSDK;
-			sourceTree = "<group>";
-		};
 		31817C391612081400392343 /* iPad */ = {
 			isa = PBXGroup;
 			children = (
 				31817C3A1612082F00392343 /* MainWindow-iPad.xib */,
 			);
 			name = iPad;
+			sourceTree = "<group>";
+		};
+		31D434E5165AD0940075D028 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				31D434EA165AD0940075D028 /* libAppBlade.a */,
+				31D434EC165AD0940075D028 /* libAppBladeUniversal.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,6 +199,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				31105339165AD0F6008FC128 /* PBXTargetDependency */,
 			);
 			name = Maps;
 			productName = Maps;
@@ -203,12 +226,35 @@
 			mainGroup = 31817BE5161202EB00392343;
 			productRefGroup = 31817BF1161202EB00392343 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 31D434E5165AD0940075D028 /* Products */;
+					ProjectRef = 31D434E4165AD0940075D028 /* AppBlade.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				31817BEF161202EB00392343 /* Maps */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		31D434EA165AD0940075D028 /* libAppBlade.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAppBlade.a;
+			remoteRef = 31D434E9165AD0940075D028 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		31D434EC165AD0940075D028 /* libAppBladeUniversal.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAppBladeUniversal.a;
+			remoteRef = 31D434EB165AD0940075D028 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		31817BEE161202EB00392343 /* Resources */ = {
@@ -245,6 +291,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		31105339165AD0F6008FC128 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AppBlade;
+			targetProxy = 31105338165AD0F6008FC128 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		31817BFD161202EB00392343 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -279,6 +333,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "../../Framework/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -300,6 +355,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "../../Framework/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";

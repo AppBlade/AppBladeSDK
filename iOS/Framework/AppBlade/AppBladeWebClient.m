@@ -37,6 +37,7 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 
 @property (nonatomic, readonly) NSString *executableUUID;
 
+@property (nonatomic, retain) NSURLConnection *activeConnection;
 
 // Request helper methods.
 
@@ -73,6 +74,9 @@ static NSString* s_boundary = @"---------------------------147378098314664998827
 @synthesize responseHeaders = _responseHeaders;
 @synthesize userInfo = _userInfo;
 @synthesize executableUUID = _executableUUID;
+
+
+@synthesize activeConnection = _activeConnection;
 
 const int kNonceRandomStringLength = 74;
 
@@ -183,7 +187,7 @@ static BOOL is_encrypted () {
     [_osVersionBuild release];
     [_platform release];
     [_executableUUID release];
-    
+    [_activeConnection release];
     [super dealloc];
 }
 
@@ -230,7 +234,7 @@ static BOOL is_encrypted () {
     [self addSecurityToRequest:apiRequest];
 
     // Issue the request.
-    [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+    self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
 }
 
 - (void)reportCrash:(NSString *)crashReport {
@@ -253,13 +257,14 @@ static BOOL is_encrypted () {
     [self addSecurityToRequest:apiRequest];
 
     // Issue the request.
-    [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease]; 
+   self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
 }
 
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console
 {
     _api = AppBladeWebClientAPI_Feedback;
-    
+    NSLog(@"Sending Feedback %@", note);
+
     NSString* udid = [self udid];
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
     NSData* consoleContent = [NSData dataWithContentsOfFile:[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:console]];
@@ -269,6 +274,9 @@ static BOOL is_encrypted () {
     // Build report URL.
     NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* reportURL = [NSURL URLWithString:reportString];
+    
+    NSLog(@"reportString %@", reportString);
+
     
     // Create the API request.
     NSMutableURLRequest* apiRequest = [self requestForURL:reportURL];
@@ -300,7 +308,7 @@ static BOOL is_encrypted () {
     [self addSecurityToRequest:apiRequest];
     
     // Issue the request.
-    [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+   self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
 }
 
 #pragma mark - Request helper methods.
@@ -386,11 +394,14 @@ static BOOL is_encrypted () {
         
     NSString* ext = [self udid];
 
+    //remove newlines from beginning / end of raw request
+    NSString *trimmedRequestBodyRaw = [requestBodyRaw stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
     // Compose the normalized request body.
     NSMutableString* request_body = [NSMutableString stringWithFormat:@"%@\n%@\n%@\n%@\n%@\n%@\n%@\n",
                                      nonce,
                                      [request HTTPMethod],
-                                     requestBodyRaw,
+                                     trimmedRequestBodyRaw,
                                      [[request URL] host],
                                      port,
                                      requestBodyHash,
@@ -409,6 +420,7 @@ static BOOL is_encrypted () {
     
     // Request is now fully prepared and secure.
 }
+
 
 - (NSString *)urlEncodeValue:(NSString *)str
 {
@@ -669,7 +681,7 @@ static BOOL is_encrypted () {
         
         [request setHTTPBody:body];
         [self addSecurityToRequest:request];
-        [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
     }
     else {
         NSLog(@"Error sending session data");
