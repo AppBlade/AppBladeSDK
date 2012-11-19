@@ -17,9 +17,12 @@
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
-static NSString *approvalURLFormat          = @"https://%@/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat       = @"https://%@/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat    = @"https://%@/api/projects/%@/devices/%@/feedback";
+static NSString *defaultURLScheme           = @"https";
+static NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
+static NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
+static NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
+static NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
+static NSString *sessionURLFormat           = @"%@/api/user_sessions";
 
 static NSString* s_boundary = @"---------------------------14737809831466499882746641449";
 
@@ -184,6 +187,34 @@ static BOOL is_encrypted () {
     [super dealloc];
 }
 
+
++ (NSString *)buildHostURL:(NSString *)customURLString
+{
+    NSString* preparedHostName = nil;
+    if(customURLString == nil){
+        NSLog(@"No custom URL: defaulting to %@", defaultAppBladeHostURL);
+        preparedHostName = defaultAppBladeHostURL;
+    }
+    else
+    {
+        //build a request to check if the supplied url is valid
+        NSURL *requestURL = [[NSURL alloc] initWithString:customURLString];
+        if(requestURL == nil)
+        {
+            NSLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
+            preparedHostName = defaultAppBladeHostURL;
+        }
+        else
+        {
+            NSLog(@"Found custom URL %@", customURLString);
+            preparedHostName = customURLString;
+        }
+    }
+    NSLog(@"built host URL: %@", preparedHostName);
+    return preparedHostName;
+}
+
+
 #pragma mark - AppBlade API
 
 - (void)checkPermissions
@@ -316,14 +347,28 @@ static BOOL is_encrypted () {
 }
 
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request
-{    
+{    //determine http or https
     NSString* scheme = [[request URL] scheme];
+    if(scheme == nil){
+        scheme = defaultURLScheme;
+    }
+    else
+    {
+        scheme = [scheme lowercaseString]; //for string comparison sanity
+    }
     NSString* preparedHostName = [NSString stringWithFormat:@"%@://%@", scheme, [[request URL] host] ];
     
+    //find port number
+    NSString* port = nil;
     if ([[request URL] port]) {
-        preparedHostName = [preparedHostName stringByAppendingFormat:@":%@", [[request URL] port]];
+        port = [[[request URL] port] stringValue];
+        preparedHostName = [preparedHostName stringByAppendingFormat:@":%@", port];
     }
-    
+    else
+    {   // Set port number based on the scheme
+        port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
+    }
+
     // Construct the relative URL path, followed by the body if POST.
     NSMutableString *requestBodyRaw = [NSMutableString stringWithString:[[[request URL] absoluteString] substringFromIndex:[preparedHostName length]]];
     if([request HTTPBody]) {
@@ -338,10 +383,7 @@ static BOOL is_encrypted () {
     // version was issued at, then a colon, then a random string of a certain length.
     NSString* randomString = [self genRandStringLength:kNonceRandomStringLength];
     NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectIssuedTimestamp], randomString];
-    
-    // Set port number based on the scheme
-    NSString* port = [scheme isEqualToString:@"https"] ? @"443" : @"80";
-    
+        
     NSString* ext = [self udid];
 
     // Compose the normalized request body.
@@ -394,13 +436,16 @@ static BOOL is_encrypted () {
         NSMutableURLRequest *r = [[_request mutableCopy] autorelease];
         [r setURL: [aRequest URL]];
         return [[r copy] autorelease];
-    } else {
+    }
+    else
+    {
         return _request;
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
+
 	[_receivedData appendData:data];
 }
 
@@ -432,7 +477,9 @@ static BOOL is_encrypted () {
         
         if (plist && error == NULL) {
             [_delegate appBladeWebClient:self receivedPermissions:plist];
-        } else {
+        }
+        else
+        {
             NSLog(@"Error parsing permisions plist: %@", [error debugDescription]);
             [_delegate appBladeWebClientFailed:self];
         }
@@ -446,6 +493,14 @@ static BOOL is_encrypted () {
         BOOL success = (status == 201 || status == 200);
         
         [_delegate appBladeWebClientSentFeedback:self withSuccess:success];
+    }else if (_api == AppBladeWebClientAPI_Sessions) {
+        NSString* receivedDataString = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
+        NSLog(@"Received Response from AppBlade Sessions %@", receivedDataString);
+        
+        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
+        BOOL success = (status == 201 || status == 200);
+
+        [_delegate appBladeWebClientSentSessions:self withSuccess:success];
     }
     
     [_request release];
@@ -501,7 +556,9 @@ static BOOL is_encrypted () {
 			*objPointer++ = _base64EncodingTable[((objRawData[0] & 0x03) << 4) + (objRawData[1] >> 4)];
 			*objPointer++ = _base64EncodingTable[(objRawData[1] & 0x0f) << 2];
 			*objPointer++ = '=';
-		} else {
+		}
+        else
+        {
 			*objPointer++ = _base64EncodingTable[(objRawData[0] & 0x03) << 4];
 			*objPointer++ = '=';
 			*objPointer++ = '=';
@@ -569,11 +626,57 @@ static BOOL is_encrypted () {
                         command[8], command[9],
                         command[10], command[11], command[12], command[13], command[14], command[15]] retain];
                 break;
-            } else {
+            }
+            else
+            {
                 command += ((const struct load_command *)command)->cmdsize;
             }
         }
     }
     return _executableUUID;
 }
+
+- (void)postSessions:(NSArray *)sessions
+{
+    _api = AppBladeWebClientAPI_Sessions;
+    
+    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [_delegate appBladeHost]];
+    NSURL* sessionURL = [NSURL URLWithString:sessionString];
+    
+    NSMutableURLRequest* request = [self requestForURL:sessionURL];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:s_boundary] forHTTPHeaderField:@"Content-Type"];
+    
+    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"device_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[[UIDevice currentDevice] uniqueIdentifier] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"project_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[[[AppBlade sharedManager] appBladeProjectID] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",s_boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSError* error = nil;
+    
+    NSData* requestData = [NSPropertyListSerialization dataWithPropertyList:sessions format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    
+    if (requestData) {
+        [body appendData:requestData];
+        [body appendData:[[[@"\r\n--" stringByAppendingString:s_boundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [request setHTTPBody:body];
+        [self addSecurityToRequest:request];
+        [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+    }
+    else {
+        NSLog(@"Error sending session data");
+        [self.delegate appBladeWebClientFailed:self];
+        [_request release];
+    }
+    
+}
+
 @end
