@@ -202,7 +202,9 @@ static BOOL is_encrypted () {
     {
         NSLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
         preparedHostName = defaultAppBladeHostURL;
-    }else {
+    }
+    else
+    {
         NSLog(@"Found custom URL %@", customURLString);
         preparedHostName = customURLString;
     }
@@ -433,7 +435,9 @@ static BOOL is_encrypted () {
         NSMutableURLRequest *r = [[_request mutableCopy] autorelease];
         [r setURL: [aRequest URL]];
         return [[r copy] autorelease];
-    } else {
+    }
+    else
+    {
         return _request;
     }
 }
@@ -472,7 +476,9 @@ static BOOL is_encrypted () {
         
         if (plist && error == NULL) {
             [_delegate appBladeWebClient:self receivedPermissions:plist];
-        } else {
+        }
+        else
+        {
             NSLog(@"Error parsing permisions plist: %@", [error debugDescription]);
             [_delegate appBladeWebClientFailed:self];
         }
@@ -549,7 +555,9 @@ static BOOL is_encrypted () {
 			*objPointer++ = _base64EncodingTable[((objRawData[0] & 0x03) << 4) + (objRawData[1] >> 4)];
 			*objPointer++ = _base64EncodingTable[(objRawData[1] & 0x0f) << 2];
 			*objPointer++ = '=';
-		} else {
+		}
+        else
+        {
 			*objPointer++ = _base64EncodingTable[(objRawData[0] & 0x03) << 4];
 			*objPointer++ = '=';
 			*objPointer++ = '=';
@@ -617,7 +625,9 @@ static BOOL is_encrypted () {
                         command[8], command[9],
                         command[10], command[11], command[12], command[13], command[14], command[15]] retain];
                 break;
-            } else {
+            }
+            else
+            {
                 command += ((const struct load_command *)command)->cmdsize;
             }
         }

@@ -287,7 +287,9 @@ static AppBlade *s_sharedManager = nil;
         [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
         self.showingFeedbackDialogue = YES;
         [feedback.textView becomeFirstResponder];
-    }else{
+    }
+    else
+    {
         NSLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
     }
     
@@ -707,9 +709,12 @@ static AppBlade *s_sharedManager = nil;
             [self.feedbackRequests removeObject:client];
         }
 
-    }else if(client.api == AppBladeWebClientAPI_Sessions){
+    }
+    else if(client.api == AppBladeWebClientAPI_Sessions){
         NSLog(@"ERROR sending sessions");
-    }else{
+    }
+    else
+    {
         NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
     }
     
@@ -773,7 +778,9 @@ static AppBlade *s_sharedManager = nil;
     BOOL success = (status == 201 || status == 200);
     if(success){ //we don't need to hold onto this crash.
         [[PLCrashReporter sharedReporter] purgePendingCrashReport];
-    }else{
+    }
+    else
+    {
         NSLog(@"Appblade: error sending crash report, response status code: %d", status);
     }
     [self.activeClients removeObject:client];
@@ -911,7 +918,9 @@ static AppBlade *s_sharedManager = nil;
             self.upgradeLink = nil;   
             exit(0);
         }
-    } else {
+    }
+    else
+    {
         exit(0);
     }
 }
