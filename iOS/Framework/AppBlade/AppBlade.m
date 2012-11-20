@@ -489,15 +489,21 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success
 {
-    //delete existing sessions, as we have reported them
-    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-        NSError *deleteError = nil;
-        [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
-        
-        if(deleteError){
-            NSLog(@"Error deleting Session log: %@", deleteError.debugDescription);
+    if(success){
+        //delete existing sessions, as we have reported them
+        NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+            NSError *deleteError = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
+            
+            if(deleteError){
+                NSLog(@"Error deleting Session log: %@", deleteError.debugDescription);
+            }
         }
+    }
+    else
+    {
+        NSLog(@"Error sending Session log");
     }
     [self.activeClients removeObject:client];
 }
