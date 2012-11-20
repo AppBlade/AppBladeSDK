@@ -261,7 +261,6 @@ static BOOL is_encrypted () {
 
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console
 {
-    @synchronized(self){
         _api = AppBladeWebClientAPI_Feedback;
         NSString* udid = [self udid];
         NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
@@ -299,7 +298,6 @@ static BOOL is_encrypted () {
         
         // Issue the request.
         self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
-    }
 }
 
 #pragma mark - Request helper methods.

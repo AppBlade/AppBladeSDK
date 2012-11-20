@@ -641,6 +641,10 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)showFeedbackDialogue
 {
+    if(self.feedbackDictionary == nil){
+        self.feedbackDictionary = [NSMutableDictionary  dictionary];
+    }
+
     //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
     NSString* screenshotPath = [self captureScreen];
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
@@ -697,6 +701,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)reportFeedback:(NSString *)feedback
 {
+    
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     
     NSLog(@"caching and attempting send of feedback %@", self.feedbackDictionary);
