@@ -23,17 +23,11 @@
 
     // Populate with values from the project SDK settings or load keys from plist
     // see README for details
-//    blade.appBladeProjectID = @""; //UUID
-//    blade.appBladeProjectToken = @""; //Token
-//    blade.appBladeProjectSecret = @""; //Secret
-//    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
+    blade.appBladeProjectID = @""; //UUID
+    blade.appBladeProjectToken = @""; //Token
+    blade.appBladeProjectSecret = @""; //Secret
+    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
     
-    blade.appBladeHost = @"http://127.0.0.1:3000";
-    blade.appBladeProjectID = @"559ec33b-2fab-47a8-945f-d718eb79845a";
-    blade.appBladeProjectToken = @"def1323a15f61cffc4dfdbbbf4c0d194";
-    blade.appBladeProjectSecret = @"87b9e7714d6f39f45a1c35f053554e98";
-    blade.appBladeProjectIssuedTimestamp = @"1353360225";
-  
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
     // [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]]
@@ -81,9 +75,9 @@
      */
     
     // Check the app blade status of this application.
-    [[AppBlade sharedManager] checkApproval];
+    //[[AppBlade sharedManager] checkApproval];
     [AppBlade startSession];
-    
+    [[AppBlade sharedManager] allowFeedbackReporting]; //for more immediate feedback to show up on Appblade (prompts a check for pending feedback)
     
 }
 
