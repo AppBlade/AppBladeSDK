@@ -888,6 +888,10 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)logSessionStart
 {
+    if(self.activeClients == nil){
+        self.activeClients = [NSMutableSet set];
+    }
+    
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     NSLog(@"Checking Session Path: %@", sessionFilePath);
 

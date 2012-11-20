@@ -300,6 +300,54 @@ static BOOL is_encrypted () {
         self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
 }
 
+- (void)postSessions:(NSArray *)sessions
+{
+    _api = AppBladeWebClientAPI_Sessions;
+    
+    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [_delegate appBladeHost]];
+    NSURL* sessionURL = [NSURL URLWithString:sessionString];
+    
+    NSError* error = nil;
+    NSData* requestData = [NSPropertyListSerialization dataWithPropertyList:sessions format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    
+    if (requestData && error == nil) {
+        NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
+        
+        NSMutableURLRequest* request = [self requestForURL:sessionURL];
+        [request setHTTPMethod:@"PUT"];
+        [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
+        
+        NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"device_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[[UIDevice currentDevice] uniqueIdentifier] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"project_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[[AppBlade sharedManager] appBladeProjectID] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+        [body appendData:requestData];
+        [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [request setHTTPBody:body];
+        [self addSecurityToRequest:request];
+        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+    }
+    else {
+        NSLog(@"Error sending session data");
+        if(error)
+            NSLog(@"Error %@", [error debugDescription]);
+
+        [self.delegate appBladeWebClientFailed:self];
+        [_request release];
+    }
+    
+}
+
+
 #pragma mark - Request helper methods.
 
 - (NSString *)udid
@@ -486,23 +534,25 @@ static BOOL is_encrypted () {
             [_delegate appBladeWebClientFailed:self];
         }
         
-    } else if (_api == AppBladeWebClientAPI_ReportCrash) {
+    } else if (_api == AppBladeWebClientAPI_ReportCrash) {    
         [_delegate appBladeWebClientCrashReported:self];
-    }
-    else if (_api == AppBladeWebClientAPI_Feedback) {
-        
+    
+    }else if (_api == AppBladeWebClientAPI_Feedback) {
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
-        
         [_delegate appBladeWebClientSentFeedback:self withSuccess:success];
+
     }else if (_api == AppBladeWebClientAPI_Sessions) {
         NSString* receivedDataString = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSLog(@"Received Response from AppBlade Sessions %@", receivedDataString);
-        
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
-
         [_delegate appBladeWebClientSentSessions:self withSuccess:success];
+
+    }
+    else
+    {
+        NSLog(@"Unhandled connection with AppBladeWebClientAPI value %d", _api);
     }
     
     [_request release];
@@ -649,49 +699,5 @@ static BOOL is_encrypted () {
     return _executableUUID;
 }
 
-- (void)postSessions:(NSArray *)sessions
-{
-    _api = AppBladeWebClientAPI_Sessions;
-    
-    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [_delegate appBladeHost]];
-    NSURL* sessionURL = [NSURL URLWithString:sessionString];
-    
-    NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
-    
-    NSMutableURLRequest* request = [self requestForURL:sessionURL];
-    [request setHTTPMethod:@"PUT"];
-    [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
-    
-    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=\"device_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[[UIDevice currentDevice] uniqueIdentifier] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=\"project_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[[AppBlade sharedManager] appBladeProjectID] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSError* error = nil;
-    
-    NSData* requestData = [NSPropertyListSerialization dataWithPropertyList:sessions format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-    
-    if (requestData) {
-        [body appendData:requestData];
-        [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        [request setHTTPBody:body];
-        [self addSecurityToRequest:request];
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
-    }
-    else {
-        NSLog(@"Error sending session data");
-        [self.delegate appBladeWebClientFailed:self];
-        [_request release];
-    }
-    
-}
 
 @end
