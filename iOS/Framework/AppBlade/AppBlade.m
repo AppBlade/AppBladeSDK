@@ -29,6 +29,9 @@ static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
 static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
+static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
+
+
 
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
 
@@ -38,6 +41,10 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
 @property (nonatomic, retain) NSURL* upgradeLink;
+
+
+@property (nonatomic, retain, readwrite) NSDictionary* appBladeParams;
+
 
 // Feedback
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
@@ -88,6 +95,7 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 @synthesize feedbackDictionary = _feedbackDictionary;
 @synthesize showingFeedbackDialogue = _showingFeedbackDialogue;
 @synthesize tapRecognizer = _tapRecognizer;
+@synthesize appBladeParams = _appBladeParams;
 
 @synthesize sessionStartDate = _sessionStartDate;
 
@@ -186,7 +194,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [_sessionStartDate release];
 
     [_activeClients release];
-    
+    [_appBladeParams release];
     [super dealloc];
 }
 
@@ -210,9 +218,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSError *error;
     
     // Check if we previously crashed
-    if ([crashReporter hasPendingCrashReport])
+    if ([crashReporter hasPendingCrashReport]){
         [self handleCrashReport];
-    
+    }
     // Enable the Crash Reporter
     if (![crashReporter enableCrashReporterAndReturnError: &error])
         NSLog(@"Warning: Could not enable crash reporter: %@", error);
@@ -244,10 +252,17 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSString* reportString = [PLCrashReportTextFormatter stringValueForCrashReport: report withTextFormat: PLCrashReportTextFormatiOS];
     NSLog(@"Formatting crash report with PLCrashReportTextFormatter %@", reportString);
 
+    NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
+    NSDictionary* customFields = nil;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
+        customFields = (NSDictionary*)[self readFile:paramsPath];
+        // After reading out values, remove file.
+        [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
+    }
+    
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
-    [client reportCrash:reportString];
-
+    [client reportCrash:reportString withParams:customFields];
 }
 
 - (void)loadSDKKeysFromPlist:(NSString *)plist
@@ -736,11 +751,19 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"Error writing backup file to %@", backupFilePath);
     }
     
+    NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
+    NSDictionary* customFields = nil;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
+        customFields = (NSDictionary*)[self readFile:paramsPath];
+        // After reading out values, remove file.
+        [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
+    }
+
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
     NSLog(@"Sending screenshot");
-    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil];
+    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:customFields];
 }
 
 
@@ -763,10 +786,20 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                 NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
                 bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
                 if(screenShotFileExists){
+                    
+                    NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
+                    NSDictionary* customFields = nil;
+                    if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
+                        customFields = (NSDictionary*)[self readFile:paramsPath];
+                        // After reading out values, remove file.
+                        [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
+                    }
+
+                    
                     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
                     client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
                     [self.activeClients addObject:client];
-                    [client sendFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil];
+                    [client sendFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:customFields];
                     
                     if (!self.activeClients) {
                         self.activeClients = [NSMutableSet set];

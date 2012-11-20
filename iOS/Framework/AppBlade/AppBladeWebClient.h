@@ -67,8 +67,8 @@ typedef enum {
 
 // AppBlade API.
 - (void)checkPermissions;
-- (void)reportCrash:(NSString *)crashReport;
-- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console;
+- (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params;
+- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)params;
 - (void)postSessions:(NSArray *)sessions;
 
 @end

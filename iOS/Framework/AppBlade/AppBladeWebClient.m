@@ -236,9 +236,16 @@ static BOOL is_encrypted () {
     self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
 }
 
-- (void)reportCrash:(NSString *)crashReport {
+- (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params {
     _api = AppBladeWebClientAPI_ReportCrash;
 
+    NSError* error = nil;
+    NSData* paramsData = nil;
+    if (params) {
+        paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    }
+
+    
     // Retrieve UDID, used in URL.
     NSString* udid = [self udid];
 
@@ -249,8 +256,30 @@ static BOOL is_encrypted () {
     // Create the API request.
     NSMutableURLRequest* apiRequest = [self requestForURL:urlCrashReport];
     [apiRequest setHTTPMethod:@"POST"];       
+    NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
 
+    [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
+    
+    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"file\"; filename=\"report.crash\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Type: text/plain\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
     NSData* data = [crashReport dataUsingEncoding:NSUTF8StringEncoding];
+    
+    [body appendData:data];
+    
+    if (paramsData) {
+        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:paramsData];
+    }
+    
+    [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [apiRequest setHTTPBody:body];
+    [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+
     [apiRequest setHTTPBody:data];
 
     [self addSecurityToRequest:apiRequest];
@@ -259,9 +288,19 @@ static BOOL is_encrypted () {
    self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
 }
 
-- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console
+- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console params:(NSDictionary*)params
 {
         _api = AppBladeWebClientAPI_Feedback;
+    @synchronized (self)
+    {
+        NSError* error = nil;
+        NSData* paramsData = nil;
+        if (params) {
+            paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+        }
+
+        
+        
         NSString* udid = [self udid];
         NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
         
@@ -288,8 +327,15 @@ static BOOL is_encrypted () {
         
         NSData* screenshotData = [[self encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
         [body appendData:screenshotData];
-        [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
+        if (paramsData) {
+            [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:paramsData];
+        }
+
+        [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [apiRequest setHTTPBody:body];
         [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
@@ -298,6 +344,7 @@ static BOOL is_encrypted () {
         
         // Issue the request.
         self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+    }
 }
 
 - (void)postSessions:(NSArray *)sessions
