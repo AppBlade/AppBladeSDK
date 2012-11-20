@@ -333,14 +333,18 @@ static BOOL is_encrypted () {
         [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [request setHTTPBody:body];
+        [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+
         [self addSecurityToRequest:request];
         self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
     }
     else {
-        NSLog(@"Error sending session data");
+        NSLog(@"Error parsing session data");
         if(error)
             NSLog(@"Error %@", [error debugDescription]);
-
+        
+        //we may have to remove the sessions file in extreme cases
+        
         [self.delegate appBladeWebClientFailed:self];
         [_request release];
     }
