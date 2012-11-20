@@ -256,8 +256,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSDictionary* customFields = nil;
     if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
         customFields = (NSDictionary*)[self readFile:paramsPath];
-        // After reading out values, remove file.
-        [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
     }
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
@@ -751,19 +749,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"Error writing backup file to %@", backupFilePath);
     }
     
-    NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
-    NSDictionary* customFields = nil;
-    if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
-        customFields = (NSDictionary*)[self readFile:paramsPath];
-        // After reading out values, remove file.
-        [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
-    }
-
-    
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
     NSLog(@"Sending screenshot");
-    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:customFields];
+    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
 }
 
 
@@ -786,20 +775,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                 NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
                 bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
                 if(screenShotFileExists){
-                    
-                    NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
-                    NSDictionary* customFields = nil;
-                    if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
-                        customFields = (NSDictionary*)[self readFile:paramsPath];
-                        // After reading out values, remove file.
-                        [[NSFileManager defaultManager] removeItemAtPath:paramsPath error:nil];
-                    }
-
-                    
                     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
                     client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
                     [self.activeClients addObject:client];
-                    [client sendFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:customFields];
+                    [client sendFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[self getCustomParams]];
                     
                     if (!self.activeClients) {
                         self.activeClients = [NSMutableSet set];
@@ -974,6 +953,63 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [sessionData writeToFile:sessionFilePath atomically:YES];
 }
 
+#pragma mark - AppBlade Custom Params
+-(NSDictionary *)getCustomParams
+{
+    NSDictionary *toRet = nil;
+    NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
+        NSDictionary* currentFields = [NSDictionary dictionaryWithContentsOfFile:customFieldsPath];
+        toRet = currentFields;
+    }else {
+        toRet = [NSDictionary dictionary];
+    }
+    NSLog(@"getting %@", toRet);
+
+    return toRet;
+}
+
+-(void)setCustomParams:(NSMutableDictionary *)newFieldValues
+{
+    NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
+        NSLog(@"WARNING: Overwriting all existing user params");
+    }
+    if(newFieldValues){
+        NSError *error = nil;
+        NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:newFieldValues format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+        if(!error)
+            [paramsData writeToFile:customFieldsPath atomically:YES];
+    }else{
+        [[NSFileManager defaultManager] removeItemAtPath:customFieldsPath error:nil];
+    }
+}
+
+-(void)setCustomParam:(id)key withValue:(id)value
+{
+    NSDictionary* currentFields = [self getCustomParams];
+    if (currentFields == nil) {
+        currentFields = [NSMutableDictionary dictionary];
+    }
+    NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
+    if(key && value){
+        [mutableFields setObject:value forKey:key];
+    }else if(key && !value){
+        [mutableFields removeObjectForKey:key];
+    }
+    else
+    {
+        NSLog(@"invalid nil key");
+    }
+    NSLog(@"set to %@", mutableFields);
+    
+    [self setCustomParams:currentFields];
+}
+
+-(void)clearAllCustomParams
+{
+    [self setCustomParams:nil];
+}
 
 
 #pragma mark - TTL (Time To Live) Methods

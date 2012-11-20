@@ -64,6 +64,13 @@ static NSString* const kAppBladeCacheDirectory;
 // Checks if any crashes have ocurred sends logs to AppBlade.
 - (void)catchAndReportCrashes;
 
+//Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
+-(NSDictionary *)getCustomParams;
+-(void)setCustomParams:(NSDictionary *)newFieldValues;
+-(void)setCustomParam:(id)newObject withValue:(NSString*)key;
+-(void)clearAllCustomParams;
+
+
 /*
  *    WARNING: The following features below are only for ad hoc and enterprise applications. Shipping an app to the iTunes App
  *    store with a call to |-checkApproval|, for example, could result in app termination or rejection.

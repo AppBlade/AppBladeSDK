@@ -288,19 +288,12 @@ static BOOL is_encrypted () {
    self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
 }
 
-- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console params:(NSDictionary*)params
+- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console params:(NSDictionary*)paramsDict
 {
-        _api = AppBladeWebClientAPI_Feedback;
+    _api = AppBladeWebClientAPI_Feedback;
+    
     @synchronized (self)
     {
-        NSError* error = nil;
-        NSData* paramsData = nil;
-        if (params) {
-            paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-        }
-
-        
-        
         NSString* udid = [self udid];
         NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
         
@@ -328,13 +321,16 @@ static BOOL is_encrypted () {
         NSData* screenshotData = [[self encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
         [body appendData:screenshotData];
         
-        if (paramsData) {
+        NSError* error = nil;
+        if([NSPropertyListSerialization propertyList:paramsDict isValidForFormat:NSPropertyListXMLFormat_v1_0]){
+            NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:paramsDict format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+            NSLog(@"paramsDict %@ \nparamsData %@", paramsDict, paramsData);
             [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:paramsData];
         }
-
+        
         [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [apiRequest setHTTPBody:body];
