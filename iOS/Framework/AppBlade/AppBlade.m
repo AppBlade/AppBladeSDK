@@ -99,6 +99,12 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 
 static AppBlade *s_sharedManager = nil;
 
+/* A custom post-crash callback */
+void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
+    [AppBlade endSession];
+}
+
+
 #pragma mark - Lifecycle
 
 + (NSString*)sdkVersion
