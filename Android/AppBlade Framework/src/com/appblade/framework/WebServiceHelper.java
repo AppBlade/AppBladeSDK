@@ -32,7 +32,7 @@ class WebServiceHelper {
 			requestBodyRaw = String.format("%s?%s", urlPath, contents);
 		else
 			requestBodyRaw = urlPath;
-		
+				
 		byte[] requestBodyRawSha256 = StringUtils.sha256(requestBodyRaw);
 		String requestBodyHash = Base64.encodeToString(requestBodyRawSha256, 0).trim();
 

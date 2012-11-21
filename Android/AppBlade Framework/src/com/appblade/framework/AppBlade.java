@@ -1,12 +1,10 @@
 package com.appblade.framework;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
 import java.util.Random;
@@ -17,7 +15,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -89,7 +86,7 @@ public class AppBlade {
 	 */
 	public static void doFeedbackWithScreenshot(Context context, Bitmap screenshot) {
 		//String screenshotName = "Feedback " + feedbackDateFormat.format(new Date()) + ".png";
-		String screenshotName = "feedback.jpg";
+		String screenshotName = "feedback.png";
 		doFeedbackWithScreenshot(context, screenshot, screenshotName);
 	}
 
@@ -102,19 +99,8 @@ public class AppBlade {
 	 */
 	public static void doFeedbackWithScreenshot(final Context context, 
 			Bitmap screenshot, String screenshotName) {
-		String[] permissions = appInfo.PackageInfo.requestedPermissions;
-
-		String consoleData = "";
-		for (String permission : permissions) {
-			if (permission.equals(Manifest.permission.READ_LOGS))
-			{
-				consoleData = FeedbackHelper.getLogData();
-				break;
-			}
-		}
-
+		
 		FeedbackData data = new FeedbackData();
-		data.Console = consoleData;
 		data.Screenshot = screenshot;
 		data.ScreenshotName = screenshotName;
 
@@ -139,26 +125,12 @@ public class AppBlade {
 			HttpPost request = new HttpPost();
 			request.setEntity(content);
 			
-			final CircularByteBuffer contentCBB = new CircularByteBuffer(16384);
-			new Thread(new Runnable() {
-				public void run() {
-					try {
-						content.writeTo(contentCBB.getOutputStream());
-						contentCBB.getOutputStream().close();
-					} catch (IOException e) {
-						Log.d(LogTag, e.getMessage());
-					}
-				}
-			}).start();
 			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(contentCBB.getInputStream()));
-			StringBuilder contentBuilder = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-			    contentBuilder.append(line);
-			}
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			content.writeTo(outputStream);
+			String multipartRawContent = outputStream.toString();
 			
-			String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, contentBuilder.toString(), HttpMethod.POST);
+			String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, multipartRawContent, HttpMethod.POST);
 
 			Log.d(LogTag, urlPath);
 			Log.d(LogTag, url);

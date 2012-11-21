@@ -48,7 +48,6 @@ public class FeedbackHelper {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 
 		dialog.setTitle("Feedback");
-//		dialog.setMessage("Feedback");
 
 		final EditText editText = new EditText(context);
 		editText.setLines(5);
@@ -79,21 +78,24 @@ public class FeedbackHelper {
 		
 		try
 		{
-		ContentBody notesBody = new StringBody(data.Notes);
-		entity.addPart("feedback[notes]", notesBody);
 
-		ContentBody consoleBody = new StringBody(data.Console);
-		entity.addPart("feedback[console]", consoleBody);
+			ContentBody notesBody = new StringBody(data.Notes);
+			entity.addPart("feedback[notes]", notesBody);
 		
-		if (data.Screenshot != null) {
-			if (StringUtils.isNullOrEmpty(data.ScreenshotName))
-				data.ScreenshotName = "FeedbackScreenshot";
+			if (data.Screenshot != null) {
+				if (StringUtils.isNullOrEmpty(data.ScreenshotName))
+					data.ScreenshotName = "FeedbackScreenshot";
+				
+				// re-encode the bytes as base64 so AppBlade will be able to handle it.
+				byte[] screenshotBytes = getBytesFromBitmap(data.Screenshot);
+				screenshotBytes = Base64.encode(screenshotBytes, 0);
+				
+				ContentBody screenshotBody = new ByteArrayBody(screenshotBytes, "application/octet-stream", "base64:" + data.ScreenshotName);
+				entity.addPart("feedback[screenshot]", screenshotBody);
+			}
 			
-			byte[] screenshotBytes = getBytesFromBitmap(data.Screenshot);
-			ContentBody screenshotBody = new ByteArrayBody(screenshotBytes, "application/octet-stream");
-			entity.addPart("feedback[screenshot]", screenshotBody);
-		}
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			Log.d(AppBlade.LogTag, e.toString());
 		}
 		
