@@ -252,15 +252,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSString* reportString = [PLCrashReportTextFormatter stringValueForCrashReport: report withTextFormat: PLCrashReportTextFormatiOS];
     NSLog(@"Formatting crash report with PLCrashReportTextFormatter %@", reportString);
 
-    NSString* paramsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
-    NSDictionary* customFields = nil;
-    if ([[NSFileManager defaultManager] fileExistsAtPath:paramsPath]) {
-        customFields = (NSDictionary*)[self readFile:paramsPath];
-    }
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
-    [client reportCrash:reportString withParams:customFields];
+    [client reportCrash:reportString withParams:[self getCustomParams]];
 }
 
 - (void)loadSDKKeysFromPlist:(NSString *)plist
@@ -948,15 +943,18 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSDictionary* currentFields = [NSDictionary dictionaryWithContentsOfFile:customFieldsPath];
         toRet = currentFields;
     }else {
-        toRet = [NSDictionary dictionary];
+        NSLog(@"no file found, reinitializing");
+        toRet = [[NSDictionary dictionary] autorelease];
+        [self setCustomParams:toRet];
     }
     NSLog(@"getting %@", toRet);
 
     return toRet;
 }
 
--(void)setCustomParams:(NSMutableDictionary *)newFieldValues
+-(void)setCustomParams:(NSDictionary *)newFieldValues
 {
+    [self checkAndCreateAppBladeCacheDirectory];
     NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
         NSLog(@"WARNING: Overwriting all existing user params");
@@ -964,9 +962,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     if(newFieldValues){
         NSError *error = nil;
         NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:newFieldValues format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-        if(!error)
+        if(!error){
             [paramsData writeToFile:customFieldsPath atomically:YES];
+        }else{
+            NSLog(@"Error parsing custom params %@", newFieldValues);
+        }
     }else{
+        NSLog(@"clearing custom params, removing file");
         [[NSFileManager defaultManager] removeItemAtPath:customFieldsPath error:nil];
     }
 }
@@ -975,7 +977,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
     NSDictionary* currentFields = [self getCustomParams];
     if (currentFields == nil) {
-        currentFields = [NSMutableDictionary dictionary];
+        currentFields = [NSDictionary dictionary];
     }
     NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
     if(key && value){
@@ -987,8 +989,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     {
         NSLog(@"invalid nil key");
     }
-    NSLog(@"set to %@", mutableFields);
-    
+    NSLog(@"setting to %@", mutableFields);
+    currentFields = (NSDictionary *)mutableFields;
     [self setCustomParams:currentFields];
 }
 
@@ -1048,6 +1050,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSFileManager* manager = [NSFileManager defaultManager];
     BOOL isDirectory = YES;
     if (![manager fileExistsAtPath:directory isDirectory:&isDirectory]) {
+        NSLog(@"Appblade creating %@", directory);
         NSError* error = nil;
         BOOL success = [manager createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:&error];
         if (!success) {
