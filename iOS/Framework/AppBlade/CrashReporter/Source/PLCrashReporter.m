@@ -52,6 +52,9 @@ static NSString *PLCRASH_LIVE_CRASHREPORT = @"live_report.plcrash";
  * Directory containing crash reports queued for sending. */
 static NSString *PLCRASH_QUEUED_DIR = @"queued_reports";
 
+
+static NSString *s_letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
 /** @internal
  * Maximum number of bytes that will be written to the crash report.
  * Used as a safety measure in case of implementation malfunction.
@@ -60,6 +63,8 @@ static NSString *PLCRASH_QUEUED_DIR = @"queued_reports";
  * are approximately 7k.
  */
 #define MAX_REPORT_BYTES (64 * 1024)
+
+#define QUEUED_FILE_NAMELENGTH 13
 
 /**
  * @internal
@@ -108,7 +113,7 @@ static PLCrashReporterCallbacks crashCallbacks = {
 static void signal_handler_callback (int signal, siginfo_t *info, ucontext_t *uap, void *context) {
     plcrashreporter_handler_ctx_t *sigctx = context;
     plcrash_async_file_t file;
-
+    
     /* Open the output file */
     int fd = open(sigctx->path, O_RDWR|O_CREAT|O_TRUNC, 0644);
     if (fd < 0) {
@@ -175,8 +180,17 @@ static void uncaught_exception_handler (NSException *exception) {
 
 - (BOOL) populateCrashReportDirectoryAndReturnError: (NSError **) outError;
 - (NSString *) crashReportDirectory;
-- (NSString *) queuedCrashReportDirectory;
+
+
+
 - (NSString *) crashReportPath;
+
+- (NSString *) queuedCrashReportDirectory;
+- (NSArray *) queuedCrashReportFiles;
+- (BOOL) hasQueuedCrashReports;
+
+- (NSString *) makeRandomFileName;
+- (NSString *) randomString: (int) len;
 
 @end
 
@@ -203,7 +217,10 @@ static void uncaught_exception_handler (NSException *exception) {
  */
 - (BOOL) hasPendingCrashReport {
     /* Check for a live crash report file */
-    return [[NSFileManager defaultManager] fileExistsAtPath: [self crashReportPath]];
+    if(![[NSFileManager defaultManager] fileExistsAtPath: [self crashReportPath]]){
+        return ([self hasQueuedCrashReports]); //check queue
+    }
+    return YES;
 }
 
 
@@ -252,12 +269,12 @@ static void uncaught_exception_handler (NSException *exception) {
 
 
 /**
- * Purge a pending crash report.
+ * Purge a pending crash report. Put the next queued crashreport in the pending crash report.
  *
  * @return Returns YES on success, or NO on error.
  */
 - (BOOL) purgePendingCrashReportAndReturnError: (NSError **) outError {
-    return [[NSFileManager defaultManager] removeItemAtPath: [self crashReportPath] error: outError];
+    return  [[NSFileManager defaultManager] removeItemAtPath: [self crashReportPath] error: outError];
 }
 
 
@@ -344,6 +361,44 @@ static void uncaught_exception_handler (NSException *exception) {
     /* Re-configure the saved callbacks */
     crashCallbacks.context = callbacks->context;
     crashCallbacks.handleSignal = callbacks->handleSignal;
+}
+
+- (BOOL)hasQueuedCrashReports
+{
+    BOOL toRet = NO;
+    NSArray *files = [self queuedCrashReportFiles];
+    if(files != nil){
+        NSLog(@"%d stored crash reports", [files count]);
+        toRet = [files count] > 0;
+    }
+    return toRet;
+}
+
+- (NSString*)getNextCrashReportPath
+{
+    NSString *crashReportPath = nil;
+    NSArray *files = [self queuedCrashReportFiles];
+    if(files && files.count > 0){
+        NSString *fileName =  [[self queuedCrashReportFiles] objectAtIndex:0];
+        crashReportPath = [[self queuedCrashReportDirectory] stringByAppendingPathComponent:fileName];
+    }//none left, or dir dne
+    return crashReportPath;
+}
+
+- (NSString *) saveCrashReportInQueue:(NSString*)reportString
+{
+    NSString *filePath = [[self queuedCrashReportDirectory] stringByAppendingPathComponent:[self makeRandomFileName]];
+    NSError *error = nil;
+    [reportString writeToFile:filePath atomically:NO encoding:NSUTF8StringEncoding error:&error];
+    if(error == nil)
+    {
+        return filePath;
+    }
+    else
+    {
+        NSLog(@"Error writing new crash report to queue directory: %@", error );
+        return nil;
+    }
 }
 
 
@@ -467,6 +522,25 @@ static void uncaught_exception_handler (NSException *exception) {
  */
 - (NSString *) queuedCrashReportDirectory {
     return [[self crashReportDirectory] stringByAppendingPathComponent: PLCRASH_QUEUED_DIR];
+}
+
+- (NSArray *) queuedCrashReportFiles
+{
+    return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self queuedCrashReportDirectory] error:NULL];
+}
+
+
+- (NSString *) makeRandomFileName
+{
+    return [NSString stringWithFormat:@"%@.txt", [self randomString:QUEUED_FILE_NAMELENGTH]];
+}
+
+- (NSString *) randomString: (int) len {
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [s_letters characterAtIndex: arc4random()%[s_letters length]]];
+    }
+    return randomString;
 }
 
 

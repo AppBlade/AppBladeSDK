@@ -7,6 +7,8 @@
 //
 
 #import "AppBladeWebClient.h"
+#import "PLCrashReporter.h"
+
 #import "AppBlade.h"
 #import <CommonCrypto/CommonHMAC.h>
 #include "FileMD5Hash.h"
@@ -235,6 +237,8 @@ static BOOL is_encrypted () {
     // Issue the request.
     self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
 }
+
+
 
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)paramsDict {
     _api = AppBladeWebClientAPI_ReportCrash;

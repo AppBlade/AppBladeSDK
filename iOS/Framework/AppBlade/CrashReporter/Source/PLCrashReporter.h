@@ -93,5 +93,7 @@ typedef struct PLCrashReporterCallbacks {
 - (BOOL) enableCrashReporterAndReturnError: (NSError **) outError;
 
 - (void) setCrashCallbacks: (PLCrashReporterCallbacks *) callbacks;
+- (NSString *) saveCrashReportInQueue:(NSString*)reportString;
+- (NSString *) getNextCrashReportPath;
 
 @end
