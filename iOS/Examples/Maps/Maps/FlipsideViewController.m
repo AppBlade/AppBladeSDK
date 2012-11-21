@@ -62,6 +62,7 @@
 - (IBAction)presentFeedback:(id)sender {
     
     AppBlade *blade = [AppBlade sharedManager];
+    [blade setCustomParam:@"CustomKey2" withValue:@"FeedbackButtonPressed"];
     [blade showFeedbackDialogue];
     
 }
