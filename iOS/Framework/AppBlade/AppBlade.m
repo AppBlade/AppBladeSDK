@@ -429,48 +429,34 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if (success) {
             NSLog(@"feedback Successful");
             
-            NSDictionary* feedback = isBacklog ? [client.userInfo objectForKey:kAppBladeFeedbackKeyFeedback] : self.feedbackDictionary;
+            NSDictionary* feedback = [client.userInfo objectForKey:kAppBladeFeedbackKeyFeedback];
             // Clean up
             NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
             [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
-            
-            if (isBacklog) {
-                NSLog(@"Successful feedback found in backLog");
-                
-                NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-                NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-                NSString* fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
-                NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
-                NSLog(@"Removing supporting feedback files");
-                [self removeIntermediateFeedbackFiles:filePath];
-                NSError* error = nil;
-                BOOL success = [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
-                if (!success) {
-                    NSLog(@"Error removing AppBlade Feedback file. %@", error);
-                }
-                
-                NSLog(@"Removing Successful feedback object");
-                [backups removeObject:fileName];
-                
-                if (backups.count > 0) {
-                    NSLog(@"writing pending feedback objects back to file");
-                    [backups writeToFile:backupFilePath atomically:YES];
-                }
-            }else{
-                NSLog(@"Successful feedback not found in backLog");
+
+            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+            NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+           
+            NSString* fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
+
+            NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
+            NSLog(@"Removing supporting feedback files and the feedback file herself");
+            [self removeIntermediateFeedbackFiles:filePath];
+           
+            NSLog(@"Removing Successful feedback object from main feedback list");
+            [backups removeObject:fileName];
+            if (backups.count > 0) {
+                NSLog(@"writing pending feedback objects back to file");
+                [backups writeToFile:backupFilePath atomically:YES];
             }
             
-            
             NSLog(@"checking for more pending feedback");
-            
             if ([self hasPendingFeedbackReports]) {
                 NSLog(@"more pending feedback");
                 [self handleBackloggedFeedback];
             }else{
                 NSLog(@"no more pending feedback");
             }
-            
-            
         }
         else if (!isBacklog) {
             NSLog(@"Unsuccesful feedback not found in backLog");
@@ -1095,11 +1081,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
         
         NSError *screenShotError = nil;
-        NSError *feedbackPathError = nil;
-        
         [[NSFileManager defaultManager] removeItemAtPath:screenshotFilePath error:&screenShotError];
-        [[NSFileManager defaultManager] removeItemAtPath:feedbackPath error:&feedbackPathError];
     }
+    NSError *feedbackPathError = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:feedbackPath error:&feedbackPathError];
 
 }
 
