@@ -236,14 +236,8 @@ static BOOL is_encrypted () {
     self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
 }
 
-- (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params {
+- (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)paramsDict {
     _api = AppBladeWebClientAPI_ReportCrash;
-
-    NSError* error = nil;
-    NSData* paramsData = nil;
-    if (params) {
-        paramsData = [NSPropertyListSerialization dataWithPropertyList:params format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-    }
 
     
     // Retrieve UDID, used in URL.
@@ -268,7 +262,11 @@ static BOOL is_encrypted () {
     
     [body appendData:data];
     
-    if (paramsData) {
+    
+    
+    if([NSPropertyListSerialization propertyList:paramsDict isValidForFormat:NSPropertyListXMLFormat_v1_0]){
+        NSError* error = nil;
+        NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:paramsDict format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
