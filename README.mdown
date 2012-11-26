@@ -34,8 +34,8 @@ There are two ways to include AppBlade in your project, directly including the s
 You can either download the compiled version from [our website](http://appblade.com/sdk/download), or build the AppBlade library from downloaded source (directions for which can be found in the [*Building AppBlade Binary From Source*](https://github.com/AppBlade/SDK#building-an-appblade-binary-from-source) section).
 
 1. After downloading AppBlade or building it locally, navigate to the folder containing the libAppBladeUniversal.a binary and header file.
-2. For a universal build, simply drag the libAppBladeUniversal.a and AppBlade.h files from the folder into your project, ensure that "Copy items" is checked. 
-3. Open your Xcode project.
+2. Open your Xcode project.
+3. For a universal build, simply drag the libAppBladeUniversal.a and AppBlade.h files from the folder into your project, ensure that "Copy items" is checked. 
 4. Click your project file from the File Navigator and then select your app target from the list on the right.
 5. Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
 6. Select Security.framework from the list and click "Add".
@@ -47,7 +47,7 @@ You can either download the compiled version from [our website](http://appblade.
 3. Build.
 4. On the completion of our custom shell script, a finder window will open to the location of the built binaries (the name of the folder will be "Release_Production-universal").
 5. For universal build, simply copy that libAppBladeUniversal.a file, and AppBlade.h from the folder into your project, exactly how you would if you had downloaded the prebuilt binary from appblade.com.  
-6. Add the built binary to your project by following the instructions in the *Including AppBlade Binary* section above. 
+6. Add the built binary to your project by following the instructions in the [*Including AppBlade Binary*](https://github.com/AppBlade/SDK#including-appblade-binary) section above. 
 
 
 ###Including AppBlade Source###
