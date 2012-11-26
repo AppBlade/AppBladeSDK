@@ -44,9 +44,6 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 @property (nonatomic, retain) NSURL* upgradeLink;
 
 
-@property (nonatomic, retain, readwrite) NSDictionary* appBladeParams;
-
-
 // Feedback
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
 @property (nonatomic, assign) BOOL showingFeedbackDialogue;
@@ -96,7 +93,6 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 @synthesize feedbackDictionary = _feedbackDictionary;
 @synthesize showingFeedbackDialogue = _showingFeedbackDialogue;
 @synthesize tapRecognizer = _tapRecognizer;
-@synthesize appBladeParams = _appBladeParams;
 
 @synthesize sessionStartDate = _sessionStartDate;
 
@@ -195,7 +191,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [_sessionStartDate release];
 
     [_activeClients release];
-    [_appBladeParams release];
     [super dealloc];
 }
 
