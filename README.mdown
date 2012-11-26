@@ -4,8 +4,8 @@
 ###[Download compiled libraries v0.3.0](http://appblade.com/sdk/download)
 
 ###Installation Instructions###
-- [iOS SDK](https://github.com/AppBlade/SDK/edit/master/README.mdown#ios-sdk)
-- [Android SDK](https://github.com/AppBlade/SDK/edit/master/README.mdown#android)
+- [iOS SDK](https://github.com/AppBlade/SDK/README.mdown#ios-sdk)
+- [Android SDK](https://github.com/AppBlade/SDK/README.mdown#android)
 
 ###Integrating the framework enables enhanced AppBlade features such as:###
 
