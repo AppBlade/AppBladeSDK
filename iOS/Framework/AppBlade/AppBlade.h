@@ -15,6 +15,8 @@
 
 static NSString* const kAppBladeErrorDomain;
 static const int kAppBladeOfflineError;
+static const int kAppBladeParsingError;
+static const int kAppBladePermissionError;
 static NSString* const kAppBladeCacheDirectory;
 @class AppBlade;
 
@@ -61,8 +63,20 @@ static NSString* const kAppBladeCacheDirectory;
 // Pass in the full path to the plist
 - (void)loadSDKKeysFromPlist:(NSString*)plist;
 
-// Checks if any crashes have ocurred sends logs to AppBlade.
+// Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
 - (void)catchAndReportCrashes;
+
+//method to call if you want to attempt to send crash reports more often than ususal 
+- (void)checkForExistingCrashReports;
+
+
+
+//Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
+-(NSDictionary *)getCustomParams;
+-(void)setCustomParams:(NSDictionary *)newFieldValues;
+-(void)setCustomParam:(id)newObject withValue:(NSString*)key;
+-(void)clearAllCustomParams;
+
 
 /*
  *    WARNING: The following features below are only for ad hoc and enterprise applications. Shipping an app to the iTunes App

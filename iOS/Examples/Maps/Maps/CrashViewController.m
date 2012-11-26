@@ -43,7 +43,6 @@
                         @"SIGSEGV",
                         @"NSException", 
                    nil] ;
-
 }
 
 - (void)viewDidUnload

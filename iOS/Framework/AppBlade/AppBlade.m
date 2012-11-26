@@ -22,14 +22,19 @@ const int kUpdateAlertTag                               = 316;
 
 static NSString* const kAppBladeErrorDomain             = @"com.appblade.sdk";
 static const int kAppBladeOfflineError                  = 1200;
+static const int kAppBladeParsingError                  = 1208;
+static const int kAppBladePermissionError               = 1216;
 static NSString *s_letters                              = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 static NSString* const kAppBladeCacheDirectory          = @"AppBladeCache";
 static NSString* const kAppBladeBacklogFileName         = @"AppBladeBacklog.plist";
-static NSString* const kAppBladeFeedbackKeyConsole      = @"console";
 static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
 static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
+static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
+static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
+
+
 
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
 
@@ -39,6 +44,7 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
 @property (nonatomic, retain) NSURL* upgradeLink;
+
 
 // Feedback
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
@@ -67,6 +73,8 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 - (void)handleBackloggedFeedback;
 
 - (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType;
+- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
+
 - (BOOL)hasPendingSessions;
 
 
@@ -97,6 +105,12 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 
 
 static AppBlade *s_sharedManager = nil;
+
+/* A custom post-crash callback */
+void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
+    [AppBlade endSession];
+}
+
 
 #pragma mark - Lifecycle
 
@@ -156,8 +170,9 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
 {
-    NSString *exceptionMessageFormat = @"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.";
-    [NSException raise:@"AppBladeException" format:exceptionMessageFormat, name];
+    NSString *exceptionMessageFormat = [NSString stringWithFormat:@"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.", name];
+    NSLog(@"%@", exceptionMessageFormat);
+    [NSException raise:@"AppBladeException" format:exceptionMessageFormat];
     abort();
 }
 
@@ -179,7 +194,6 @@ static AppBlade *s_sharedManager = nil;
     [_sessionStartDate release];
 
     [_activeClients release];
-    
     [super dealloc];
 }
 
@@ -202,14 +216,20 @@ static AppBlade *s_sharedManager = nil;
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     NSError *error;
     
-    // Check if we previously crashed
-    if ([crashReporter hasPendingCrashReport])
-        [self handleCrashReport];
+    [self checkForExistingCrashReports];
     
     // Enable the Crash Reporter
     if (![crashReporter enableCrashReporterAndReturnError: &error])
         NSLog(@"Warning: Could not enable crash reporter: %@", error);
- 
+}
+
+- (void)checkForExistingCrashReports
+{
+    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
+    // Check if we previously crashed
+    if ([crashReporter hasPendingCrashReport]){
+        [self handleCrashReport];
+    }
 }
 
 - (void)handleCrashReport
@@ -217,30 +237,48 @@ static AppBlade *s_sharedManager = nil;
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     NSData *crashData;
     NSError *error;
-    
-    // Try loading the crash report
+    NSString* reportString = nil;
+    NSString *queuedFilePath = nil;
+    // Try loading the crash report from the live file
     crashData = [crashReporter loadPendingCrashReportDataAndReturnError: &error];
-    if (crashData == nil) {
-        [crashReporter purgePendingCrashReport];
-        NSLog(@"Purged pending crash report");
-        return;
+    if (crashData != nil) {
+        PLCrashReport *report = [[[PLCrashReport alloc] initWithData: crashData error: &error] autorelease];
+        if (report != nil) {
+            reportString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat: PLCrashReportTextFormatiOS];
+//            NSLog(@"Formatting crash report with PLCrashReportTextFormatter %@", reportString);
+            //send pending crash report to a unique file name in the the queue
+            queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
+            if(queuedFilePath == nil){
+                NSLog(@"error saving crash report");
+            }else{
+                NSLog(@"moved crash report to %@", queuedFilePath);
+            }
+        }
+        else
+        {
+            NSLog(@"Could not parse crash report");
+        }
+    }
+    else
+    {
+        NSLog(@"Could not load a crash report from live file");
+    }
+    [crashReporter purgePendingCrashReport]; //remove crash report from immediate file, we have it in the queue now
+
+    if(queuedFilePath == nil){
+        //we had no immediate crash, or an invalid save, grab any stored crash report
+        queuedFilePath = [crashReporter getNextCrashReportPath];
+        reportString = [NSString stringWithContentsOfFile:queuedFilePath encoding:NSUTF8StringEncoding error:&error];
     }
     
-    // try to parse the crash data into a PLCrashReport. 
-    PLCrashReport *report = [[[PLCrashReport alloc] initWithData: crashData error: &error] autorelease];
-    if (report == nil) {
-        NSLog(@"Could not parse crash report");
-        [crashReporter purgePendingCrashReport];
-        return;
+    if(queuedFilePath != nil){
+        AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        [self.activeClients addObject:client];
+        client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:queuedFilePath,  kAppBladeCrashReportKeyFilePath, nil];
+        [client reportCrash:reportString withParams:[self getCustomParams]];
+    }else{
+        NSLog(@"No crashes to report");
     }
-    
-    NSString* reportString = [PLCrashReportTextFormatter stringValueForCrashReport: report withTextFormat: PLCrashReportTextFormatiOS];
-    NSLog(@"Formatting crash report with PLCrashReportTextFormatter %@", reportString);
-
-    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [self.activeClients addObject:client];
-    [client reportCrash:reportString];
-
 }
 
 - (void)loadSDKKeysFromPlist:(NSString *)plist
@@ -254,7 +292,316 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-#pragma mark Feedback
+
+#pragma mark - AppBladeWebClient
+-(void) appBladeWebClientFailed:(AppBladeWebClient *)client
+{
+    [self appBladeWebClientFailed:client withErrorString:NULL];
+}
+
+- (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString
+{
+    if (client.api == AppBladeWebClientAPI_Permissions)  {
+        
+        // check only once if the delegate responds to this selector
+        BOOL signalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
+        
+        // if the connection failed, see if the application is still within the previous TTL window.
+        // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
+        // prevent the app from running until the request completes successfully. This will prevent
+        // users from unlocking an app by simply changing their clock.
+        if ([self withinStoredTTL]) {
+            if(signalDelegate) {
+                [self.delegate appBlade:self applicationApproved:YES error:nil];
+            }
+            
+        }
+        else {
+            [self closeTTLWindow];
+            if(signalDelegate) {
+                NSDictionary* errorDictionary = nil;
+                NSError* error = nil;
+                if(errorString){
+                    errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                       NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+                    error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+
+                }else{
+                    errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
+                                       NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
+                    error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
+                }
+                [self.delegate appBlade:self applicationApproved:NO error:error];
+            }
+            
+        }
+    }
+    else if (client.api == AppBladeWebClientAPI_Feedback) {
+        @synchronized (self){
+            NSLog(@"ERROR sending feedback");
+            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+            NSString *fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
+            BOOL isBacklog = ([[backupFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@",fileName]] count] > 0);
+            if (!isBacklog) {
+                NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+                NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+                NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+                [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+                
+                if (!backupFiles) {
+                    backupFiles = [NSMutableArray array];
+                }
+                
+                [backupFiles addObject:newFeedbackName];
+                
+                BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+                if(!success){
+                    NSLog(@"Error writing backup file to %@", backupFilePath);
+                }
+                self.feedbackDictionary = nil;
+            }
+            else {
+                [self.activeClients removeObject:client];
+            }
+        }
+    }
+    else if(client.api == AppBladeWebClientAPI_Sessions){
+        NSLog(@"ERROR sending sessions");
+    }
+    else if(client.api == AppBladeWebClientAPI_ReportCrash)
+    {
+        NSLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
+    }
+    else
+    {
+        NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
+    }
+    
+    [self.activeClients removeObject:client];
+}
+
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
+{
+    NSString *errorString = [permissions objectForKey:@"error"];
+    BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
+    
+    if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
+        [self closeTTLWindow];
+        
+        
+        NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                         NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+        
+        NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
+        
+        if (signalApproval)
+            [self.delegate appBlade:self applicationApproved:NO error:error];
+        
+        
+    }
+    else {
+        
+        NSNumber *ttl = [permissions objectForKey:@"ttl"];
+        if (ttl) {
+            [self updateTTL:ttl];
+        }
+        
+        // tell the client the application was approved.
+        if (signalApproval) {
+            [self.delegate appBlade:self applicationApproved:YES error:nil];
+        }
+        
+        
+        // determine if there is an update available
+        NSDictionary* update = [permissions objectForKey:@"update"];
+        if(update)
+        {
+            NSString* updateMessage = [update objectForKey:@"message"];
+            NSString* updateURL = [update objectForKey:@"url"];
+            
+            if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
+                [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
+            }
+        }
+    }
+    
+    [self.activeClients removeObject:client];
+    
+    
+}
+
+- (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
+{
+    // purge the crash report that was just reported.
+    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+    BOOL success = (status == 201 || status == 200);
+    if(success){ //we don't need to hold onto this crash.
+        NSLog(@"Appblade: success sending crash report, response status code: %d", status);
+        [[PLCrashReporter sharedReporter] purgePendingCrashReport];
+        NSString *pathOfCrashReport = [client.userInfo valueForKey:kAppBladeCrashReportKeyFilePath];
+        [[NSFileManager defaultManager] removeItemAtPath:pathOfCrashReport error:nil];
+        NSLog(@"Appblade: removed crash report, %@", pathOfCrashReport);
+
+        if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
+            NSLog(@"Appblade: PLCrashReporter has more crash reports");
+            [self handleCrashReport];
+        }else{
+            NSLog(@"Appblade: PLCrashReporter has no more crash reports");
+        }
+    }
+    else
+    {
+        NSLog(@"Appblade: error sending crash report, response status code: %d", status);
+        //No more crash reports for now. We might have bad internet access.
+    }
+    [self.activeClients removeObject:client];
+}
+
+- (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success
+{
+    @synchronized (self){
+        BOOL isBacklog = [self.activeClients containsObject:client];
+        if (success) {
+            NSLog(@"feedback Successful");
+            
+            NSDictionary* feedback = [client.userInfo objectForKey:kAppBladeFeedbackKeyFeedback];
+            // Clean up
+            NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
+            [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
+
+            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+            NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+           
+            NSString* fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
+
+            NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
+            NSLog(@"Removing supporting feedback files and the feedback file herself");
+            [self removeIntermediateFeedbackFiles:filePath];
+           
+            NSLog(@"Removing Successful feedback object from main feedback list");
+            [backups removeObject:fileName];
+            if (backups.count > 0) {
+                NSLog(@"writing pending feedback objects back to file");
+                [backups writeToFile:backupFilePath atomically:YES];
+            }
+            
+            NSLog(@"checking for more pending feedback");
+            if ([self hasPendingFeedbackReports]) {
+                NSLog(@"more pending feedback");
+                [self handleBackloggedFeedback];
+            }else{
+                NSLog(@"no more pending feedback");
+            }
+        }
+        else if (!isBacklog) {
+            NSLog(@"Unsuccesful feedback not found in backLog");
+            
+            // If we fail sending, add to backlog
+            // We do not remove backlogged files unless the request is sucessful
+            
+            NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+            NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+            NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+            
+            [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+            
+            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+            if (!backupFiles) {
+                backupFiles = [NSMutableArray array];
+            }
+            
+            [backupFiles addObject:newFeedbackName];
+            
+            BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+            if(!success){
+                NSLog(@"Error writing backup file to %@", backupFilePath);
+            }
+        } //It's failed and already in the backlog. Keep it there.
+        
+        if (!isBacklog) {
+            self.feedbackDictionary = nil;
+        }
+        
+        [self.activeClients removeObject:client];
+    }
+}
+
+- (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success
+{
+    if(success){
+        //delete existing sessions, as we have reported them
+        NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+            NSError *deleteError = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
+            
+            if(deleteError){
+                NSLog(@"Error deleting Session log: %@", deleteError.debugDescription);
+            }
+        }
+    }
+    else
+    {
+        NSLog(@"Error sending Session log");
+    }
+    [self.activeClients removeObject:client];
+}
+
+
+#pragma mark - AppBladeDelegate
+- (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
+{
+    if(!approved) {
+        
+        UIAlertView* alert = [[[UIAlertView alloc] initWithTitle:@"Permission Denied"
+                                                         message:[error localizedDescription]
+                                                        delegate:self
+                                               cancelButtonTitle:@"Exit"
+                                               otherButtonTitles: nil] autorelease];
+        [alert show];
+    }
+    
+}
+
+
+-(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
+{
+    if (update) {
+        
+        UIAlertView* alert = [[[UIAlertView alloc] initWithTitle:@"Update Available"
+                                                         message:message
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles: @"Upgrade", nil] autorelease];
+        alert.tag = kUpdateAlertTag;
+        self.upgradeLink = [NSURL URLWithString:url];
+        
+        [alert show];
+        
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kUpdateAlertTag) {
+        if (buttonIndex == 1) {
+            [[UIApplication sharedApplication] openURL:self.upgradeLink];
+            self.upgradeLink = nil;   
+            exit(0);
+        }
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+
+#pragma mark - Feedback
 
 - (BOOL)hasPendingFeedbackReports
 {
@@ -279,50 +626,6 @@ static AppBlade *s_sharedManager = nil;
     return toRet;
 }
 
-- (void)promptFeedbackDialogue
-{
-    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGRect screenFrame = self.window.frame;
-    
-    if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
-        // We need to react properly to interface orientations
-        CGSize size = screenFrame.size;
-        screenFrame.size.width = size.height;
-        screenFrame.size.height = size.width;
-    }
-    
-    FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(0, 0, screenFrame.size.width, screenFrame.size.height)];
-    feedback.delegate = self;
-    
-    // get the first window in the application if one was not supplied.
-    if (!self.window){
-        self.window = [[UIApplication sharedApplication] keyWindow];
-        NSLog(@"Feedback window not defined, using default (Images might not come through.)");
-    }
-    if([[self.window subviews] count] > 0){
-        [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
-        self.showingFeedbackDialogue = YES;
-        [feedback.textView becomeFirstResponder];
-    }
-    else
-    {
-        NSLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
-    }
-    
-}
-
--(void)feedbackDidSubmitText:(NSString*)feedbackText{
-    
-    NSLog(@"reporting text %@", feedbackText);
-    [self reportFeedback:feedbackText];
-}
-
-- (void)feedbackDidCancel
-{
-    NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot]];
-    [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
-    self.feedbackDictionary = nil;
-}
 
 - (void)allowFeedbackReporting
 {
@@ -332,7 +635,6 @@ static AppBlade *s_sharedManager = nil;
     if (window) {
         [self allowFeedbackReportingForWindow:window];
         NSLog(@"Allowing feedback.");
-
     }
     else {
         NSLog(@"Cannot setup for feedback. No keyWindow.");
@@ -388,43 +690,95 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)showFeedbackDialogue
 {
-    aslmsg q, m;
-    int i;
-    const char *key, *val;
-    
-    q = asl_new(ASL_TYPE_QUERY);
-    
-    aslresponse r = asl_search(NULL, q);
-    NSMutableArray* logs = [NSMutableArray arrayWithCapacity:15];
-    while (NULL != (m = aslresponse_next(r)))
-    {
-        
-        NSMutableDictionary* logDict = [NSMutableDictionary dictionaryWithCapacity:10];
-        for (i = 0; (NULL != (key = asl_key(m, i))); i++)
-        {
-            NSString *keyString = [NSString stringWithUTF8String:(char *)key];
-            
-            val = asl_get(m, key);
-            
-            NSString *string = [NSString stringWithUTF8String:val];
-            
-            [logDict setObject:string forKey:keyString];
-        }
-        
-        [logs addObject:logDict];
+    if(self.feedbackDictionary == nil){
+        self.feedbackDictionary = [NSMutableDictionary  dictionary];
     }
-    aslresponse_free(r);
-    NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"plist"];
-	NSString *plistFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
-    [logs writeToFile:plistFilePath atomically:YES];
-    
-    self.feedbackDictionary = [NSMutableDictionary dictionaryWithObject:fileName forKey:kAppBladeFeedbackKeyConsole];
-    
+
+    //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
     NSString* screenshotPath = [self captureScreen];
     [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
-    
+    //other setup methods (like the reintroduction of the console log) will go here
     [self promptFeedbackDialogue];
 }
+
+- (void)promptFeedbackDialogue
+{
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    CGRect screenFrame = self.window.frame;
+    
+    if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        // We need to react properly to interface orientations
+        CGSize size = screenFrame.size;
+        screenFrame.size.width = size.height;
+        screenFrame.size.height = size.width;
+    }
+    
+    FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(0, 0, screenFrame.size.width, screenFrame.size.height)];
+    feedback.delegate = self;
+    
+    // get the first window in the application if one was not supplied.
+    if (!self.window){
+        self.window = [[UIApplication sharedApplication] keyWindow];
+        NSLog(@"Feedback window not defined, using default (Images might not come through.)");
+    }
+    if([[self.window subviews] count] > 0){
+        [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
+        self.showingFeedbackDialogue = YES;
+        [feedback.textView becomeFirstResponder];
+    }
+    else
+    {
+        NSLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
+        feedback.delegate = nil;
+    }
+    
+}
+
+-(void)feedbackDidSubmitText:(NSString*)feedbackText{
+    
+    NSLog(@"reporting text %@", feedbackText);
+    [self reportFeedback:feedbackText];
+}
+
+- (void)feedbackDidCancel
+{
+    NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot]];
+    [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
+    self.feedbackDictionary = nil;
+}
+
+
+- (void)reportFeedback:(NSString *)feedback
+{
+    
+    [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
+    
+    NSLog(@"caching and attempting send of feedback %@", self.feedbackDictionary);
+    
+    //store the feedback in the cache director in the event of a termination
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+    NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+    
+    [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+    NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+    NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+    if (!backupFiles) {
+        backupFiles = [NSMutableArray array];
+    }
+    [backupFiles addObject:newFeedbackName];
+    
+    BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+    if(!success){
+        NSLog(@"Error writing backup file to %@", backupFilePath);
+    }
+    
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
+    NSLog(@"Sending screenshot");
+    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
+}
+
 
 - (void)handleBackloggedFeedback
 {
@@ -439,46 +793,37 @@ static AppBlade *s_sharedManager = nil;
             NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
             if (feedback) {
                 NSLog(@"Feedback found at %@", feedbackPath);
-                NSLog(@"Feedback %@", feedback);
-                AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-                client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
-                [self.activeClients addObject:client];
-                [client sendFeedbackWithScreenshot:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot] note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:[feedback objectForKey:kAppBladeFeedbackKeyConsole]];
-                
-                if (!self.activeClients) {
-                    self.activeClients = [NSMutableSet set];
+                NSLog(@"backlog Feedback dictionary %@", feedback);
+                NSString *screenshotFileName = [feedback objectForKey:kAppBladeFeedbackKeyScreenshot];
+                //validate that additional files exist
+                NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
+                bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
+                if(screenShotFileExists){
+                    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+                    client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
+                    [self.activeClients addObject:client];
+                    [client sendFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[self getCustomParams]];
+                    
+                    if (!self.activeClients) {
+                        self.activeClients = [NSMutableSet set];
+                    }
+                    
+                    [self.activeClients addObject:client];
+                }else{
+                    //clean up files if one doesn't exist
+                    [self removeIntermediateFeedbackFiles:feedbackPath];
+                    NSLog(@"invalid feedback at %@, removing File and intermediate files", feedbackPath);
+                    [backupFiles removeObject:fileName];
+                    NSLog(@"writing valid pending feedback objects back to file");
+                    [backupFiles writeToFile:backupFilePath atomically:YES];
+
                 }
-                
-                [self.activeClients addObject:client];
             }else{
                 NSLog(@"No Feedback found at %@, invalid feedback, removing File", feedbackPath);
                 [backupFiles removeObject:fileName];
                 NSLog(@"writing valid pending feedback objects back to file");
                 [backupFiles writeToFile:backupFilePath atomically:YES];
             }
-        }
-    }
-}
-
-- (void)reportFeedback:(NSString *)feedback
-{
-    [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
-    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [self.activeClients addObject:client];
-    NSLog(@"Sending screenshot");
-    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyConsole]];
-}
-
-- (void)checkAndCreateAppBladeCacheDirectory
-{
-    NSString* directory = [AppBlade cachesDirectoryPath];
-    NSFileManager* manager = [NSFileManager defaultManager];
-    BOOL isDirectory = YES;
-    if (![manager fileExistsAtPath:directory isDirectory:&isDirectory]) {
-        NSError* error = nil;
-        BOOL success = [manager createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:&error];
-        if (!success) {
-            NSLog(@"Error creating directory %@", error);
         }
     }
 }
@@ -562,16 +907,143 @@ static AppBlade *s_sharedManager = nil;
     return ret;
 }
 
--(NSString *) randomString: (int) len {
-    
-    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
-    
-    for (int i=0; i<len; i++) {
-        [randomString appendFormat: @"%C", [s_letters characterAtIndex: arc4random()%[s_letters length]]];
+#pragma mark UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+
+#pragma mark - Analytics
+- (BOOL)hasPendingSessions
+{   //check active clients for API_Sessions
+    NSInteger sessionClients = [self activeClientsOfType:AppBladeWebClientAPI_Sessions];
+    return sessionClients > 0;
+}
+
++ (void)startSession
+{
+    NSLog(@"Starting Session Logging");
+    [[AppBlade sharedManager] logSessionStart];
+}
+
++ (void)endSession
+{
+    NSLog(@"Ended Session Logging");
+    [[AppBlade sharedManager] logSessionEnd];
+}
+
+- (void)logSessionStart
+{
+    if(self.activeClients == nil){
+        self.activeClients = [NSMutableSet set];
     }
     
-    return randomString;
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    NSLog(@"Checking Session Path: %@", sessionFilePath);
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        NSLog(@"%d Sessions Exist, posting them", [sessions count]);
+        
+        AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        [self.activeClients addObject:client];
+        if(![self hasPendingSessions]){
+            [client postSessions:sessions];
+        }
+    }
+    
+    self.sessionStartDate = [NSDate date];
 }
+
+- (void)logSessionEnd
+{
+    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", nil];
+    
+    NSMutableArray* pastSessions = nil;
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        pastSessions = [[sessions mutableCopy] autorelease];
+    }
+    else {
+        pastSessions = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [pastSessions addObject:sessionDict];
+    
+    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
+    [sessionData writeToFile:sessionFilePath atomically:YES];
+}
+
+#pragma mark - AppBlade Custom Params
+-(NSDictionary *)getCustomParams
+{
+    NSDictionary *toRet = nil;
+    NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
+        NSDictionary* currentFields = [NSDictionary dictionaryWithContentsOfFile:customFieldsPath];
+        toRet = currentFields;
+    }else {
+        NSLog(@"no file found, reinitializing");
+        toRet = [NSDictionary dictionary];
+        [self setCustomParams:toRet];
+    }
+    NSLog(@"getting %@", toRet);
+
+    return toRet;
+}
+
+-(void)setCustomParams:(NSDictionary *)newFieldValues
+{
+    [self checkAndCreateAppBladeCacheDirectory];
+    NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
+        NSLog(@"WARNING: Overwriting all existing user params");
+    }
+    if(newFieldValues){
+        NSError *error = nil;
+        NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:newFieldValues format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+        if(!error){
+            [paramsData writeToFile:customFieldsPath atomically:YES];
+        }else{
+            NSLog(@"Error parsing custom params %@", newFieldValues);
+        }
+    }else{
+        NSLog(@"clearing custom params, removing file");
+        [[NSFileManager defaultManager] removeItemAtPath:customFieldsPath error:nil];
+    }
+}
+
+-(void)setCustomParam:(id)key withValue:(id)value
+{
+    NSDictionary* currentFields = [self getCustomParams];
+    if (currentFields == nil) {
+        currentFields = [NSDictionary dictionary];
+    }
+    NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
+    if(key && value){
+        [mutableFields setObject:value forKey:key];
+    }else if(key && !value){
+        [mutableFields removeObjectForKey:key];
+    }
+    else
+    {
+        NSLog(@"invalid nil key");
+    }
+    NSLog(@"setting to %@", mutableFields);
+    currentFields = (NSDictionary *)mutableFields;
+    [self setCustomParams:currentFields];
+}
+
+-(void)clearAllCustomParams
+{
+    [self setCustomParams:nil];
+}
+
+
+#pragma mark - TTL (Time To Live) Methods
 
 - (void)closeTTLWindow
 {
@@ -610,374 +1082,25 @@ static AppBlade *s_sharedManager = nil;
     
     return YES;
 }
-#pragma mark - Analytics
-- (BOOL)hasPendingSessions
-{   //check active clients for API_Sessions
-    NSInteger sessionClients = [self activeClientsOfType:AppBladeWebClientAPI_Sessions];
-    return sessionClients > 0;
-}
 
-+ (void)startSession
+
+
+#pragma mark - Helper Methods
+
+- (void)checkAndCreateAppBladeCacheDirectory
 {
-    NSLog(@"Starting Session Logging");
-    [[AppBlade sharedManager] logSessionStart];
-}
-
-+ (void)endSession
-{
-    NSLog(@"Ended Session Logging");
-    [[AppBlade sharedManager] logSessionEnd];
-}
-
-- (void)logSessionStart
-{
-    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-    NSLog(@"Checking Session Path: %@", sessionFilePath);
-
-    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
-        NSLog(@"%d Sessions Exist, posting them", [sessions count]);
-        
-        AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-        [self.activeClients addObject:client];
-        if(![self hasPendingSessions]){
-            [client postSessions:sessions];
+    NSString* directory = [AppBlade cachesDirectoryPath];
+    NSFileManager* manager = [NSFileManager defaultManager];
+    BOOL isDirectory = YES;
+    if (![manager fileExistsAtPath:directory isDirectory:&isDirectory]) {
+        NSLog(@"Appblade creating %@", directory);
+        NSError* error = nil;
+        BOOL success = [manager createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:&error];
+        if (!success) {
+            NSLog(@"Error creating directory %@", error);
         }
     }
-    
-    self.sessionStartDate = [NSDate date];
 }
-
-- (void)logSessionEnd
-{
-    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", nil];
-    
-    NSMutableArray* pastSessions = nil;
-    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
-        pastSessions = [[sessions mutableCopy] autorelease];
-    }
-    else {
-        pastSessions = [NSMutableArray arrayWithCapacity:1];
-    }
-    
-    [pastSessions addObject:sessionDict];
-    
-    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
-    [sessionData writeToFile:sessionFilePath atomically:YES];
-}
-
-
-#pragma mark - AppBladeWebClient
--(void) appBladeWebClientFailed:(AppBladeWebClient *)client
-{
-    if (client.api == AppBladeWebClientAPI_Permissions)  {
- 
-        // check only once if the delegate responds to this selector
-        BOOL signalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
-        
-        // if the connection failed, see if the application is still within the previous TTL window. 
-        // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and 
-        // prevent the app from running until the request completes successfully. This will prevent
-        // users from unlocking an app by simply changing their clock.
-        if ([self withinStoredTTL]) {
-            if(signalDelegate) {
-                [self.delegate appBlade:self applicationApproved:YES error:nil];
-            }
-            
-        } 
-        else {
-            [self closeTTLWindow];
-            
-            if(signalDelegate) {
-                
-                NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey, 
-                                                 NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
-                
-                NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
-                [self.delegate appBlade:self applicationApproved:NO error:error];                
-            }
-
-        }
-    }
-    else if (client.api == AppBladeWebClientAPI_Feedback) {
-        @synchronized (self){
-            NSLog(@"ERROR sending feedback");
-            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-            NSString *fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
-            BOOL isBacklog = ([[backupFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@",fileName]] count] > 0);
-            if (!isBacklog) {
-                NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-                NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-                NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-                [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
-
-                if (!backupFiles) {
-                    backupFiles = [NSMutableArray array];
-                }
-                
-                [backupFiles addObject:newFeedbackName];
-                
-                BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-                if(!success){
-                    NSLog(@"Error writing backup file to %@", backupFilePath);
-                }
-                self.feedbackDictionary = nil;
-            }
-            else {
-                [self.activeClients removeObject:client];
-            }
-        }
-    }
-    else if(client.api == AppBladeWebClientAPI_Sessions){
-        NSLog(@"ERROR sending sessions");
-    }
-    else
-    {
-        NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
-    }
-    
-    [self.activeClients removeObject:client];
-}
-
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
-{
-    NSString *errorString = [permissions objectForKey:@"error"];
-    BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
-    
-    if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
-        [self closeTTLWindow];
-    
-        
-        NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey, 
-                                         NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-        
-        NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
-
-        if (signalApproval) 
-            [self.delegate appBlade:self applicationApproved:NO error:error];
-        
-        
-    } 
-    else {
-        
-        NSNumber *ttl = [permissions objectForKey:@"ttl"];
-        if (ttl) {
-            [self updateTTL:ttl];
-        }
-        
-        // tell the client the application was approved. 
-        if (signalApproval) {
-            [self.delegate appBlade:self applicationApproved:YES error:nil];
-        }
-        
-        
-        // determine if there is an update available
-        NSDictionary* update = [permissions objectForKey:@"update"];
-        if(update) 
-        {
-            NSString* updateMessage = [update objectForKey:@"message"];
-            NSString* updateURL = [update objectForKey:@"url"];
-            
-            if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
-                [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
-            }
-        }
-    }
-
-    [self.activeClients removeObject:client];
-
-    
-}
-
-- (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
-{
-    // purge the crash report that was just reported.
-    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
-    BOOL success = (status == 201 || status == 200);
-    if(success){ //we don't need to hold onto this crash.
-        NSLog(@"Appblade: success sending crash report, response status code: %d", status);
-        [[PLCrashReporter sharedReporter] purgePendingCrashReport];
-        
-        if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
-            NSLog(@"Appblade: PLCrashReporter has more crash reports");
-            [self handleCrashReport];
-        }else{
-            NSLog(@"Appblade: PLCrashReporter has no more crash reports");
-        }
-
-    }
-    else
-    {
-        NSLog(@"Appblade: error sending crash report, response status code: %d", status);
-    }
-    [self.activeClients removeObject:client];
-}
-
-- (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success
-{
-    @synchronized (self){
-        BOOL isBacklog = [self.activeClients containsObject:client];
-        if (success) {
-            NSLog(@"feedback Successful");
-
-            NSDictionary* feedback = isBacklog ? [client.userInfo objectForKey:kAppBladeFeedbackKeyFeedback] : self.feedbackDictionary;
-            // Clean up
-            NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
-            [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
-            
-            NSString* consolePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyConsole]];
-            [[NSFileManager defaultManager] removeItemAtPath:consolePath error:nil];
-            
-            if (isBacklog) {
-                NSLog(@"Successful feedback found in backLog");
-
-                NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-                NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-                NSString* fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
-                NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
-                
-                NSError* error = nil;
-                BOOL success = [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
-                if (!success) {
-                    NSLog(@"Error removing AppBlade Feedback file. %@", error);
-                }
-                
-                NSLog(@"Removing Successful feedback object");
-                [backups removeObject:fileName];
-                
-                if (backups.count > 0) {
-                    NSLog(@"writing pending feedback objects back to file");
-                    [backups writeToFile:backupFilePath atomically:YES];
-                }
-                else {
-                    error = nil;
-                    [[NSFileManager defaultManager] removeItemAtPath:fileName error:&error];
-                }
-            }else{
-                NSLog(@"Successful feedback not found in backLog");
-            }
-            
-            
-            NSLog(@"checking for more pending feedback");
-            
-            if ([self hasPendingFeedbackReports]) {
-                NSLog(@"more pending feedback");
-                [self handleBackloggedFeedback];
-            }else{
-                NSLog(@"no more pending feedback");
-            }
-
-            
-        }
-        else if (!isBacklog) {
-            NSLog(@"Unsuccesful feedback not found in backLog");
-
-            // If we fail sending, add to backlog
-            // We do not remove backlogged files unless the request is sucessful
-            
-            NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-            NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-            NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-            
-            [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
-            
-            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-            if (!backupFiles) {
-                backupFiles = [NSMutableArray array];
-            }
-            
-            [backupFiles addObject:newFeedbackName];
-            
-            BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-            if(!success){
-                NSLog(@"Error writing backup file to %@", backupFilePath);
-            }
-        } //It's failed and already in the backlog. Keep it there.
-
-        if (!isBacklog) {
-            self.feedbackDictionary = nil;
-        }
-        
-        [self.activeClients removeObject:client];
-    }
-}
-
-- (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success
-{
-    //delete existing sessions, as we have reported them
-    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-        NSError *deleteError = nil;
-        [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
-        
-        if(deleteError){
-            NSLog(@"Error deleting Session log: %@", deleteError.debugDescription);
-        }
-    }
-    [self.activeClients removeObject:client];
-}
-
-
-#pragma mark - AppBladeDelegate
-- (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
-{
-    if(!approved) {
-        
-        UIAlertView* alert = [[[UIAlertView alloc] initWithTitle:@"Permission Denied"
-                                                         message:[error localizedDescription] 
-                                                        delegate:self 
-                                               cancelButtonTitle:@"Exit"
-                                               otherButtonTitles: nil] autorelease];
-        [alert show];
-    }
-    
-}
-
-
--(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
-{
-    if (update) {
-        
-        UIAlertView* alert = [[[UIAlertView alloc] initWithTitle:@"Update Available"
-                                                         message:message
-                                                        delegate:self 
-                                               cancelButtonTitle:@"Cancel"
-                                               otherButtonTitles: @"Upgrade", nil] autorelease];
-        alert.tag = kUpdateAlertTag;
-        self.upgradeLink = [NSURL URLWithString:url];
-        
-        [alert show];
-      
-    }
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == kUpdateAlertTag) {
-        if (buttonIndex == 1) {
-            [[UIApplication sharedApplication] openURL:self.upgradeLink];
-            self.upgradeLink = nil;   
-            exit(0);
-        }
-    }
-    else
-    {
-        exit(0);
-    }
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return YES;
-}
-
-
 
 - (NSObject*)readFile:(NSString *)filePath
 {
@@ -995,10 +1118,25 @@ static AppBlade *s_sharedManager = nil;
     return returnObject;
 }
 
-#pragma mark - Helper Files
+
+- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath
+{
+    NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
+    if (feedback) {
+        NSLog(@"Cleaning Feedback %@", feedback);
+        NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
+        
+        NSError *screenShotError = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:screenshotFilePath error:&screenShotError];
+    }
+    NSError *feedbackPathError = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:feedbackPath error:&feedbackPathError];
+
+}
+
 - (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType {
     NSInteger amtToReturn = 0;
-
+    
     if(clientType == AppBladeWebClientAPI_AllTypes){
         amtToReturn = [self.activeClients count];
     }
@@ -1008,6 +1146,18 @@ static AppBlade *s_sharedManager = nil;
         amtToReturn = clientsOfType.count;
     }
     return amtToReturn;
+}
+
+
+-(NSString *) randomString: (int) len {
+    
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [s_letters characterAtIndex: arc4random()%[s_letters length]]];
+    }
+    
+    return randomString;
 }
 
 

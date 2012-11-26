@@ -30,6 +30,8 @@ typedef enum {
 - (NSString *)appBladeProjectIssuedTimestamp;
 
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client;
+- (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString;
+
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary*)permissions;
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success;
@@ -67,8 +69,8 @@ typedef enum {
 
 // AppBlade API.
 - (void)checkPermissions;
-- (void)reportCrash:(NSString *)crashReport;
-- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console;
+- (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params;
+- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsData;
 - (void)postSessions:(NSArray *)sessions;
 
 @end
