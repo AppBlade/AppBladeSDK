@@ -1,65 +1,83 @@
 #AppBlade SDK#
 ##*An easy-to-use, drop-in library to tightly integrate the Appblade service into your app.*##
 
+###[Download compiled libraries v0.3.0](http://appblade.com/sdk/download)
+
+###Installation Instructions###
+- [iOS SDK](https://github.com/AppBlade/SDK/edit/master/README.mdown#ios-sdk)
+- [Android SDK](https://github.com/AppBlade/SDK/edit/master/README.mdown#android)
+
 ###Integrating the framework enables enhanced AppBlade features such as:###
 
  - **Application kill switch**
    - Administrators can remote disable AppBlade installed applications.
    - Kill switch enabled applications are required to connect to the internet and verify status with AppBlade.
    - If it has been more than 24 hours since the last verified check OR if the user status is not valid, the application will not run.
+ - **Application update notifications**
+   - On application start, users are automatically notified when an update is available
  - **Capture application crash logs**
    - Capture, view & download crash logs via AppBlade  
- - **Application update notification**
-   - On application start, users are automatically notified when an update is available
  - **Application Feedback** *(iOS Only, added in v0.2)*
  	- At any point in the app, users can send a screenshot and a note to AppBlade by doing a three-finger double tap.
-	- v0.2.1 is required to submit feedback with screenshots, due to security changes on the AppBlade API
+	- v0.3.0 is required to submit feedback with screenshots, due to security changes on the AppBlade API
+ - **Custom Data Fields When Reporting** *(iOS Only, added in v0.3)*
+ 	- Developers can pass additional custom parameters about an application when reporting feedback or crashes. 
+ - **User Statistics** *(iOS Only, added in v0.3)*
+ 	- Project managers can track specific data like when an AppBlade-integrated app was opened, how long it stayed open, and who opened it. 
 
-###[Download compiled libraries v0.2.1](http://appblade.com/sdk/download)
-
+ 	
 #iOS SDK#
-##Add AppBlade to your project#
-There are two ways to include AppBlade in your project, as source or a compiled library. The AppBlade framework is not currently ARC compatible, so if you are writing a project using ARC we suggest you include the binary.
+##Add AppBlade to your Xcode project#
+There are two ways to include AppBlade in your project, directly including the source code or including an AppBlade binary. Programmers less familiar with xcode are suggested to use the binary files [available for download from appblade.](http://appblade.com/sdk/download)
 
-###Including AppBlade Source##
-If you are upgrading from a previous version, delete the current AppBlade folder and its contents before updating.
+###Including AppBlade Binary##
+You can either download the compiled version from [our website](http://appblade.com/sdk/download), or build the AppBlade library from downloaded source (directions for which can be found in the [*Building AppBlade Binary From Source*](https://github.com/AppBlade/SDK/edit/master/README.mdown#building-an-appblade-binary-from-source) section).
 
-######A Note on Xcode 4.5 and Above###
-Starting on iOS 6 and Xcode 4.5, Apple has officially dropped support for armv6 processors (And, subsequently, the ability to exclusively publish to iPhone 3G and below).
-Here at AppBlade we have been forced to follow suit, and now support armv7 and armv7s processors for iOS 4.3 and above.
-For those who would like to continue to use older versions of Xcode or iOS for legacy purposes, the source (not the compiled binaries) will still work.
+1. After downloading AppBlade or building it locally, navigate to the folder containing the libAppBladeUniversal.a binary and header file.
+2. For a universal build, simply drag the libAppBladeUniversal.a and AppBlade.h files from the folder into your project, ensure that "Copy items" is checked. 
+3. Open your Xcode project.
+4. Click your project file from the File Navigator and then select your app target from the list on the right.
+5. Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
+6. Select Security.framework from the list and click "Add".
+7. Configure the framework using the instructions in the [*Configure AppBlade*](https://github.com/AppBlade/SDK/edit/master/README.mdown#configure-appblade-in-your-xcode-project) section.
 
-####Xcode 4###
+####Building An AppBlade Binary From Source####
+1. Download the source. Open AppBlade.xcodeproj located in `iOS/Framework/`.  
+2. Select AppBladeUniversal from the Scheme dropdown.
+3. Build.
+4. On the completion of our custom shell script, a finder window will open to the location of the built binaries (the name of the folder will be "Release_Production-universal").
+5. For universal build, simply copy that libAppBladeUniversal.a file, and AppBlade.h from the folder into your project, exactly how you would if you had downloaded the prebuilt binary from appblade.com.  
+6. Add the built binary to your project by following the instructions in the *Including AppBlade Binary* section above. 
 
-1. Download and unzip the AppBlade framework, then drag the inner AppBlade folder into the left-hand File Navigator of your application's Xcode project.
+
+###Including AppBlade Source###
+Some prefer to include the AppBlade source code directly to their project, either as a submodule for easier code updates or for development on new AppBlade features. AppBlade binaries should not be included if the source code is being used directly instead. Integrating source is a slightly more advanced process and not recommended for beginners. 
+
+**Note:** *The AppBlade framework is ARC-agnostic (It is compatible with ARC-enabled projects, but does not use ARC itself.)*
+
+1. Download and unzip the AppBlade framework, then drag the AppBlade project file into the left-hand File Navigator of your application's Xcode project.
 1.  Select the following options in the add file options panel and before clicking "Finish":
     - Make sure that "Copy items" is checked for "Destination".
     - Check each of your app targets in "Add to targets".
-1.  Click your project file from the File Navigator and then select your app target from the list on the right.
-1.	Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
-1.  Select Security.framework from the list and click "Add".
-1.  Configure the framework using the instructions in the *Configure AppBlade* section of this document.
+1.  Add the Apple Security.framework to your project.
+    - Click your project file from the File Navigator and then select your app target from the list on the right.
+    - Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
+    - Select Security.framework from the list and click "Add".
+1.  Add the Appblade library to your Target Dependencies 
+    - From the "Build Phases" tab, expand "Target Dependencies" and click the "+" button to add a library.
+    - Select the AppBlade target under your AppBlade subproject in the dropdown. 
+1.  Link the Appblade binary to your Link Binary With Libraries 
+    - From the "Build Phases" tab, expand "Link Binary With Libraries" and click the "+" button to add a binary.
+    - Select the AppBlade.a binary under your Workspace folder in the appearing dropdown. 
+1.  The AppBlade library will now build and link to your project on each build of this target. 
+1.  You can now configure the framework in your project using the instructions in the [*Configure AppBlade*](https://github.com/AppBlade/SDK/edit/master/README.mdown#configure-appblade-in-your-xcode-project) section.
 
-###Including AppBlade Binary in Xcode 4##
-You can either download the compiled version from [our website](http://appblade.com/sdk/download) and skip to step 5, or follow these instructions for creating your own library from source.
 
-1. Download the source. Open AppBlade.xcodeproj located in `iOS/Framework/`.  
-2. If you need support in the iPhone Simulator, select AppBladeUniversal from the Scheme dropdown. If not, then you can leave it on the normal AppBlade scheme.
-3. Build.
-4. Expand the `Products` group in the left-hand navigator. Right-click on `libAppBlade.a` and select `Show in Finder`.
-5. For a non-universal build, simply copy that libAppBlade.a file, and AppBlade.h from the project into your project.  For a universal build, navigate one folder above where libAppBlade.a lives, then go into `Release_Production-universal`. Include both of the files (libAppBladeUniversal.a and AppBlade.h) in your project.
-6. Open your Xcode project.
-1.  Click your project file from the File Navigator and then select your app target from the list on the right.
-1.	Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
-1.  Select Security.framework from the list and click "Add".
-6. Configure the framework using the instructions in the *Configure AppBlade* section of this document.
-
-##Configure AppBlade#
+##Configure AppBlade in your Xcode project#
 
 1. Log in or register at [http://appblade.com/](http://appblade.com)
 1. Click 'Upload' in the top right-hand corner. If you have an .ipa, you may upload it now. If not, skip the upload and finish the project configuration. This creates a new project.
 1. In your application delegate implementation file (e.g.AppDelegate.m), import AppBlade.h and add the following to `-application:didFinishLaunchingWithOptions:`.
-
             // Enter your 32-digit alphanumeric project id, token, secret, and issued timestamp here.
             // These can be found under the SDK Keys section of your AppBlade project on AppBlade.com.
             AppBlade *blade = [AppBlade sharedManager];
@@ -70,20 +88,24 @@ You can either download the compiled version from [our website](http://appblade.
             
     You may also use a `plist` to load these keys by calling `loadSDKKeysFromPlist:` and pass in the path to the plist. See our example project for further details.
     
-1.  Enable crash logging
 
+    
+
+1.  Enable crash logging
             [[AppBlade sharedManager] catchAndReportCrashes];
 
 1.  To enable the AppBlade kill switch, add the following code to `-applicationDidBecomeActive:` in your application delegate. IMPORTANT: this features is intended only for ad hoc and enterprise applications. Shipping an app to the iTunes App store with a call to |-checkApproval| could result in app termination (and rejection).
-
             [[AppBlade sharedManager] checkApproval];
             
 1. To enable feedback reporting, add the following code to `-application:didFinishLaunchingWithOptions:`
-
             [[AppBlade sharedManager] allowFeedbackReporting];
             
    **Note:** Feedback requires there be a `keyWindow`. Make sure to set this in `-application:didFinishLaunchingWithOptions:` as well. If you do not have a `keyWindow`, you can call `allowFeedbackReportingForWindow:` instead.
-            
+
+######A Note on Xcode 4.5 and Above###
+Starting on iOS 6 and Xcode 4.5, Apple has officially dropped support for armv6 processors (And, subsequently, the ability to exclusively publish to iPhone 3G and below).
+Here at AppBlade we have been forced to follow suit, and now support armv7 and armv7s processors for iOS 4.3 and above.
+For those who would like to continue to use older versions of Xcode or iOS for legacy purposes, the source (not the compiled binaries) will still work.          
 
 #Android#
 You can download a compiled .jar from [our website](http://appblade.com/sdk/download), or compile it yourself from source.
