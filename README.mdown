@@ -4,8 +4,8 @@
 ###[Download compiled libraries v0.3.0](http://appblade.com/sdk/download)
 
 ###Installation Instructions###
-- [iOS SDK](https://github.com/AppBlade/SDK/README.mdown#ios-sdk)
-- [Android SDK](https://github.com/AppBlade/SDK/README.mdown#android)
+- [iOS SDK](https://github.com/AppBlade/SDK#ios-sdk)
+- [Android SDK](https://github.com/AppBlade/SDK#android)
 
 ###Integrating the framework enables enhanced AppBlade features such as:###
 
@@ -31,7 +31,7 @@
 There are two ways to include AppBlade in your project, directly including the source code or including an AppBlade binary. Programmers less familiar with xcode are suggested to use the binary files [available for download from appblade.](http://appblade.com/sdk/download)
 
 ###Including AppBlade Binary##
-You can either download the compiled version from [our website](http://appblade.com/sdk/download), or build the AppBlade library from downloaded source (directions for which can be found in the [*Building AppBlade Binary From Source*](https://github.com/AppBlade/SDK/edit/master/README.mdown#building-an-appblade-binary-from-source) section).
+You can either download the compiled version from [our website](http://appblade.com/sdk/download), or build the AppBlade library from downloaded source (directions for which can be found in the [*Building AppBlade Binary From Source*](https://github.com/AppBlade/SDK#building-an-appblade-binary-from-source) section).
 
 1. After downloading AppBlade or building it locally, navigate to the folder containing the libAppBladeUniversal.a binary and header file.
 2. For a universal build, simply drag the libAppBladeUniversal.a and AppBlade.h files from the folder into your project, ensure that "Copy items" is checked. 
@@ -39,7 +39,7 @@ You can either download the compiled version from [our website](http://appblade.
 4. Click your project file from the File Navigator and then select your app target from the list on the right.
 5. Select the "Build Phases" tab and expand "Link Binary With Libraries" and click the "+" button to add a library.
 6. Select Security.framework from the list and click "Add".
-7. Configure the framework using the instructions in the [*Configure AppBlade*](https://github.com/AppBlade/SDK/edit/master/README.mdown#configure-appblade-in-your-xcode-project) section.
+7. Configure the framework using the instructions in the [*Configure AppBlade*](https://github.com/AppBlade/SDK#configure-appblade-in-your-xcode-project) section.
 
 ####Building An AppBlade Binary From Source####
 1. Download the source. Open AppBlade.xcodeproj located in `iOS/Framework/`.  
@@ -70,7 +70,7 @@ Some prefer to include the AppBlade source code directly to their project, eithe
     - From the "Build Phases" tab, expand "Link Binary With Libraries" and click the "+" button to add a binary.
     - Select the AppBlade.a binary under your Workspace folder in the appearing dropdown. 
 1.  The AppBlade library will now build and link to your project on each build of this target. 
-1.  You can now configure the framework in your project using the instructions in the [*Configure AppBlade*](https://github.com/AppBlade/SDK/edit/master/README.mdown#configure-appblade-in-your-xcode-project) section.
+1.  You can now configure the framework in your project using the instructions in the [*Configure AppBlade*](https://github.com/AppBlade/SDK#configure-appblade-in-your-xcode-project) section.
 
 
 ##Configure AppBlade in your Xcode project#
