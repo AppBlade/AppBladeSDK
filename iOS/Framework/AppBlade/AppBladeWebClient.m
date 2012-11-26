@@ -667,9 +667,10 @@ static BOOL is_encrypted () {
 	}
 	// Terminate the string-based result
 	*objPointer = '\0';
-    free(objPointer);
+    NSString *toRet = [NSString stringWithCString:strResult encoding:NSASCIIStringEncoding];
+    free(strResult);
 	// Return the results as an NSString object
-	return [NSString stringWithCString:strResult encoding:NSASCIIStringEncoding];
+	return toRet;
 }
 
 // Derived from http://stackoverflow.com/q/2633801/2633948#2633948
