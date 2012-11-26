@@ -27,11 +27,14 @@
 //    blade.appBladeProjectToken = @""; //Token
 //    blade.appBladeProjectSecret = @""; //Secret
 //    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
-  
+    
+
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
-    [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]];  //Fill AppBladeKeys.plist with your own credentials to test
-
+    // [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]]
+    // Fill AppBladeKeys.plist with your own credentials to test
+    [blade setCustomParam:@"CustomKey1" withValue:@"FirstSend"];
+    
     [blade catchAndReportCrashes];
     
     self.window.rootViewController = self.mainViewController;
@@ -74,10 +77,11 @@
      */
     
     // Check the app blade status of this application.
-    [[AppBlade sharedManager] checkApproval];
+    //[[AppBlade sharedManager] checkApproval];
     [AppBlade startSession];
-    
-    
+    [[AppBlade sharedManager] allowFeedbackReporting]; //for more immediate feedback to show up on Appblade (prompts a check for pending feedback)
+    [[AppBlade sharedManager] checkForExistingCrashReports]; //for more immediate crash reporting
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
