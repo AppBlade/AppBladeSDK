@@ -78,6 +78,7 @@ Some prefer to include the AppBlade source code directly to their project, eithe
 1. Log in or register at [http://appblade.com/](http://appblade.com)
 1. Click 'Upload' in the top right-hand corner. If you have an .ipa, you may upload it now. If not, skip the upload and finish the project configuration. This creates a new project.
 1. In your application delegate implementation file (e.g.AppDelegate.m), import AppBlade.h and add the following to `-application:didFinishLaunchingWithOptions:`.
+
             // Enter your 32-digit alphanumeric project id, token, secret, and issued timestamp here.
             // These can be found under the SDK Keys section of your AppBlade project on AppBlade.com.
             AppBlade *blade = [AppBlade sharedManager];
