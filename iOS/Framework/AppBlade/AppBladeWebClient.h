@@ -30,6 +30,8 @@ typedef enum {
 - (NSString *)appBladeProjectIssuedTimestamp;
 
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client;
+- (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString;
+
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary*)permissions;
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success;

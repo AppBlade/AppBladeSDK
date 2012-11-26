@@ -580,7 +580,7 @@ static BOOL is_encrypted () {
         else
         {
             NSLog(@"Error parsing permisions plist: %@", [error debugDescription]);
-            [_delegate appBladeWebClientFailed:self];
+            [_delegate appBladeWebClientFailed:self withErrorString:@"An invalid response was received from AppBlade; please contact support"];
         }
         
     } else if (_api == AppBladeWebClientAPI_ReportCrash) {    

@@ -22,6 +22,8 @@ const int kUpdateAlertTag                               = 316;
 
 static NSString* const kAppBladeErrorDomain             = @"com.appblade.sdk";
 static const int kAppBladeOfflineError                  = 1200;
+static const int kAppBladeParsingError                  = 1208;
+static const int kAppBladePermissionError               = 1216;
 static NSString *s_letters                              = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 static NSString* const kAppBladeCacheDirectory          = @"AppBladeCache";
 static NSString* const kAppBladeBacklogFileName         = @"AppBladeBacklog.plist";
@@ -168,8 +170,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
 {
-    NSString *exceptionMessageFormat = @"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.";
-    [NSException raise:@"AppBladeException" format:exceptionMessageFormat, name];
+    NSString *exceptionMessageFormat = [NSString stringWithFormat:@"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.", name];
+    NSLog(@"%@", exceptionMessageFormat);
+    [NSException raise:@"AppBladeException" format:exceptionMessageFormat];
     abort();
 }
 
@@ -293,6 +296,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 #pragma mark - AppBladeWebClient
 -(void) appBladeWebClientFailed:(AppBladeWebClient *)client
 {
+    [self appBladeWebClientFailed:client withErrorString:NULL];
+}
+
+- (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString
+{
     if (client.api == AppBladeWebClientAPI_Permissions)  {
         
         // check only once if the delegate responds to this selector
@@ -310,13 +318,21 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         }
         else {
             [self closeTTLWindow];
-            
             if(signalDelegate) {
-                
-                NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
-                                                 NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
-                
-                NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
+                NSDictionary* errorDictionary = nil;
+                NSError* error = nil;
+                if(errorString){
+                    errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                       NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+                    error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+
+                }else{
+                    errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
+                                       NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
+                    error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
+                }
                 [self.delegate appBlade:self applicationApproved:NO error:error];
             }
             
@@ -379,7 +395,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
                                          NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
         
-        NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
+        NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
         
         if (signalApproval)
             [self.delegate appBlade:self applicationApproved:NO error:error];

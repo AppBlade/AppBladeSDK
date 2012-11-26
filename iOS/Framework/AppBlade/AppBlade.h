@@ -15,6 +15,8 @@
 
 static NSString* const kAppBladeErrorDomain;
 static const int kAppBladeOfflineError;
+static const int kAppBladeParsingError;
+static const int kAppBladePermissionError;
 static NSString* const kAppBladeCacheDirectory;
 @class AppBlade;
 
