@@ -203,7 +203,7 @@ static BOOL is_encrypted () {
     else
     {
         //build a request to check if the supplied url is valid
-        NSURL *requestURL = [[NSURL alloc] initWithString:customURLString];
+        NSURL *requestURL = [[[NSURL alloc] initWithString:customURLString] autorelease];
         if(requestURL == nil)
         {
             NSLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
@@ -667,6 +667,7 @@ static BOOL is_encrypted () {
 	}
 	// Terminate the string-based result
 	*objPointer = '\0';
+    free(objPointer);
 	// Return the results as an NSString object
 	return [NSString stringWithCString:strResult encoding:NSASCIIStringEncoding];
 }

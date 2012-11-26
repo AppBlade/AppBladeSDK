@@ -987,7 +987,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         toRet = currentFields;
     }else {
         NSLog(@"no file found, reinitializing");
-        toRet = [[NSDictionary dictionary] autorelease];
+        toRet = [NSDictionary dictionary];
         [self setCustomParams:toRet];
     }
     NSLog(@"getting %@", toRet);
