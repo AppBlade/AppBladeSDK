@@ -57,7 +57,8 @@ Some prefer to include the AppBlade source code directly to their project, eithe
 
 **Note:** *The AppBlade framework is ARC-agnostic (It is compatible with ARC-enabled projects, but does not use ARC itself.)*
 
-1. Download and unzip the AppBlade framework, then drag the AppBlade project file into the left-hand File Navigator of your application's Xcode project.
+1.  Clone the AppBlade master branch off of github, then drag the AppBlade project file into the left-hand File Navigator of your application's Xcode project.
+    - NOTE: If you are also sharing this project with others (through github, for example) it is highly suggested that you use a copy of the AppBlade Framework in a subdirectory into your project instead of an external one. You may either simply copy iOS/Framework into your project folder or add AppBlade as a Submodule.
 1.  Select the following options in the add file options panel and before clicking "Finish":
     - Make sure that "Copy items" is checked for "Destination".
     - Check each of your app targets in "Add to targets".
@@ -71,6 +72,9 @@ Some prefer to include the AppBlade source code directly to their project, eithe
 1.  Link the Appblade binary to your Link Binary With Libraries 
     - From the "Build Phases" tab, expand "Link Binary With Libraries" and click the "+" button to add a binary.
     - Select the AppBlade.a binary under your Workspace folder in the appearing dropdown. 
+1.  Link the Appblade header files to your Project
+    - In your Project Build Settings (Not your Target Build Settings), scroll down to `Header Search Paths`. 
+    - Add the path of your AppBlade `iOS/Framework` folder to your `Header Search Paths`. Make sure it is marked recursive.
 1.  The AppBlade library will now build and link to your project on each build of this target. 
 1.  You can now configure the framework in your project using the instructions in the [*Configure AppBlade*](https://github.com/AppBlade/SDK#configure-appblade-in-your-xcode-project) section.
 
