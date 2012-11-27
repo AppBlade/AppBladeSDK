@@ -7,6 +7,8 @@
 - [iOS SDK](https://github.com/AppBlade/SDK#ios-sdk)
 - [Android SDK](https://github.com/AppBlade/SDK#android)
 
+**Still having trouble installing? Check out our [FAQ](https://github.com/AppBlade/SDK/wiki/FAQ-%28Frequent-AppBlade-Questions%29).**
+
 ###Integrating the framework enables enhanced AppBlade features such as:###
 
  - **Application kill switch**
