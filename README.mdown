@@ -92,10 +92,12 @@ Some prefer to include the AppBlade source code directly to their project, eithe
             blade.appBladeProjectToken = @"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
             blade.appBladeProjectSecret = @"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
             blade.appBladeProjectIssuedTimestamp = @"9999999999";
+
+    If you are an AppBlade Enterprise user and have an AppBlade appliance behind your firewall, configure your hostname:
+
+            blade.appBladeHost = @"https://your-appblade-domain.com";
             
     You may also use a `plist` to load these keys by calling `loadSDKKeysFromPlist:` and pass in the path to the plist. See our example project for further details.
-    
-
     
 
 1.  Enable crash logging
