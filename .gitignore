@@ -16,6 +16,8 @@ AppBladeKeys.plist
 # generated files
 bin/
 gen/
+Android/*/bin
+Android/*/gen
 
 # Local configuration file (sdk path, etc)
 local.properties
