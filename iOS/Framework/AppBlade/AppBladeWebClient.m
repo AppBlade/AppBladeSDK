@@ -236,8 +236,8 @@ static BOOL is_encrypted () {
     if(hasFairplay){
         //we're signed by apple, skip authentication.
         NSLog(@"Binary signed by Apple, skipping permissions check");
-        NSDictionary *fakePlist = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:99999999], @"ttl", nil];
-        [_delegate appBladeWebClient:self receivedPermissions:fakePlist];
+        NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
+        [_delegate appBladeWebClient:self receivedPermissions:fairplayPermissions];
         return;
     }
     
