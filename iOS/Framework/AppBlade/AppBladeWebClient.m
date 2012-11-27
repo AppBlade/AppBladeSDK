@@ -231,6 +231,16 @@ static BOOL is_encrypted () {
     NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* projectUrl = [NSURL URLWithString:urlString];
     NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
+    
+    BOOL hasFairplay = is_encrypted();
+    if(hasFairplay){
+        //we're signed by apple, skip authentication.
+        NSLog(@"Binary signed by Apple, skipping permissions check");
+        NSDictionary *fakePlist = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:99999999], @"ttl", nil];
+        [_delegate appBladeWebClient:self receivedPermissions:fakePlist];
+        return;
+    }
+    
     [apiRequest setHTTPMethod:@"GET"];
     [self addSecurityToRequest:apiRequest];
 
