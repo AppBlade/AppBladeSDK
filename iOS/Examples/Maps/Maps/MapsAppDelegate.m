@@ -76,11 +76,13 @@
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
+    
     // Check the app blade status of this application.
-    //[[AppBlade sharedManager] checkApproval];
+    [[AppBlade sharedManager] checkApproval];
+
     [AppBlade startSession];
-    [[AppBlade sharedManager] allowFeedbackReporting]; //for more immediate feedback to show up on Appblade (prompts a check for pending feedback)
-    [[AppBlade sharedManager] checkForExistingCrashReports]; //for more immediate crash reporting
+    [[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)
+    [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
 
 }
 
