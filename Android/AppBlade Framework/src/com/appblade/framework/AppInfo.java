@@ -7,12 +7,16 @@ import android.os.Build;
 class AppInfo {
 	
 	static final String DefaultUDID = "0000000000000000000000000000000000000000";
-	
+	public static String DefaultAppBladeHost = "AppBlade.com";
+	public static String DefaultServiceScheme = "https://";
+
 	String Token;
 	String Secret;
 	String AppId;
 	String Issuance;
 	String Ext = DefaultUDID;
+	String CurrentEndpoint = DefaultAppBladeHost;
+	String CurrentServiceScheme = DefaultServiceScheme;
 	
 	PackageInfo PackageInfo;
 	private String systemInfo;

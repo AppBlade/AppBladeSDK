@@ -17,14 +17,17 @@ class WebServiceHelper {
 	}
 	
 	static final int NonceRandomStringLength = 74;
+	@Deprecated
 	static final String ServiceScheme = "https://";
-	static final String ServiceHost = "appblade.com";
+	@Deprecated
+	static final String ServiceHost = "appblade.com"; 
 	
 	protected static final String ServicePathCrashReportsFormat = "/api/2/projects/%s/devices/%s/crash_reports";
 	protected static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
 	protected static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
 	protected static final String ServicePathOauthTokens = "/oauth/tokens";
 
+	//do we need this AppInfo here since AppBlade already has what we declared within AppBlade.appInfo?
 	protected static String getHMACAuthHeader(AppInfo appInfo, String urlPath, String contents, HttpMethod method) {
 		
 		String requestBodyRaw = null;
@@ -43,7 +46,7 @@ class WebServiceHelper {
 		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
 		
 		String requestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
-				nonce, methodName, requestBodyRaw, ServiceHost, "443", requestBodyHash, appInfo.Ext);
+				nonce, methodName, requestBodyRaw, appInfo.CurrentEndpoint, "443", requestBodyHash, appInfo.Ext);
 		String mac = StringUtils.hmacSha256(appInfo.Secret, requestBody).trim();
 		
 		byte[] normalizedRequestBodySha256 = StringUtils.sha256(requestBody);
@@ -79,7 +82,7 @@ class WebServiceHelper {
 	}
 
 	static String getUrl(String path) {
-		return String.format("%s%s%s", ServiceScheme, ServiceHost, path);
+		return String.format("%s%s%s", AppBlade.appInfo.CurrentServiceScheme, AppBlade.appInfo.CurrentEndpoint, path);
 	}
 	
 	static void addCommonHeaders(HttpRequest request) {

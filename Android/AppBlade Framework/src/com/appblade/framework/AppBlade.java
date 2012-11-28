@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URI;
+import java.net.URL;
 import java.util.Random;
 
 import org.apache.http.HttpResponse;
@@ -33,9 +34,7 @@ import com.appblade.framework.WebServiceHelper.HttpMethod;
 public class AppBlade {
 
 	public static String LogTag = "AppBlade";
-
-	public static String DefaultAppBladeHost = "https://AppBlade.com";
-
+	
 	protected static AppInfo appInfo;
 
 	static boolean canWriteToDisk = false;
@@ -167,19 +166,18 @@ public class AppBlade {
 
 	public static void register(Context context, String token, String secret, String uuid, String issuance)
 	{
-		register(context, token, secret, uuid, issuance, DefaultAppBladeHost);		
+		register(context, token, secret, uuid, issuance, null);		
 	}
 	
 	public static void register(Context context, String token, String secret, String uuid, String issuance, String customHost)
 	{
-		// Check params
+		// Check parameters
 		if(context == null)
 		{
 			throw new IllegalArgumentException("Invalid context registered with AppBlade");
 		}
 
-		if(
-				StringUtils.isNullOrEmpty(token) ||
+		if(		StringUtils.isNullOrEmpty(token) ||
 				StringUtils.isNullOrEmpty(secret) ||
 				StringUtils.isNullOrEmpty(uuid) ||
 				StringUtils.isNullOrEmpty(issuance))
@@ -194,6 +192,32 @@ public class AppBlade {
 		appInfo.Secret = secret;
 		appInfo.Issuance = issuance;
 
+		if(customHost != null)
+		{
+			//check url validity of custom host
+			try{
+				URL hostCheck = new URL(customHost);
+				hostCheck.toURI();
+				appInfo.CurrentEndpoint  = hostCheck.getHost();
+				if(hostCheck.getPort() != -1){
+					appInfo.CurrentEndpoint = String.format("%s:%d", hostCheck.getHost(), hostCheck.getPort());
+				}
+				
+				appInfo.CurrentServiceScheme = String.format("%s://", hostCheck.getProtocol());
+				if(appInfo.CurrentServiceScheme == null){
+					appInfo.CurrentServiceScheme = AppInfo.DefaultServiceScheme;
+				}
+				
+			}catch(Exception e){   
+				//the URL was not valid, fallback to default
+				Log.d(LogTag, String.format("%s was not a valid URL, falling back to %s", customHost, AppInfo.DefaultAppBladeHost));
+				appInfo.CurrentEndpoint  = AppInfo.DefaultAppBladeHost;
+				appInfo.CurrentServiceScheme = AppInfo.DefaultServiceScheme;
+			}
+		}
+		Log.d(LogTag, String.format("Using a endpoint URL, %s %s", appInfo.CurrentServiceScheme, appInfo.CurrentEndpoint));
+
+		
 		// Set the device ID for exception reporting requests
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
 		setDeviceId(accessToken);
