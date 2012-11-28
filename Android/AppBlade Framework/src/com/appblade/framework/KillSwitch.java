@@ -143,8 +143,13 @@ public class KillSwitch {
 		@Override
 		protected void onPostExecute(Void unused) {
 			inProgress = false;
-			if(progress != null && progress.isShowing())
-				progress.dismiss();
+			if(progress != null && progress.isShowing()){
+			    try {
+			    	progress.dismiss();
+			    } catch (IllegalArgumentException e) {
+			        // nothing, in case activity is dismissed before dialog is dismissed
+			    }
+			}
 		}
 
 		private void handleResponse(HttpResponse response) {
