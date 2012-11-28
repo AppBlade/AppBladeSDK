@@ -111,8 +111,16 @@ Some prefer to include the AppBlade source code directly to their project, eithe
 1. To enable feedback reporting (triggered by a three finger double tap) add the following code to `-application:didFinishLaunchingWithOptions:`
 
             [[AppBlade sharedManager] allowFeedbackReporting];
+
+   - To enable feedback reporting WITHOUT the three-finger double-tap prompt, use             
+
+            [[AppBlade sharedManager] setupCustomFeedbackReporting];
+
+    and then prompt the feedback window somewhere in your app with `[[AppBlade sharedManager]  showFeedbackDialogue]`. See the `presentFeedback` button callback in our Maps example project for a full example.
             
-   **Note:** Feedback requires there be a `keyWindow`. Make sure to set this in `-application:didFinishLaunchingWithOptions:` as well. If you do not have a `keyWindow`, you can call `allowFeedbackReportingForWindow:` instead.
+   **Note:** Feedback requires there be a `keyWindow`, so call any feedback-related code after `[self.window makeKeyAndVisible]` so it can grab the one your AppDelegate generates. If you want to handle making a keywindow yourself, you can call `allowFeedbackReportingForWindow:(UIWindow*)window` or `setupCustomFeedbackReportingForWindow:(UIWindow*)window`  instead.
+
+
 
 ######A Note on Xcode 4.5 and Above###
 Starting on iOS 6 and Xcode 4.5, Apple has officially dropped support for armv6 processors (And, subsequently, the ability to exclusively publish to iPhone 3G and below).
