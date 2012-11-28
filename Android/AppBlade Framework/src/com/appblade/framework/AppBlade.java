@@ -34,6 +34,8 @@ public class AppBlade {
 
 	public static String LogTag = "AppBlade";
 
+	public static String DefaultAppBladeHost = "https://AppBlade.com";
+
 	protected static AppInfo appInfo;
 
 	static boolean canWriteToDisk = false;
@@ -164,6 +166,11 @@ public class AppBlade {
 	}
 
 	public static void register(Context context, String token, String secret, String uuid, String issuance)
+	{
+		register(context, token, secret, uuid, issuance, DefaultAppBladeHost);		
+	}
+	
+	public static void register(Context context, String token, String secret, String uuid, String issuance, String customHost)
 	{
 		// Check params
 		if(context == null)
