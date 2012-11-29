@@ -1,28 +1,28 @@
-package com.appblade.framework.feedback;
+package com.appblade.framework.crashreporting;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Void>{
+public class PostCrashReportTask extends AsyncTask<CrashReportData, Void, Void>{
 
 	Context context;
 	ProgressDialog progress;
 	
 	Boolean success;
 	
-	private static final String SUCCESS_MESSAGE = "Feedback Uploaded Successfully!";
-	private static final String FAIL_MESSAGE = "Feedback Upload Failed";
+	private static final String SUCCESS_MESSAGE = "Crash Uploaded Successfully!";
+	private static final String FAIL_MESSAGE = "Crash Upload Failed";
 	
-	public PostFeedbackTask(Context context) {
+	public PostCrashReportTask(Context context) {
 		this.context = context;
 	}
 	
 	@Override
-	protected Void doInBackground(FeedbackData... params) {
-		FeedbackData data = params[0];
-		success = FeedbackHelper.postFeedback(data);
+	protected Void doInBackground(CrashReportData... params) {
+		CrashReportData data = params[0];
+		success = CrashReportHelper.postCrashes(data);
 		
 		return null;
 	}
@@ -33,10 +33,12 @@ public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Void>{
 		if (success) {
 			toastMessage = SUCCESS_MESSAGE;
 		}
-
+		
 		if(context != null){
 			Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
 		}
 	}
-
+	
 }
+
+

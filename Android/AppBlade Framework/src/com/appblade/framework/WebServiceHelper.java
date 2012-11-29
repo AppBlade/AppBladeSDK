@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.apache.http.HttpRequest;
 
+import com.appblade.framework.utils.Base64;
 import com.appblade.framework.utils.StringUtils;
 
 import android.content.pm.PackageInfo;
@@ -25,13 +26,13 @@ public class WebServiceHelper {
 	@Deprecated
 	static final String ServiceHost = "appblade.com"; 
 	
-	protected static final String ServicePathCrashReportsFormat = "/api/2/projects/%s/devices/%s/crash_reports";
-	protected static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
-	protected static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
+	public static final String ServicePathCrashReportsFormat = "/api/2/projects/%s/devices/%s/crash_reports";
+	public static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
+	public static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
 	public static final String ServicePathOauthTokens = "/oauth/tokens";
 
 	//do we need this AppInfo here since AppBlade already has what we declared within AppBlade.appInfo?
-	protected static String getHMACAuthHeader(AppInfo appInfo, String urlPath, String contents, HttpMethod method) {
+	public static String getHMACAuthHeader(AppInfo appInfo, String urlPath, String contents, HttpMethod method) {
 		
 		String requestBodyRaw = null;
 		if(!StringUtils.isNullOrEmpty(contents))

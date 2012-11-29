@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
@@ -12,7 +16,11 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 
 import com.appblade.framework.AppBlade;
-import com.appblade.framework.Base64;
+import com.appblade.framework.WebServiceHelper;
+import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.utils.Base64;
+import com.appblade.framework.utils.HttpClientProvider;
+import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
 
 import android.app.AlertDialog;
@@ -26,6 +34,60 @@ import android.widget.EditText;
 
 public class FeedbackHelper {
 
+	public static boolean postFeedback(FeedbackData data) {
+		boolean success = false;
+		HttpClient client = HttpClientProvider.newInstance("Android");
+
+		try
+		{
+			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+			String url = WebServiceHelper.getUrl(urlPath);
+
+			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, AppBlade.BOUNDARY);
+
+			HttpPost request = new HttpPost();
+			request.setEntity(content);
+			
+			
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			content.writeTo(outputStream);
+			String multipartRawContent = outputStream.toString();
+			
+			String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, multipartRawContent, HttpMethod.POST);
+
+			Log.d(AppBlade.LogTag, urlPath);
+			Log.d(AppBlade.LogTag, url);
+			Log.d(AppBlade.LogTag, authHeader);
+
+			request.setURI(new URI(url));
+			request.addHeader("Content-Type", "multipart/form-data; boundary=" + AppBlade.BOUNDARY);
+			request.addHeader("Authorization", authHeader);
+			WebServiceHelper.addCommonHeaders(request);
+			
+			
+			HttpResponse response = null;
+			response = client.execute(request);
+			if(response != null && response.getStatusLine() != null)
+			{
+				int statusCode = response.getStatusLine().getStatusCode();
+				int statusCategory = statusCode / 100;
+
+				if(statusCategory == 2)
+					success = true;
+			}
+		}
+		catch(Exception ex)
+		{
+			Log.d(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+		}
+
+		IOUtils.safeClose(client);
+		
+		return success;
+	}
+
+	
+	
 	public static String getLogData(){
 		try {
 			Process process = Runtime.getRuntime().exec("logcat -d");

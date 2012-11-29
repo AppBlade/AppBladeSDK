@@ -14,16 +14,16 @@ public class AppInfo {
 
 	public String Token;
 	public String Secret;
-	String AppId;
-	String Issuance;
-	String Ext = DefaultUDID;
-	String CurrentEndpoint = DefaultAppBladeHost;
-	String CurrentServiceScheme = DefaultServiceScheme;
+	public String AppId;
+	public String Issuance;
+	public String Ext = DefaultUDID;
+	public String CurrentEndpoint = DefaultAppBladeHost;
+	public String CurrentServiceScheme = DefaultServiceScheme;
 	
 	PackageInfo PackageInfo;
 	private String systemInfo;
 	
-	synchronized String getSystemInfo()
+	public synchronized String getSystemInfo()
 	{
 		if(StringUtils.isNullOrEmpty(systemInfo))
 			initSystemInfo();

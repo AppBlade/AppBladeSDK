@@ -18,8 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.appblade.framework.AppBlade;
-import com.appblade.framework.HttpClientProvider;
 import com.appblade.framework.WebServiceHelper;
+import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;

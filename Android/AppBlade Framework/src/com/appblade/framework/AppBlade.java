@@ -1,21 +1,8 @@
 package com.appblade.framework;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.net.URI;
 import java.net.URL;
-import java.util.Random;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,19 +11,17 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 
-import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.authenticate.AuthHelper;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
+import com.appblade.framework.crashreporting.CrashReportData;
+import com.appblade.framework.crashreporting.PostCrashReportTask;
 import com.appblade.framework.feedback.FeedbackData;
 import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
-import com.appblade.framework.utils.ExceptionUtils;
-import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
 
 
@@ -47,11 +32,11 @@ public class AppBlade {
 	public static AppInfo appInfo;
 
 	static boolean canWriteToDisk = false;
-	static String rootDir = null;
+	public static String rootDir = null;
 
 	static final String AppBladeExceptionsDirectory = "app_blade_exceptions";
 
-	private static final String BOUNDARY = "---------------------------14737809831466499882746641449";
+	public static final String BOUNDARY = "---------------------------14737809831466499882746641449";
 
 	/**
 	 * Gets feedback from the user via a dialog and posts the feedback along with log data to AppBlade.
@@ -121,57 +106,6 @@ public class AppBlade {
 		});
 	}
 
-	public static boolean postFeedback(FeedbackData data) {
-		boolean success = false;
-		HttpClient client = HttpClientProvider.newInstance("Android");
-
-		try
-		{
-			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, appInfo.AppId, appInfo.Ext);
-			String url = WebServiceHelper.getUrl(urlPath);
-
-			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, BOUNDARY);
-
-			HttpPost request = new HttpPost();
-			request.setEntity(content);
-			
-			
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			content.writeTo(outputStream);
-			String multipartRawContent = outputStream.toString();
-			
-			String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, multipartRawContent, HttpMethod.POST);
-
-			Log.d(LogTag, urlPath);
-			Log.d(LogTag, url);
-			Log.d(LogTag, authHeader);
-
-			request.setURI(new URI(url));
-			request.addHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
-			request.addHeader("Authorization", authHeader);
-			WebServiceHelper.addCommonHeaders(request);
-			
-			
-			HttpResponse response = null;
-			response = client.execute(request);
-			if(response != null && response.getStatusLine() != null)
-			{
-				int statusCode = response.getStatusLine().getStatusCode();
-				int statusCategory = statusCode / 100;
-
-				if(statusCategory == 2)
-					success = true;
-			}
-		}
-		catch(Exception ex)
-		{
-			Log.d(LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
-		}
-
-		IOUtils.safeClose(client);
-		
-		return success;
-	}
 
 	public static void register(Context context, String token, String secret, String uuid, String issuance)
 	{
@@ -265,114 +199,16 @@ public class AppBlade {
 		}
 	}
 
+	/**
+	 * Notify the AppBlade Server of a crash, given the thrown error/exception
+	 * @param e
+	 */
 	public static void notify(final Throwable e)
 	{
 		if(e != null && canWriteToDisk)
 		{
-			new AsyncTask<Void, Void, Void>() {
-
-				@Override
-				protected Void doInBackground(Void... params) {
-					writeExceptionToDisk(e);
-					postExceptionsToServer();
-
-					return null;
-				}
-
-			}.execute();
-		}
-	}
-
-	private static void writeExceptionToDisk(Throwable e) {
-		try
-		{
-			String systemInfo = appInfo.getSystemInfo();
-			String stackTrace = ExceptionUtils.getStackTrace(e);
-
-			if(!StringUtils.isNullOrEmpty(stackTrace))
-			{
-				int r = new Random().nextInt(9999);
-				String filename = String.format("%s/ex-%d-%d.txt",
-						rootDir, System.currentTimeMillis(), r);
-
-				File file = new File(filename);
-				if(file.createNewFile())
-				{
-					BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-					writer.write(systemInfo);
-					writer.write(stackTrace);
-					writer.close();
-				}
-			}
-		}
-		catch(Exception ex)
-		{
-			Log.d(LogTag, String.format("Ex: %s, %s", ex.getClass().getCanonicalName(), ex.getMessage()));
-		}
-	}
-
-	private static void postExceptionsToServer() {
-
-		File exceptionDir = new File(rootDir);
-		if(exceptionDir.exists() && exceptionDir.isDirectory()) {
-			File[] exceptions = exceptionDir.listFiles();
-			for(File f : exceptions) {
-				if(f.exists() && f.isFile()) {
-					sendExceptionData(f);
-				}
-			}
-		}
-	}
-
-	private static synchronized void sendExceptionData(File f) {
-		boolean success = false;
-		HttpClient client = HttpClientProvider.newInstance("Android");
-
-		try
-		{
-			FileInputStream fis = new FileInputStream(f);
-			String content = StringUtils.readStream(fis);
-			if(!StringUtils.isNullOrEmpty(content))
-			{
-				String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat, appInfo.AppId, appInfo.Ext);
-				String url = WebServiceHelper.getUrl(urlPath);
-				String authHeader = WebServiceHelper.getHMACAuthHeader(appInfo, urlPath, content, HttpMethod.POST);
-
-				Log.d(LogTag, urlPath);
-				Log.d(LogTag, url);
-				Log.d(LogTag, authHeader);
-
-				HttpPost request = new HttpPost();
-				request.setURI(new URI(url));
-				request.addHeader("Authorization", authHeader);
-				WebServiceHelper.addCommonHeaders(request);
-
-				if(!StringUtils.isNullOrEmpty(content))
-					request.setEntity(new StringEntity(content));
-
-				HttpResponse response = null;
-				response = client.execute(request);
-				if(response != null && response.getStatusLine() != null)
-				{
-					int statusCode = response.getStatusLine().getStatusCode();
-					int statusCategory = statusCode / 100;
-
-					if(statusCategory == 2)
-						success = true;
-				}
-			}
-		}
-		catch(Exception ex)
-		{
-			Log.d(LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
-		}
-
-		IOUtils.safeClose(client);
-
-		// delete the file
-		if(success && f.exists())
-		{
-			f.delete();
+			CrashReportData data = new CrashReportData(e);
+			new PostCrashReportTask(null).execute(data);
 		}
 	}
 

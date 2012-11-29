@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -38,10 +39,11 @@ public class RemoteAuthorizeActivity extends Activity {
         jsInterface = new JavascriptInterface();
 
         webview.getSettings().setJavaScriptEnabled(true);
-        webview.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
+        webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webview.addJavascriptInterface(jsInterface, "Android");
         webview.setWebChromeClient(new WebChromeClient() {
-        	public void onProgressChanged(WebView view, int progress) {
+        	@Override
+			public void onProgressChanged(WebView view, int progress) {
         		// Activities and WebViews measure progress with different scales.
         		// The progress meter will automatically disappear when we reach 100%
         		setProgress(progress * 100);

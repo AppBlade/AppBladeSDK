@@ -11,7 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.appblade.framework.Base64;
 
 public class StringUtils {
 	

@@ -1,4 +1,4 @@
-package com.appblade.framework;
+package com.appblade.framework.utils;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.conn.ClientConnectionManager;
