@@ -1,4 +1,4 @@
-package com.appblade.framework;
+package com.appblade.framework.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -10,6 +10,8 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import com.appblade.framework.Base64;
 
 public class StringUtils {
 	
@@ -44,12 +46,12 @@ public class StringUtils {
 		return input == null || input.trim().length() == 0;
 	}
 	
-	protected static void append(StringBuilder builder, String format, Object... params)
+	public static void append(StringBuilder builder, String format, Object... params)
 	{
 		builder.append(String.format(format, params));
 	}
 	
-	protected static String hmacSha256(String key, String message)
+	public static String hmacSha256(String key, String message)
 	{
 		String result = "";
 		try

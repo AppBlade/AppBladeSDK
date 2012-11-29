@@ -1,4 +1,7 @@
-package com.appblade.framework;
+package com.appblade.framework.authenticate;
+
+import com.appblade.framework.KillSwitch;
+import com.appblade.framework.utils.StringUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;

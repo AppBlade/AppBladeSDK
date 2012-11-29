@@ -24,7 +24,7 @@
         </activity>
         
         <activity
-            android:name="com.appblade.framework.RemoteAuthorizeActivity"
+            android:name="com.appblade.framework.authenticate.RemoteAuthorizeActivity"
             android:screenOrientation="portrait" />
         
     </application>

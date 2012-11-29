@@ -4,16 +4,19 @@ import java.util.Random;
 
 import org.apache.http.HttpRequest;
 
+import com.appblade.framework.utils.StringUtils;
+
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.util.Log;
 
 
-class WebServiceHelper {
+public class WebServiceHelper {
 	
 	public enum HttpMethod {
 		POST,
-		GET
+		GET, 
+		PUT
 	}
 	
 	static final int NonceRandomStringLength = 74;
@@ -25,7 +28,7 @@ class WebServiceHelper {
 	protected static final String ServicePathCrashReportsFormat = "/api/2/projects/%s/devices/%s/crash_reports";
 	protected static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
 	protected static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
-	protected static final String ServicePathOauthTokens = "/oauth/tokens";
+	public static final String ServicePathOauthTokens = "/oauth/tokens";
 
 	//do we need this AppInfo here since AppBlade already has what we declared within AppBlade.appInfo?
 	protected static String getHMACAuthHeader(AppInfo appInfo, String urlPath, String contents, HttpMethod method) {
@@ -81,11 +84,11 @@ class WebServiceHelper {
 		return builder.toString();
 	}
 
-	static String getUrl(String path) {
+	public static String getUrl(String path) {
 		return String.format("%s%s%s", AppBlade.appInfo.CurrentServiceScheme, AppBlade.appInfo.CurrentEndpoint, path);
 	}
 	
-	static void addCommonHeaders(HttpRequest request) {
+	public static void addCommonHeaders(HttpRequest request) {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
 			request.addHeader("bundle_version", pi.versionName);

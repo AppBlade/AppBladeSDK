@@ -1,4 +1,6 @@
-package com.appblade.framework;
+package com.appblade.framework.feedback;
+
+import com.appblade.framework.AppBlade;
 
 import android.app.ProgressDialog;
 import android.content.Context;

@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.KillSwitch;
-import com.appblade.framework.RemoteAuthHelper;
+import com.appblade.framework.authenticate.RemoteAuthHelper;
 
 public class MainActivity extends Activity {
 

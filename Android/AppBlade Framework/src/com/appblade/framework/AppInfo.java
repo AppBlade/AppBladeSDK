@@ -1,17 +1,19 @@
 package com.appblade.framework;
 
 
+import com.appblade.framework.utils.StringUtils;
+
 import android.content.pm.PackageInfo;
 import android.os.Build;
 
-class AppInfo {
+public class AppInfo {
 	
 	static final String DefaultUDID = "0000000000000000000000000000000000000000";
 	public static String DefaultAppBladeHost = "AppBlade.com";
 	public static String DefaultServiceScheme = "https://";
 
-	String Token;
-	String Secret;
+	public String Token;
+	public String Secret;
 	String AppId;
 	String Issuance;
 	String Ext = DefaultUDID;

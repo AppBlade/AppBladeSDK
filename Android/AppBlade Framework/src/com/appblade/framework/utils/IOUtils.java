@@ -1,4 +1,4 @@
-package com.appblade.framework;
+package com.appblade.framework.utils;
 
 import java.io.Closeable;
 import java.io.IOException;

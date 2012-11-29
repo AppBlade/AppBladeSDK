@@ -1,9 +1,13 @@
-package com.appblade.framework;
+package com.appblade.framework.authenticate;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+
+import com.appblade.framework.AppBlade;
+import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.StringUtils;
 
 import android.content.Context;
 import android.util.Log;

@@ -1,9 +1,9 @@
-package com.appblade.framework;
+package com.appblade.framework.utils;
 
 
-class ExceptionUtils {
+public class ExceptionUtils {
 	
-	static String getStackTrace(Throwable e)
+	public static String getStackTrace(Throwable e)
 	{
 		StringBuilder builder = new StringBuilder();
 		

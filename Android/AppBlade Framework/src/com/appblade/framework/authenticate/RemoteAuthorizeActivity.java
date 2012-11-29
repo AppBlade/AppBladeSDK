@@ -1,4 +1,4 @@
-package com.appblade.framework;
+package com.appblade.framework.authenticate;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,7 +9,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.appblade.framework.AuthTokensDownloadTask.OnPostExecuteListener;
+import com.appblade.framework.AppBlade;
+import com.appblade.framework.WebServiceHelper;
+import com.appblade.framework.authenticate.AuthTokensDownloadTask.OnPostExecuteListener;
 
 public class RemoteAuthorizeActivity extends Activity {
 	

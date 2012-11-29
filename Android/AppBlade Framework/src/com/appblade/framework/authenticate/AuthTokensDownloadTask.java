@@ -1,4 +1,4 @@
-package com.appblade.framework;
+package com.appblade.framework.authenticate;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,6 +16,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.appblade.framework.AppBlade;
+import com.appblade.framework.HttpClientProvider;
+import com.appblade.framework.WebServiceHelper;
+import com.appblade.framework.utils.HttpUtils;
+import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.StringUtils;
 
 import android.app.ProgressDialog;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.appblade.framework;
+package com.appblade.framework.feedback;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -10,6 +10,10 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
+
+import com.appblade.framework.AppBlade;
+import com.appblade.framework.Base64;
+import com.appblade.framework.utils.StringUtils;
 
 import android.app.AlertDialog;
 import android.content.Context;

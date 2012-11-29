@@ -29,13 +29,22 @@ import android.util.Log;
 import android.view.View;
 
 import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.authenticate.AuthHelper;
+import com.appblade.framework.authenticate.RemoteAuthHelper;
+import com.appblade.framework.feedback.FeedbackData;
+import com.appblade.framework.feedback.FeedbackHelper;
+import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
+import com.appblade.framework.feedback.PostFeedbackTask;
+import com.appblade.framework.utils.ExceptionUtils;
+import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.StringUtils;
 
 
 public class AppBlade {
 
 	public static String LogTag = "AppBlade";
 	
-	protected static AppInfo appInfo;
+	public static AppInfo appInfo;
 
 	static boolean canWriteToDisk = false;
 	static String rootDir = null;
@@ -112,7 +121,7 @@ public class AppBlade {
 		});
 	}
 
-	protected static boolean postFeedback(FeedbackData data) {
+	public static boolean postFeedback(FeedbackData data) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance("Android");
 
