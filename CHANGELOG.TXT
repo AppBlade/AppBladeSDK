@@ -1,0 +1,4 @@
+
+2012-10-29 	Andrew Tremblay  <andrew.tremblay@raizlabs.com>
+	Began a Changelog. Any large changes that require explanation can be placed here.   
+	* CHANGELOG.txt: File Added
