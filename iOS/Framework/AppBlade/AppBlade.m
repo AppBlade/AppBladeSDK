@@ -18,14 +18,15 @@
 
 static NSString* const s_sdkVersion                     = @"0.3.0";
 
+NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
+const int kAppBladeOfflineError                         = 1200;
+const int kAppBladeParsingError                         = 1208;
+const int kAppBladePermissionError                      = 1216;
+NSString* const kAppBladeCacheDirectory                 = @"AppBladeCache";
+
 const int kUpdateAlertTag                               = 316;
 
-static NSString* const kAppBladeErrorDomain             = @"com.appblade.sdk";
-static const int kAppBladeOfflineError                  = 1200;
-static const int kAppBladeParsingError                  = 1208;
-static const int kAppBladePermissionError               = 1216;
 static NSString *s_letters                              = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-static NSString* const kAppBladeCacheDirectory          = @"AppBladeCache";
 static NSString* const kAppBladeBacklogFileName         = @"AppBladeBacklog.plist";
 static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
 static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
@@ -677,7 +678,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"Allowing custom feedback for window %@", window);
         self.window = window;
     }
-    else {
+    else
+    {
         NSLog(@"Cannot setup for custom feedback. Not a valid window.");
         return;
     }
@@ -690,15 +692,23 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)showFeedbackDialogue
 {
-    if(self.feedbackDictionary == nil){
-        self.feedbackDictionary = [NSMutableDictionary  dictionary];
-    }
+    if(!self.showingFeedbackDialogue){
+        self.showingFeedbackDialogue = YES;
+        if(self.feedbackDictionary == nil){
+            self.feedbackDictionary = [NSMutableDictionary  dictionary];
+        }
 
-    //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
-    NSString* screenshotPath = [self captureScreen];
-    [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
-    //other setup methods (like the reintroduction of the console log) will go here
-    [self promptFeedbackDialogue];
+        //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
+        NSString* screenshotPath = [self captureScreen];
+        [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
+        //other setup methods (like the reintroduction of the console log) will go here
+        [self promptFeedbackDialogue];
+    }
+    else
+    {
+        NSLog(@"Feedback window already presenting, or a screenshot is trying to be captured");
+        return;
+    }
 }
 
 - (void)promptFeedbackDialogue
@@ -719,6 +729,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     // get the first window in the application if one was not supplied.
     if (!self.window){
         self.window = [[UIApplication sharedApplication] keyWindow];
+        self.showingFeedbackDialogue = YES;
         NSLog(@"Feedback window not defined, using default (Images might not come through.)");
     }
     if([[self.window subviews] count] > 0){
@@ -730,6 +741,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     {
         NSLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
         feedback.delegate = nil;
+        self.showingFeedbackDialogue = NO;
     }
     
 }
@@ -738,6 +750,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     NSLog(@"reporting text %@", feedbackText);
     [self reportFeedback:feedbackText];
+    self.showingFeedbackDialogue = NO;
+
 }
 
 - (void)feedbackDidCancel
@@ -745,6 +759,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot]];
     [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
     self.feedbackDictionary = nil;
+    self.showingFeedbackDialogue = NO;
+    
 }
 
 
@@ -832,6 +848,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
     [self checkAndCreateAppBladeCacheDirectory];
     UIImage *currentImage = [self getContentBelowView];
+    if(currentImage == nil){
+        NSLog(@"ERROR, could not capture screenshot, possible invalid keywindow");
+    }
     NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"png"];
 	NSString *pngFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
 	NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(currentImage)];
