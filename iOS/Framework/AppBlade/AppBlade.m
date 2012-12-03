@@ -18,6 +18,12 @@
 
 static NSString* const s_sdkVersion                     = @"0.3.0";
 
+NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
+const int kAppBladeOfflineError                         = 1200;
+const int kAppBladeParsingError                         = 1208;
+const int kAppBladePermissionError                      = 1216;
+NSString* const kAppBladeCacheDirectory                 = @"AppBladeCache";
+
 const int kUpdateAlertTag                               = 316;
 
 static NSString *s_letters                              = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
