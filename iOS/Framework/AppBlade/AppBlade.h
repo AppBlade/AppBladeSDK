@@ -13,6 +13,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+static NSString* const kAppBladeErrorDomain             = @"com.appblade.sdk";
+static const int kAppBladeOfflineError                  = 1200;
+static const int kAppBladeParsingError                  = 1208;
+static const int kAppBladePermissionError               = 1216;
+static NSString* const kAppBladeCacheDirectory          = @"AppBladeCache";
+
+
 @class AppBlade;
 
 @protocol AppBladeDelegate <NSObject>

@@ -20,12 +20,7 @@ static NSString* const s_sdkVersion                     = @"0.3.0";
 
 const int kUpdateAlertTag                               = 316;
 
-static NSString* const kAppBladeErrorDomain             = @"com.appblade.sdk";
-static const int kAppBladeOfflineError                  = 1200;
-static const int kAppBladeParsingError                  = 1208;
-static const int kAppBladePermissionError               = 1216;
 static NSString *s_letters                              = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-static NSString* const kAppBladeCacheDirectory          = @"AppBladeCache";
 static NSString* const kAppBladeBacklogFileName         = @"AppBladeBacklog.plist";
 static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
 static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
