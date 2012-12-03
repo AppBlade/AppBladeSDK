@@ -677,7 +677,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"Allowing custom feedback for window %@", window);
         self.window = window;
     }
-    else {
+    else
+    {
         NSLog(@"Cannot setup for custom feedback. Not a valid window.");
         return;
     }
@@ -701,7 +702,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
         //other setup methods (like the reintroduction of the console log) will go here
         [self promptFeedbackDialogue];
-    }else{
+    }
+    else
+    {
         NSLog(@"Feedback window already presenting, or a screenshot is trying to be captured");
         return;
     }
