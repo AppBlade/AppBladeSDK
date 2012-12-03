@@ -7,7 +7,7 @@ import android.widget.Toast;
 public class PostSessionTask extends AsyncTask<SessionData, Void, Void>{
 
 	Context context;
-	
+	SessionData data;
 	Boolean success;
 	
 	private static final String SUCCESS_MESSAGE = "SessionData Uploaded Successfully!";
@@ -19,7 +19,7 @@ public class PostSessionTask extends AsyncTask<SessionData, Void, Void>{
 	
 	@Override
 	protected Void doInBackground(SessionData... params) {
-		SessionData data = params[0];
+		data = params[0];
 		success = SessionHelper.postSession(data);
 		
 		return null;
@@ -30,6 +30,7 @@ public class PostSessionTask extends AsyncTask<SessionData, Void, Void>{
 		String toastMessage = FAIL_MESSAGE;
 		if (success) {
 			toastMessage = SUCCESS_MESSAGE;
+			SessionHelper.removeSession(data);
 		}
 		
 		if(context != null){

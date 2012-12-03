@@ -34,8 +34,8 @@ public class PostCrashReportTask extends AsyncTask<CrashReportData, Void, Void>{
 			toastMessage = SUCCESS_MESSAGE;
 		}
 		
-		if(context != null){
-			Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
+		if(this.context != null){
+			Toast.makeText(this.context, toastMessage, Toast.LENGTH_SHORT).show();
 		}
 	}
 	

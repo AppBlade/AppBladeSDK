@@ -22,6 +22,8 @@ import com.appblade.framework.feedback.FeedbackData;
 import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
+import com.appblade.framework.stats.SessionData;
+import com.appblade.framework.stats.SessionHelper;
 import com.appblade.framework.utils.StringUtils;
 
 
@@ -33,6 +35,8 @@ public class AppBlade {
 
 	static boolean canWriteToDisk = false;
 	public static String rootDir = null;
+
+	public static SessionData currentSession;
 
 	static final String AppBladeExceptionsDirectory = "app_blade_exceptions";
 
@@ -92,9 +96,7 @@ public class AppBlade {
 	 * @param screenshot The screenshot Bitmap to post to AppBlade.
 	 * @param screenshotName The filename to use for the screenshot.
 	 */
-	public static void doFeedbackWithScreenshot(final Context context, 
-			Bitmap screenshot, String screenshotName) {
-		
+	public static void doFeedbackWithScreenshot(final Context context, Bitmap screenshot, String screenshotName) {
 		FeedbackData data = new FeedbackData();
 		data.Screenshot = screenshot;
 		data.ScreenshotName = screenshotName;
@@ -107,6 +109,42 @@ public class AppBlade {
 	}
 
 
+	/**
+	 * Static point for beginning a session
+	 */
+	public static void startSession()
+	{
+		SessionHelper.startSession();
+	}
+	 
+
+	/**
+	 * Static point for ending a session
+	 */
+	public static void endSession()
+	{
+		SessionHelper.endSession();
+	}
+	
+	
+	
+	/**
+	 * Static entry point for setting custom Params
+	 */
+	public static void setCustomParameter(String key, Object value)
+	{
+		
+	}
+	 
+	/**
+	 * Static entry point for clearing all custom Params
+	 */
+	public static void clearCustomParameters()
+	{
+		
+	}
+
+	
 	public static void register(Context context, String token, String secret, String uuid, String issuance)
 	{
 		register(context, token, secret, uuid, issuance, null);		

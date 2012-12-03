@@ -21,16 +21,13 @@ public class WebServiceHelper {
 	}
 	
 	static final int NonceRandomStringLength = 74;
-	@Deprecated
-	static final String ServiceScheme = "https://";
-	@Deprecated
-	static final String ServiceHost = "appblade.com"; 
 	
 	public static final String ServicePathCrashReportsFormat = "/api/2/projects/%s/devices/%s/crash_reports";
 	public static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
+	public static final String ServicePathSessionFormat =  "/api/user_sessions";
 	public static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
 	public static final String ServicePathOauthTokens = "/oauth/tokens";
-
+	
 	//do we need this AppInfo here since AppBlade already has what we declared within AppBlade.appInfo?
 	public static String getHMACAuthHeader(AppInfo appInfo, String urlPath, String contents, HttpMethod method) {
 		

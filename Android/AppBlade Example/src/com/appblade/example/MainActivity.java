@@ -23,19 +23,28 @@ public class MainActivity extends Activity {
         
         initControls();
     }
+    public void onStart(){
+    	super.onStart();
+    }
     
     public void onResume() {
     	super.onResume();
+    	AppBlade.startSession();
     	AppBlade.authorize(this);
     }
+    
+    public void onPause() {
+    	super.onPause();
+    	AppBlade.endSession(); 
+    }
+
 
 	private void initControls() {
 		View btnDivideByZero = findViewById(R.id.btnDivideByZero);
 		View btnClearAuthData = findViewById(R.id.btnClearAuthData);
 		View btnFeedback = findViewById(R.id.btnFeedback);
 		
-		btnDivideByZero.setOnClickListener(new OnClickListener() {
-			
+		btnDivideByZero.setOnClickListener(new OnClickListener() {			
 			@SuppressWarnings("unused")
 			public void onClick(View v) {
 				try
@@ -54,15 +63,12 @@ public class MainActivity extends Activity {
 		});
 		
 		btnClearAuthData.setOnClickListener(new OnClickListener() {
-			
 			public void onClick(View v) {
 				RemoteAuthHelper.clear(MainActivity.this);
 				KillSwitch.clear(MainActivity.this);
-				
 				AlertDialog.Builder builder = new Builder(MainActivity.this);
 				builder.setMessage("Auth data cleared");
 				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					
 					public void onClick(DialogInterface dialog, int which) {
 				    	AppBlade.authorize(MainActivity.this, false);
 					}
@@ -96,4 +102,5 @@ public class MainActivity extends Activity {
 	private void doFeedbackWithScreenshot() {
 		AppBlade.doFeedbackWithScreenshot(this, this);
 	}
+	
 }
