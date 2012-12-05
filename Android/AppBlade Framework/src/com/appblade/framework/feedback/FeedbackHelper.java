@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -172,5 +174,20 @@ public class FeedbackHelper {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		bitmap.compress(CompressFormat.PNG, 100, out);
 		return out.toByteArray();
+	}
+
+
+	/*
+	 * Persistent storage functionality (that's not in FeedbackData)
+	 */
+	
+	
+
+	public static String formatNewScreenshotFileLocation() {
+		String toRet = "";
+		Date date = new Date();
+		Timestamp timestamp = new Timestamp(date.getTime());
+		toRet = "Feedback" + timestamp.getSeconds() + ".png";
+		return toRet ;
 	}
 }
