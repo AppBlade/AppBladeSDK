@@ -3,6 +3,8 @@ package com.appblade.framework;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URL;
+import java.util.Date;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -84,8 +86,7 @@ public class AppBlade {
 	 * @param screenshot The screenshot Bitmap to post to AppBlade.
 	 */
 	public static void doFeedbackWithScreenshot(Context context, Bitmap screenshot) {
-		//String screenshotName = "Feedback " + feedbackDateFormat.format(new Date()) + ".png";
-		String screenshotName = "feedback.png";
+		String screenshotName = "feedback.png"; //keep for appblade logic
 		doFeedbackWithScreenshot(context, screenshot, screenshotName);
 	}
 
@@ -98,7 +99,8 @@ public class AppBlade {
 	 */
 	public static void doFeedbackWithScreenshot(final Context context, Bitmap screenshot, String screenshotName) {
 		FeedbackData data = new FeedbackData();
-		data.Screenshot = screenshot;
+		//data.Screenshot = screenshot;
+		data.setPersistentScreenshot(screenshot);
 		data.ScreenshotName = screenshotName;
 
 		FeedbackHelper.getFeedbackData(context, data, new OnFeedbackDataAcquiredListener() {
