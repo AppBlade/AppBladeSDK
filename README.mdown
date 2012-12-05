@@ -170,7 +170,7 @@ You can download a compiled .jar from [our website](http://appblade.com/sdk/down
 			
 
 
-5. Be sure that your application has permission to access the internet to allow the AppBlade SDK to communicate with our servers by adding the following permission to the manifest:
+ Be sure that your application has permission to access the internet to allow the AppBlade SDK to communicate with our servers by adding the following permission to the manifest:
 
 		<uses-permission android:name="android.permission.INTERNET" />
 
