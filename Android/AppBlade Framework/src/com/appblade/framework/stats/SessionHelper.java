@@ -97,7 +97,7 @@ public class SessionHelper {
 			entity.addPart("session[device_id]", deviceIdBody);			
 			ContentBody projectIdBody  = new StringBody(AppBlade.appInfo.AppId);
 			entity.addPart("session[project_id]", projectIdBody);			
-			ContentBody sessionsBody = new StringBody(data.formattedSession().toString());
+			ContentBody sessionsBody = new StringBody(data.formattedSessionBody());
 			entity.addPart("session[sessions]", sessionsBody);			
 		} 
 		catch (IOException e) {
@@ -107,7 +107,24 @@ public class SessionHelper {
 		return entity;
 	}
 
-
+	public static MultipartEntity getPostSessionBody(List<SessionData> sessions, String boundary) {
+		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
+		
+		try
+		{
+			ContentBody deviceIdBody  = new StringBody(AppBlade.appInfo.AppId);
+			entity.addPart("session[device_id]", deviceIdBody);			
+			ContentBody projectIdBody  = new StringBody(AppBlade.appInfo.AppId);
+			entity.addPart("session[project_id]", projectIdBody);			
+			ContentBody sessionsBody = new StringBody(formattedSessionsBodyFromList(sessions));
+			entity.addPart("session[sessions]", sessionsBody);			
+		} 
+		catch (IOException e) {
+			Log.d(AppBlade.LogTag, e.toString());
+		}
+		
+		return entity;
+	}
 	
 	private static void postExistingSessions(){
 		File f = new File(sessionsIndexFileLocation());
@@ -145,7 +162,20 @@ public class SessionHelper {
 		}
 	}
 
-
+	//sessions formatting
+	public static String formattedSessionsBodyFromList(List<SessionData> sessions){
+		String toRet = "\"sessions\" : ["; 
+		for(int i = 0; i < sessions.size(); i++){
+			SessionData s = sessions.get(i);
+			toRet = toRet + " " + s.formattedSessionBody();
+			if(sessions.size() > 1 && i < sessions.size() - 1){
+				toRet = toRet +",";	
+			}
+		}
+		toRet = toRet  + "]";
+		return toRet;
+	}
+	
 	//Sessions storage/queue logic
 	public static String sessionsIndexFileLocation() {
 		return sessionsFolder + "/"+sessionsIndexFileName;
