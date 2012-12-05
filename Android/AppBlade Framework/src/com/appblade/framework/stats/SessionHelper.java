@@ -243,7 +243,7 @@ public class SessionHelper {
 	}	
 	
 
-	public static List<SessionData> readData()
+	public synchronized  static List<SessionData> readData()
     {
             List<SessionData> listofusers = new ArrayList<SessionData>();
             FileInputStream fstream = null;
@@ -271,7 +271,7 @@ public class SessionHelper {
     }
 
 
-    public static void updateFile(String filename, List<SessionData> userDataList) {
+    public synchronized  static void updateFile(String filename, List<SessionData> userDataList) {
        BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(filename));
