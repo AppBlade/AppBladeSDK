@@ -204,18 +204,36 @@ public class SessionHelper {
 	}
 
 
-	public static void removeSession(SessionData data) {
+	public synchronized static void removeSessionsEndedBefore(Date dateEnded){
+        List<SessionData> sessionDataList = readData();
+        // remove all objects from ArrayList that ended before dateEnded
+        for (int i = 0; i < sessionDataList.size(); )
+        {
+        	SessionData s = sessionDataList.get(i);
+        	if(s.ended.getSeconds() < dateEnded.getSeconds())
+        	{
+        		sessionDataList.remove(i);
+        	}
+        	else
+        	{
+        		i++;
+        	}
+        }
+        //list filtered, rewrite
+        updateFile(sessionsIndexFileLocation(), sessionDataList);
+	}
+	
+	public synchronized static void removeSession(SessionData data) {
 		Log.d(AppBlade.LogTag, "Removing Session to file");
-        List<SessionData> userDataList = readData();
+        List<SessionData> sessionDataList = readData();
         // remove object from ArrayList
-        userDataList.remove(data);
+        sessionDataList.remove(data);
         // Update file
-        updateFile(sessionsIndexFileLocation(), userDataList);
-
+        updateFile(sessionsIndexFileLocation(), sessionDataList);
 	}
 	
 
-	public static void insertSessionData(SessionData data) {
+	public synchronized static void insertSessionData(SessionData data) {
 		Log.d(AppBlade.LogTag, "Adding Session to file");
 
         List<SessionData> userDataList = readData();
