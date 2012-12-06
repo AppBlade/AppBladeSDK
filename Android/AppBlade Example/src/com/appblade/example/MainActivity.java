@@ -29,13 +29,13 @@ public class MainActivity extends Activity {
     
     public void onResume() {
     	super.onResume();
-    	AppBlade.startSession();
+    	AppBlade.startSession(this.getApplicationContext());
     	AppBlade.authorize(this);
     }
     
     public void onPause() {
     	super.onPause();
-    	AppBlade.endSession(); 
+    	AppBlade.endSession(this.getApplicationContext()); 
     }
 
 
