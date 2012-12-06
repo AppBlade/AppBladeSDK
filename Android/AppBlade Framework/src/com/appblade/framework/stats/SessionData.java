@@ -12,6 +12,7 @@ public class SessionData implements Comparator<Object> {
 	 */
 	public static String sessionBeganKey = "started_at";
 	public static String sessionEndedKey = "ended_at";
+	public static String storageDividerKey = ", ";
 	
 	public Date began;
 	public Date ended;
@@ -27,6 +28,20 @@ public class SessionData implements Comparator<Object> {
 		this.ended = _ended;
 	}
 	
+	//storage in/out
+	public SessionData(String storedString){
+		//storedString should match the output of sessionAsStoredString
+        // Copy the content into the array
+        String[] tokens = storedString.split(storageDividerKey);
+		this.began = new Date(tokens[0]);
+		this.ended = new Date(tokens[1]);
+	}
+
+	public String sessionAsStoredString(){ 
+		//should match what constructor SessionData(String storedString) needs for parsing
+		return this.began.toString() + storageDividerKey + this.ended.toString();
+	}
+		
 	public int compare(Object o1, Object o2)
 	{
 		SessionData session1 = (SessionData)o1;
