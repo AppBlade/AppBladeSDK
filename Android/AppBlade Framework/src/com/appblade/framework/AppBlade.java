@@ -112,20 +112,22 @@ public class AppBlade {
 
 
 	/**
-	 * Static point for beginning a session
+	 * Static point for beginning a session (posts any existing sessions by default) 
 	 */
-	public static void startSession()
+	public static void startSession(Context context)
 	{
-		SessionHelper.startSession();
+		//check for existing sessions, post them.
+		SessionHelper.postExistingSessions(context);
+		SessionHelper.startSession(context);
 	}
 	 
 
 	/**
 	 * Static point for ending a session
 	 */
-	public static void endSession()
+	public static void endSession(Context context)
 	{
-		SessionHelper.endSession();
+		SessionHelper.endSession(context);
 	}
 	
 	
@@ -133,7 +135,7 @@ public class AppBlade {
 	/**
 	 * Static entry point for setting custom Params
 	 */
-	public static void setCustomParameter(String key, Object value)
+	public static void setCustomParameter(Context context, String key, Object value)
 	{
 		
 	}
@@ -141,7 +143,7 @@ public class AppBlade {
 	/**
 	 * Static entry point for clearing all custom Params
 	 */
-	public static void clearCustomParameters()
+	public static void clearCustomParameters(Context context)
 	{
 		
 	}
