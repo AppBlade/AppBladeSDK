@@ -1,13 +1,15 @@
 package com.appblade.framework.stats;
 
+import java.util.List;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-public class PostSessionTask extends AsyncTask<SessionData, Void, Void>{
+public class PostSessionTask extends AsyncTask<List<SessionData>, Void, Void>{
 
 	Context context;
-	SessionData data;
+	List<SessionData> data;
 	Boolean success;
 	
 	private static final String SUCCESS_MESSAGE = "SessionData Uploaded Successfully!";
@@ -18,9 +20,9 @@ public class PostSessionTask extends AsyncTask<SessionData, Void, Void>{
 	}
 	
 	@Override
-	protected Void doInBackground(SessionData... params) {
+	protected Void doInBackground(List<SessionData>... params) {
 		data = params[0];
-		success = SessionHelper.postSession(data);
+		success = SessionHelper.postSessions(data);
 		
 		return null;
 	}
@@ -30,7 +32,10 @@ public class PostSessionTask extends AsyncTask<SessionData, Void, Void>{
 		String toastMessage = FAIL_MESSAGE;
 		if (success) {
 			toastMessage = SUCCESS_MESSAGE;
-			SessionHelper.removeSession(data);
+			if(context != null){
+				SessionData lastSession = data.get(data.size()-1);
+				SessionHelper.removeSessionsEndedBefore(context, lastSession.ended);
+			}
 		}
 		
 		if(context != null){

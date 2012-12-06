@@ -46,7 +46,7 @@ public class SessionHelper {
 		return postSessions(sessionsList);
 	}
 
-	private static boolean postSessions(List<SessionData> sessionsList) {
+	static boolean postSessions(List<SessionData> sessionsList) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance("Android");
 		try
