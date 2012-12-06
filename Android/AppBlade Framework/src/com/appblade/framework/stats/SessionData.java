@@ -4,6 +4,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 
 public class SessionData implements Comparator<Object> {
@@ -70,8 +73,19 @@ public class SessionData implements Comparator<Object> {
 	 * 		]
 	 * 	}
 	 */
-	public String formattedSessionBody()
+	public JSONObject formattedSessionAsJSON()
 	{
-		return String.format("{ started_at:\"%s\", ended_at:\"%s\" }", this.began.toString(), this.ended.toString() );
+		JSONObject json = new JSONObject();
+		try {
+			json.put("started_at", this.began.toString());
+			json.put("ended_at", this.ended.toString()); 
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} 
+		return json;
 	}
+
+	
+
+
 }
