@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,9 +20,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.appblade.framework.AppBlade;
@@ -31,15 +33,17 @@ import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.IOUtils;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 public class SessionHelper {
-	public static String sessionsFolder = "/appBlade/sessions";
+	//I/O RELATED
+	public static String sessionsFolder = "/appBlade/sessions"; 
 	public static String sessionsIndexFileName = "index.txt";
+	//API RELATED
+	public static String sessionsIndexMIMEType = "text/json"; 
 
 	
-	//API related functions
+	//API RELATED FUNCTIONS
 	public static Boolean postSession(SessionData data) {
 		ArrayList<SessionData> sessionsList = new ArrayList<SessionData>();
 		sessionsList.add(data);
@@ -104,11 +108,11 @@ public class SessionHelper {
 		try
 		{
 			ContentBody deviceIdBody  = new StringBody(AppBlade.appInfo.AppId);
-			entity.addPart("session[device_id]", deviceIdBody);			
+			entity.addPart("device_id", deviceIdBody);			
 			ContentBody projectIdBody  = new StringBody(AppBlade.appInfo.AppId);
-			entity.addPart("session[project_id]", projectIdBody);			
-			ContentBody sessionsBody = new StringBody(formattedSessionsBodyFromList(sessions));
-			entity.addPart("session[sessions]", sessionsBody);			
+			entity.addPart("project_id", projectIdBody);			
+			ContentBody sessionsBody = new ByteArrayBody(formattedSessionsBodyFromList(sessions), sessionsIndexMIMEType, sessionsIndexFileName);
+			entity.addPart("sessions", sessionsBody);			
 		} 
 		catch (IOException e) {
 			Log.d(AppBlade.LogTag, e.toString());
@@ -142,12 +146,12 @@ public class SessionHelper {
 		}
 	}
 	
+	//session logging 
 	public static void startSession(Context context){
 		Log.d(AppBlade.LogTag, "Starting Session");
 		AppBlade.currentSession = new SessionData();
 	}
 	 
-
 	public static void endSession(Context context){
 		Log.d(AppBlade.LogTag, "Ending Session");
 		if(AppBlade.currentSession != null){
@@ -158,47 +162,40 @@ public class SessionHelper {
 		}
 	}
 
-	//sessions batch formatting
-	public static String formattedSessionsBodyFromList(List<SessionData> sessions){
-		String toRet = "none";
-
-		JSONObject jsonRet = new JSONObject();
-		ArrayList<JSONObject> jsonSessions = new ArrayList<JSONObject>();
-		
+	//Sessions batch formatting for sending to AppBlade
+	public static byte[] formattedSessionsBodyFromList(List<SessionData> sessions){
+		JSONArray jsonSessions = new JSONArray();
+		//build a list of JSONObjects 
 		for(SessionData s : sessions){
-			jsonSessions.add(s.formattedSessionAsJSON());
+			jsonSessions.put(s.formattedSessionAsJSON());
 		}
-		
+		// write to byte array
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream out;
 		try {
-			jsonRet.put("sessions", jsonSessions);
-		} catch (JSONException e) {
-			e.printStackTrace();
+			out = new ObjectOutputStream(baos);
+			out.writeObject(jsonSessions.toString());
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-		
-		toRet = jsonRet.toString();
-		
-		return toRet;
+		byte[] bytes = baos.toByteArray();
+		return bytes;
 	}
 	
-	//Sessions storage/queue logic
+	//Sessions storage helpers
 	public static String sessionsIndexFileURL(Context context) {
 		File f = context.getFilesDir();
 		return f.getAbsolutePath() + sessionsFolder;
 	}
-	
 	public static String sessionsIndexFileURI(Context context) {
 		return sessionsIndexFileURL(context) + "/"+sessionsIndexFileName;
 	}
 
-	
+
+	//Sessions storage/queue logic
 	public static SessionData createPersistentSession(Context context) {
 		Log.d(AppBlade.LogTag, "Creating New Session ");
 		SessionData data = new SessionData(new Date(), new Date());
-		insertPendingSession(context, data);
-		return data;
-	}
-	
-	public static void insertPendingSession(Context context, SessionData sessionToInsert){
 		//check if file exists
 		File f = new File(sessionsIndexFileURI(context));
 		if(f.exists()){
@@ -208,11 +205,28 @@ public class SessionHelper {
 				e.printStackTrace();
 			}
 		}
-		
-		insertSessionData(context, sessionToInsert);
+		insertSessionData(context, data);
+		return data;
+	}
+	
+	public synchronized static void insertSessionData(Context context, SessionData data) {
+		Log.d(AppBlade.LogTag, "Adding Session to file");
+        List<SessionData> userDataList = readData(context);
+        userDataList.add(data);
+        // Update file
+        updateFile(context, sessionsIndexFileURI(context), userDataList);
+	}	
+
+	public synchronized static void removeSession(Context context, SessionData data) {
+		Log.d(AppBlade.LogTag, "Removing Session to file");
+        List<SessionData> sessionDataList = readData(context);
+        // remove object from ArrayList
+        sessionDataList.remove(data);
+        // Update file
+        updateFile(context, sessionsIndexFileURI(context), sessionDataList);
 	}
 
-
+	//batch removal of sessions after success (or expiration). Sessions ended before dateEnded will be removed.
 	public synchronized static void removeSessionsEndedBefore(Context context, Date dateEnded){
         List<SessionData> sessionDataList = readData(context);
         // remove all objects from ArrayList that ended before dateEnded
@@ -232,26 +246,8 @@ public class SessionHelper {
         updateFile(context, sessionsIndexFileURI(context), sessionDataList);
 	}
 	
-	public synchronized static void removeSession(Context context, SessionData data) {
-		Log.d(AppBlade.LogTag, "Removing Session to file");
-        List<SessionData> sessionDataList = readData(context);
-        // remove object from ArrayList
-        sessionDataList.remove(data);
-        // Update file
-        updateFile(context, sessionsIndexFileURI(context), sessionDataList);
-	}
-	
 
-	public synchronized static void insertSessionData(Context context, SessionData data) {
-		Log.d(AppBlade.LogTag, "Adding Session to file");
-
-        List<SessionData> userDataList = readData(context);
-        userDataList.add(data);
-        // Update file
-        updateFile(context, sessionsIndexFileURI(context), userDataList);
-	}	
-	
-
+	//Sessions base file interaction functions 
 	public synchronized  static List<SessionData> readData(Context context)
     {
     	Log.d(AppBlade.LogTag, "reading in Sessions file. ");
@@ -260,7 +256,6 @@ public class SessionHelper {
             FileInputStream fstream = null;
             try
             {
-
                 fstream = new FileInputStream(sessionsIndexFileURI(context));
                 BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
                 String strLine = "";
@@ -285,7 +280,6 @@ public class SessionHelper {
     public synchronized  static void updateFile(Context context, String filename, List<SessionData> userDataList) {
     	//check for existence of file, if no file, create file
     	Log.d(AppBlade.LogTag, "Updating Sessions file. " +userDataList.size() +" sessions");
-
     try{
     	final File parent = new File(sessionsIndexFileURL(context));
     	if(!parent.exists())
@@ -305,7 +299,6 @@ public class SessionHelper {
     	Log.d(AppBlade.LogTag, "Error making Sessions file");
     	ex.printStackTrace();
     }
-    	
        BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(filename));

@@ -3,7 +3,6 @@ package com.appblade.framework;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URL;
-import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -2,17 +2,12 @@ package com.appblade.framework.stats;
 
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Hashtable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-
 public class SessionData implements Comparator<Object> {
-	/**
-	 * 
-	 */
 	public static String sessionBeganKey = "started_at";
 	public static String sessionEndedKey = "ended_at";
 	public static String storageDividerKey = ", ";
@@ -40,6 +35,8 @@ public class SessionData implements Comparator<Object> {
 		this.ended = new Date(tokens[1]);
 	}
 
+	
+	//FILE I/O
 	public String sessionAsStoredString(){ 
 		//should match what constructor SessionData(String storedString) needs for parsing
 		return this.began.toString() + storageDividerKey + this.ended.toString();
@@ -57,6 +54,8 @@ public class SessionData implements Comparator<Object> {
 		return 1;
 	}	
 	
+	
+	//API REALATED
 	/*
 	 * 	{	
 	 * 		"device_id": "8989ffBB", 

@@ -23,7 +23,6 @@ public class PostSessionTask extends AsyncTask<List<SessionData>, Void, Void>{
 	protected Void doInBackground(List<SessionData>... params) {
 		data = params[0];
 		success = SessionHelper.postSessions(data);
-		
 		return null;
 	}
 	
