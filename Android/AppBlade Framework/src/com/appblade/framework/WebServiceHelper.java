@@ -1,12 +1,18 @@
 package com.appblade.framework;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Random;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.apache.http.HttpRequest;
 
 import com.appblade.framework.utils.Base64;
 import com.appblade.framework.utils.StringUtils;
+import com.appblade.framework.utils.SystemUtils;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.util.Log;
@@ -90,7 +96,12 @@ public class WebServiceHelper {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
 			request.addHeader("bundle_version", pi.versionName);
+			request.addHeader("executable_uuid", SystemUtils.generateUniqueID(pi));			
+		}else {
+			request.addHeader("executable_uuid", "unknown");			
 		}
+
+		Log.d(AppBlade.LogTag, "Request executable_uuid " + request.getFirstHeader("executable_uuid"));
 		
 		request.addHeader("android_release", Build.VERSION.RELEASE);
 		request.addHeader("android_api", Build.VERSION.SDK);
@@ -101,4 +112,7 @@ public class WebServiceHelper {
 		request.addHeader("device_fingerprint", Build.FINGERPRINT);
 	}
 
+
+	
+	
 }
