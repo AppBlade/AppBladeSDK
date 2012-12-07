@@ -111,7 +111,7 @@ public class SessionHelper {
 			entity.addPart("device_id", deviceIdBody);			
 			ContentBody projectIdBody  = new StringBody(AppBlade.appInfo.AppId);
 			entity.addPart("project_id", projectIdBody);			
-			ContentBody sessionsBody = new ByteArrayBody(formattedSessionsBodyFromList(sessions), sessionsIndexMIMEType, sessionsIndexFileName);
+			ContentBody sessionsBody = new StringBody(formattedSessionsBodyFromList(sessions));
 			entity.addPart("sessions", sessionsBody);			
 		} 
 		catch (IOException e) {
@@ -163,23 +163,24 @@ public class SessionHelper {
 	}
 
 	//Sessions batch formatting for sending to AppBlade
-	public static byte[] formattedSessionsBodyFromList(List<SessionData> sessions){
+	public static String formattedSessionsBodyFromList(List<SessionData> sessions){
 		JSONArray jsonSessions = new JSONArray();
 		//build a list of JSONObjects 
 		for(SessionData s : sessions){
 			jsonSessions.put(s.formattedSessionAsJSON());
 		}
 		// write to byte array
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream out;
-		try {
-			out = new ObjectOutputStream(baos);
-			out.writeObject(jsonSessions.toString());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		byte[] bytes = baos.toByteArray();
-		return bytes;
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		ObjectOutputStream out;
+//		try {
+//			out = new ObjectOutputStream(baos);
+//			out.writeObject(jsonSessions.toString());
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
+//		byte[] bytes = baos.toByteArray();
+//		return bytes;
+		return jsonSessions.toString();
 	}
 	
 	//Sessions storage helpers
