@@ -1,10 +1,15 @@
 package com.appblade.framework.stats;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.text.format.DateFormat;
 
 
 public class SessionData implements Comparator<Object> {
@@ -31,15 +36,30 @@ public class SessionData implements Comparator<Object> {
 		//storedString should match the output of sessionAsStoredString
         // Copy the content into the array
         String[] tokens = storedString.split(storageDividerKey);
-		this.began = new Date(tokens[0]);
-		this.ended = new Date(tokens[1]);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		try {
+			this.began = format.parse(tokens[0]);
+			this.ended = format.parse(tokens[1]);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			this.began = new Date();
+			this.ended = new Date();
+		}
 	}
 
 	
 	//FILE I/O
 	public String sessionAsStoredString(){ 
 		//should match what constructor SessionData(String storedString) needs for parsing
-		return this.began.toString() + storageDividerKey + this.ended.toString();
+	    java.sql.Timestamp timeStampBegan = new 
+	    		 Timestamp(this.began.getTime());
+	    java.sql.Timestamp timeStampEnded = new 
+	    		 Timestamp(this.ended.getTime());
+	    
+
+
+		return timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
 	}
 		
 	public int compare(Object o1, Object o2)
@@ -75,9 +95,14 @@ public class SessionData implements Comparator<Object> {
 	public JSONObject formattedSessionAsJSON()
 	{
 		JSONObject json = new JSONObject();
+	    java.sql.Timestamp timeStampBegan = new 
+	    		 Timestamp(this.began.getTime());
+	    java.sql.Timestamp timeStampEnded = new 
+	    		 Timestamp(this.ended.getTime());
+		
 		try {
-			json.put("started_at", this.began.toString());
-			json.put("ended_at", this.ended.toString()); 
+			json.put("started_at",timeStampBegan);
+			json.put("ended_at", timeStampEnded); 
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} 
