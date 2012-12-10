@@ -126,17 +126,12 @@ public class SessionHelper {
 		if(f.exists()){
 			Log.d(AppBlade.LogTag, sessionsIndexFileURI(context)+" exists.");
 
-			List<SessionData> sessionsList = readData(context);
-			if(sessionsList.size() != 0){
-				Log.d(AppBlade.LogTag, "Finished sessions exist, posting them.");
-				if(postSessions(sessionsList)){
-					Log.d(AppBlade.LogTag, "session posting success. remove successful sessions");
-					SessionData lastSession = sessionsList.get(sessionsList.size()-1);
-					removeSessionsEndedBefore(context, lastSession.ended);
-				}else{
-					Log.d(AppBlade.LogTag, "error posting session. Stored for later.");					
-				}
-			}
+			//List<SessionData> sessionsList = readData(context);
+			//if(sessionsList.size() != 0){
+				Log.d(AppBlade.LogTag, "Finished sessions might exist, posting them.");
+				PostSessionTask asyncSessionPost = new PostSessionTask(context);
+				asyncSessionPost.doInBackground(null);
+			//}
 		}else{
 			Log.d(AppBlade.LogTag, "Sessions file does not exist, creating it.");
 			List<SessionData> blankSessions = new ArrayList<SessionData>();
