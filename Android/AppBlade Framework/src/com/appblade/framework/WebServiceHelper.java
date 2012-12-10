@@ -97,11 +97,9 @@ public class WebServiceHelper {
 			PackageInfo pi = AppBlade.getPackageInfo();
 			request.addHeader("bundle_version", pi.versionName);
 			request.addHeader("executable_uuid", SystemUtils.generateUniqueID(pi));			
-		}else {
-			request.addHeader("executable_uuid", "unknown");			
 		}
-
-		Log.d(AppBlade.LogTag, "Request executable_uuid " + request.getFirstHeader("executable_uuid"));
+		
+		Log.d(AppBlade.LogTag, "Request " + request.getFirstHeader("executable_uuid"));
 		
 		request.addHeader("android_release", Build.VERSION.RELEASE);
 		request.addHeader("android_api", Build.VERSION.SDK);
