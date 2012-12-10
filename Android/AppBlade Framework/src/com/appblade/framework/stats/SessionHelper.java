@@ -44,14 +44,13 @@ public class SessionHelper {
 
 	
 	//API RELATED FUNCTIONS
-	public static Boolean postSession(SessionData data) {
+	public static int postSession(SessionData data) {
 		ArrayList<SessionData> sessionsList = new ArrayList<SessionData>();
 		sessionsList.add(data);
 		return postSessions(sessionsList);
 	}
 
-	static boolean postSessions(List<SessionData> sessionsList) {
-		boolean success = false;
+	static int postSessions(List<SessionData> sessionsList) {
 		HttpClient client = HttpClientProvider.newInstance("Android");
 		try
 		{
@@ -87,9 +86,8 @@ public class SessionHelper {
 				int statusCode = response.getStatusLine().getStatusCode();
 				int statusCategory = statusCode / 100;
 				Log.d(AppBlade.LogTag, "response: "+ statusCode);
-
-				if(statusCategory == 2)
-					success = true;
+				
+				return statusCode;
 			}
 		}
 		catch(Exception ex)
@@ -99,7 +97,7 @@ public class SessionHelper {
 
 		IOUtils.safeClose(client);
 		
-		return success;
+		return -10000; //an exception occurred during posting
 	}
 	
 	public static MultipartEntity getPostSessionBody(List<SessionData> sessions, String boundary) {
