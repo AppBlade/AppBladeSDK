@@ -18,6 +18,7 @@ public class SystemUtils {
 		return false;
 	}
 	
+	//[Package Name]:[Version Name]:[Version Code]:[Timestamp of the last time classes.dex was edited]
 	public static String generateUniqueID(PackageInfo pi) {
 		String toRet = "";
 		toRet = pi.packageName + ":";
