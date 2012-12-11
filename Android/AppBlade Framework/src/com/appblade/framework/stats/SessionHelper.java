@@ -39,6 +39,22 @@ public class SessionHelper {
 	//API RELATED
 	public static String sessionsIndexMIMEType = "text/json"; 
 
+	//Session Logging 
+	public static void startSession(Context context){
+		Log.d(AppBlade.LogTag, "Starting Session");
+		AppBlade.currentSession = new SessionData();
+	}
+	 
+	public static void endSession(Context context){
+		Log.d(AppBlade.LogTag, "Ending Session");
+		if(AppBlade.currentSession != null){
+			AppBlade.currentSession.ended = new Date();
+			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended);
+			insertSessionData(context, sessionToStore);
+			AppBlade.currentSession = null;
+		}
+	}
+
 	
 	//API RELATED FUNCTIONS
 	public static int postSession(SessionData data) {
@@ -116,41 +132,36 @@ public class SessionHelper {
 		return entity;
 	}
 	
-	public static void postExistingSessions(Context context){
+	public static void postExistingSessions(final Context context){
 		Log.d(AppBlade.LogTag, "checking for existing sessions.");
-
+		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
+			@SuppressWarnings("unchecked")
+			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
+				PostSessionTask postSessionTask = new PostSessionTask(context);
+				postSessionTask.execute(acquiredData);
+			}
+		} );
+	}
+	
+	
+	//Data Listener
+	public static void getSessionDataWithListener(Context context,
+			final OnSessionDataAcquiredListener listener) {
 		File f = new File(sessionsIndexFileURI(context));
 		if(f.exists()){
 			Log.d(AppBlade.LogTag, sessionsIndexFileURI(context)+" exists.");
-
-			//List<SessionData> sessionsList = readData(context);
-			//if(sessionsList.size() != 0){
 				Log.d(AppBlade.LogTag, "Finished sessions might exist, posting them.");
-				PostSessionTask asyncSessionPost = new PostSessionTask(context);
-				asyncSessionPost.doInBackground(null);
-			//}
+				List<SessionData> existingSessions = SessionHelper.readData(context);
+				listener.OnSessionDataAcquired(existingSessions);
 		}else{
 			Log.d(AppBlade.LogTag, "Sessions file does not exist, creating it.");
 			List<SessionData> blankSessions = new ArrayList<SessionData>();
 			updateFile(context, sessionsIndexFileURI(context), blankSessions);
+			listener.OnSessionDataAcquired(blankSessions);
 		}
+
 	}
 	
-	//session logging 
-	public static void startSession(Context context){
-		Log.d(AppBlade.LogTag, "Starting Session");
-		AppBlade.currentSession = new SessionData();
-	}
-	 
-	public static void endSession(Context context){
-		Log.d(AppBlade.LogTag, "Ending Session");
-		if(AppBlade.currentSession != null){
-			AppBlade.currentSession.ended = new Date();
-			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended);
-			insertSessionData(context, sessionToStore);
-			AppBlade.currentSession = null;
-		}
-	}
 
 	//Sessions batch formatting for sending to AppBlade
 	public static String formattedSessionsBodyFromList(List<SessionData> sessions){
@@ -159,17 +170,6 @@ public class SessionHelper {
 		for(SessionData s : sessions){
 			jsonSessions.put(s.formattedSessionAsJSON());
 		}
-		// write to byte array
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		ObjectOutputStream out;
-//		try {
-//			out = new ObjectOutputStream(baos);
-//			out.writeObject(jsonSessions.toString());
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
-//		byte[] bytes = baos.toByteArray();
-//		return bytes;
 		return jsonSessions.toString();
 	}
 	
@@ -200,41 +200,52 @@ public class SessionHelper {
 		return data;
 	}
 	
-	public synchronized static void insertSessionData(Context context, SessionData data) {
+	public synchronized static void insertSessionData(final Context context, final SessionData data) {
 		Log.d(AppBlade.LogTag, "Adding Session to file");
-        List<SessionData> userDataList = readData(context);
-        userDataList.add(data);
-        // Update file
-        updateFile(context, sessionsIndexFileURI(context), userDataList);
+		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
+			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
+				acquiredData.add(data); //add data
+		        // Update file
+		        updateFile(context, sessionsIndexFileURI(context), acquiredData);
+			}
+		} );
+
 	}	
 
-	public synchronized static void removeSession(Context context, SessionData data) {
+	public synchronized static void removeSession(final Context context, final SessionData data) {
 		Log.d(AppBlade.LogTag, "Removing Session to file");
-        List<SessionData> sessionDataList = readData(context);
-        // remove object from ArrayList
-        sessionDataList.remove(data);
-        // Update file
-        updateFile(context, sessionsIndexFileURI(context), sessionDataList);
+		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
+			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
+				// remove object from ArrayList
+				acquiredData.remove(data);
+				// Update file
+				updateFile(context, sessionsIndexFileURI(context), acquiredData);
+			}
+		} );
 	}
 
 	//batch removal of sessions after success (or expiration). Sessions ended before dateEnded will be removed.
-	public synchronized static void removeSessionsEndedBefore(Context context, Date dateEnded){
-        List<SessionData> sessionDataList = readData(context);
-        // remove all objects from ArrayList that ended before dateEnded
-        for (int i = 0; i < sessionDataList.size(); )
-        {
-        	SessionData s = sessionDataList.get(i);
-        	if(s.ended.getSeconds() < dateEnded.getSeconds())
-        	{
-        		sessionDataList.remove(i);
-        	}
-        	else
-        	{
-        		i++;
-        	}
-        }
-        //list filtered, rewrite
-        updateFile(context, sessionsIndexFileURI(context), sessionDataList);
+	public synchronized static void removeSessionsEndedBefore(final Context context, final Date dateEnded){
+		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
+			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
+		        // remove all objects from ArrayList that ended before dateEnded
+		        for (int i = 0; i < acquiredData.size(); )
+		        {
+		        	SessionData s = acquiredData.get(i);
+		        	if(s.ended.getSeconds() < dateEnded.getSeconds())
+		        	{
+		        		acquiredData.remove(i);
+		        	}
+		        	else
+		        	{
+		        		i++;
+		        	}
+		        }
+		        //list filtered, rewrite
+		        updateFile(context, sessionsIndexFileURI(context), acquiredData);
+			}
+		} );
+
 	}
 	
 
