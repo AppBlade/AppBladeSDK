@@ -23,7 +23,6 @@ public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Void>{
 	protected Void doInBackground(FeedbackData... params) {
 		FeedbackData data = params[0];
 		success = FeedbackHelper.postFeedback(data);
-		
 		return null;
 	}
 	

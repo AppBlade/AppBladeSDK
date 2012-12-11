@@ -98,10 +98,8 @@ public class AppBlade {
 	 */
 	public static void doFeedbackWithScreenshot(final Context context, Bitmap screenshot, String screenshotName) {
 		FeedbackData data = new FeedbackData();
-		//data.Screenshot = screenshot;
 		data.setPersistentScreenshot(screenshot);
 		data.ScreenshotName = screenshotName;
-
 		FeedbackHelper.getFeedbackData(context, data, new OnFeedbackDataAcquiredListener() {
 			public void OnFeedbackDataAcquired(FeedbackData data) {
 				new PostFeedbackTask(context).execute(data);

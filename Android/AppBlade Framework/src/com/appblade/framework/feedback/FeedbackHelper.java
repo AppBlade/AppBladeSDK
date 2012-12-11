@@ -102,7 +102,6 @@ public class FeedbackHelper {
 				log.append(line);
 				log.append("\n");
 			}
-
 			return log.toString();
 		} catch (IOException e) {
 		}
@@ -112,9 +111,7 @@ public class FeedbackHelper {
 
 	public static void getFeedbackData(Context context, FeedbackData data,
 			final OnFeedbackDataAcquiredListener listener) {
-
 		AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-
 		dialog.setTitle("Feedback");
 
 		final EditText editText = new EditText(context);
