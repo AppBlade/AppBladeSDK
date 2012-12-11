@@ -113,9 +113,15 @@ public class AppBlade {
 	 */
 	public static void startSession(Context context)
 	{
-		//check for existing sessions, post them.
-		SessionHelper.postExistingSessions(context);
-		SessionHelper.startSession(context);
+		if(isAuthorized(context)){
+			//check for existing sessions, post them.
+			SessionHelper.postExistingSessions(context);
+			SessionHelper.startSession(context);
+		}
+		else
+		{
+			Log.d(LogTag, "Client is not yet authorized, cannot start session");
+		}
 	}
 	 
 
@@ -124,7 +130,13 @@ public class AppBlade {
 	 */
 	public static void endSession(Context context)
 	{
-		SessionHelper.endSession(context);
+		if(isAuthorized(context)){
+			SessionHelper.endSession(context);
+		}
+		else
+		{
+			Log.d(LogTag, "Client is not yet authorized, cannot end session");			
+		}
 	}
 	
 	
@@ -330,6 +342,19 @@ public class AppBlade {
 				!StringUtils.isNullOrEmpty(accessToken) &&
 				!isTtlInvalid;
 	}
+	
+	private static boolean isAuthorized(Context context) {
+		String accessToken = RemoteAuthHelper.getAccessToken(context);
+		setDeviceId(accessToken);
+
+		boolean isTtlInvalid = KillSwitch.shouldUpdate();
+
+		return
+				!StringUtils.isNullOrEmpty(accessToken) &&
+				!isTtlInvalid;
+	} 
+	
+
 
 	public static void setDeviceId(String accessToken) {
 		Log.d(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
