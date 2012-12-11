@@ -25,12 +25,7 @@ public class PostSessionTask extends AsyncTask<List<SessionData>, Void, Void>{
 	
 	@Override
 	protected Void doInBackground(List<SessionData>... params) {
-		if(params == null){
-			data = SessionHelper.readData(context);
-		}else{
-			data = params[0];
-		}
-		
+		data = params[0];
 		if(data.size() != 0){
 			responseCode = SessionHelper.postSessions(data);
 		}else{
