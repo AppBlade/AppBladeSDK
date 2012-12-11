@@ -287,19 +287,16 @@ public class AppBlade {
 				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 				builder.setMessage("Authorization Required");
 				builder.setPositiveButton("OK", new OnClickListener() {
-
 					public void onClick(DialogInterface dialog, int which) {
 						AuthHelper.checkAuthorization(activity, false);
 					}
 				});
 				builder.setNegativeButton("No, thanks", new OnClickListener() {
-
 					public void onClick(DialogInterface dialog, int which) {
 						activity.finish();
 					}
 				});
 				builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
 					public void onCancel(DialogInterface dialog) {
 						activity.finish();
 					}

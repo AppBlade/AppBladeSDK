@@ -30,7 +30,7 @@ public class SystemUtils {
 		try {
 			zf = new ZipFile(ai.sourceDir);
 			ZipEntry ze = zf.getEntry("classes.dex");
-			long time = ze.getTime();  //time classes.dex was built will remain the same throughout installs
+			long time = (ze.getTime() / 1000);  //time classes.dex was built will remain the same throughout installs (removing last 4 zeros to match appblade)
 			toRet = toRet + time;
 		} catch (IOException e) {
 			e.printStackTrace();
