@@ -1,6 +1,7 @@
 package com.appblade.framework.stats;
 
-public class OnSessionDataAcquiredListener {
-	//currently not used, perhaps when/if session files become suitably big
+import java.util.List;
 
+public interface OnSessionDataAcquiredListener {
+	public void OnSessionDataAcquired(List<SessionData> acquiredData);
 }
