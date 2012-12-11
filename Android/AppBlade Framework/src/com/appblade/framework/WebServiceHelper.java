@@ -1,6 +1,7 @@
 package com.appblade.framework;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.zip.ZipEntry;
@@ -96,7 +97,8 @@ public class WebServiceHelper {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
 			request.addHeader("bundle_version", pi.versionName);
-			request.addHeader("executable_uuid", SystemUtils.generateUniqueID(pi));			
+//			request.addHeader("executable_uuid", SystemUtils.generateUniqueID(pi));			
+			request.addHeader("executable_uuid", new String(SystemUtils.hashedExecutableUuid(pi)));			
 		}
 		
 		Log.d(AppBlade.LogTag, "Request " + request.getFirstHeader("executable_uuid"));

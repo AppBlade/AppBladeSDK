@@ -1,6 +1,7 @@
 package com.appblade.framework.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -18,7 +19,8 @@ public class SystemUtils {
 		return false;
 	}
 	
-	//[Package Name]:[Version Name]:[Version Code]:[Timestamp of the last time classes.dex was edited]
+	//"[Package Name]:[Version Name]:[Version Code]:[Timestamp of the last time classes.dex was edited]"
+	@Deprecated
 	public static String generateUniqueID(PackageInfo pi) {
 		String toRet = "";
 		toRet = pi.packageName + ":";
@@ -40,4 +42,21 @@ public class SystemUtils {
 		return toRet;
 	}
 
+	public static byte[] hashedExecutableUuid(PackageInfo pi){
+//		sha256FromInputStream
+		byte[] toRet = null;
+		ApplicationInfo ai = pi.applicationInfo;
+		ZipFile zf;
+		try {
+			zf = new ZipFile(ai.sourceDir);
+			ZipEntry ze = zf.getEntry("classes.dex");
+			InputStream streamToHash = zf.getInputStream(ze);
+			toRet = StringUtils.sha256FromInputStream(streamToHash);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return toRet;
+	}
+	
 }

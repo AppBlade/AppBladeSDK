@@ -1,9 +1,11 @@
 package com.appblade.framework.utils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.security.DigestInputStream;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -103,5 +105,57 @@ public class StringUtils {
 	    }
 	    catch (NoSuchAlgorithmException e) { }
 	    return hash;
+	}
+	
+	
+	public static byte[] md5FromInputStream(InputStream is)  {
+		MessageDigest md = null;
+		byte[] toRet = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e1) {
+			e1.printStackTrace();
+		}
+		
+		if(md != null){
+			try {
+				is = new DigestInputStream(is, md);
+				// read stream to EOF as normal...
+			}
+			finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			toRet = md.digest();
+		}
+		return toRet;
+	}
+
+	public static byte[] sha256FromInputStream(InputStream is)  {
+		MessageDigest md = null;
+		byte[] toRet = null;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e1) {
+			e1.printStackTrace();
+		}
+		
+		if(md != null){
+			try {
+				is = new DigestInputStream(is, md);
+				toRet = md.digest();
+			}
+			finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return toRet;
 	}
 }
