@@ -98,7 +98,7 @@ public class WebServiceHelper {
 			PackageInfo pi = AppBlade.getPackageInfo();
 			request.addHeader("bundle_version", pi.versionName);
 //			request.addHeader("executable_uuid", SystemUtils.generateUniqueID(pi));			
-			request.addHeader("executable_uuid", new String(SystemUtils.hashedExecutableUuid(pi)));			
+			request.addHeader("executable_uuid", Base64.encodeToString(SystemUtils.hashedExecutableUuid(pi), 0));			
 		}
 		
 		Log.d(AppBlade.LogTag, "Request " + request.getFirstHeader("executable_uuid"));
