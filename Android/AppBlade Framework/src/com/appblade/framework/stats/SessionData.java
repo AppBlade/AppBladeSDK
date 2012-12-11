@@ -9,8 +9,6 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.text.format.DateFormat;
-
 
 public class SessionData implements Comparator<Object> {
 	public static String sessionBeganKey = "started_at";
