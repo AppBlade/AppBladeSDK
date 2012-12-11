@@ -13,9 +13,14 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import android.util.Log;
+
+import com.appblade.framework.AppBlade;
+
 
 public class StringUtils {
-	
+	 public static final int BUFFER_SIZE = 2048;
+	 
 	/**
 	 * Utility method for pulling plain text from an InputStream object
 	 * @param in InputStream object retrieved from an HttpResponse
@@ -108,9 +113,9 @@ public class StringUtils {
 	}
 	
 	
-	public static byte[] md5FromInputStream(InputStream is)  {
+	public static String md5FromInputStream(InputStream is)  {
 		MessageDigest md = null;
-		byte[] toRet = null;
+		byte[] byteArray = null;
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
@@ -129,14 +134,22 @@ public class StringUtils {
 					e.printStackTrace();
 				}
 			}
-			toRet = md.digest();
+			byteArray = md.digest();
 		}
-		return toRet;
+		
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < byteArray.length; i++) {
+            String hex = Integer.toHexString(0xff & byteArray[i]);
+            if(hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        
+        return hexString.toString();
 	}
 
-	public static byte[] sha256FromInputStream(InputStream is)  {
+	public static String sha256FromInputStream(InputStream is)  {
 		MessageDigest md = null;
-		byte[] toRet = null;
+        StringBuffer hexString = new StringBuffer();
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e1) {
@@ -144,18 +157,31 @@ public class StringUtils {
 		}
 		
 		if(md != null){
-			try {
-				is = new DigestInputStream(is, md);
-				toRet = md.digest();
-			}
-			finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+	        DigestInputStream dis = new DigestInputStream(is, md);
+	        byte[] buffer = new byte[BUFFER_SIZE];
+	       try {
+	    	   try {
+					while (dis.read(buffer) != -1) {
+					 //
+					}
+			        dis.close();
+	    	   }
+	    	   finally {
+		    	   is.close();
+		       }
+	       }
+	       catch (IOException e) {
+				e.printStackTrace();
+	       }
+	        
+			byte[] byteArray = md.digest();
+	        for (int i = 0; i < byteArray.length; i++) {
+	            String hex = Integer.toHexString(byteArray[i] & 0xff);
+	            if(hex.length() == 1) hexString.append('0');
+	            hexString.append(hex);
+	        }
 		}
-		return toRet;
+
+        return hexString.toString();
 	}
 }

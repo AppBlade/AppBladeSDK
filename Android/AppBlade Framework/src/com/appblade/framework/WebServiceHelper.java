@@ -98,10 +98,15 @@ public class WebServiceHelper {
 			PackageInfo pi = AppBlade.getPackageInfo();
 			request.addHeader("bundle_version", pi.versionName);
 //			request.addHeader("executable_uuid", SystemUtils.generateUniqueID(pi));			
-			request.addHeader("executable_uuid", Base64.encodeToString(SystemUtils.hashedExecutableUuid(pi), 0));			
+			request.addHeader("executable_uuid", SystemUtils.hashedExecutableUuid(pi) );			
+			Log.d(AppBlade.LogTag, "Request Header " + request.getFirstHeader("executable_uuid"));
+			request.addHeader("static_resource_uuid", SystemUtils.hashedStaticResourcesUuid(pi) );			
+			Log.d(AppBlade.LogTag, "Request Header " + request.getFirstHeader("static_resource_uuid"));
+			request.addHeader("certificate_uuid", SystemUtils.hashedCertificateUuid(pi) );			
+			Log.d(AppBlade.LogTag, "Request Header " + request.getFirstHeader("certificate_uuid"));
 		}
 		
-		Log.d(AppBlade.LogTag, "Request " + request.getFirstHeader("executable_uuid"));
+
 		
 		request.addHeader("android_release", Build.VERSION.RELEASE);
 		request.addHeader("android_api", Build.VERSION.SDK);

@@ -40,16 +40,16 @@ public class SystemUtils {
 			toRet = toRet + "debug";
 		}
 		return toRet;
+	
 	}
-
-	public static byte[] hashedExecutableUuid(PackageInfo pi){
-//		sha256FromInputStream
-		byte[] toRet = null;
+	
+	public static String  hashedUuidOfPackageFile(PackageInfo pi, String filename){
+		String toRet = null;
 		ApplicationInfo ai = pi.applicationInfo;
 		ZipFile zf;
 		try {
 			zf = new ZipFile(ai.sourceDir);
-			ZipEntry ze = zf.getEntry("classes.dex");
+			ZipEntry ze = zf.getEntry(filename);
 			InputStream streamToHash = zf.getInputStream(ze);
 			toRet = StringUtils.sha256FromInputStream(streamToHash);
 		} catch (IOException e) {
@@ -57,6 +57,17 @@ public class SystemUtils {
 		}
 		
 		return toRet;
+
 	}
+	public static String hashedExecutableUuid(PackageInfo pi){
+		return hashedUuidOfPackageFile(pi, "classes.dex");
+	}
+	public static String hashedStaticResourcesUuid(PackageInfo pi){
+		return hashedUuidOfPackageFile(pi, "resources.arsc");
+	}
+	public static String hashedCertificateUuid(PackageInfo pi){
+		return hashedUuidOfPackageFile(pi, "META-INF/CERT.RSA");
+	}
+
 	
 }
