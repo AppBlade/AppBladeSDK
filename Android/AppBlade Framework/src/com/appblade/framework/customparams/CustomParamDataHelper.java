@@ -26,7 +26,8 @@ public class CustomParamDataHelper {
 
 	public static String jsonFileURL(Context context)
 	{
-		return customParamsFolder;
+		File f = context.getFilesDir();
+		return f.getAbsolutePath() + customParamsFolder;
 	}
 	public static String jsonFileURI(Context context)
 	{
@@ -43,8 +44,8 @@ public class CustomParamDataHelper {
 
 	
 	// JSON Parsing
-	public static JSONObject getCustomParamsAsJSON(Context context){
-        InputStream is = CustomParamDataHelper.class.getResourceAsStream( jsonFileURL(context) );
+	public static JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
+        InputStream is = CustomParamDataHelper.class.getResourceAsStream( customParamsResourceLocation );
         String jsonTxt = StringUtils.readStream( is );
 
         JSONObject json = null;
@@ -55,7 +56,15 @@ public class CustomParamDataHelper {
 		}        
         return json;
 	}
+
+	public static JSONObject getCustomParamsAsJSON(Context context){
+        return getCustomParamsAsJSON( jsonFileURI(context) );
+	}
 	
+	//CAREFUL: for crashes only not sure about AppBlade.rootDir
+	public static JSONObject getCustomParamsAsJSON(){
+		return getCustomParamsAsJSON(AppBlade.rootDir + "/../"+customParamsFolder+"/"+customParamsFileName);
+	}
 	
 	public static void storeCurrentCustomParams(Context context, CustomParamData customParams)
 	{
