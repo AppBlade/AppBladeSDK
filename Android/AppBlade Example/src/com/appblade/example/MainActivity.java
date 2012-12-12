@@ -23,10 +23,6 @@ public class MainActivity extends Activity {
         
         initControls();
     }
-    public void onStart(){
-    	super.onStart();
-
-    }
     
     public void onResume() {
     	super.onResume();
