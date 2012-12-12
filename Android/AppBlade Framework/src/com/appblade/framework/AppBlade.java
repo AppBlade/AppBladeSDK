@@ -376,22 +376,16 @@ public class AppBlade {
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
 		setDeviceId(accessToken);
 
-		boolean isTtlInvalid = KillSwitch.shouldUpdate();
-
-		return
-				!StringUtils.isNullOrEmpty(accessToken) &&
-				!isTtlInvalid;
+		boolean isTtlValid = !KillSwitch.shouldUpdate();
+		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
 	}
 	
 	private static boolean isAuthorized(Context context) {
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
 		setDeviceId(accessToken);
 
-		boolean isTtlInvalid = KillSwitch.shouldUpdate();
-
-		return
-				!StringUtils.isNullOrEmpty(accessToken) &&
-				!isTtlInvalid;
+		boolean isTtlValid = !KillSwitch.shouldUpdate(); 
+		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
 	}
 
 
