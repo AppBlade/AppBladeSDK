@@ -34,7 +34,6 @@ import android.util.Log;
 
 public class SessionHelper {
 	//I/O RELATED
-	public static String sessionsFolder = "/appBlade/sessions"; 
 	public static String sessionsIndexFileName = "index.txt";
 	//API RELATED
 	public static String sessionsIndexMIMEType = "text/json"; 
@@ -146,16 +145,16 @@ public class SessionHelper {
 	//Data Listener
 	public static void getSessionDataWithListener(Context context,
 			final OnSessionDataAcquiredListener listener) {
-		File f = new File(sessionsIndexFileURI(context));
+		File f = new File(sessionsIndexFileURI());
 		if(f.exists()){
-			Log.d(AppBlade.LogTag, sessionsIndexFileURI(context)+" exists.");
+			Log.d(AppBlade.LogTag, sessionsIndexFileURI()+" exists.");
 				Log.d(AppBlade.LogTag, "Finished sessions might exist, posting them.");
 				List<SessionData> existingSessions = SessionHelper.readData(context);
 				listener.OnSessionDataAcquired(existingSessions);
 		}else{
 			Log.d(AppBlade.LogTag, "Sessions file does not exist, creating it.");
 			List<SessionData> blankSessions = new ArrayList<SessionData>();
-			updateFile(context, sessionsIndexFileURI(context), blankSessions);
+			updateFile(context, sessionsIndexFileURI(), blankSessions);
 			listener.OnSessionDataAcquired(blankSessions);
 		}
 
@@ -173,12 +172,8 @@ public class SessionHelper {
 	}
 	
 	//Sessions storage helpers
-	public static String sessionsIndexFileURL(Context context) {
-		File f = context.getFilesDir();
-		return f.getAbsolutePath() + sessionsFolder;
-	}
-	public static String sessionsIndexFileURI(Context context) {
-		return sessionsIndexFileURL(context) + "/"+sessionsIndexFileName;
+	public static String sessionsIndexFileURI() {
+		return AppBlade.sessionsDir + "/"+sessionsIndexFileName;
 	}
 
 
@@ -187,7 +182,7 @@ public class SessionHelper {
 		Log.d(AppBlade.LogTag, "Creating New Session ");
 		SessionData data = new SessionData(new Date(), new Date());
 		//check if file exists
-		File f = new File(sessionsIndexFileURI(context));
+		File f = new File(sessionsIndexFileURI());
 		if(f.exists()){
 			try {
 				f.createNewFile();
@@ -205,7 +200,7 @@ public class SessionHelper {
 			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
 				acquiredData.add(data); //add data
 		        // Update file
-		        updateFile(context, sessionsIndexFileURI(context), acquiredData);
+		        updateFile(context, sessionsIndexFileURI(), acquiredData);
 			}
 		} );
 
@@ -218,7 +213,7 @@ public class SessionHelper {
 				// remove object from ArrayList
 				acquiredData.remove(data);
 				// Update file
-				updateFile(context, sessionsIndexFileURI(context), acquiredData);
+				updateFile(context, sessionsIndexFileURI(), acquiredData);
 			}
 		} );
 	}
@@ -241,7 +236,7 @@ public class SessionHelper {
 		        	}
 		        }
 		        //list filtered, rewrite
-		        updateFile(context, sessionsIndexFileURI(context), acquiredData);
+		        updateFile(context, sessionsIndexFileURI(), acquiredData);
 			}
 		} );
 
@@ -257,7 +252,7 @@ public class SessionHelper {
             FileInputStream fstream = null;
             try
             {
-                fstream = new FileInputStream(sessionsIndexFileURI(context));
+                fstream = new FileInputStream(sessionsIndexFileURI());
                 BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
                 String strLine = "";
                 //Read file line by line
@@ -282,7 +277,7 @@ public class SessionHelper {
     	//check for existence of file, if no file, create file
     	Log.d(AppBlade.LogTag, "Updating Sessions file. " +userDataList.size() +" sessions");
     try{
-    	final File parent = new File(sessionsIndexFileURL(context));
+    	final File parent = new File(AppBlade.sessionsDir);
     	if(!parent.exists())
     	{
     		System.err.println("Parent directories do not exist");
@@ -291,7 +286,7 @@ public class SessionHelper {
 	    	   System.err.println("Could not create parent directories");
 	    	}
     	}
-    	final File someFile = new File(sessionsIndexFileURL(context), sessionsIndexFileName);
+    	final File someFile = new File(AppBlade.sessionsDir, sessionsIndexFileName);
     	if(!someFile.exists()){
         	Log.d(AppBlade.LogTag, "Sessions file does not exist yet. creating Sessions file.");
     		someFile.createNewFile();

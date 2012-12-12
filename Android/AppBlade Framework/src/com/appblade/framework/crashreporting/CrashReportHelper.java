@@ -11,10 +11,8 @@ import java.util.Random;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
@@ -25,8 +23,6 @@ import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.customparams.CustomParamDataHelper;
-import com.appblade.framework.feedback.FeedbackHelper;
-import com.appblade.framework.utils.Base64;
 import com.appblade.framework.utils.ExceptionUtils;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.IOUtils;
@@ -35,13 +31,12 @@ import com.appblade.framework.utils.StringUtils;
 public class CrashReportHelper {
 	//I/O RELATED
 	//Just store the json straight to file
-	public static String appbladeCrashesFolder = "/app_blade_exceptions"; 
 	
 	private static String newCrashFileName()
 	{
 		int r = new Random().nextInt(9999);
-		String filename = String.format("%s/%s/ex-%d-%d.txt",
-				AppBlade.rootDir, appbladeCrashesFolder, System.currentTimeMillis(), r);
+		String filename = String.format("%s/ex-%d-%d.txt",
+				AppBlade.exceptionsDir, System.currentTimeMillis(), r);
 		return filename;
 	}
 	
