@@ -50,6 +50,8 @@ public class FeedbackHelper {
 			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
 			String url = WebServiceHelper.getUrl(urlPath);
 
+			Log.d(AppBlade.LogTag, (paramData == null ? "no paramData" : "Param Data " + paramData.toString()));
+
 			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, paramData, AppBlade.BOUNDARY);
 
 			HttpPost request = new HttpPost();
@@ -65,7 +67,6 @@ public class FeedbackHelper {
 			Log.d(AppBlade.LogTag, urlPath);
 			Log.d(AppBlade.LogTag, url);
 			Log.d(AppBlade.LogTag, authHeader);
-			Log.d(AppBlade.LogTag, (paramData == null ? "no paramData" : paramData.toString()));
 
 			request.setURI(new URI(url));
 			request.addHeader("Content-Type", "multipart/form-data; boundary=" + AppBlade.BOUNDARY);
@@ -153,7 +154,12 @@ public class FeedbackHelper {
 
 			ContentBody notesBody = new StringBody(data.Notes);
 			entity.addPart("feedback[notes]", notesBody);
-		
+
+			if(paramsData != null){
+				ContentBody customParamsBody = new StringBody(paramsData.toString());
+				entity.addPart("feedback[custom_params]", customParamsBody);
+			}
+
 			if (data.Screenshot != null) {
 				if (StringUtils.isNullOrEmpty(data.ScreenshotName))
 					data.ScreenshotName = "FeedbackScreenshot";
@@ -165,8 +171,6 @@ public class FeedbackHelper {
 				ContentBody screenshotBody = new ByteArrayBody(screenshotBytes, "application/octet-stream", "base64:" + data.ScreenshotName);
 				entity.addPart("feedback[screenshot]", screenshotBody);
 
-				ContentBody customParamsBody = new StringBody(paramsData.toString());
-				entity.addPart("custom_params", customParamsBody);
 
 			}
 			
@@ -188,9 +192,6 @@ public class FeedbackHelper {
 	/*
 	 * Persistent storage functionality (that's not in FeedbackData)
 	 */
-	
-	
-
 	public static String formatNewScreenshotFileLocation() {
 		String toRet = "";
 		Date date = new Date();
