@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Random;
 
@@ -11,12 +12,21 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONObject;
 
 import android.util.Log;
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.customparams.CustomParamDataHelper;
+import com.appblade.framework.feedback.FeedbackHelper;
+import com.appblade.framework.utils.Base64;
 import com.appblade.framework.utils.ExceptionUtils;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.IOUtils;
@@ -79,6 +89,7 @@ public class CrashReportHelper {
 		{
 			FileInputStream fis = new FileInputStream(f);
 			String content = StringUtils.readStream(fis);
+			final MultipartEntity crashContent = CrashReportHelper.getPostCrashReportBody(content, CustomParamDataHelper.getCustomParamsAsJSON(), AppBlade.BOUNDARY);
 			if(!StringUtils.isNullOrEmpty(content))
 			{
 				String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
@@ -94,8 +105,7 @@ public class CrashReportHelper {
 				request.addHeader("Authorization", authHeader);
 				WebServiceHelper.addCommonHeaders(request);
 
-				if(!StringUtils.isNullOrEmpty(content))
-					request.setEntity(new StringEntity(content));
+				request.setEntity(new StringEntity(content));
 
 				HttpResponse response = null;
 				response = client.execute(request);
@@ -123,6 +133,25 @@ public class CrashReportHelper {
 		}
 	}
 
+	private static MultipartEntity getPostCrashReportBody(String content,
+			JSONObject customParamsAsJSON, String boundary) {
+		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
+		
+		try
+		{
+			ContentBody crashReportBody = new StringBody(content);
+			entity.addPart("crash_report", crashReportBody );
+			if (customParamsAsJSON != null) {
+				ContentBody customParamsBody = new StringBody(customParamsAsJSON.toString());
+				entity.addPart("custom_params", customParamsBody);
+			}
+		} 
+		catch (IOException e) {
+			Log.d(AppBlade.LogTag, e.toString());
+		}
+		
+		return entity;
+	}
 
 	
 }
