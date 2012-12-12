@@ -1,11 +1,6 @@
 package com.appblade.framework;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.Random;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.apache.http.HttpRequest;
 
@@ -13,7 +8,6 @@ import com.appblade.framework.utils.Base64;
 import com.appblade.framework.utils.StringUtils;
 import com.appblade.framework.utils.SystemUtils;
 
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.util.Log;
