@@ -20,6 +20,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.customparams.CustomParamData;
 import com.appblade.framework.utils.Base64;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.IOUtils;
@@ -37,6 +38,10 @@ import android.widget.EditText;
 public class FeedbackHelper {
 
 	public static boolean postFeedback(FeedbackData data) {
+		return postFeedbackWithCustomParams(data, null);
+	}		
+	public static boolean postFeedbackWithCustomParams(FeedbackData data,
+				CustomParamData paramData) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance("Android");
 
@@ -45,7 +50,7 @@ public class FeedbackHelper {
 			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
 			String url = WebServiceHelper.getUrl(urlPath);
 
-			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, AppBlade.BOUNDARY);
+			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, paramData, AppBlade.BOUNDARY);
 
 			HttpPost request = new HttpPost();
 			request.setEntity(content);
@@ -60,10 +65,12 @@ public class FeedbackHelper {
 			Log.d(AppBlade.LogTag, urlPath);
 			Log.d(AppBlade.LogTag, url);
 			Log.d(AppBlade.LogTag, authHeader);
+			Log.d(AppBlade.LogTag, (paramData == null ? "no paramData" : paramData.toString()));
 
 			request.setURI(new URI(url));
 			request.addHeader("Content-Type", "multipart/form-data; boundary=" + AppBlade.BOUNDARY);
 			request.addHeader("Authorization", authHeader);
+
 			WebServiceHelper.addCommonHeaders(request);
 			
 			
@@ -138,7 +145,7 @@ public class FeedbackHelper {
 		dialog.show();
 	}
 
-	public static MultipartEntity getPostFeedbackBody(FeedbackData data, String boundary) {
+	public static MultipartEntity getPostFeedbackBody(FeedbackData data, CustomParamData paramsData, String boundary) {
 		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
 		
 		try
@@ -157,6 +164,10 @@ public class FeedbackHelper {
 				
 				ContentBody screenshotBody = new ByteArrayBody(screenshotBytes, "application/octet-stream", "base64:" + data.ScreenshotName);
 				entity.addPart("feedback[screenshot]", screenshotBody);
+
+				ContentBody customParamsBody = new StringBody(paramsData.toString());
+				entity.addPart("custom_params", customParamsBody);
+
 			}
 			
 		} 
@@ -187,4 +198,7 @@ public class FeedbackHelper {
 		toRet = "Feedback" + timestamp.getSeconds() + ".png";
 		return toRet ;
 	}
+
+
+
 }
