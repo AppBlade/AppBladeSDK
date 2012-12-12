@@ -232,7 +232,8 @@ public class AppBlade {
 					appInfo.CurrentServiceScheme = AppInfo.DefaultServiceScheme;
 				}
 				
-			}catch(Exception e){   
+			}
+			catch(Exception e) {   
 				//the URL was not valid, fallback to default
 				Log.d(LogTag, String.format("%s was not a valid URL, falling back to %s", customHost, AppInfo.DefaultAppBladeHost));
 				appInfo.CurrentEndpoint  = AppInfo.DefaultAppBladeHost;
