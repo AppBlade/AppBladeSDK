@@ -43,6 +43,7 @@ public class AppBlade {
 	public static String exceptionsDir = null;
 	public static String feedbackDir = null;
 	public static String sessionsDir = null;
+	public static String customParamsDir = null;
 
 	public static SessionData currentSession;
 
@@ -50,6 +51,7 @@ public class AppBlade {
 	public static final String AppBladeExceptionsFolder = "app_blade_exceptions";
 	public static final String AppBladeFeedbackFolder = "app_blade_feedback";
 	public static final String AppBladeSessionsFolder = "app_blade_sessions";
+	public static final String AppBladeCustomParamsFolder = "app_blade_params";
 
 	public static final String BOUNDARY_FORMAT = "---------------------------%d";
 
@@ -258,7 +260,7 @@ public class AppBlade {
 		exceptionsDir = makeDirFromRoot(AppBladeExceptionsFolder, context);
 		feedbackDir = makeDirFromRoot(AppBladeFeedbackFolder, context);
 		sessionsDir = makeDirFromRoot(AppBladeSessionsFolder, context);
-
+		customParamsDir  = makeDirFromRoot(AppBladeCustomParamsFolder, context);
 		File exceptionsDirectory = new File(exceptionsDir);
 		canWriteToDisk = exceptionsDirectory.exists();
 	}

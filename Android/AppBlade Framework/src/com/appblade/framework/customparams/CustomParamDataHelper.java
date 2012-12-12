@@ -19,19 +19,14 @@ import android.util.Log;
 public class CustomParamDataHelper {
 	//I/O RELATED
 	//Just store the json straight to file
-	public static String customParamsFolder = "/appBlade"; 
-	public static String customParamsFileName = "customParams.json";
+	public static String customParamsFileName = "custom_params.json";
 	//API RELATED
 	public static String customParamsIndexMIMEType = "text/json"; 
 
-	public static String jsonFileURL(Context context)
+	
+	public static String jsonFileURI()
 	{
-		File f = context.getFilesDir();
-		return f.getAbsolutePath() + customParamsFolder;
-	}
-	public static String jsonFileURI(Context context)
-	{
-		return jsonFileURL(context)+"/"+customParamsFileName;
+		return String.format("%s/%s", AppBlade.customParamsDir, customParamsFileName);
 	}
 	
 	
@@ -39,10 +34,9 @@ public class CustomParamDataHelper {
 	{
 		//don't need to do much currently since all it is is a JSON object, 
 		//other features may include behaviors we'll need in separate behavior, ttl for example
-		return (CustomParamData)getCustomParamsAsJSON(context);
+		return new CustomParamData(getCustomParamsAsJSON());
 	}
 
-	
 	// JSON Parsing
 	public static JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
         JSONObject json = new JSONObject();
@@ -63,13 +57,10 @@ public class CustomParamDataHelper {
         return json;
 	}
 
-	public static JSONObject getCustomParamsAsJSON(Context context){
-        return getCustomParamsAsJSON( jsonFileURI(context) );
-	}
 	
 	//CAREFUL: for crashes only not sure about AppBlade.rootDir
 	public static JSONObject getCustomParamsAsJSON(){
-		return getCustomParamsAsJSON(AppBlade.rootDir + "/../"+customParamsFolder+"/"+customParamsFileName);
+		return getCustomParamsAsJSON(jsonFileURI() );
 	}
 	
 	public static void storeCurrentCustomParams(Context context, CustomParamData customParams)
@@ -77,7 +68,7 @@ public class CustomParamDataHelper {
 		String stringJSON = ((JSONObject) customParams).toString();
 		//confirm file existence
 	    try{
-	    	final File parent = new File(jsonFileURL(context));
+	    	final File parent = new File(AppBlade.customParamsDir);
 	    	if(!parent.exists())
 	    	{
 	    		System.err.println("Parent directories do not exist");
@@ -86,7 +77,7 @@ public class CustomParamDataHelper {
 		    	   System.err.println("Could not create parent directories");
 		    	}
 	    	}
-	    	final File someFile = new File(jsonFileURL(context), customParamsFileName);
+	    	final File someFile = new File(AppBlade.customParamsDir, customParamsFileName);
 	    	if(!someFile.exists()){
 	        	Log.d(AppBlade.LogTag, "customParams file does not exist yet. creating Sessions file.");
 	    		someFile.createNewFile();
