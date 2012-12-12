@@ -44,7 +44,7 @@ public class WebServiceHelper {
 		int seconds = (int) ((System.currentTimeMillis() / 1000) - StringUtils.safeParse(appInfo.Issuance, 0));
 		String nonce = String.format("%d:%s", seconds, getRandomNonceString(WebServiceHelper.NonceRandomStringLength));
 		
-		String methodName = method.name().trim();
+		String methodName = method.toString();
 		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
 		
 		String requestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
