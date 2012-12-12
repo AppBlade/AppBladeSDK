@@ -4,6 +4,8 @@ import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URL;
 
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,6 +21,8 @@ import com.appblade.framework.authenticate.AuthHelper;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
 import com.appblade.framework.crashreporting.CrashReportData;
 import com.appblade.framework.crashreporting.PostCrashReportTask;
+import com.appblade.framework.customparams.CustomParamData;
+import com.appblade.framework.customparams.CustomParamDataHelper;
 import com.appblade.framework.feedback.FeedbackData;
 import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
@@ -140,22 +144,40 @@ public class AppBlade {
 	}
 	
 	
-	
+
 	/**
 	 * Static entry point for setting custom Params
+	 * silently throws JSONException 
 	 */
-	public static void setCustomParameter(Context context, String key, Object value)
+	public static void setCustomParameter(Context context, String key, Object value) 
 	{
-		
+		try {
+			AppBlade.setCustomParameterThrowy(context, key, value);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
-	 
+
 	/**
 	 * Static entry point for clearing all custom Params
 	 */
 	public static void clearCustomParameters(Context context)
 	{
-		
+		CustomParamData emptyData = new CustomParamData();
+		CustomParamDataHelper.storeCurrentCustomParams(context, emptyData);		
 	}
+
+	/**
+	 * Static entry point for setting custom Params
+	 * @throws JSONException 
+	 */
+	public static void setCustomParameterThrowy(Context context, String key, Object value) throws JSONException
+	{
+		CustomParamData currentParams = CustomParamDataHelper.getCurrentCustomParams(context);
+		currentParams.put(key, value);
+		CustomParamDataHelper.storeCurrentCustomParams(context, currentParams);
+	}
+	 
 
 	
 	public static void register(Context context, String token, String secret, String uuid, String issuance)
