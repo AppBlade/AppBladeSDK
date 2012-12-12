@@ -45,15 +45,21 @@ public class CustomParamDataHelper {
 	
 	// JSON Parsing
 	public static JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
+        JSONObject json = new JSONObject();
         InputStream is = CustomParamDataHelper.class.getResourceAsStream( customParamsResourceLocation );
-        String jsonTxt = StringUtils.readStream( is );
-
-        JSONObject json = null;
-		try {
-			json = new JSONObject( jsonTxt );
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}        
+        if(is != null){
+	        String jsonTxt = StringUtils.readStream( is );
+	
+			try {
+				json = new JSONObject( jsonTxt );
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}        
+        }
+        else
+        {
+        	Log.d(AppBlade.LogTag, "Custom Parameters have not yet been inititalized.");
+        }
         return json;
 	}
 
