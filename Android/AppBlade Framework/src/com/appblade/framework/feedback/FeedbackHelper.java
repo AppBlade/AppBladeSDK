@@ -44,6 +44,7 @@ public class FeedbackHelper {
 				CustomParamData paramData) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance("Android");
+		String sharedBoundary = AppBlade.genDynamicBoundary();
 
 		try
 		{
@@ -52,7 +53,7 @@ public class FeedbackHelper {
 
 			Log.d(AppBlade.LogTag, (paramData == null ? "no paramData" : "Param Data " + paramData.toString()));
 
-			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, paramData, AppBlade.BOUNDARY);
+			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, paramData, sharedBoundary);
 
 			HttpPost request = new HttpPost();
 			request.setEntity(content);
@@ -69,7 +70,7 @@ public class FeedbackHelper {
 			Log.d(AppBlade.LogTag, authHeader);
 
 			request.setURI(new URI(url));
-			request.addHeader("Content-Type", "multipart/form-data; boundary=" + AppBlade.BOUNDARY);
+			request.addHeader("Content-Type", "multipart/form-data; boundary=" + sharedBoundary);
 			request.addHeader("Authorization", authHeader);
 
 			WebServiceHelper.addCommonHeaders(request);

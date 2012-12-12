@@ -65,12 +65,13 @@ public class SessionHelper {
 
 	static int postSessions(List<SessionData> sessionsList) {
 		HttpClient client = HttpClientProvider.newInstance("Android");
+		String sharedBoundary = AppBlade.genDynamicBoundary();
 		try
 		{
 			String urlPath = String.format(WebServiceHelper.ServicePathSessionFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
 			String url = WebServiceHelper.getUrl(urlPath);
 
-			final MultipartEntity content = SessionHelper.getPostSessionBody(sessionsList, AppBlade.BOUNDARY);
+			final MultipartEntity content = SessionHelper.getPostSessionBody(sessionsList, sharedBoundary);
 
 			HttpPut request = new HttpPut();
 			request.setEntity(content);
@@ -87,7 +88,7 @@ public class SessionHelper {
 			Log.d(AppBlade.LogTag, authHeader);
 
 			request.setURI(new URI(url));
-			request.addHeader("Content-Type", "multipart/form-data; boundary=" + AppBlade.BOUNDARY);
+			request.addHeader("Content-Type", "multipart/form-data; boundary=" + sharedBoundary);
 			request.addHeader("Authorization", authHeader);
 			WebServiceHelper.addCommonHeaders(request);
 			

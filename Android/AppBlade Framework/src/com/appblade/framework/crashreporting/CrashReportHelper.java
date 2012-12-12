@@ -97,7 +97,9 @@ public class CrashReportHelper {
 		{
 			FileInputStream fis = new FileInputStream(f);
 			String content = StringUtils.readStream(fis);
-			final MultipartEntity crashContent = CrashReportHelper.getPostCrashReportBody(content, CustomParamDataHelper.getCustomParamsAsJSON(), AppBlade.BOUNDARY);
+			String sharedBoundary = AppBlade.genDynamicBoundary();
+
+			final MultipartEntity crashContent = CrashReportHelper.getPostCrashReportBody(content, CustomParamDataHelper.getCustomParamsAsJSON(), sharedBoundary);
 			if(!StringUtils.isNullOrEmpty(content))
 			{
 				String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
