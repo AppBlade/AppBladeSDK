@@ -40,12 +40,18 @@ public class AppBlade {
 
 	static boolean canWriteToDisk = false;
 	public static String rootDir = null;
+	public static String exceptionsDir = null;
+	public static String feedbackDir = null;
+	public static String sessionsDir = null;
 
 	public static SessionData currentSession;
 
-	static final String AppBladeExceptionsDirectory = "app_blade_exceptions";
+	//keeping folders all in one place (the rootDir)
+	public static final String AppBladeExceptionsFolder = "app_blade_exceptions";
+	public static final String AppBladeFeedbackFolder = "app_blade_feedback";
+	public static final String AppBladeSessionsFolder = "app_blade_sessions";
 
-	public static final String BOUNDARY = "---------------------------14737809831466499882746641449";
+	public static final String BOUNDARY_FORMAT = "---------------------------%d";
 
 	/**
 	 * Gets feedback from the user via a dialog and posts the feedback along with log data to AppBlade.
@@ -248,12 +254,22 @@ public class AppBlade {
 		}
 		catch (Exception ex) { }
 
-		rootDir = String.format("%s/%s",
-				context.getFilesDir().getAbsolutePath(),
-				AppBladeExceptionsDirectory);
-		File exceptionsDirectory = new File(rootDir);
-		exceptionsDirectory.mkdirs();
+		rootDir = context.getFilesDir().getAbsolutePath();
+		exceptionsDir = makeDirFromRoot(AppBladeExceptionsFolder, context);
+		feedbackDir = makeDirFromRoot(AppBladeFeedbackFolder, context);
+		sessionsDir = makeDirFromRoot(AppBladeSessionsFolder, context);
+
+		File exceptionsDirectory = new File(exceptionsDir);
 		canWriteToDisk = exceptionsDirectory.exists();
+	}
+
+	private static String makeDirFromRoot(String subfolder, Context context)
+	{
+		String toRet = String.format("%s/%s",
+				context.getFilesDir().getAbsolutePath(), subfolder);
+		File exceptionsDirectory = new File(toRet);
+		exceptionsDirectory.mkdirs();
+		return toRet;
 	}
 
 	public boolean isRegistered() {
@@ -374,8 +390,7 @@ public class AppBlade {
 		return
 				!StringUtils.isNullOrEmpty(accessToken) &&
 				!isTtlInvalid;
-	} 
-	
+	}
 
 
 	public static void setDeviceId(String accessToken) {
@@ -385,5 +400,10 @@ public class AppBlade {
 			AppBlade.appInfo.Ext = accessToken;
 		else
 			AppBlade.appInfo.Ext = AppInfo.DefaultUDID;
+	}
+	
+	public static String genDynamicBoundary()
+	{
+		return String.format(BOUNDARY_FORMAT, Math.floor(Math.random()*Integer.MAX_VALUE));		
 	}
 }
