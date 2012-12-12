@@ -13,7 +13,22 @@ public class CustomParamData extends JSONObject {
 		super();
 	}
 	
-	//initializing with a context will kick off a load for all existing values
+	//initializing with a context or JSONObject will kick off a load for all existing values
+	public CustomParamData(JSONObject jsonObject){
+		super();
+		@SuppressWarnings("unchecked")
+		Iterator<String> keysToAdd = jsonObject.keys(); 
+		while(keysToAdd.hasNext()){
+			String nextKey = (String) keysToAdd.next();
+			try {
+				this.put(nextKey, jsonObject.get(nextKey));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
 	public CustomParamData(Context context){
 		super();
 		this.refreshFromStoredData(context);
