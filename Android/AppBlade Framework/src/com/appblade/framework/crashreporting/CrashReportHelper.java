@@ -105,7 +105,7 @@ public class CrashReportHelper {
 				request.addHeader("Authorization", authHeader);
 				WebServiceHelper.addCommonHeaders(request);
 
-				request.setEntity(new StringEntity(content));
+				request.setEntity(crashContent);
 
 				HttpResponse response = null;
 				response = client.execute(request);
