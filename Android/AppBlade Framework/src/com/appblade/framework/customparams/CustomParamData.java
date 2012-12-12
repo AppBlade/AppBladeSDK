@@ -8,10 +8,17 @@ import org.json.JSONObject;
 import android.content.Context;
 
 public class CustomParamData extends JSONObject {
-	//It feels empty up here without a constructor
+	//It feels empty up here without a basic constructor
 	public CustomParamData(){
 		super();
 	}
+	
+	//initializing with a context will kick off a load for all existing values
+	public CustomParamData(Context context){
+		super();
+		this.refreshFromStoredData(context);
+	}
+
 	
 	//helper functions for parameter data
 	public void storeCurrentData(Context context)
