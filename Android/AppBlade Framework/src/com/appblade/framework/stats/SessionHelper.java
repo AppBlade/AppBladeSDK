@@ -97,9 +97,7 @@ public class SessionHelper {
 			if(response != null && response.getStatusLine() != null)
 			{
 				int statusCode = response.getStatusLine().getStatusCode();
-				int statusCategory = statusCode / 100;
 				Log.d(AppBlade.LogTag, "response: "+ statusCode);
-				
 				return statusCode;
 			}
 		}
