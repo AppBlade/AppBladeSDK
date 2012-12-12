@@ -33,7 +33,19 @@ import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
 
 public class CrashReportHelper {
-
+	//I/O RELATED
+	//Just store the json straight to file
+	public static String appbladeCrashesFolder = "/app_blade_exceptions"; 
+	
+	private static String newCrashFileName()
+	{
+		int r = new Random().nextInt(9999);
+		String filename = String.format("%s/%s/ex-%d-%d.txt",
+				AppBlade.rootDir, appbladeCrashesFolder, System.currentTimeMillis(), r);
+		return filename;
+	}
+	
+	
 	public static Boolean postCrashes(CrashReportData data) {
 		writeExceptionToDisk(data.exception);
 		postExceptionsToServer();
@@ -48,14 +60,11 @@ public class CrashReportHelper {
 
 			if(!StringUtils.isNullOrEmpty(stackTrace))
 			{
-				int r = new Random().nextInt(9999);
-				String filename = String.format("%s/ex-%d-%d.txt",
-						AppBlade.rootDir, System.currentTimeMillis(), r);
-
-				File file = new File(filename);
+				String newFilename = newCrashFileName();
+				File file = new File(newFilename);
 				if(file.createNewFile())
 				{
-					BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+					BufferedWriter writer = new BufferedWriter(new FileWriter(newFilename));
 					writer.write(systemInfo);
 					writer.write(stackTrace);
 					writer.close();
@@ -69,7 +78,6 @@ public class CrashReportHelper {
 	}
 
 	private static void postExceptionsToServer() {
-
 		File exceptionDir = new File(AppBlade.rootDir);
 		if(exceptionDir.exists() && exceptionDir.isDirectory()) {
 			File[] exceptions = exceptionDir.listFiles();
