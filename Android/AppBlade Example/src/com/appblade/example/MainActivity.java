@@ -25,12 +25,15 @@ public class MainActivity extends Activity {
     }
     public void onStart(){
     	super.onStart();
+
     }
     
     public void onResume() {
     	super.onResume();
     	AppBlade.startSession(this.getApplicationContext());
     	AppBlade.authorize(this);
+    	
+    	AppBlade.setCustomParameter(getApplicationContext(), "AppState", "Resumed");
     }
     
     public void onPause() {
@@ -100,6 +103,8 @@ public class MainActivity extends Activity {
 	}
 	
 	private void doFeedbackWithScreenshot() {
+    	AppBlade.setCustomParameter(getApplicationContext(), "AppState", "Did A Feedback");
+
 		AppBlade.doFeedbackWithScreenshot(this, this);
 	}
 	
