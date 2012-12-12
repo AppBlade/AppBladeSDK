@@ -1,11 +1,13 @@
 package com.appblade.framework.feedback;
 
+import com.appblade.framework.AppBlade;
 import com.appblade.framework.customparams.CustomParamData;
 import com.appblade.framework.customparams.CustomParamDataHelper;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Void>{
@@ -26,6 +28,7 @@ public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Void>{
 	protected Void doInBackground(FeedbackData... params) {
 		FeedbackData data = params[0];
 		CustomParamData paramData = CustomParamDataHelper.getCurrentCustomParams(this.context);
+		Log.d(AppBlade.LogTag, "customParams " + paramData.toString());
 		success = FeedbackHelper.postFeedbackWithCustomParams(data, paramData);
 		return null;
 	}
