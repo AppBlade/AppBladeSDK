@@ -7,13 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.appblade.framework.AppBlade;
-import com.appblade.framework.utils.StringUtils;
 
 import android.content.Context;
 import android.util.Log;
