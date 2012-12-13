@@ -89,7 +89,8 @@ public class CustomParamDataHelper {
 	    
         try {
             //open the buffered writer
-        	BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(customParamsFileName));
+	    	Log.d(AppBlade.LogTag, "open the buffered writer to "+ jsonFileURI());
+        	BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(jsonFileURI()));
     		Log.d(AppBlade.LogTag, "writing customParams "+stringJSON);
             bufferedWriter.write(stringJSON);
 	        //Close the BufferedWriter
