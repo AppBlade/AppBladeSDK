@@ -336,7 +336,7 @@ public class AppBlade {
 	 */
 	public static void authorize(final Activity activity, boolean fromLoopBack) {
 
-		// If we don't have enough stored information to authorize the curent user,
+		// If we don't have enough stored information to authorize the current user,
 		// delegate to the AuthHelper
 		if(!isAuthorized(activity))
 		{
