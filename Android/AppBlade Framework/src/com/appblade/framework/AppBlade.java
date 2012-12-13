@@ -276,8 +276,7 @@ public class AppBlade {
 	}
 
 	public boolean isRegistered() {
-		return
-				appInfo != null && appInfo.isValid();
+		return appInfo != null && appInfo.isValid();
 	}
 
 	/**
