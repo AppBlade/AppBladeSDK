@@ -1,8 +1,10 @@
 package com.appblade.framework.customparams;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,20 +32,40 @@ public class CustomParamDataHelper {
 	}
 	
 	
-	public static CustomParamData getCurrentCustomParams(Context context)
+	public static CustomParamData getCurrentCustomParams()
 	{
 		//don't need to do much currently since all it is is a JSON object, 
 		//other features may include behaviors we'll need in separate behavior, ttl for example
-		return new CustomParamData(getCustomParamsAsJSON());
+		CustomParamData dataToRet = new CustomParamData();
+		dataToRet.refreshFromStoredData();
+		return dataToRet;
 	}
 
 	// JSON Parsing
 	public static JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
         JSONObject json = new JSONObject();
-        InputStream is = CustomParamDataHelper.class.getResourceAsStream( customParamsResourceLocation );
-        if(is != null){
-	        String jsonTxt = StringUtils.readStream( is );
-	
+        String jsonTxt = null;
+		BufferedReader buffreader;
+		try {
+			buffreader = new BufferedReader(new FileReader(customParamsResourceLocation));
+			String line;
+			StringBuilder text = new StringBuilder();
+			try {
+				while (( line = buffreader.readLine()) != null) {
+				      text.append(line);
+				      text.append(' ');
+				}
+			} catch (IOException e) {
+				return null;
+			}
+			jsonTxt = text.toString();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		Log.d(AppBlade.LogTag, "Text in cutomparams.json: "+ jsonTxt);
+        
+        if(jsonTxt != null){
 			try {
 				json = new JSONObject( jsonTxt );
 			} catch (JSONException e) {
