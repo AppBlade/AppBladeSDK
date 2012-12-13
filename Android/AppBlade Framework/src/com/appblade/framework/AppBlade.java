@@ -53,7 +53,7 @@ public class AppBlade {
 	public static final String AppBladeSessionsFolder = "app_blade_sessions";
 	public static final String AppBladeCustomParamsFolder = "app_blade_params";
 
-	public static final String BOUNDARY_FORMAT = "---------------------------%d";
+	public static final String BOUNDARY_FORMAT = "---------------------------%s";
 
 	/**
 	 * Gets feedback from the user via a dialog and posts the feedback along with log data to AppBlade.
@@ -410,6 +410,6 @@ public class AppBlade {
 	
 	public static String genDynamicBoundary()
 	{
-		return String.format(BOUNDARY_FORMAT, Math.floor(Math.random()*Integer.MAX_VALUE));		
+		return String.format(BOUNDARY_FORMAT, Double.toString(Math.floor(Math.random()*Integer.MAX_VALUE)));		
 	}
 }
