@@ -5,7 +5,10 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appblade.framework.AppBlade;
+
 import android.content.Context;
+import android.util.Log;
 
 public class CustomParamData extends JSONObject {
 	//It feels empty up here without a basic constructor
@@ -31,7 +34,7 @@ public class CustomParamData extends JSONObject {
 
 	public CustomParamData(Context context){
 		super();
-		this.refreshFromStoredData(context);
+		this.refreshFromStoredData();
 	}
 
 	
@@ -42,9 +45,12 @@ public class CustomParamData extends JSONObject {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public CustomParamData refreshFromStoredData(Context context)
+	public CustomParamData refreshFromStoredData()
 	{
-		CustomParamData latestParams = CustomParamDataHelper.getCurrentCustomParams(context);
+		JSONObject latestParams = CustomParamDataHelper.getCustomParamsAsJSON();
+		
+		Log.d(AppBlade.LogTag, "params loaded: "+ latestParams.toString());
+		
 		//clobber the keys, replace with latest params
 		Iterator<String> keysToRemove = this.keys();
 		Iterator<String> keysToAdd = latestParams.keys(); 

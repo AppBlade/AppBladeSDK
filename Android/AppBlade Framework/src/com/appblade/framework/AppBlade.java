@@ -191,7 +191,7 @@ public class AppBlade {
 	 */
 	public static void setCustomParameterThrowy(Context context, String key, Object value) throws JSONException
 	{
-		CustomParamData currentParams = CustomParamDataHelper.getCurrentCustomParams(context);
+		CustomParamData currentParams = CustomParamDataHelper.getCurrentCustomParams();
 		currentParams.put(key, value);
 		CustomParamDataHelper.storeCurrentCustomParams(context, currentParams);
 	}
