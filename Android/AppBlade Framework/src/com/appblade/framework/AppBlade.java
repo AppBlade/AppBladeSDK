@@ -3,6 +3,7 @@ package com.appblade.framework;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URL;
+import java.util.Random;
 
 import org.json.JSONException;
 
@@ -54,6 +55,7 @@ public class AppBlade {
 	public static final String AppBladeCustomParamsFolder = "app_blade_params";
 
 	public static final String BOUNDARY_FORMAT = "---------------------------%s";
+	private static final int dynamicBoundaryLength = 64;
 
 	/**
 	 * Gets feedback from the user via a dialog and posts the feedback along with log data to AppBlade.
@@ -408,8 +410,17 @@ public class AppBlade {
 			AppBlade.appInfo.Ext = AppInfo.DefaultUDID;
 	}
 	
+	
 	public static String genDynamicBoundary()
 	{
-		return String.format(BOUNDARY_FORMAT, Double.toString(Math.floor(Math.random()*Integer.MAX_VALUE)));		
+		//copying from random nonce string in case anything changes over there.
+		String letters = "123456789";
+		StringBuilder builder = new StringBuilder();
+		Random random = new Random();
+		for(int i = 0; i < dynamicBoundaryLength; i++)
+		{
+			builder.append(letters.charAt(random.nextInt(letters.length())));
+		}
+		return builder.toString();
 	}
 }
