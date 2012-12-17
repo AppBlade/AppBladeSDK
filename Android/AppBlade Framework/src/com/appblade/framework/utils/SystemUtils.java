@@ -44,7 +44,7 @@ public class SystemUtils {
 	}
 	
 	public static String  hashedUuidOfPackageFile(PackageInfo pi, String filename){
-		String toRet = null;
+		String toRet = "";
 		ApplicationInfo ai = pi.applicationInfo;
 		ZipFile zf;
 		try {
@@ -66,7 +66,7 @@ public class SystemUtils {
 		return hashedUuidOfPackageFile(pi, "resources.arsc");
 	}
 	public static String hashedCertificateUuid(PackageInfo pi){
-		return hashedUuidOfPackageFile(pi, "META-INF/CERT.RSA");
+		return hashedUuidOfPackageFile(pi, "META-INF/CERT.DSA");
 	}
 
 	
