@@ -132,7 +132,7 @@ public class AppBlade {
 	
 	public static void startSession(Context context, boolean onlyAuthorized)
 	{
-		if(onlyAuthorized && isAuthorized(context)){
+		if(onlyAuthorized && isAuthorized(context)) {
 			//check for existing sessions, post them.
 			SessionHelper.postExistingSessions(context);
 			SessionHelper.startSession(context);
@@ -154,7 +154,7 @@ public class AppBlade {
 		
 	public static void endSession(Context context, boolean onlyAuthorized)
 	{
-		if(onlyAuthorized && isAuthorized(context)){
+		if(onlyAuthorized && isAuthorized(context)) {
 			SessionHelper.endSession(context);
 		}
 		else
