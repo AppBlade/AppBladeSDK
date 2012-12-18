@@ -43,7 +43,7 @@ public class CustomParamDataHelper {
 	public static synchronized JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
         JSONObject json = new JSONObject();
         String jsonTxt = null;
-		BufferedReader buffreader;
+		BufferedReader buffreader = null;
 		try {
 			buffreader = new BufferedReader(new FileReader(customParamsResourceLocation));
 			String line;
@@ -58,6 +58,16 @@ public class CustomParamDataHelper {
 			jsonTxt = text.toString();
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
+		}finally
+		{
+			try {
+				if(buffreader != null)
+				{
+					buffreader.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		Log.d(AppBlade.LogTag, "Text in cutomparams.json: "+ jsonTxt);
