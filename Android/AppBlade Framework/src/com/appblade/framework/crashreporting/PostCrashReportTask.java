@@ -21,9 +21,10 @@ public class PostCrashReportTask extends AsyncTask<CrashReportData, Void, Void>{
 	
 	@Override
 	protected Void doInBackground(CrashReportData... params) {
-		CrashReportData data = params[0];
-		success = CrashReportHelper.postCrashes(data);
-		
+		if(params.length == 1){
+			CrashReportData data = params[0];
+			success = CrashReportHelper.postCrashes(data);
+		}
 		return null;
 	}
 	
