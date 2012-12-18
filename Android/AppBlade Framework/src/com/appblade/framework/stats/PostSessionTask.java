@@ -25,13 +25,15 @@ public class PostSessionTask extends AsyncTask<List<SessionData>, Void, Void>{
 	
 	@Override
 	protected Void doInBackground(List<SessionData>... params) {
-		data = params[0];
-		if(data.size() != 0){
-			responseCode = SessionHelper.postSessions(data);
-		}else{
-			responseCode = 0;
+		if(params.length == 1){
+			data = params[0];
+			if(data.size() != 0){
+				responseCode = SessionHelper.postSessions(data);
+			}else{
+				responseCode = 0;
+			}
+			success = (responseCode/100) == 2;
 		}
-		success = (responseCode/100) == 2;
 		return null;
 	}
 	
