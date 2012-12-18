@@ -44,7 +44,7 @@ public class SystemUtils {
 	}
 	
 	public static String  hashedUuidOfPackageFile(PackageInfo pi, String filename){
-		String toRet = "";
+		String toRet = null;
 		ApplicationInfo ai = pi.applicationInfo;
 		ZipFile zf;
 		try {
