@@ -280,10 +280,10 @@ public class AppBlade {
 
 	private static String makeDirFromRoot(String subfolder, Context context)
 	{
-		String toRet = String.format("%s/%s",
-				context.getFilesDir().getAbsolutePath(), subfolder);
-		File exceptionsDirectory = new File(toRet);
-		exceptionsDirectory.mkdirs();
+		String toRet = String.format("%s%s%s",
+				context.getFilesDir().getAbsolutePath(), File.pathSeparator, subfolder);
+		File fileDirectory = new File(toRet);
+		fileDirectory.mkdirs();
 		return toRet;
 	}
 
