@@ -85,7 +85,7 @@ public class CustomParamDataHelper {
 	
 	public static void storeCurrentCustomParams(Context context, CustomParamData customParams)
 	{
-		String stringJSON = ((JSONObject) customParams).toString();
+		String stringJSON = customParams.toString();
 		//confirm file existence
 	    try{
 	    	final File parent = new File(AppBlade.customParamsDir);
