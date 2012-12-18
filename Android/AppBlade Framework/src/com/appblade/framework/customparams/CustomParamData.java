@@ -19,18 +19,20 @@ public class CustomParamData extends JSONObject {
 	//initializing with a context or JSONObject will kick off a load for all existing values
 	public CustomParamData(JSONObject jsonObject){
 		super();
-		Iterator<?> keysToAdd = jsonObject.keys(); 
-		while(keysToAdd.hasNext()){
-            Object nextKeyObj = keysToAdd.next();
-            if(nextKeyObj instanceof String)
-            {
-				String nextKey = (String) keysToAdd.next();
-				try {
-					this.put(nextKey, jsonObject.get(nextKey));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-            }
+		if(jsonObject != null){
+			Iterator<?> keysToAdd = jsonObject.keys(); 
+			while(keysToAdd.hasNext()){
+	            Object nextKeyObj = keysToAdd.next();
+	            if(nextKeyObj instanceof String)
+	            {
+					String nextKey = (String) keysToAdd.next();
+					try {
+						this.put(nextKey, jsonObject.get(nextKey));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+	            }
+			}
 		}
 	}
 
@@ -42,12 +44,12 @@ public class CustomParamData extends JSONObject {
 
 	
 	//helper functions for parameter data
-	public void storeCurrentData(Context context)
+	public synchronized void storeCurrentData(Context context)
 	{
 		CustomParamDataHelper.storeCurrentCustomParams(context, this);
 	}
 	
-	public CustomParamData refreshFromStoredData()
+	public synchronized CustomParamData refreshFromStoredData()
 	{
 		JSONObject latestParams = CustomParamDataHelper.getCustomParamsAsJSON();
 		//clobber the keys, replace with latest params

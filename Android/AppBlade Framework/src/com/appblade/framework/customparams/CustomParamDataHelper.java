@@ -30,7 +30,7 @@ public class CustomParamDataHelper {
 	}
 	
 	
-	public static CustomParamData getCurrentCustomParams()
+	public static synchronized CustomParamData getCurrentCustomParams()
 	{
 		//don't need to do much currently since all it is is a JSON object, 
 		//other features may include behaviors we'll need in separate behavior, ttl for example
@@ -40,7 +40,7 @@ public class CustomParamDataHelper {
 	}
 
 	// JSON Parsing
-	public static JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
+	public static synchronized JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
         JSONObject json = new JSONObject();
         String jsonTxt = null;
 		BufferedReader buffreader;
@@ -79,11 +79,11 @@ public class CustomParamDataHelper {
 
 	
 	//CAREFUL: for crashes only not sure about AppBlade.rootDir
-	public static JSONObject getCustomParamsAsJSON(){
+	public static synchronized JSONObject getCustomParamsAsJSON(){
 		return getCustomParamsAsJSON(jsonFileURI() );
 	}
 	
-	public static void storeCurrentCustomParams(Context context, CustomParamData customParams)
+	public static synchronized void storeCurrentCustomParams(Context context, CustomParamData customParams)
 	{
 		String stringJSON = customParams.toString();
 		//confirm file existence
