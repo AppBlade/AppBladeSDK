@@ -19,15 +19,18 @@ public class CustomParamData extends JSONObject {
 	//initializing with a context or JSONObject will kick off a load for all existing values
 	public CustomParamData(JSONObject jsonObject){
 		super();
-		@SuppressWarnings("unchecked")
-		Iterator<String> keysToAdd = jsonObject.keys(); 
+		Iterator<?> keysToAdd = jsonObject.keys(); 
 		while(keysToAdd.hasNext()){
-			String nextKey = (String) keysToAdd.next();
-			try {
-				this.put(nextKey, jsonObject.get(nextKey));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+            Object nextKeyObj = keysToAdd.next();
+            if(nextKeyObj instanceof String)
+            {
+				String nextKey = (String) keysToAdd.next();
+				try {
+					this.put(nextKey, jsonObject.get(nextKey));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+            }
 		}
 	}
 
@@ -44,24 +47,28 @@ public class CustomParamData extends JSONObject {
 		CustomParamDataHelper.storeCurrentCustomParams(context, this);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public CustomParamData refreshFromStoredData()
 	{
 		JSONObject latestParams = CustomParamDataHelper.getCustomParamsAsJSON();
-		
-		Log.d(AppBlade.LogTag, "params loaded: "+ latestParams.toString());
-		
 		//clobber the keys, replace with latest params
-		Iterator<String> keysToRemove = this.keys();
-		Iterator<String> keysToAdd = latestParams.keys(); 
+		Iterator<?> keysToRemove = this.keys();
+		Iterator<?> keysToAdd = latestParams.keys(); 
 		while(keysToRemove.hasNext()){
-			String nextKey = (String) keysToRemove.next();
-			this.remove(nextKey);
+            Object nextKeyObj = keysToAdd.next();
+            if(nextKeyObj instanceof String)
+            {
+				String nextKey = (String) keysToRemove.next();
+				this.remove(nextKey);
+            }
 		}
 		while(keysToAdd.hasNext()){
-			String nextKey = (String) keysToAdd.next();
 			try {
-				this.put(nextKey, latestParams.get(nextKey));
+	            Object nextKeyObj = keysToAdd.next();
+	            if(nextKeyObj instanceof String)
+	            {
+	    			String nextKey = (String) keysToAdd.next();	            	
+					this.put(nextKey, latestParams.get(nextKey));
+	            }
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
