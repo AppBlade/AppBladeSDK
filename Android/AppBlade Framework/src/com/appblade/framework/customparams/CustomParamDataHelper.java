@@ -51,7 +51,6 @@ public class CustomParamDataHelper {
 			try {
 				while (( line = buffreader.readLine()) != null) {
 				      text.append(line);
-				      text.append(' ');
 				}
 			} catch (IOException e) {
 				return null;
