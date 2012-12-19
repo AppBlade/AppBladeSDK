@@ -26,7 +26,7 @@ public class CustomParamDataHelper {
 	
 	public static String jsonFileURI()
 	{
-		return String.format("%s/%s", AppBlade.customParamsDir, customParamsFileName);
+		return String.format("%s%s%s", AppBlade.customParamsDir, File.pathSeparator, customParamsFileName);
 	}
 	
 	

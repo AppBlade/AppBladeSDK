@@ -39,8 +39,8 @@ public class CrashReportHelper {
 	private static String newCrashFileName()
 	{
 		int r = new Random().nextInt(9999);
-		String filename = String.format("%s/ex-%d-%d.txt",
-				AppBlade.exceptionsDir, System.currentTimeMillis(), r);
+		String filename = String.format("%s%sex-%d-%d.txt",
+				AppBlade.exceptionsDir, File.pathSeparator, System.currentTimeMillis(), r);
 		return filename;
 	}
 	
