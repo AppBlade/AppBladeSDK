@@ -83,6 +83,9 @@ public class FeedbackHelper {
 				int statusCode = response.getStatusLine().getStatusCode();
 				int statusCategory = statusCode / 100;
 
+				Log.d(AppBlade.LogTag, "Feedback returned: " + statusCode);
+
+				
 				if(statusCategory == 2)
 					success = true;
 			}
