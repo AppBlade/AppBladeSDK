@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.appblade.framework.AppInfo;
+
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 
@@ -45,7 +47,7 @@ public class SystemUtils {
 	
 	}
 	
-	public static String  hashedUuidOfPackageFile(PackageInfo pi, String filename){
+	public static String hashedUuidOfPackageFile(PackageInfo pi, String filename){
 		String toRet = null;
 		ApplicationInfo ai = pi.applicationInfo;
 		ZipFile zf;
@@ -71,18 +73,9 @@ public class SystemUtils {
 	//builds run through eclipse will not be signed
 	public static String hashedCertificateUuid(PackageInfo pi){
 		String toRet = "unsigned";
-		ApplicationInfo ai = pi.applicationInfo;
-		ZipFile zf;
-		try {
-			zf = new ZipFile(ai.sourceDir);
-			ZipEntry ze = zf.getEntry("META-INF/CERT.DSA");
-			if(ze != null){
-				toRet = hashedUuidOfPackageFile(pi, "META-INF/CERT.DSA");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		if(AppInfo.isSigned(pi)){
+			toRet = hashedUuidOfPackageFile(pi, "META-INF/CERT.DSA");
+		} 
 		return toRet;
 	}
 

@@ -1,8 +1,13 @@
 package com.appblade.framework;
 
 
+import java.io.IOException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import com.appblade.framework.utils.StringUtils;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 
@@ -57,6 +62,25 @@ public class AppInfo {
 		
 		systemInfo = builder.toString();
 	}
+	
+	
+	//a good check to see if we are in eclipse, since that doesn't sign apks before uploading to attached devices
+	public static boolean isSigned(PackageInfo pi) {
+		boolean toRet = false;
+		if(pi != null){
+			ApplicationInfo ai = pi.applicationInfo;
+			ZipFile zf;
+				try {
+					zf = new ZipFile(ai.sourceDir);
+					ZipEntry ze = zf.getEntry("META-INF/CERT.DSA");
+					toRet = (ze != null);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+		return toRet;
+	}
+	
 	
 	public boolean isValid() {
 		return
