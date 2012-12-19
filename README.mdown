@@ -20,7 +20,7 @@
  - **Capture application crash logs**
    - Capture, view & download crash logs via AppBlade  
  - **Application Feedback**
- 	- At any point in the app, users can send a screenshot and a note to AppBlade by doing a three-finger double tap.
+ 	- At any point in the app, users can send a screenshot and a note to AppBlade by doing (iOS only) a three-finger double tap or (iOS and Android) a custom defined action.
 	- v0.3.0 is required to submit feedback with screenshots, due to security changes on the AppBlade API
  - **Custom Data Fields When Reporting** *(iOS Only, added in v0.3)*
  	- Developers can pass additional custom parameters about an application when reporting feedback or crashes. 
