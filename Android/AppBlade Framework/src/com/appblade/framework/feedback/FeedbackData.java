@@ -29,7 +29,7 @@ public class FeedbackData {
 		}
 
 		//if we have a non null variable, write it to file
-		if(this.Screenshot == null){
+		if(this.Screenshot != null){
 			//create a file to write bitmap data
 			File f = new File(this.ScreenshotFileLocation);
 			try {
