@@ -34,7 +34,7 @@ public class HttpUtils {
 		HttpResponse response = null;
 		try
 		{
-			HttpClient client = HttpClientProvider.newInstance("Android");
+			HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 			HttpHead request = new HttpHead(url);
 		    response = client.execute(request);
 		}

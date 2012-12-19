@@ -27,6 +27,7 @@ import com.appblade.framework.authenticate.RemoteAuthorizeActivity;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.StringUtils;
+import com.appblade.framework.utils.SystemUtils;
 
 public class KillSwitch {
 	
@@ -91,7 +92,7 @@ public class KillSwitch {
 
 	public static synchronized HttpResponse getKillSwitchResponse() {
 		HttpResponse response = null;
-		HttpClient client = HttpClientProvider.newInstance("Android");
+		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 
 		String urlPath = String.format(WebServiceHelper.ServicePathKillSwitchFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
 		String url = WebServiceHelper.getUrl(urlPath);

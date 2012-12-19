@@ -27,6 +27,7 @@ import com.appblade.framework.utils.ExceptionUtils;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
+import com.appblade.framework.utils.SystemUtils;
 
 public class CrashReportHelper {
 	//I/O RELATED
@@ -89,7 +90,7 @@ public class CrashReportHelper {
 
 	private static synchronized void sendExceptionData(File f) {
 		boolean success = false;
-		HttpClient client = HttpClientProvider.newInstance("Android");
+		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 
 		try
 		{

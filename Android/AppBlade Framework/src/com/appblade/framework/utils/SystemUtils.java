@@ -9,6 +9,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 
 public class SystemUtils {
+	public static final String UserAgent = "Android";
+	
 	
 	public static boolean hasPermission(PackageInfo pkg, String requested) {
 		String[] permissions = pkg.requestedPermissions;

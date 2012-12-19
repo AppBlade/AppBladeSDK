@@ -77,7 +77,7 @@ public class UpdatesHelper {
 			
 			HttpGet request = new HttpGet();
 			request.setURI(new URI(url));
-			HttpClient client = HttpClientProvider.newInstance("Android");
+			HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 			HttpResponse response = client.execute(request);
 			if(response != null) {
 				

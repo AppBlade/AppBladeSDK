@@ -29,6 +29,7 @@ import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.SystemUtils;
 
 import android.content.Context;
 import android.util.Log;
@@ -64,7 +65,7 @@ public class SessionHelper {
 	}
 
 	static int postSessions(List<SessionData> sessionsList) {
-		HttpClient client = HttpClientProvider.newInstance("Android");
+		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 		String sharedBoundary = AppBlade.genDynamicBoundary();
 		try
 		{

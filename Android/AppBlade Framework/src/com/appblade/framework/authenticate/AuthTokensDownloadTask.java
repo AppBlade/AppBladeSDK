@@ -23,6 +23,7 @@ import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
+import com.appblade.framework.utils.SystemUtils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -52,7 +53,7 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 	protected Void doInBackground(String... params) {
 		
 		String code = params[0];
-		HttpClient client = HttpClientProvider.newInstance("Android");
+		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 		
 		try {
 			String url = WebServiceHelper.getUrl(WebServiceHelper.ServicePathOauthTokens);
