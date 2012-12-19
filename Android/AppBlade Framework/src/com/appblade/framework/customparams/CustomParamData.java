@@ -25,7 +25,7 @@ public class CustomParamData extends JSONObject {
 	            Object nextKeyObj = keysToAdd.next();
 	            if(nextKeyObj instanceof String)
 	            {
-					String nextKey = (String) keysToAdd.next();
+					String nextKey = (String) nextKeyObj;
 					try {
 						this.put(nextKey, jsonObject.get(nextKey));
 					} catch (JSONException e) {
@@ -59,21 +59,21 @@ public class CustomParamData extends JSONObject {
             Object nextKeyObj = keysToAdd.next();
             if(nextKeyObj instanceof String)
             {
-				String nextKey = (String) keysToRemove.next();
+				String nextKey = (String) nextKeyObj;
 				this.remove(nextKey);
             }
 		}
 		while(keysToAdd.hasNext()){
-			try {
-	            Object nextKeyObj = keysToAdd.next();
-	            if(nextKeyObj instanceof String)
-	            {
-	    			String nextKey = (String) keysToAdd.next();	            	
-					this.put(nextKey, latestParams.get(nextKey));
-	            }
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+            Object nextKeyObj = keysToAdd.next();
+            if(nextKeyObj instanceof String)
+            {
+            	String nextKey = (String) nextKeyObj;
+    			try {
+    				this.put(nextKey, latestParams.get(nextKey));
+    			} catch (JSONException e) {
+    				e.printStackTrace();
+    			}
+            }
 		}
 		return this; //return new self
 	}
