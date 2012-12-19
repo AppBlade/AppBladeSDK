@@ -16,7 +16,7 @@ public class HttpUtils {
 	public final static String ContentTypeJson = "application/json";
 	public final static String ContentTypeJpeg = "image/jpeg";
 	public final static String ContentTypeMultipartFormData = "multipart/form-data";
-	public final static String ContentTypeOctetStream = "multipart/form-data";
+	public final static String ContentTypeOctetStream = "application/octet-stream";
 
 	public static long getHeaderAsLong(String url, String name) {
 		long val = 0;

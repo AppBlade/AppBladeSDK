@@ -23,6 +23,7 @@ import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.customparams.CustomParamData;
 import com.appblade.framework.utils.Base64;
 import com.appblade.framework.utils.HttpClientProvider;
+import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
 
@@ -70,7 +71,7 @@ public class FeedbackHelper {
 			Log.d(AppBlade.LogTag, authHeader);
 
 			request.setURI(new URI(url));
-			request.addHeader("Content-Type", "multipart/form-data; boundary=" + sharedBoundary);
+			request.addHeader("Content-Type", HttpUtils.ContentTypeMultipartFormData + "; boundary=" + sharedBoundary);
 			request.addHeader("Authorization", authHeader);
 
 			WebServiceHelper.addCommonHeaders(request);
@@ -172,7 +173,7 @@ public class FeedbackHelper {
 				byte[] screenshotBytes = getBytesFromBitmap(data.Screenshot);
 				screenshotBytes = Base64.encode(screenshotBytes, 0);
 				
-				ContentBody screenshotBody = new ByteArrayBody(screenshotBytes, "application/octet-stream", "base64:" + data.ScreenshotName);
+				ContentBody screenshotBody = new ByteArrayBody(screenshotBytes,	HttpUtils.ContentTypeOctetStream, "base64:" + data.ScreenshotName);
 				entity.addPart("feedback[screenshot]", screenshotBody);
 
 

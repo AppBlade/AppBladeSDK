@@ -27,6 +27,7 @@ import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.utils.HttpClientProvider;
+import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
 
 import android.content.Context;
@@ -87,7 +88,7 @@ public class SessionHelper {
 			Log.d(AppBlade.LogTag, authHeader);
 
 			request.setURI(new URI(url));
-			request.addHeader("Content-Type", "multipart/form-data; boundary=" + sharedBoundary);
+			request.addHeader("Content-Type", HttpUtils.ContentTypeMultipartFormData + "; boundary=" + sharedBoundary);
 			request.addHeader("Authorization", authHeader);
 			WebServiceHelper.addCommonHeaders(request);
 			
