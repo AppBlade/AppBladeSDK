@@ -65,8 +65,23 @@ public class SystemUtils {
 	public static String hashedStaticResourcesUuid(PackageInfo pi){
 		return hashedUuidOfPackageFile(pi, "resources.arsc");
 	}
+	
+	//builds run through eclipse will not be signed
 	public static String hashedCertificateUuid(PackageInfo pi){
-		return hashedUuidOfPackageFile(pi, "META-INF/CERT.DSA");
+		String toRet = "unsigned";
+		ApplicationInfo ai = pi.applicationInfo;
+		ZipFile zf;
+		try {
+			zf = new ZipFile(ai.sourceDir);
+			ZipEntry ze = zf.getEntry("META-INF/CERT.DSA");
+			if(ze != null){
+				toRet = hashedUuidOfPackageFile(pi, "META-INF/CERT.DSA");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return toRet;
 	}
 
 	
