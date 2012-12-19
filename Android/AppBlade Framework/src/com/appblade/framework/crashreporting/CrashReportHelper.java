@@ -31,6 +31,9 @@ import com.appblade.framework.utils.StringUtils;
 public class CrashReportHelper {
 	//I/O RELATED
 	//Just store the json straight to file
+	private static int maxStoredCrashes = 0;
+	private final boolean dropOldestCrash = true;
+
 	
 	private static String newCrashFileName()
 	{
