@@ -42,13 +42,13 @@ public class CrashReportHelper {
 	{
 		int r = new Random().nextInt(9999);
 		String filename = String.format("%s%sex-%d-%d.txt",
-				AppBlade.exceptionsDir, File.pathSeparator, System.currentTimeMillis(), r);
+				AppBlade.exceptionsDir, "/", System.currentTimeMillis(), r);
 		return filename;
 	}
 	
 	
 	public static Boolean postCrashes(CrashReportData data) {
-		writeExceptionToDisk(data.exception);
+		writeExceptionToDisk(data.exception); //remove only on success
 		postExceptionsToServer();
 		return false;
 	}

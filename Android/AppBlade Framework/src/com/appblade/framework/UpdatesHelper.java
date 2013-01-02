@@ -172,7 +172,7 @@ public class UpdatesHelper {
 	private static File getRootDirectory() {
 		String rootDir = ".appblade";
 		String path = String.format("%s%s%s",
-				Environment.getExternalStorageDirectory().getAbsolutePath(), File.pathSeparator,
+				Environment.getExternalStorageDirectory().getAbsolutePath(), "/",
 				rootDir);
 		File dir = new File(path);
 		dir.mkdirs();
