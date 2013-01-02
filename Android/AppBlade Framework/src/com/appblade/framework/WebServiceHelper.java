@@ -98,8 +98,8 @@ public class WebServiceHelper {
 		Log.d(AppBlade.LogTag, "Current service scheme " + AppBlade.appInfo.CurrentServiceScheme);
 		int portToReturn = 443; //assume secure until otherwise said so
 		
-		if(AppBlade.appInfo.DefaultAppBladeHost.equals(AppBlade.appInfo.CurrentEndpoint)){
-			if(!AppBlade.appInfo.DefaultServiceScheme.equals(AppBlade.appInfo.CurrentServiceScheme))
+		if(AppBlade.appInfo.CurrentEndpoint != null && AppBlade.appInfo.CurrentEndpoint.equals(AppInfo.DefaultAppBladeHost)){
+			if(!AppBlade.appInfo.CurrentServiceScheme.equals(AppInfo.DefaultServiceScheme))
 			{
 				portToReturn = 80;
 			}//no check for https here since we're 443 by default
