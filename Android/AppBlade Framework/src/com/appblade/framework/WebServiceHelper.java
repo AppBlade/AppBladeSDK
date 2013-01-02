@@ -1,5 +1,7 @@
 package com.appblade.framework;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Random;
 
 import org.apache.http.HttpRequest;
@@ -48,7 +50,7 @@ public class WebServiceHelper {
 		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
 		
 		String requestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
-				nonce, methodName, requestBodyRaw, appInfo.CurrentEndpoint, "443", requestBodyHash, appInfo.Ext);
+				nonce, methodName, requestBodyRaw, appInfo.CurrentEndpoint, WebServiceHelper.getCurrentPortAsString(), requestBodyHash, appInfo.Ext);
 		String mac = StringUtils.hmacSha256(appInfo.Secret, requestBody).trim();
 		
 		byte[] normalizedRequestBodySha256 = StringUtils.sha256(requestBody);
@@ -86,6 +88,48 @@ public class WebServiceHelper {
 	public static String getUrl(String path) {
 		return String.format("%s%s%s", AppBlade.appInfo.CurrentServiceScheme, AppBlade.appInfo.CurrentEndpoint, path);
 	}
+	
+	public static String getCurrentPortAsString() {
+		return String.format("%d", WebServiceHelper.getCurrentPort());
+	}
+	
+	public static int getCurrentPort() {
+		Log.d(AppBlade.LogTag, "Current endpoint " + AppBlade.appInfo.CurrentEndpoint);
+		Log.d(AppBlade.LogTag, "Current service scheme " + AppBlade.appInfo.CurrentServiceScheme);
+		int portToReturn = 443; //assume secure until otherwise said so
+		
+		if(AppBlade.appInfo.DefaultAppBladeHost.equals(AppBlade.appInfo.CurrentEndpoint)){
+			if(!AppBlade.appInfo.DefaultServiceScheme.equals(AppBlade.appInfo.CurrentServiceScheme))
+			{
+				portToReturn = 80;
+			}//no check for https here since we're 443 by default
+		}
+		else  //custom defined endpoint, make sure we're giving the right port
+		{
+			try {
+				URL aURL = new URL(String.format("%s%s", AppBlade.appInfo.CurrentServiceScheme, AppBlade.appInfo.CurrentEndpoint));
+				if(aURL.getPort() > 0)
+				{
+					Log.d(AppBlade.LogTag, "Port! " + aURL.getPort());
+
+					portToReturn = aURL.getPort();
+				}
+				else
+				{
+					//no specified port, check the protocol
+					if(aURL.getProtocol().equals("http"))
+					{
+						portToReturn = 80;
+					}//no https check required since we're already 443 by default
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return portToReturn;
+	}
+
 	
 	public static void addCommonHeaders(HttpRequest request) {
 		if(AppBlade.hasPackageInfo()) {
