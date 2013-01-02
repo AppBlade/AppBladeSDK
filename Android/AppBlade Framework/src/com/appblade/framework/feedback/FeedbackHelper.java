@@ -21,6 +21,7 @@ import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.customparams.CustomParamData;
+import com.appblade.framework.customparams.CustomParamDataHelper;
 import com.appblade.framework.utils.Base64;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
@@ -153,32 +154,25 @@ public class FeedbackHelper {
 
 	public static MultipartEntity getPostFeedbackBody(FeedbackData data, CustomParamData paramsData, String boundary) {
 		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
-		
 		try
 		{
-
 			ContentBody notesBody = new StringBody(data.Notes);
 			entity.addPart("feedback[notes]", notesBody);
-
 			if (data.Screenshot != null) {
 				if (StringUtils.isNullOrEmpty(data.ScreenshotName))
 					data.ScreenshotName = "FeedbackScreenshot";
-				
 				// re-encode the bytes as base64 so AppBlade will be able to handle it.
 				byte[] screenshotBytes = getBytesFromBitmap(data.Screenshot);
 				screenshotBytes = Base64.encode(screenshotBytes, 0);
-				
 				ContentBody screenshotBody = new ByteArrayBody(screenshotBytes,	HttpUtils.ContentTypeOctetStream, "base64:" + data.ScreenshotName);
 				entity.addPart("feedback[screenshot]", screenshotBody);
 			}
-			
 			if(paramsData != null){
-				ContentBody customParamsBody = new StringBody(paramsData.toString());
+				ContentBody customParamsBody = new ByteArrayBody(paramsData.toString().getBytes("utf-8"),
+																 HttpUtils.ContentTypeJson,
+																 CustomParamDataHelper.customParamsFileName);
 				entity.addPart("custom_params", customParamsBody);
 			}
-
-
-			
 		} 
 		catch (IOException e) {
 			Log.d(AppBlade.LogTag, e.toString());

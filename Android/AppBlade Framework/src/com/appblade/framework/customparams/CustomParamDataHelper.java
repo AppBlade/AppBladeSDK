@@ -70,7 +70,7 @@ public class CustomParamDataHelper {
 			}
 		}
 
-		Log.d(AppBlade.LogTag, "Text in cutomparams.json: "+ jsonTxt);
+		Log.d(AppBlade.LogTag, "Text in customparams.json: "+ jsonTxt);
         
         if(jsonTxt != null){
 			try {

@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
@@ -25,6 +26,7 @@ import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.customparams.CustomParamDataHelper;
 import com.appblade.framework.utils.ExceptionUtils;
 import com.appblade.framework.utils.HttpClientProvider;
+import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
 import com.appblade.framework.utils.SystemUtils;
@@ -32,8 +34,8 @@ import com.appblade.framework.utils.SystemUtils;
 public class CrashReportHelper {
 	//I/O RELATED
 	//Just store the json straight to file
-	private static int maxStoredCrashes = 0;
-	private final boolean dropOldestCrash = true;
+	//private static int maxStoredCrashes = 0;
+	//private final boolean dropOldestCrash = true;
 
 	
 	private static String newCrashFileName()
@@ -88,9 +90,10 @@ public class CrashReportHelper {
 		}
 	}
 
-	private static synchronized void sendExceptionData(File f) {
+	private static synchronized boolean sendExceptionData(File f) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
+		Log.d(AppBlade.LogTag, "sending exception in file " + f.getName());
 
 		try
 		{
@@ -98,6 +101,9 @@ public class CrashReportHelper {
 			String content = StringUtils.readStream(fis);
 			String sharedBoundary = AppBlade.genDynamicBoundary();
 
+			Log.d(AppBlade.LogTag, "CRASH content " + content);
+
+			
 			final MultipartEntity crashContent = CrashReportHelper.getPostCrashReportBody(content, CustomParamDataHelper.getCustomParamsAsJSON(), sharedBoundary);
 			if(!StringUtils.isNullOrEmpty(content))
 			{
@@ -140,6 +146,7 @@ public class CrashReportHelper {
 		{
 			f.delete();
 		}
+		return success;
 	}
 
 	private static MultipartEntity getPostCrashReportBody(String content,
@@ -151,7 +158,9 @@ public class CrashReportHelper {
 			ContentBody crashReportBody = new StringBody(content);
 			entity.addPart("crash_report", crashReportBody );
 			if (customParamsAsJSON != null) {
-				ContentBody customParamsBody = new StringBody(customParamsAsJSON.toString());
+				ContentBody customParamsBody = new ByteArrayBody(customParamsAsJSON.toString().getBytes("utf-8"),
+						 HttpUtils.ContentTypeJson,
+						 CustomParamDataHelper.customParamsFileName);
 				entity.addPart("custom_params", customParamsBody);
 			}
 		} 
