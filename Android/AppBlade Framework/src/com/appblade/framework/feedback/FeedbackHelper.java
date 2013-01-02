@@ -160,11 +160,6 @@ public class FeedbackHelper {
 			ContentBody notesBody = new StringBody(data.Notes);
 			entity.addPart("feedback[notes]", notesBody);
 
-			if(paramsData != null){
-				ContentBody customParamsBody = new StringBody(paramsData.toString());
-				entity.addPart("feedback[custom_params]", customParamsBody);
-			}
-
 			if (data.Screenshot != null) {
 				if (StringUtils.isNullOrEmpty(data.ScreenshotName))
 					data.ScreenshotName = "FeedbackScreenshot";
@@ -175,9 +170,14 @@ public class FeedbackHelper {
 				
 				ContentBody screenshotBody = new ByteArrayBody(screenshotBytes,	HttpUtils.ContentTypeOctetStream, "base64:" + data.ScreenshotName);
 				entity.addPart("feedback[screenshot]", screenshotBody);
-
-
 			}
+			
+			if(paramsData != null){
+				ContentBody customParamsBody = new StringBody(paramsData.toString());
+				entity.addPart("custom_params", customParamsBody);
+			}
+
+
 			
 		} 
 		catch (IOException e) {
