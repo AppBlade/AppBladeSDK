@@ -81,6 +81,23 @@ public class AppInfo {
 		return toRet;
 	}
 	
+	//There is apparently a better way to do this by checking if the debug certificate is included, but right now checking that the cert is missing's our best bet 
+	public static boolean isInEmulator(PackageInfo pi) {
+		boolean toRet = false;
+		if(pi != null){
+			ApplicationInfo ai = pi.applicationInfo;
+			ZipFile zf;
+				try {
+					zf = new ZipFile(ai.sourceDir);
+					ZipEntry ze = zf.getEntry("META-INF/CERT.DSA");
+					toRet = (ze != null);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+		return toRet;
+	}
+
 	
 	public boolean isValid() {
 		return
