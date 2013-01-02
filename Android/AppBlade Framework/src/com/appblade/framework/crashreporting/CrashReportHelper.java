@@ -79,7 +79,7 @@ public class CrashReportHelper {
 	}
 
 	private static void postExceptionsToServer() {
-		File exceptionDir = new File(AppBlade.rootDir);
+		File exceptionDir = new File(AppBlade.exceptionsDir);
 		if(exceptionDir.exists() && exceptionDir.isDirectory()) {
 			File[] exceptions = exceptionDir.listFiles();
 			for(File f : exceptions) {
