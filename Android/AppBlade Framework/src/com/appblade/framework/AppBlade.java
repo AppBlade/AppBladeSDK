@@ -281,7 +281,7 @@ public class AppBlade {
 	private static String makeDirFromRoot(String subfolder, Context context)
 	{
 		String toRet = String.format("%s%s%s",
-				context.getFilesDir().getAbsolutePath(), File.pathSeparator, subfolder);
+				context.getFilesDir().getAbsolutePath(), "/", subfolder);
 		File fileDirectory = new File(toRet);
 		fileDirectory.mkdirs();
 		return toRet;
