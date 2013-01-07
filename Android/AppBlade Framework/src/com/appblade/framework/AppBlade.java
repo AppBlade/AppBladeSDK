@@ -32,7 +32,11 @@ import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
 import com.appblade.framework.utils.StringUtils;
 
-
+/**
+ * AppBlade
+ * @author andrew.tremblay@raizlabs
+ * @author rich.stern@raizlabs
+ */
 public class AppBlade {
 
 	public static String LogTag = "AppBlade";
@@ -244,7 +248,7 @@ public class AppBlade {
 
 	/**
 	 * Static check for authorization 
-	 * @param activity
+	 * @param activity Activity to check for authorization
 	 * @return Whether we have a valid access token (a token exists AND we are still within the ttl)
 	 */
 	private static boolean isAuthorized(Activity activity) {
@@ -257,7 +261,7 @@ public class AppBlade {
 	
 	/**
 	 * Static check for authorization 
-	 * @param context
+	 * @param context The Context we want to check for authorization
 	 * @return Whether we have a valid access token (a token exists AND we are still within the ttl)
 	 */
 	private static boolean isAuthorized(Context context) {
@@ -268,11 +272,12 @@ public class AppBlade {
 		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
 	}
 
+
 	
 	/********************************************************
 	 ********************************************************
 	 * SESSION COUNTING
-	 * MEthods to store and send when a session is started and ended (usually reserved for when an application or activity is resumed or paused)
+	 * Methods to store and send when a session is started and ended (usually reserved for when an application or activity is resumed or paused)
 	 */
 	
 	/**
@@ -343,7 +348,6 @@ public class AppBlade {
 		SessionHelper.postExistingSessions(context);
 	}
 
-	
 	
 	/********************************************************
 	 ********************************************************
@@ -416,8 +420,6 @@ public class AppBlade {
 		});
 	}
 
-
-	
 	/********************************************************
 	 ********************************************************
 	 * CRASH REPORTING 
@@ -425,7 +427,8 @@ public class AppBlade {
 	 */
 	
 	/**
-	 * Register AppBladeExceptionHandler as the default exception handler on the current thread
+	 * Register AppBladeExceptionHandler as the default uncaught exception handler on the current thread.
+	 * Will call on every uncaught exception and will pass that exception to AppBlade.notify(final Throwable e).
 	 */
 	private static void registerExceptionHandler() {
 		UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
@@ -437,7 +440,7 @@ public class AppBlade {
 
 	/**
 	 * Notify the AppBlade Server of a crash, given the thrown error/exception
-	 * @param e
+	 * @param e The Throwable to send to AppBlade
 	 */
 	public static void notify(final Throwable e)
 	{
