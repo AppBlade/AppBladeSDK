@@ -86,17 +86,17 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 		if(HttpUtils.isOK(response)) {
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.d(AppBlade.LogTag, data);
+				Log.d(AppBlade.LogTag, "authData recieved " + data);
 				JSONObject json = new JSONObject(data);
 				
 				String accessToken = json.getString("access_token");
 				
 				// Currently unused
-//				int expires = json.getInt("expires_in");
-//				String token_type = json.getString("token_type");
-//				String refresh_token = json.getString("refresh_token");
+				String token_type = json.getString("token_type");
+				String refresh_token = json.getString("refresh_token");
+				int expires = json.getInt("expires_in");
 				
-				RemoteAuthHelper.store(context, accessToken);
+				RemoteAuthHelper.store(context, token_type, accessToken, refresh_token, expires);
 			}
 			catch (IOException ex) { }
 			catch (JSONException ex) { }
