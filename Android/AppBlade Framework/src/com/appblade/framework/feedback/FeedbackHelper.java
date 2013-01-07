@@ -35,7 +35,11 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 import android.view.Gravity;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class FeedbackHelper {
 
@@ -128,12 +132,29 @@ public class FeedbackHelper {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 		dialog.setTitle("Feedback");
 
+		final LinearLayout wrapperView = new LinearLayout(context);
+		wrapperView.setOrientation(LinearLayout.VERTICAL);
+		
+		
+		LinearLayout checkboxLayout = new LinearLayout(context);
+		checkboxLayout.setGravity(Gravity.CENTER_VERTICAL);
+		final CheckBox screenshotCheckBox = new CheckBox(context);
+		screenshotCheckBox.setChecked(true); 
+		checkboxLayout.addView(screenshotCheckBox);
+		
+		final TextView screenshotCheckboxTitle = new TextView(context);
+		screenshotCheckboxTitle.setText("Send Screenshot");
+		checkboxLayout.addView(screenshotCheckboxTitle);
+		wrapperView.addView(checkboxLayout);
+		
 		final EditText editText = new EditText(context);
 		editText.setLines(5);
 		editText.setGravity(Gravity.TOP);
 		editText.setHint("Enter any feedback...");
-
-		dialog.setView(editText);
+		wrapperView.addView(editText);
+		
+		
+		dialog.setView(wrapperView);
 		
 		if (data == null)
 			data = new FeedbackData();
@@ -143,6 +164,7 @@ public class FeedbackHelper {
 		dialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				fData.Notes = editText.getText().toString();
+				fData.sendScreenshotConfirmed = screenshotCheckBox.isChecked();
 				listener.OnFeedbackDataAcquired(fData);
 			}
 		});
@@ -158,7 +180,7 @@ public class FeedbackHelper {
 		{
 			ContentBody notesBody = new StringBody(data.Notes);
 			entity.addPart("feedback[notes]", notesBody);
-			if (data.Screenshot != null) {
+			if (data.Screenshot != null && data.sendScreenshotConfirmed) {
 				if (StringUtils.isNullOrEmpty(data.ScreenshotName))
 					data.ScreenshotName = "FeedbackScreenshot";
 				// re-encode the bytes as base64 so AppBlade will be able to handle it.

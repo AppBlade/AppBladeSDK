@@ -18,6 +18,8 @@ public class FeedbackData {
 	public Bitmap Screenshot;
 	public String ScreenshotName;
 	public String ScreenshotFileLocation;
+	public boolean sendScreenshotConfirmed;
+
 
 	/*
 	 * Persistent storage functionality
@@ -51,10 +53,12 @@ public class FeedbackData {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			sendScreenshotConfirmed = true;
 		}
 		else
 		{
-			//setting screenshot to null means delete the file (potentially)
+			//setting screenshot to null means delete the file (potentially). 
+			sendScreenshotConfirmed = false;
 		}
 	}
 	
