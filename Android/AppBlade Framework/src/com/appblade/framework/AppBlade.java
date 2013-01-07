@@ -57,154 +57,35 @@ public class AppBlade {
 	public static final String BOUNDARY_FORMAT = "---------------------------%s";
 	private static final int dynamicBoundaryLength = 64;
 
-	/**
-	 * Gets feedback from the user via a dialog and posts the feedback along with log data to AppBlade.
-	 * @param context Context to use to display the dialog. 
-	 */
-	public static void doFeedback(Context context) {
-		doFeedbackWithScreenshot(context, null, null);
-	}
-
-	/**
-	 * Gets feedback from the user via a dialog and takes a screenshot from the content of the given
-	 * Activity. Posts the feedback, log data, and screenshot to AppBlade.
-	 * @param context Context to use to display the dialog.
-	 * @param activity Activity to screenshot.
-	 */
-	public static void doFeedbackWithScreenshot(Context context, Activity activity) {
-		View view = activity.getWindow().getDecorView().findViewById(android.R.id.content);
-		doFeedbackWithScreenshot(context, view);
-	}
-
-	/**
-	 * Gets feedback from the user via a dialog and takes a screenshot from the given View.
-	 * Posts the feedback, log data, and screenshot to AppBlade.
-	 * @param context Context to use to display the dialog.
-	 * @param view View to screenshot.
-	 */
-	public static void doFeedbackWithScreenshot(Context context, View view) {
-		boolean wasCacheEnabled = view.isDrawingCacheEnabled();
-		view.setDrawingCacheEnabled(true);
-		Bitmap viewScreenshot = view.getDrawingCache();
-		Bitmap screenshot = viewScreenshot.copy(viewScreenshot.getConfig(), false);
-		view.setDrawingCacheEnabled(wasCacheEnabled);
-
-		doFeedbackWithScreenshot(context, screenshot);
-	}
-
-	/**
-	 * Gets feedback from the user via a dialog and posts the feedback, log data, and given
-	 * Bitmap to AppBlade.
-	 * @param context Context to use to display the dialog.
-	 * @param screenshot The screenshot Bitmap to post to AppBlade.
-	 */
-	public static void doFeedbackWithScreenshot(Context context, Bitmap screenshot) {
-		String screenshotName = "feedback.png"; //keep for appblade logic
-		doFeedbackWithScreenshot(context, screenshot, screenshotName);
-	}
-
-	/**
-	 * Gets feedback from the user via a dialog and posts the feedback, log data, and given
-	 * Bitmap to AppBlade.
-	 * @param context Context to use to display the dialog.
-	 * @param screenshot The screenshot Bitmap to post to AppBlade.
-	 * @param screenshotName The filename to use for the screenshot.
-	 */
-	public static void doFeedbackWithScreenshot(final Context context, Bitmap screenshot, String screenshotName) {
-		FeedbackData data = new FeedbackData();
-		data.setPersistentScreenshot(screenshot);
-		data.ScreenshotName = screenshotName;
-		FeedbackHelper.getFeedbackData(context, data, new OnFeedbackDataAcquiredListener() {
-			public void OnFeedbackDataAcquired(FeedbackData data) {
-				new PostFeedbackTask(context).execute(data);
-			}
-		});
-	}
-
-
-	/**
-	 * Static point for beginning a session (posts any existing sessions by default) 
-	 */
-	public static void startSession(Context context)
-	{
-		startSession(context, false);
-	}
 	
-	public static void startSession(Context context, boolean onlyAuthorized)
-	{
-		if(onlyAuthorized && isAuthorized(context)) {
-			//check for existing sessions, post them.
-			SessionHelper.postExistingSessions(context);
-			SessionHelper.startSession(context);
-		}
-		else
-		{
-			Log.d(LogTag, "Client is not yet authorized, cannot start session");
-		}
-	}
-	 
-
-	/**
-	 * Static point for ending a session
+	/********************************************************
+	 * APPBLADE REGISTRATION
+	 * Methods to help assign the app with the necessary information to communicate with AppBlade. A register call should be made before all other calls, and only once. 
 	 */
-	public static void endSession(Context context)
-	{
-		endSession(context, false);		
-	}
-		
-	public static void endSession(Context context, boolean onlyAuthorized)
-	{
-		if(onlyAuthorized && isAuthorized(context)) {
-			SessionHelper.endSession(context);
-		}
-		else
-		{
-			Log.d(LogTag, "Client is not yet authorized, cannot end session");			
-		}
-	}
 	
-	
-
 	/**
-	 * Static entry point for setting custom Params
-	 * silently throws JSONException 
-	 */
-	public static void setCustomParameter(Context context, String key, Object value) 
-	{
-		try {
-			AppBlade.setCustomParameterThrowy(context, key, value);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Static entry point for clearing all custom Params
-	 */
-	public static void clearCustomParameters(Context context)
-	{
-		CustomParamData emptyData = new CustomParamData();
-		CustomParamDataHelper.storeCurrentCustomParams(context, emptyData);		
-	}
-
-	/**
-	 * Static entry point for setting custom Params
-	 * @throws JSONException 
-	 */
-	public static void setCustomParameterThrowy(Context context, String key, Object value) throws JSONException
-	{
-		CustomParamData currentParams = CustomParamDataHelper.getCurrentCustomParams();
-		currentParams.put(key, value);
-		CustomParamDataHelper.storeCurrentCustomParams(context, currentParams);
-	}
-	 
-
-	
+	 * Static entry point for registering with AppBlade (must be called before anything else).
+	 * Find your API keys on your project page at http://www.appblade.com
+	 * @param context Context to use to control storage.
+	 * @param token String value of the token.
+	 * @param secret String value of the shared secret.
+	 * @param uuid String value of the project uuid.
+	 * @param issuance String value of the timestamp value.
+	 */	
 	public static void register(Context context, String token, String secret, String uuid, String issuance)
 	{
 		register(context, token, secret, uuid, issuance, null);		
 	}
 	
+	/**
+	 * Static entry point for registering with AppBlade (must be called before anything else)
+	 * @param context Context to use to control storage.
+	 * @param token String value of the token.
+	 * @param secret String value of the shared secret.
+	 * @param uuid String value of the project uuid.
+	 * @param issuance String value of the timestamp value.
+	 * @param customHost String value of the custom endpoint to use. Will determine port automatically if not defined from the given protocol (http/https), falls back to default values of protocol and port if neither included.
+	 */	
 	public static void register(Context context, String token, String secret, String uuid, String issuance, String customHost)
 	{
 		// Check parameters
@@ -278,53 +159,25 @@ public class AppBlade {
 		canWriteToDisk = exceptionsDirectory.exists();
 	}
 
-	private static String makeDirFromRoot(String subfolder, Context context)
-	{
-		String toRet = String.format("%s%s%s",
-				context.getFilesDir().getAbsolutePath(), "/", subfolder);
-		File fileDirectory = new File(toRet);
-		fileDirectory.mkdirs();
-		return toRet;
-	}
-
+	/**
+	 * Static check for whether we are currently registered with AppBlade.
+	 */
 	public boolean isRegistered() {
 		return appInfo != null && appInfo.isValid();
 	}
+	
+	
+	
 
-	/**
-	 * Register default exception handler on current thread
+	/********************************************************
+	 * APP AUTHORIZATION 
+	 * Methods to force users to sign into AppBlade before using the app (or a part of the app).
+	 * The features of AppBlade benefit from authorization, but calls to it should be removed before Play Store release.
 	 */
-	private static void registerExceptionHandler() {
-		UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
-		if(! (current instanceof AppBladeExceptionHandler))
-		{
-			Thread.setDefaultUncaughtExceptionHandler(new AppBladeExceptionHandler(current));
-		}
-	}
 
 	/**
-	 * Notify the AppBlade Server of a crash, given the thrown error/exception
-	 * @param e
-	 */
-	public static void notify(final Throwable e)
-	{
-		if(e != null && canWriteToDisk)
-		{
-			CrashReportData data = new CrashReportData(e);
-			new PostCrashReportTask(null).execute(data);
-		}
-	}
-
-	public static boolean hasPackageInfo() {
-		return appInfo != null && appInfo.PackageInfo != null;
-	}
-
-	public static PackageInfo getPackageInfo() {
-		return appInfo.PackageInfo;
-	}
-
-	/**
-	 * Default fromLoopBack parameter to false since this is how it is called from the host app
+	 * Static entry point for authorization logic and navigation.
+	 * Simple wrapper call to  authorize(final Activity activity, boolean fromLoopBack) where fromLoopBack is false
 	 * @param activity
 	 */
 	public static void authorize(Activity activity) {
@@ -333,8 +186,10 @@ public class AppBlade {
 
 	/**
 	 * Static entry point for authorization logic and navigation
+	 * Prompts an Authorization view with a sign-in to AppBlade, fetches a token on successful login. 
+	 * If a valid token already exists, will not prompt anything.
 	 * @param activity
-	 * @param fromLoopBack
+	 * @param fromLoopBack whether the authorize call is from the authorization window or not, (defaults to false)
 	 */
 	public static void authorize(final Activity activity, boolean fromLoopBack) {
 
@@ -384,6 +239,12 @@ public class AppBlade {
 		}
 	}
 
+
+	/**
+	 * Static check for authorization 
+	 * @param activity
+	 * @return Whether we have a valid access token (a token exists AND we are still within the ttl)
+	 */
 	private static boolean isAuthorized(Activity activity) {
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
 		setDeviceId(accessToken);
@@ -392,6 +253,11 @@ public class AppBlade {
 		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
 	}
 	
+	/**
+	 * Static check for authorization 
+	 * @param context
+	 * @return Whether we have a valid access token (a token exists AND we are still within the ttl)
+	 */
 	private static boolean isAuthorized(Context context) {
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
 		setDeviceId(accessToken);
@@ -400,7 +266,261 @@ public class AppBlade {
 		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
 	}
 
+	
+	/********************************************************
+	 * SESSION COUNTING
+	 * MEthods to store and send when a session is started and ended (usually reserved for when an application or activity is resumed or paused)
+	 */
+	
+	/**
+	 * Static point for beginning a session (posts any existing sessions by default) 
+	 * @param context Context to use to control the posting of the session.
+	 */
+	public static void startSession(Context context)
+	{
+		startSession(context, false);
+	}
+	
+	/**
+	 * Static point for ending a session
+	 * @param context Context to use to control the posting of the session.
+	 * @param onlyAuthorized boolean to determine manually if you only want to log authorized sessions or not.
+	 */
+	public static void startSession(Context context, boolean onlyAuthorized)
+	{
+		if(onlyAuthorized){
+			if(isAuthorized(context)) {
+				//check for existing sessions, post them.
+				SessionHelper.startSession(context);
+			}
+			else
+			{
+				Log.d(LogTag, "Client is not yet authorized, cannot start session");
+			}
+		}
+		else
+		{
+			//we don't care about authorization
+			SessionHelper.startSession(context);
+		}
 
+
+	}
+
+	/**
+	 * Static point for ending a session
+	 * @param context Context to use to control the posting of the session.
+	 */
+	public static void endSession(Context context)
+	{
+		endSession(context, false);		
+	}
+		
+	/**
+	 * Static point for ending a session
+	 * @param context Context to use to control the posting of the session.
+	 * @param onlyAuthorized boolean to determine manually if you only want to log authorized sessions or not.
+	 */
+	public static void endSession(Context context, boolean onlyAuthorized)
+	{
+		if(onlyAuthorized){
+			if(isAuthorized(context)) {
+				SessionHelper.endSession(context);
+			}
+			else
+			{
+				Log.d(LogTag, "Client is not yet authorized, cannot end session");			
+			}
+		}
+		else
+		{
+			//we don't care about authorization
+			SessionHelper.endSession(context);
+		}
+		SessionHelper.postExistingSessions(context);
+	}
+
+	
+	
+	/********************************************************
+	 * FEEDBACK REPORTING
+	 * Methods for the AppBlade feedback window, will send a screenshot of hte current screen and a personalized message to appblade, as well as any custom parameters you have set. 
+	 * Be very careful that you do not send any personal information accidentally (or maliciously) 
+	 */
+	
+	/**
+	 * Gets feedback from the user via a dialog and posts the feedback along with log data to AppBlade.
+	 * @param context Context to use to display the dialog. 
+	 */
+	public static void doFeedback(Context context) {
+		doFeedbackWithScreenshot(context, null, null);
+	}
+
+	/**
+	 * Gets feedback from the user via a dialog and takes a screenshot from the content of the given
+	 * Activity. Posts the feedback, log data, and screenshot to AppBlade.
+	 * @param context Context to use to display the dialog.
+	 * @param activity Activity to screenshot.
+	 */
+	public static void doFeedbackWithScreenshot(Context context, Activity activity) {
+		View view = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+		doFeedbackWithScreenshot(context, view);
+	}
+
+	/**
+	 * Gets feedback from the user via a dialog and takes a screenshot from the given View.
+	 * Posts the feedback, log data, and screenshot to AppBlade.
+	 * @param context Context to use to display the dialog.
+	 * @param view View to screenshot.
+	 */
+	public static void doFeedbackWithScreenshot(Context context, View view) {
+		boolean wasCacheEnabled = view.isDrawingCacheEnabled();
+		view.setDrawingCacheEnabled(true);
+		Bitmap viewScreenshot = view.getDrawingCache();
+		Bitmap screenshot = viewScreenshot.copy(viewScreenshot.getConfig(), false);
+		view.setDrawingCacheEnabled(wasCacheEnabled);
+
+		doFeedbackWithScreenshot(context, screenshot);
+	}
+
+	/**
+	 * Gets feedback from the user via a dialog and posts the feedback, log data, and given
+	 * Bitmap to AppBlade.
+	 * @param context Context to use to display the dialog.
+	 * @param screenshot The screenshot Bitmap to post to AppBlade.
+	 */
+	public static void doFeedbackWithScreenshot(Context context, Bitmap screenshot) {
+		String screenshotName = "feedback.png"; //keep for appblade logic
+		doFeedbackWithScreenshot(context, screenshot, screenshotName);
+	}
+
+	/**
+	 * Gets feedback from the user via a dialog and posts the feedback, log data, and given
+	 * Bitmap to AppBlade.
+	 * @param context Context to use to display the dialog.
+	 * @param screenshot The screenshot Bitmap to post to AppBlade.
+	 * @param screenshotName The filename to use for the screenshot.
+	 */
+	public static void doFeedbackWithScreenshot(final Context context, Bitmap screenshot, String screenshotName) {
+		FeedbackData data = new FeedbackData();
+		data.setPersistentScreenshot(screenshot);
+		data.ScreenshotName = screenshotName;
+		FeedbackHelper.getFeedbackData(context, data, new OnFeedbackDataAcquiredListener() {
+			public void OnFeedbackDataAcquired(FeedbackData data) {
+				new PostFeedbackTask(context).execute(data);
+			}
+		});
+	}
+
+
+	
+	/********************************************************
+	 * CRASH REPORTING 
+	 * Error handling methods that can help you send data to AppBlade
+	 */
+	
+	/**
+	 * Register AppBladeExceptionHandler as the default exception handler on the current thread
+	 */
+	private static void registerExceptionHandler() {
+		UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
+		if(! (current instanceof AppBladeExceptionHandler))
+		{
+			Thread.setDefaultUncaughtExceptionHandler(new AppBladeExceptionHandler(current));
+		}
+	}
+
+	/**
+	 * Notify the AppBlade Server of a crash, given the thrown error/exception
+	 * @param e
+	 */
+	public static void notify(final Throwable e)
+	{
+		if(e != null && canWriteToDisk)
+		{
+			Log.d(AppBlade.LogTag, e.getLocalizedMessage());
+			CrashReportData data = new CrashReportData(e);
+			new PostCrashReportTask(null).execute(data);
+		}
+	}
+
+	
+	/********************************************************
+	 * CUSTOM PARAMETERS 
+	 * Methods to set, get, and clear any custom parameters you'd like to send along with feedback or crash reporting to AppBlade 
+	 */
+
+	/**
+	 * Static entry point for setting custom parameters
+	 * custom parameters are stored and sent as JSON
+	 * silently throws JSONException 
+	 * @param context Context to use to control storage.
+	 * @param key Key value (name) of the parameter.
+	 * @param value Object value that you want the key set to. (JSON or String, usually) 
+	 */
+	public static void setCustomParameter(Context context, String key, Object value) 
+	{
+		try {
+			AppBlade.setCustomParameterThrowy(context, key, value);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Static entry point for setting custom parameters
+	 * loudly throws JSONException 
+	 * @param context Context to use to control storage.
+	 * @param key Key value (name) of the parameter.
+	 * @param value Object value that you want the key set to. (JSON or String, usually) 
+	 * @throws JSONException 
+	 */
+	public static void setCustomParameterThrowy(Context context, String key, Object value) throws JSONException
+	{
+		CustomParamData currentParams = CustomParamDataHelper.getCurrentCustomParams();
+		currentParams.put(key, value);
+		CustomParamDataHelper.storeCurrentCustomParams(context, currentParams);
+	}
+	
+	/**
+	 * Static entry point for clearing all custom Params
+	 * @param context Context to use to control storage.
+	 */
+	public static void clearCustomParameters(Context context)
+	{
+		CustomParamData emptyData = new CustomParamData();
+		CustomParamDataHelper.storeCurrentCustomParams(context, emptyData);		
+	}
+
+
+	/********************************************************
+	 * ASSORTED DETRITUS 
+	 * Helper methods to make the inner workings of AppBlade a bit easier
+	 */
+
+	/**
+	 * Static check for whether we are have info about the current apk.
+	 */
+	public static boolean hasPackageInfo() {
+		return appInfo != null && appInfo.PackageInfo != null;
+	}
+
+	/**
+	 * Static call for the info about the current apk.
+	 * @return package info about the apk we have already generated on registering. Returns null if we are not registered.
+	 */
+	public static PackageInfo getPackageInfo() {
+		if(AppBlade.hasPackageInfo()) {
+			return appInfo.PackageInfo;
+		}
+		return null;	
+	}
+
+
+	/**
+	 * Static helper call to set the device ID (ext) for the device running this app.
+	 * @param accessToken the access token to that will be the new deviceID, defaults to AppInfo.DefaultUDID if null or an empty string
+	 */
 	public static void setDeviceId(String accessToken) {
 		Log.d(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
 
@@ -410,7 +530,10 @@ public class AppBlade {
 			AppBlade.appInfo.Ext = AppInfo.DefaultUDID;
 	}
 	
-	
+	/**
+	 * Static helper call to generate a dynamic boundary for webservice calls.
+	 * @return a random string of numbers of length dynamicBoundaryLength, the string will not contain zero
+	 */
 	public static String genDynamicBoundary()
 	{
 		//copying from random nonce string in case anything changes over there.
@@ -423,4 +546,19 @@ public class AppBlade {
 		}
 		return builder.toString();
 	}
+
+	/**
+	 * Helper method for setting up AppBlade storage
+	 * @param subfolder String name of subfolder to create.
+	 * @param context Context to use to control storage.	 
+	 */	
+	private static String makeDirFromRoot(String subfolder, Context context)
+	{
+		String toRet = String.format("%s%s%s",
+				context.getFilesDir().getAbsolutePath(), "/", subfolder);
+		File fileDirectory = new File(toRet);
+		fileDirectory.mkdirs();
+		return toRet;
+	}
+
 }
