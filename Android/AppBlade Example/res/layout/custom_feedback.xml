@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/customAppBladeDialogueView"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top"
+    android:orientation="vertical" >
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="AppBladeFeedbackScreenshotCheckBox"
+        android:text="@string/send_screenshot" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:ems="5"
+        android:hint="@string/custom_feedback_field"
+        android:inputType="text|textMultiLine"
+        android:scrollHorizontally="false"
+        android:tag="AppBladeFeedbackTextView" >
+        <requestFocus />
+    </EditText>
+
+    <RadioButton
+        android:id="@+id/radioButton1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/useless_radio_button" />
+
+</LinearLayout>

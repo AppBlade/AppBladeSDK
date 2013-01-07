@@ -3,5 +3,8 @@
 
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">AppBlade Example</string>
+    <string name="send_screenshot">Send Screenshot</string>
+    <string name="custom_feedback_field">Custom Feedback Field</string>
+    <string name="useless_radio_button">Useless Radio button</string>
 
 </resources>
