@@ -61,7 +61,7 @@ public class PostSessionTask extends AsyncTask<List<SessionData>, Void, Void>{
 		}
 
 		
-		if(context != null){
+		if(context != null && AppBlade.makeToast){
 			Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
 		}
 	}

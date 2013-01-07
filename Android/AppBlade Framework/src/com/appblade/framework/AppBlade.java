@@ -38,9 +38,13 @@ import com.appblade.framework.utils.StringUtils;
  * @author rich.stern@raizlabs
  */
 public class AppBlade {
-
 	public static String LogTag = "AppBlade";
-	
+	public static boolean makeToast = false;  //for toast display in the device, not desired by default
+
+	/**
+	 * Contains basic anonymous information about the application and the device running it after a successful register() call. 
+	 * See AppInfo class for more details.
+	 */
 	public static AppInfo appInfo;
 
 	static boolean canWriteToDisk = false;
@@ -198,7 +202,6 @@ public class AppBlade {
 	 * @param fromLoopBack whether the authorize call is from the authorization window or not, (defaults to false)
 	 */
 	public static void authorize(final Activity activity, boolean fromLoopBack) {
-
 		// If we don't have enough stored information to authorize the current user,
 		// delegate to the AuthHelper
 		if(!isAuthorized(activity))
@@ -387,7 +390,6 @@ public class AppBlade {
 		Bitmap viewScreenshot = view.getDrawingCache();
 		Bitmap screenshot = viewScreenshot.copy(viewScreenshot.getConfig(), false);
 		view.setDrawingCacheEnabled(wasCacheEnabled);
-
 		doFeedbackWithScreenshot(context, screenshot);
 	}
 

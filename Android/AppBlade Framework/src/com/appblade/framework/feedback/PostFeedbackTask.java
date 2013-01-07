@@ -42,7 +42,7 @@ public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Void>{
 			toastMessage = SUCCESS_MESSAGE;
 		}
 
-		if(context != null){
+		if(context != null && AppBlade.makeToast){
 			Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show();
 		}
 	}

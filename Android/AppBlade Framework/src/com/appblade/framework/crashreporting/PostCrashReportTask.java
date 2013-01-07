@@ -1,5 +1,7 @@
 package com.appblade.framework.crashreporting;
 
+import com.appblade.framework.AppBlade;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -35,7 +37,7 @@ public class PostCrashReportTask extends AsyncTask<CrashReportData, Void, Void>{
 			toastMessage = SUCCESS_MESSAGE;
 		}
 		
-		if(this.context != null){
+		if(this.context != null && AppBlade.makeToast){
 			Toast.makeText(this.context, toastMessage, Toast.LENGTH_SHORT).show();
 		}
 	}
