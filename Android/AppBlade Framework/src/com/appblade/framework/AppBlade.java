@@ -59,6 +59,7 @@ public class AppBlade {
 
 	
 	/********************************************************
+	 ********************************************************
 	 * APPBLADE REGISTRATION
 	 * Methods to help assign the app with the necessary information to communicate with AppBlade. A register call should be made before all other calls, and only once. 
 	 */
@@ -170,6 +171,7 @@ public class AppBlade {
 	
 
 	/********************************************************
+	 ********************************************************
 	 * APP AUTHORIZATION 
 	 * Methods to force users to sign into AppBlade before using the app (or a part of the app).
 	 * The features of AppBlade benefit from authorization, but calls to it should be removed before Play Store release.
@@ -268,6 +270,7 @@ public class AppBlade {
 
 	
 	/********************************************************
+	 ********************************************************
 	 * SESSION COUNTING
 	 * MEthods to store and send when a session is started and ended (usually reserved for when an application or activity is resumed or paused)
 	 */
@@ -343,6 +346,7 @@ public class AppBlade {
 	
 	
 	/********************************************************
+	 ********************************************************
 	 * FEEDBACK REPORTING
 	 * Methods for the AppBlade feedback window, will send a screenshot of hte current screen and a personalized message to appblade, as well as any custom parameters you have set. 
 	 * Be very careful that you do not send any personal information accidentally (or maliciously) 
@@ -415,6 +419,7 @@ public class AppBlade {
 
 	
 	/********************************************************
+	 ********************************************************
 	 * CRASH REPORTING 
 	 * Error handling methods that can help you send data to AppBlade
 	 */
@@ -446,6 +451,7 @@ public class AppBlade {
 
 	
 	/********************************************************
+	 ********************************************************
 	 * CUSTOM PARAMETERS 
 	 * Methods to set, get, and clear any custom parameters you'd like to send along with feedback or crash reporting to AppBlade 
 	 */
@@ -494,6 +500,7 @@ public class AppBlade {
 
 
 	/********************************************************
+	 ********************************************************
 	 * ASSORTED DETRITUS 
 	 * Helper methods to make the inner workings of AppBlade a bit easier
 	 */
