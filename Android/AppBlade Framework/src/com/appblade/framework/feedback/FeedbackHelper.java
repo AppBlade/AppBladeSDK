@@ -38,7 +38,6 @@ import android.view.Gravity;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class FeedbackHelper {
@@ -136,7 +135,7 @@ public class FeedbackHelper {
 		wrapperView.setOrientation(LinearLayout.VERTICAL);
 		
 		
-		LinearLayout checkboxLayout = new LinearLayout(context);
+		final LinearLayout checkboxLayout = new LinearLayout(context);
 		checkboxLayout.setGravity(Gravity.CENTER_VERTICAL);
 		final CheckBox screenshotCheckBox = new CheckBox(context);
 		screenshotCheckBox.setChecked(true); 
