@@ -11,8 +11,13 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 
+/**
+ * AppInfo
+ * Class that stores AppBlade registration information as well as other useful app information, incluing PackageInfo, whether the package is signed, and whether the app is being run in the emulator.
+ * @author andrewtremblay
+ *
+ */
 public class AppInfo {
-	
 	static final String DefaultUDID = "0000000000000000000000000000000000000000";
 	public static String DefaultAppBladeHost = "AppBlade.com";
 	public static String DefaultServiceScheme = "https://";
@@ -28,14 +33,22 @@ public class AppInfo {
 	PackageInfo PackageInfo;
 	private String systemInfo;
 	
+	/**
+	 * Initializes systemInfo string if it does not yet exist.
+	 * @return String of all current interesting device information, see initSystemInfo() for a breakdown.
+	 */
 	public synchronized String getSystemInfo()
 	{
 		if(StringUtils.isNullOrEmpty(systemInfo))
+		{
 			initSystemInfo();
-		
+		}
 		return systemInfo;
 	}
 
+	/**
+	 * Initializer for all interesting device information. Will include Package information if that is available.
+	 */
 	void initSystemInfo() {
 		StringBuilder builder = new StringBuilder();
 
@@ -62,9 +75,14 @@ public class AppInfo {
 		
 		systemInfo = builder.toString();
 	}
-	
-	
+		
 	//a good check to see if we are in eclipse, since that doesn't sign apks before uploading to attached devices
+	/**
+	 * Static call to check if we are signed (a.k.a. running in eclipse), checks for the existence of a certificate and only returns true on its existence. 
+	 * This would be a good check to call if you didn't want errors, sessions, or feedback to be logged while you were just developing the app locally.
+	 * @param pi the package info we are checking, usually just AppInfo.PackageInfo
+	 * @return whether we are signed, which is the same as saying whether we are running the apk locally.
+	 */
 	public static boolean isSigned(PackageInfo pi) {
 		boolean toRet = false;
 		if(pi != null){
@@ -81,8 +99,13 @@ public class AppInfo {
 		return toRet;
 	}
 	
-	//There is apparently a better way to do this by checking if the debug certificate is included, but right now checking that the cert is missing's our best bet 
+	/**
+	 * Static call to check if we are running in the emulator (a.k.a. development), checks for the existence of a certificate
+	 * @param pi the package info we are checking, usually just AppInfo.PackageInfo
+	 * @return whether we are in an emulator
+	 */
 	public static boolean isInEmulator(PackageInfo pi) {
+		//There is apparently a better way to do this by checking if the debug certificate is included, but right now checking that the cert is missing's our best bet 
 		boolean toRet = false;
 		if(pi != null){
 			ApplicationInfo ai = pi.applicationInfo;
@@ -98,7 +121,10 @@ public class AppInfo {
 		return toRet;
 	}
 
-	
+	/**
+	 * Checks validity (existence) of AppBlade variables. If we don't have that we prety much can't do anything. 
+	 * @return
+	 */
 	public boolean isValid() {
 		return
 				!StringUtils.isNullOrEmpty(AppId) &&
