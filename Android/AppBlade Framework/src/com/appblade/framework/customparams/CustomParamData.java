@@ -1,14 +1,9 @@
 package com.appblade.framework.customparams;
 
 import java.util.Iterator;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.appblade.framework.AppBlade;
-
 import android.content.Context;
-import android.util.Log;
 
 public class CustomParamData extends JSONObject {
 	//It feels empty up here without a basic constructor
