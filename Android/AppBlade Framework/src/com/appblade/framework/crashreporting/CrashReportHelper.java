@@ -63,12 +63,14 @@ public class CrashReportHelper {
 			{
 				String newFilename = newCrashFileName();
 				File file = new File(newFilename);
+				Log.d(AppBlade.LogTag,"writing to " + newFilename);
 				if(file.createNewFile())
 				{
 					BufferedWriter writer = new BufferedWriter(new FileWriter(newFilename));
 					writer.write(systemInfo);
 					writer.write(stackTrace);
 					writer.close();
+					Log.d(AppBlade.LogTag,"wrote to " + file.getName());
 				}
 			}
 		}
