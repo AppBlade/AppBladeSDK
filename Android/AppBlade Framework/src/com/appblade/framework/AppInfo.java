@@ -7,9 +7,12 @@ import java.util.zip.ZipFile;
 
 import com.appblade.framework.utils.StringUtils;
 
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 
 /**
  * AppInfo
@@ -103,23 +106,21 @@ public class AppInfo {
 	}
 	
 	/**
-	 * Static call to check if we are running in the emulator (a.k.a. development), checks for the existence of a certificate
-	 * @param pi the package info we are checking, usually just AppInfo.PackageInfo
+	 * Static call to check if we are running in the emulator (a.k.a. development),
+	 * @param context The Context we are checking to be running in the emulator
 	 * @return whether we are in an emulator
 	 */
-	public static boolean isInEmulator(PackageInfo pi) {
-		//There is apparently a better way to do this by checking if the debug certificate is included, but right now checking that the cert is missing's our best bet 
+	public static boolean isInEmulator(Context context) {
 		boolean toRet = false;
-		if(pi != null){
-			ApplicationInfo ai = pi.applicationInfo;
-			ZipFile zf;
-				try {
-					zf = new ZipFile(ai.sourceDir);
-					ZipEntry ze = zf.getEntry("META-INF/CERT.DSA");
-					toRet = (ze != null);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+		String networkOperator = tm.getNetworkOperatorName();
+		Log.d(AppBlade.LogTag, "networkOperator "+networkOperator);
+		if("Android".equals(networkOperator)) {
+		    // Emulator
+			toRet = true;
+		}
+		else {
+		    // Device
 		}
 		return toRet;
 	}
