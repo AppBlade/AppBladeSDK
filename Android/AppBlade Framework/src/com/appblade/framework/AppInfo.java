@@ -90,8 +90,11 @@ public class AppInfo {
 			ZipFile zf;
 				try {
 					zf = new ZipFile(ai.sourceDir);
+					//check for the existence of a DSA or RSA file, which will be the public key of whatever we're supposedly signed with 
 					ZipEntry ze = zf.getEntry("META-INF/CERT.DSA");
-					toRet = (ze != null);
+					ZipEntry zr = zf.getEntry("META-INF/CERT.RSA");
+					//TODO: enumerate through META-INF and check for *.RSA/*DSA, since we can be signed with multiple files and there's no guarantee for names. 99.999% of people will just sign once though. 
+					toRet = (ze != null) || (zr != null);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

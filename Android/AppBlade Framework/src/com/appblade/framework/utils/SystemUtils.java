@@ -75,6 +75,12 @@ public class SystemUtils {
 		String toRet = "unsigned";
 		if(AppInfo.isSigned(pi)){
 			toRet = hashedUuidOfPackageFile(pi, "META-INF/CERT.DSA");
+			if(toRet == null){
+				toRet = hashedUuidOfPackageFile(pi, "META-INF/CERT.RSA");				
+			}
+			if(toRet == null){
+				toRet = "signed";
+			}
 		} 
 		return toRet;
 	}
