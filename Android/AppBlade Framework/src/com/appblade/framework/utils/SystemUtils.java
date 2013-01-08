@@ -12,10 +12,19 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.util.Log;
 
+/**
+ * A class to help check for permissions and generate hashes for files in the apk. Used mostly for identifiers for AppBlade.
+ * @author andrew.tremblay@raizlabs
+ */
 public class SystemUtils {
 	public static final String UserAgent = "Android";
 	
-	
+	/**
+	 * A helper method check for whether a specific permission was requested by the package.
+	 * @param pkg The PackageInfo that might have requested the permission. 
+	 * @param requested String name of the permission.
+	 * @return true if the name of the permission was found in {@link android.content.pm.PackageInfo.requestedPermissions}.
+	 */
 	public static boolean hasPermission(PackageInfo pkg, String requested) {
 		String[] permissions = pkg.requestedPermissions;
 		for (String permission : permissions) {
@@ -46,9 +55,14 @@ public class SystemUtils {
 			toRet = toRet + "debug";
 		}
 		return toRet;
-	
 	}
 	
+	/**
+	 * A helper method to generate a SHA256 hash of a given file inside a package.
+	 * @param pi The PackageInfo that will provide the source directory in which to look. 
+	 * @param filename String name of the file, from within the base source directory, that we want to generate our hash.
+	 * @return The (SHA256) of the given filename, or null if the file could not be found.
+	 */
 	public static String hashedUuidOfPackageFile(PackageInfo pi, String filename){
 		String toRet = null;
 		ApplicationInfo ai = pi.applicationInfo;
@@ -68,14 +82,31 @@ public class SystemUtils {
 		return toRet;
 
 	}
+
+	/**
+	 * A hash representing all classes in the APK, the value will change when the classes do and not at any other time.
+	 * @param pi
+	 * @return The (SHA256) of classes.dex, the file representing all compiled classes in the apk.
+	 */
 	public static String hashedExecutableUuid(PackageInfo pi){
 		return hashedUuidOfPackageFile(pi, "classes.dex");
 	}
+
+	/**
+	 * A hash representing all resources in the APK, the value will change when the resources do and not at any other time.
+	 * @param pi
+	 * @return The (SHA256) of resources.arsc, the compiled file for all resources in the apk.
+	 */
 	public static String hashedStaticResourcesUuid(PackageInfo pi){
 		return hashedUuidOfPackageFile(pi, "resources.arsc");
 	}
 	
-	//builds run through eclipse will not be signed
+	/**
+	 * Builds run through eclipse will be signed with the debug certificate. 
+	 * How to detect the debug certificate properly is a matter of some debate.
+	 * @param pi
+	 * @return The (SHA256) hash of either a CERT.DSA or a CERT.RSA file in the META-INF folder.
+	 */
 	public static String hashedCertificateUuid(PackageInfo pi){
 		String toRet = "unsigned";
 		if(AppInfo.isSigned(pi)){
