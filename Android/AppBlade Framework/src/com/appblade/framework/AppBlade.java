@@ -33,9 +33,15 @@ import com.appblade.framework.stats.SessionHelper;
 import com.appblade.framework.utils.StringUtils;
 
 /**
- * AppBlade
- * @author andrew.tremblay@raizlabs
- * @author rich.stern@raizlabs
+ * <ul>Contains static methods for all current stable features of the AppBlade SDK
+ * <li>Registration
+ * <li>Authorization
+ * <li>Session Counting
+ * <li>Feedback Reporting
+ * <li>Crash Reporting
+ * <li>Custom Parameters (for Feedback and Crash Reporting)
+ * 
+ * @authors andrew.tremblay@raizlabs, rich.stern@raizlabs
  */
 public class AppBlade {
 	public static String LogTag = "AppBlade";
@@ -420,7 +426,7 @@ public class AppBlade {
 	
 	/**
 	 * Helper method for the user to bypass using the FeedbackData class the included dialog. User is responsible for making the screenshot with {@link #getBitmapFromView(View)}.
-	 * The feedback request will posts asynchronously.
+	 * The feedback request will post asynchronously.
 	 * @param context Context for the postFeedbackTask (and any callbacks).
 	 * @param feedbackMessage The feedback message to post to AppBlade. (can be null)
 	 * @param screenshot The screenshot Bitmap to post to AppBlade. (can be null)
@@ -452,32 +458,6 @@ public class AppBlade {
 		return screenshot;
 	}
 
-
-	/**
-	 * Allows a user to customize the feedback view to present and not worry about the implementiation. 
-	 * For a less hand-holdy method use {@link #sendFeedbackData(Context, String, Bitmap)}.
-	 * @param context Context to use to display the dialog.
-	 * @param activity The activity containing the view to screenshot and post to AppBlade.
-	 * @param customDialogId The res id to use for the custom dialogue view.
-	 */
-	public static void doFeedbackWithScreenshotAndCustomDialog(final Context context, Activity activity, int customDialogId) {
-		View view = activity.getWindow().getDecorView().findViewById(android.R.id.content);
-		boolean wasCacheEnabled = view.isDrawingCacheEnabled();
-		view.setDrawingCacheEnabled(true);
-		Bitmap viewScreenshot = view.getDrawingCache();
-		Bitmap screenshot = viewScreenshot.copy(viewScreenshot.getConfig(), false);
-		view.setDrawingCacheEnabled(wasCacheEnabled);
-
-		FeedbackData data = new FeedbackData();
-		data.setPersistentScreenshot(screenshot);
-		FeedbackHelper.getFeedbackData(context, data, new OnFeedbackDataAcquiredListener() {
-			public void OnFeedbackDataAcquired(FeedbackData data) {
-				new PostFeedbackTask(context).execute(data);
-			}
-		});
-	}
-
-	
 	/********************************************************
 	 ********************************************************
 	 * CRASH REPORTING 
