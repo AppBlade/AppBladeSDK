@@ -228,7 +228,7 @@ public class SessionHelper {
 		        for (int i = 0; i < acquiredData.size(); )
 		        {
 		        	SessionData s = acquiredData.get(i);
-		        	if(s.ended.getSeconds() < dateEnded.getSeconds())
+		        	if(s.ended.getSeconds() <= dateEnded.getSeconds())
 		        	{
 		        		acquiredData.remove(i);
 		        	}
