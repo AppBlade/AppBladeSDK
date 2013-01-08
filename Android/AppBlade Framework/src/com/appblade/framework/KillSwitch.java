@@ -46,9 +46,7 @@ public class KillSwitch {
 	private static boolean inProgress = false;
 	
 	public static synchronized void authorize(Activity activity) {
-		
 		reloadSharedPrefs(activity);
-		
 		if(shouldUpdate() && !inProgress) {
 			KillSwitchTask task = new KillSwitchTask(activity);
 			task.execute();
@@ -136,7 +134,9 @@ public class KillSwitch {
 		protected Void doInBackground(Void... params) {
 			HttpResponse response = getKillSwitchResponse();
 
-			Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			if(response != null){
+				Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			}
 			handleResponse(response);
 			
 			return null;
@@ -270,7 +270,6 @@ public class KillSwitch {
 	}
 
 	public static void kill(Activity context) {
-		
 		// This feels a little hacky, but it serves the same purpose as passing the isLoopBack flag around
 		// which I'm not in love with either.  This basically addresses the need to shut down the 
 		// RemoteAuthorizationActivity when we require login info.  Once the whole process completes,
