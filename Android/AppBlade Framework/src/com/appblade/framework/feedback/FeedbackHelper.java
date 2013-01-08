@@ -5,8 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -93,11 +91,15 @@ public class FeedbackHelper {
 				
 				if(statusCategory == 2)
 					success = true;
+			}else{
+				Log.d(AppBlade.LogTag, "Feedback returned null response ");
 			}
+
 		}
 		catch(Exception ex)
 		{
 			Log.d(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+			ex.printStackTrace();
 		}
 
 		IOUtils.safeClose(client);
