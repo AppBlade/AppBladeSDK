@@ -5,10 +5,12 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.appblade.framework.AppBlade;
 import com.appblade.framework.AppInfo;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.util.Log;
 
 public class SystemUtils {
 	public static final String UserAgent = "Android";
@@ -54,9 +56,12 @@ public class SystemUtils {
 		try {
 			zf = new ZipFile(ai.sourceDir);
 			ZipEntry ze = zf.getEntry(filename);
-			InputStream streamToHash = zf.getInputStream(ze);
-			toRet = StringUtils.sha256FromInputStream(streamToHash);
+			if(ze != null){
+				InputStream streamToHash = zf.getInputStream(ze);
+				toRet = StringUtils.sha256FromInputStream(streamToHash);
+			}
 		} catch (IOException e) {
+			Log.d(AppBlade.LogTag, "Error reading "+filename);
 			e.printStackTrace();
 		}
 		
