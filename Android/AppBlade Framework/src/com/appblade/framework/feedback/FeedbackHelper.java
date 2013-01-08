@@ -209,14 +209,19 @@ public class FeedbackHelper {
 	}
 
 
-	/*
+	public static String formatNewScreenshotFileName() {
+		String toRet = "";
+		toRet = "Feedback-" + (System.currentTimeMillis() / 1000L) + ".png";
+		return toRet ;
+	}
+	
+	/**
 	 * Persistent storage functionality (that's not in FeedbackData)
 	 */
 	public static String formatNewScreenshotFileLocation() {
 		String toRet = "";
-		Date date = new Date();
-		Timestamp timestamp = new Timestamp(date.getTime());
-		toRet = "Feedback" + timestamp.getSeconds() + ".png";
+		toRet = AppBlade.rootDir + "/" + formatNewScreenshotFileName();
+		Log.d(AppBlade.LogTag, toRet);
 		return toRet ;
 	}
 
