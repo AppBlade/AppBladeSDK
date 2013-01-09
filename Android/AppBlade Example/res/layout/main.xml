@@ -12,7 +12,8 @@
         android:scaleType="centerInside"
         android:adjustViewBounds="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dip" />
+        android:layout_margin="20dip" 
+        android:contentDescription="@string/background_image"/>
     
     <ScrollView
         android:layout_width="fill_parent"
@@ -21,7 +22,7 @@
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dip">
 
@@ -29,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Exception reporting"
+                android:text="@string/exception_reporting"
                 android:textColor="#464e54"
                 android:textStyle="bold"
                 android:layout_marginLeft="10dip" />
@@ -43,13 +44,13 @@
 		        android:id="@+id/btnDivideByZero"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="Divide by zero" />
+		        android:text="@string/divide_by_zero" />
 
 		    <!-- Remote authorization sections... -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Remote Authorization"
+                android:text="@string/remote_authorization"
                 android:textColor="#464e54"
                 android:textStyle="bold"
                 android:layout_marginTop="10dip"
@@ -64,13 +65,13 @@
 		        android:id="@+id/btnClearAuthData"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="Clear Authorization Data" />
+		        android:text="@string/clear_authorization_data" />
 		    
 		    <!-- Feedback sections... -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Feedback"
+                android:text="@string/feedback"
                 android:textColor="#464e54"
                 android:textStyle="bold"
                 android:layout_marginTop="10dip"
@@ -85,7 +86,7 @@
 		        android:id="@+id/btnFeedback"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="Send Feedback" />
+		        android:text="@string/send_feedback" />
         </LinearLayout>
         
     </ScrollView>

@@ -6,5 +6,12 @@
     <string name="send_screenshot">Send Screenshot</string>
     <string name="custom_feedback_field">Custom Feedback Field</string>
     <string name="useless_radio_button">Useless Radio button</string>
+    <string name="exception_reporting">Exception reporting</string>
+    <string name="divide_by_zero">Divide by zero</string>
+    <string name="remote_authorization">Remote Authorization</string>
+    <string name="clear_authorization_data">Clear Authorization Data</string>
+    <string name="feedback">Feedback</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="background_image">Background Image</string>
 
 </resources>
