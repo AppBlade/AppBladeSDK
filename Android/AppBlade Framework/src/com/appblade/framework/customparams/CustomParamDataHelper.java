@@ -24,12 +24,20 @@ public class CustomParamDataHelper {
 	public static String customParamsIndexMIMEType = "text/json"; 
 
 	
+	/**
+	 * The resource location of the share customParams file. Currently stored as JSON.
+	 * @return a String of the location of the customParams file.
+	 */
 	public static String jsonFileURI()
 	{
 		return String.format("%s%s%s", AppBlade.customParamsDir, "/", customParamsFileName);
 	}
 	
 	
+	/**
+	 * Initializes a new CustomParamData and calls refreshFromStoredData() on it.		
+	 * @return a new CustomParamData object with all stored values.
+	 */
 	public static synchronized CustomParamData getCurrentCustomParams()
 	{
 		//don't need to do much currently since all it is is a JSON object, 
@@ -40,6 +48,11 @@ public class CustomParamDataHelper {
 	}
 
 	// JSON Parsing
+	/**
+	 * Parses a file at the given location, returns a JSONObject. Assumes valid read/write permissions.
+	 * @param customParamsResourceLocation String URL of the file in json format to read.
+	 * @return a new JSONObject with all stored values.
+	 */
 	public static synchronized JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
         JSONObject json = new JSONObject();
         String jsonTxt = null;
@@ -86,12 +99,21 @@ public class CustomParamDataHelper {
         return json;
 	}
 
-	
-	//CAREFUL: for crashes only not sure about AppBlade.rootDir
+	/**
+	 * Helper method, loads JSONObject from default customParams file location.		
+	 * @return a new JSONObject with all stored values in the default file location.
+	 * @see #jsonFileURI()
+	 */
 	public static synchronized JSONObject getCustomParamsAsJSON(){
 		return getCustomParamsAsJSON(jsonFileURI() );
 	}
 	
+	/**
+	 * Buffer-writes the given custom parameters to the default JSON file location relative to context. .
+	 * @param context Unused. but useful for a callback/making sure the write location is still valid.
+	 * @param customParams the JSON values to write to the default JSON file location.
+	 * @see #jsonFileURI()
+	 */
 	public static synchronized void storeCurrentCustomParams(Context context, CustomParamData customParams)
 	{
 		String stringJSON = customParams.toString();
