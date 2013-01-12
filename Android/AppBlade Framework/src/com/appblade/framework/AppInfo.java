@@ -17,7 +17,7 @@ import android.util.Log;
 /**
  * AppInfo
  * Class that stores AppBlade registration information as well as other useful app information, incluing PackageInfo, whether the package is signed, and whether the app is being run in the emulator.
- * @author andrewtremblay
+ * @author andrew.tremblay@raizlabs
  *
  */
 public class AppInfo {
