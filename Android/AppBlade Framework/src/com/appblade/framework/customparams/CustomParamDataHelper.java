@@ -16,6 +16,10 @@ import com.appblade.framework.AppBlade;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * Helper functions for storing and loading custom parameters and adding them to HttpRequests.
+ * @author andrew.tremblay@raizlabs
+ */
 public class CustomParamDataHelper {
 	//I/O RELATED
 	//Just store the json straight to file
