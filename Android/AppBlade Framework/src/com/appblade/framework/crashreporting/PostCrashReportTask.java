@@ -7,6 +7,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+/**
+ * Asynchronous task to help posting a CrashReportData object to AppBlade
+ * @author andrew.tremblay@raizlabs
+ */
 public class PostCrashReportTask extends AsyncTask<CrashReportData, Void, Void>{
 
 	Context context;

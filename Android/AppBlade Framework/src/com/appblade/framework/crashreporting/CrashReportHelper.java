@@ -31,28 +31,43 @@ import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
 import com.appblade.framework.utils.SystemUtils;
 
+/**
+ * Holder for functions related to storing and handling crashes.
+ * Note there is no handling currently for how many crashes can be stored locally, you can delete them manually from your app settings. 
+ * @author andrew.tremblay@raizlabs
+ * @see AppBLadeExceptionHandler
+ */
 public class CrashReportHelper {
-	//I/O RELATED
-	//Just store the json straight to file
-	//private static int maxStoredCrashes = 0;
-	//private final boolean dropOldestCrash = true;
-
-	
-	private static String newCrashFileName()
-	{
-		int r = new Random().nextInt(9999);
-		String filename = String.format("%s%sex-%d-%d.txt",
-				AppBlade.exceptionsDir, "/", System.currentTimeMillis(), r);
-		return filename;
-	}
-	
-	
+	/**
+	 * Store the passed CrashReportData object and attempt to post it to AppBlade.
+	 * Stored CrashReportData will be removedonly on success. 
+	 * @param data The CrashReportData containing the exception we want to report. 
+	 * @return false
+	 * @see PostCrashReportTask
+	 */
 	public static Boolean postCrashes(CrashReportData data) {
-		writeExceptionToDisk(data.exception); //remove only on success
-		postExceptionsToServer();
+		writeExceptionToDisk(data.exception); //removed only on success see sendExceptionData(File)
+		postExceptionsToServer(); //every call will attempt to post EVERY exception in the exception directory to AppBlade.Removing them on success. 
 		return false;
 	}
 
+	/**
+	 * Iterates through every file in the exception directory and attempts a POST to AppBlade with the each. <br>  
+	 * Handled asynchronously within {@link PostCrashReportTask} 
+	 */
+	public static void postExceptionsToServer() {
+		File exceptionDir = new File(AppBlade.exceptionsDir);
+		if(exceptionDir.exists() && exceptionDir.isDirectory()) {
+			File[] exceptions = exceptionDir.listFiles();
+			for(File f : exceptions) {
+				if(f.exists() && f.isFile()) {
+					sendExceptionData(f);
+				}
+			}
+		}
+	}
+
+	
 	private static void writeExceptionToDisk(Throwable e) {
 		try
 		{
@@ -80,18 +95,11 @@ public class CrashReportHelper {
 		}
 	}
 
-	private static void postExceptionsToServer() {
-		File exceptionDir = new File(AppBlade.exceptionsDir);
-		if(exceptionDir.exists() && exceptionDir.isDirectory()) {
-			File[] exceptions = exceptionDir.listFiles();
-			for(File f : exceptions) {
-				if(f.exists() && f.isFile()) {
-					sendExceptionData(f);
-				}
-			}
-		}
-	}
-
+	/**
+	 * Handles the reading,sending and deletion (on success) of a file ()
+	 * @param f CrashReport stored file to send to the AppBade server.
+	 * @return true on successful send, will also delete() the File. 
+	 */
 	private static synchronized boolean sendExceptionData(File f) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
@@ -102,9 +110,6 @@ public class CrashReportHelper {
 			FileInputStream fis = new FileInputStream(f);
 			String content = StringUtils.readStream(fis);
 			String sharedBoundary = AppBlade.genDynamicBoundary();
-
-			Log.d(AppBlade.LogTag, "CRASH content " + content);
-
 			
 			final MultipartEntity crashContent = CrashReportHelper.getPostCrashReportBody(content, CustomParamDataHelper.getCustomParamsAsJSON(), sharedBoundary);
 			if(!StringUtils.isNullOrEmpty(content))
@@ -151,8 +156,7 @@ public class CrashReportHelper {
 		return success;
 	}
 
-	private static MultipartEntity getPostCrashReportBody(String content,
-			JSONObject customParamsAsJSON, String boundary) {
+	private static MultipartEntity getPostCrashReportBody(String content, JSONObject customParamsAsJSON, String boundary) {
 		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
 		
 		try
@@ -172,6 +176,13 @@ public class CrashReportHelper {
 		
 		return entity;
 	}
-
+	
+	private static String newCrashFileName()
+	{
+		int r = new Random().nextInt(9999);
+		String filename = String.format("%s%sex-%d-%d.txt",
+				AppBlade.exceptionsDir, "/", System.currentTimeMillis(), r);
+		return filename;
+	}
 	
 }
