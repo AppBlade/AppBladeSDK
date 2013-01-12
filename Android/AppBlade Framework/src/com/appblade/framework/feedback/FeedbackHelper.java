@@ -38,13 +38,30 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * Helper class for Feedback to AppBlade.
+ * Contains functionality for posting and storing of data. See {@link PostFeedbackTask} for the asynchronous implementation.  
+ * @author andrew.tremblay@raizlabs
+ */
 public class FeedbackHelper {
 
+	/**
+	 * Posts the given FeedbackData object to AppBlade. WITHOUT any customData.
+	 * @param data The FeedbackData object you want to post.
+	 * @return true on successful POST
+	 */
 	public static boolean postFeedback(FeedbackData data) {
 		return postFeedbackWithCustomParams(data, null);
 	}		
-	public static boolean postFeedbackWithCustomParams(FeedbackData data,
-				CustomParamData paramData) {
+	
+	
+	/**
+	 * Posts the given FeedbackData object to AppBlade along with any custom Parameters you'd like to include.
+	 * @param data The FeedbackData object you want to post.
+	 * @param paramData The CustomParamData object to be sent along and attached to yhe Feedback.
+	 * @return true on successful POST (statusCode 2**)
+	 */
+	public static boolean postFeedbackWithCustomParams(FeedbackData data,	CustomParamData paramData) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance("Android");
 		String sharedBoundary = AppBlade.genDynamicBoundary();
@@ -107,27 +124,13 @@ public class FeedbackHelper {
 		return success;
 	}
 
-	
-	
-	public static String getLogData(){
-		try {
-			Process process = Runtime.getRuntime().exec("logcat -d");
-			BufferedReader bufferedReader = new BufferedReader(
-					new InputStreamReader(process.getInputStream()));
 
-			StringBuilder log = new StringBuilder();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				log.append(line);
-				log.append("\n");
-			}
-			return log.toString();
-		} catch (IOException e) {
-		}
-
-		return "";
-	}
-
+	/**
+	 * Prompts a dialog window for the user to fill out and post feedback. With optional screenshot.
+	 * @param context context to display an AlertDialog
+	 * @param data FeedbackData object containing the Screenshot Bitmap 
+	 * @param listener OnFeedbackDataAcquiredListener object for the submit button. Will likely kick off a post request when pressed. 
+	 */
 	public static void getFeedbackData(Context context, FeedbackData data,
 			final OnFeedbackDataAcquiredListener listener) {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(context);
@@ -170,11 +173,22 @@ public class FeedbackHelper {
 			}
 		});
 		
-		dialog.setNegativeButton("Cancel", null);
+		dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				
+			}});
 		
 		dialog.show();
 	}
 
+
+	/**
+	 * The MultipartEntity object of the given FeedbackData object and (optional) custom parameters. 
+	 * @param data FeedbackData whose notes String and (if permission given) Screenshot Bitmap we want to include.
+	 * @param paramsData (optional,can be null) The CustomParamData object that we want to include in the post.
+ 	 * @param boundary boundary separator string for the part dividers
+	 * @return a MultipartEntity object of the given parameters.
+	 */
 	public static MultipartEntity getPostFeedbackBody(FeedbackData data, CustomParamData paramsData, String boundary) {
 		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
 		try
@@ -204,13 +218,21 @@ public class FeedbackHelper {
 		return entity;
 	}
 
+	/**
+	 * Helpful function to get a byte array out of a Bitmap
+	 * @param bitmap A valid Bitmap
+	 * @return byte array of the passed Bitmap (PNG format, zero compression)
+	 */
 	public static byte[] getBytesFromBitmap(Bitmap bitmap) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		bitmap.compress(CompressFormat.PNG, 100, out);
 		return out.toByteArray();
 	}
 
-
+	/**
+	 * Helper function for generating a new Screenshot file name.
+	 * @return "Feedback[timestamp].png"
+	 */
 	public static String formatNewScreenshotFileName() {
 		String toRet = "";
 		toRet = "Feedback-" + (System.currentTimeMillis() / 1000L) + ".png";
@@ -227,6 +249,28 @@ public class FeedbackHelper {
 		return toRet ;
 	}
 
+	
+	/**
+	 * Helper function for getting the debug logcat output. Silently catches IOExceptions.
+	 * @return A String of exactly what would display if you ran <code>logcat -d</code> from the command line. Empty string if there's an IOException.
+	 */
+	public static String getLogData(){
+		try {
+			Process process = Runtime.getRuntime().exec("logcat -d");
+			BufferedReader bufferedReader = new BufferedReader(
+					new InputStreamReader(process.getInputStream()));
 
+			StringBuilder log = new StringBuilder();
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				log.append(line);
+				log.append("\n");
+			}
+			return log.toString();
+		} catch (IOException e) {
+		}
+
+		return "";
+	}
 
 }

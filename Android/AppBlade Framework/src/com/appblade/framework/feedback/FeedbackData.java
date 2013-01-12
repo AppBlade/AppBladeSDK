@@ -12,6 +12,12 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 
+/**
+ * Data class for Feedback objects. Each object contains a Note String, a Screenshot Bitmap, and the file locations for its data.<br>
+ * On a complete  
+ * @author andrew.tremblay@raizlabs
+ *
+ */
 public class FeedbackData {
 	public String FileName;
 	public String Notes;
@@ -21,8 +27,9 @@ public class FeedbackData {
 	public boolean sendScreenshotConfirmed;
 
 
-	/*
-	 * Persistent storage functionality
+	/**
+	 * Persistent storage functionality. Will overwrite existing screenshot, will make a new location otherwise. 
+	 * @param screenshot Bitmap to store locally under this Object.
 	 */
 	public void setPersistentScreenshot(Bitmap screenshot){
 		this.Screenshot = screenshot;
@@ -62,6 +69,12 @@ public class FeedbackData {
 		}
 	}
 	
+	/**
+	 * Returns whatever's in the Screenshot bitmap if not null. <br>
+	 * Gets LOCALLY STORED screenshot from ScreenshotFileLocation if the Screenshot object is null. <br>
+	 * Returns null if both Screenshot and ScreenshotFileLocation are null.
+	 * @return Bitmap or null
+	 */
 	public Bitmap getScreenshot(){
 		if(this.Screenshot == null){
 			if (StringUtils.isNullOrEmpty(this.ScreenshotFileLocation)){

@@ -10,6 +10,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * Class for asynchronously posting feedback to AppBlade. <br>
+ * Running exec will post all current stored custom params. 
+ * @see #FeedbackHelper.postFeedbackWithCustomParams(FeedbackData data, CustomParamData paramData)
+ * @see #CustomParamDataHelper.getCurrentCustomParams()
+ * @author andrew.tremblay@raizlabs
+ */
 public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Void>{
 
 	Context context;
