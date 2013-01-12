@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.appblade.framework.authenticate.AuthHelper;
+import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
 import com.appblade.framework.crashreporting.CrashReportData;
 import com.appblade.framework.crashreporting.PostCrashReportTask;
@@ -33,7 +34,7 @@ import com.appblade.framework.stats.SessionHelper;
 import com.appblade.framework.utils.StringUtils;
 
 /**
- * <ul>Contains static methods for all current stable features of the AppBlade SDK
+ * <ul>Contains static functions for all current stable features of the AppBlade SDK
  * <li>Registration
  * <li>Authorization
  * <li>Session Counting
@@ -41,7 +42,8 @@ import com.appblade.framework.utils.StringUtils;
  * <li>Crash Reporting
  * <li>Custom Parameters (for Feedback and Crash Reporting)
  * 
- * @authors andrew.tremblay@raizlabs, rich.stern@raizlabs
+ * @author rich.stern@raizlabs
+ * @author andrew.tremblay@raizlabs 
  */
 public class AppBlade {
 	public static String LogTag = "AppBlade";
