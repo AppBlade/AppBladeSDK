@@ -30,6 +30,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/**
+ * AsyncTask to help download and store a valid auth token after singing in with RemoteAuthorizeActivity.
+ * @author rich.stern@raizlabs
+ * @author andrew.tremblay@raizlabs 
+ * @see RemoteAuthorizeActivity
+ */
 public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 
 	ProgressDialog progress;

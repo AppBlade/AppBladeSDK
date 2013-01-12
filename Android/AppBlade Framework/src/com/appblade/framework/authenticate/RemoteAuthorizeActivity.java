@@ -15,12 +15,13 @@ import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.authenticate.AuthTokensDownloadTask.OnPostExecuteListener;
 
-@SuppressLint("SetJavaScriptEnabled")
+
 /**
- * Activity to prompt the user to authorize themselves to use the app. 
- * Prompts a WebView that talks to AppBlade where the user signs in with their valid credentials.
- * WARNING: Uses javascript. If you are using a custom endpoint make sure you trust the site you are accessing.
+ * Activity to prompt the user to authorize themselves to use the app. <br>
+ * Prompts a WebView that talks to AppBlade where the user signs in with their valid credentials.<br>
+ * WARNING: Uses javascript. If you are using a custom endpoint make sure you trust the site you are accessing.<br>
  */
+@SuppressLint("SetJavaScriptEnabled")
 public class RemoteAuthorizeActivity extends Activity {
 	
 	private static final String EndpointAuthNew = "/oauth/authorization/new?client_id=%s&response_type=code";

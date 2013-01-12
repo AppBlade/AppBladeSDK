@@ -12,6 +12,12 @@ import com.appblade.framework.utils.StringUtils;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * Class used mostly for storing, retrieving and clearing the remote Authentication token securely.
+ * @author rich.stern@raizlabs
+ * @author andrew.tremblay@raizlabs 
+ *
+ */
 public class RemoteAuthHelper {
 	
 	private static final String defaultFileName = "REMOTE_AUTH";
