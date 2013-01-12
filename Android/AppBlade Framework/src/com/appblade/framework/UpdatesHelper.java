@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
@@ -36,22 +37,33 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+/**
+ * Class containing functions that will handle a download and installation of an apk update for the given app.
+ * @author rich.stern@raizlabs  
+ * @author andrew.tremblay@raizlabs
+ * @see KillSwitch
+ */
 public class UpdatesHelper {
 
 	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;
 
-	public static void processUpdate(Activity context, JSONObject update) {
-		
+	/**
+	 * We have been given a response from the server through {@link KillSwitch} that an update is available.<br>
+	 * Kick off an update and install if we have the write permissions. Notify the user of the download if we don't have write permissions.
+	 * @param activity Activity to handle the notification or installation.
+	 * @param update JSONObject containing the necessary update information.
+	 */
+	public static void processUpdate(Activity activity, JSONObject update) {
 		PackageInfo pkg = AppBlade.getPackageInfo();
 		String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 		if(SystemUtils.hasPermission(pkg, permission)) {
 			Log.d(AppBlade.LogTag, "UpdatesHelper.processUpdate - permission to write to sd, downloading...");
-			downloadUpdate(context, update);
+			downloadUpdate(activity, update);
 		}
 		else {
 			Log.d(AppBlade.LogTag, "UpdatesHelper.processUpdate - no permission to write to sd, notifying...");
-			notifyUpdate(context, update);
+			notifyUpdate(activity, update);
 		}
 	}
 
@@ -169,6 +181,7 @@ public class UpdatesHelper {
 		});
 	}
 
+	
 	private static File getRootDirectory() {
 		String rootDir = ".appblade";
 		String path = String.format("%s%s%s",
