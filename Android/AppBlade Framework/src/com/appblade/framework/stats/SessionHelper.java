@@ -34,18 +34,33 @@ import com.appblade.framework.utils.SystemUtils;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * Helper class for session reporting functionality.
+ * Helps store and send SessionData objects.
+ * @author andrew.tremblay@raizlabs
+ * @see SessionData
+ */
 public class SessionHelper {
 	//I/O RELATED
 	public static String sessionsIndexFileName = "index.txt";
 	//API RELATED
 	public static String sessionsIndexMIMEType = "text/json"; 
 
-	//Session Logging 
+	//*****************Session Logging 
+
+	/**
+	 * Starts a session by reinitializing the curentSession object in the AppBLade singleton.
+	 * @param context Context where we will be storing the session data.
+	 */
 	public static void startSession(Context context){
 		Log.d(AppBlade.LogTag, "Starting Session");
 		AppBlade.currentSession = new SessionData();
 	}
 	 
+	/**
+	 * Ends a session and kicks off a post request.
+	 * @param context Context where we will be storing the session data.
+	 */
 	public static void endSession(Context context){
 		Log.d(AppBlade.LogTag, "Ending Session");
 		if(AppBlade.currentSession != null){
@@ -57,13 +72,23 @@ public class SessionHelper {
 	}
 
 	
-	//API RELATED FUNCTIONS
+	//*****************API RELATED FUNCTIONS
+	/**
+	 * Posts the given session to AppBlade, stores it for later on failure. 
+	 * @param data SessionData to post.
+	 * @return status code of the response from the server (2** = success) or -10000 if an error was thrown.
+	 */
 	public static int postSession(SessionData data) {
 		ArrayList<SessionData> sessionsList = new ArrayList<SessionData>();
 		sessionsList.add(data);
 		return postSessions(sessionsList);
 	}
 
+	/**
+	 * Posts all of the given sessions to AppBlade, stores them for later on failure. 
+	 * @param sessionsList List of SessionData we want to send to AppBLade
+	 * @return status code of the response from the server
+	 */
 	static int postSessions(List<SessionData> sessionsList) {
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 		String sharedBoundary = AppBlade.genDynamicBoundary();
@@ -113,6 +138,12 @@ public class SessionHelper {
 		return -10000; //an exception occurred during posting
 	}
 	
+	/**
+	 * Generates a MultipartEntity of the given list of sessions
+	 * @param sessions list of SessionData objects
+	 * @param boundary boundary String that will be used as a separator.
+	 * @return MultipartEntity object generated for the sessions.
+	 */
 	public static MultipartEntity getPostSessionBody(List<SessionData> sessions, String boundary) {
 		MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, boundary, null);
 		
@@ -132,6 +163,10 @@ public class SessionHelper {
 		return entity;
 	}
 	
+	/**
+	 * Sends a post request for all currently stored sessions. (Note the existing session will not be sent since it hasn't ended yet.)
+ 	 * @param context Context to use for file maintenance.
+ 	 */
 	public static void postExistingSessions(final Context context){
 		Log.d(AppBlade.LogTag, "checking for existing sessions.");
 		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
@@ -144,7 +179,13 @@ public class SessionHelper {
 	}
 	
 	
-	//Data Listener
+	//*****************Data Listener
+	/**
+	 * REtrieves session data and reports the to the listener when the data is acquired. <br>
+	 * Ideal for asynchronous tasks. 
+	 * @param context Context to use for file maintenance.
+	 * @param listener Listerer we will send the callbacks to.
+	 */
 	public static void getSessionDataWithListener(Context context,
 			final OnSessionDataAcquiredListener listener) {
 		File f = new File(sessionsIndexFileURI());
@@ -163,7 +204,12 @@ public class SessionHelper {
 	}
 	
 
-	//Sessions batch formatting for sending to AppBlade
+	//*****************Sessions batch formatting for sending to AppBlade
+	/**
+	 * Turns a sessionslist into a JSONFormatted String (non-destructive to the sessions list)
+	 * @param sessions List of sessions we want to format.
+	 * @return String in the format of a JSONArray with all the SessionData Objects as JSON Objects inside it.
+	 */
 	public static String formattedSessionsBodyFromList(List<SessionData> sessions){
 		JSONArray jsonSessions = new JSONArray();
 		//build a list of JSONObjects 
@@ -173,13 +219,22 @@ public class SessionHelper {
 		return jsonSessions.toString();
 	}
 	
-	//Sessions storage helpers
+	//*****************Sessions storage helpers
+	/**
+	 * Generator of the sessions folder location.
+	 * @return A String of the sessions folder location.
+	 */
 	public static String sessionsIndexFileURI() {
 		return AppBlade.sessionsDir + "/"+sessionsIndexFileName;
 	}
 
 
-	//Sessions storage/queue logic
+	//*****************Sessions storage/queue logic
+	/**
+	 * Generator for a SessionData object that we absolutely HAVE to have stored staticlly before we get it. 
+	 * @param context Context to use for file maintenance.
+	 * @return A SessionData object
+	 */
 	public static SessionData createPersistentSession(Context context) {
 		Log.d(AppBlade.LogTag, "Creating New Session ");
 		SessionData data = new SessionData(new Date(), new Date());
@@ -196,6 +251,12 @@ public class SessionHelper {
 		return data;
 	}
 	
+
+	/**
+	 * Synchronized addition of a single session.<br>
+	 * @param context Context to use for file maintenance.
+	 * @param data SessionData you want added. 
+	 */
 	public synchronized static void insertSessionData(final Context context, final SessionData data) {
 		Log.d(AppBlade.LogTag, "Adding Session to file");
 		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
@@ -208,19 +269,30 @@ public class SessionHelper {
 
 	}	
 
+
+	/**
+	 * Synchronized removal of a single stored session.<br>
+	 * @param context Context to use for file maintenance.
+	 * @param data SessionData you want removed. 
+	 */
 	public synchronized static void removeSession(final Context context, final SessionData data) {
 		Log.d(AppBlade.LogTag, "Removing Session to file");
 		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
 			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
 				// remove object from ArrayList
 				acquiredData.remove(data);
-				// Update file
+				// Update file with new list of sessions
 				updateFile(context, sessionsIndexFileURI(), acquiredData);
 			}
 		} );
 	}
 
-	//batch removal of sessions after success (or expiration). Sessions ended before dateEnded will be removed.
+	/**
+	 * Batch removal of sessions after success (or expiration).<br>
+	 * Sessions ended on or before dateEnded will be removed. Sessions that started before dateEnded but ended after dateEnded will not be removed. 
+	 * @param context Context to use for file maintenance.
+	 * @param dateEnded The date you want sessions removed before. 
+	 */
 	public synchronized static void removeSessionsEndedBefore(final Context context, final Date dateEnded){
 		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
 			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
@@ -245,7 +317,14 @@ public class SessionHelper {
 	}
 	
 
-	//Sessions base file interaction functions 
+	
+	//***************** BASE FILE MANAGEMENT
+	
+	/**
+	 * Retrieves list of current sessions.<br>
+	 * @param context Context to use for file maintenance.
+	 * @return list of current stored session data. 
+	 */
 	public synchronized  static List<SessionData> readData(Context context)
     {
     	Log.d(AppBlade.LogTag, "reading in Sessions file. ");
@@ -274,29 +353,34 @@ public class SessionHelper {
             return listofusers;
     }
 
-
-    public synchronized  static void updateFile(Context context, String filename, List<SessionData> userDataList) {
+	/**
+	 * Function that makes or overwrites a file with the given sessions.
+	 * @param context Context to use for file maintenance.
+	 * @param filename String name of the file that we will store our session data.
+	 * @param sessionDataList List of SessionData that we will store in the file.
+	 */
+    public synchronized  static void updateFile(Context context, String filename, List<SessionData> sessionDataList) {
     	//check for existence of file, if no file, create file
-    	Log.d(AppBlade.LogTag, "Updating Sessions file. " +userDataList.size() +" sessions");
-    try{
-    	final File parent = new File(AppBlade.sessionsDir);
-    	if(!parent.exists())
-    	{
-    		System.err.println("Parent directories do not exist");
-	    	if (!parent.mkdirs())
+    	Log.d(AppBlade.LogTag, "Updating Sessions file. " +sessionDataList.size() +" sessions");
+	    try{
+	    	final File parent = new File(AppBlade.sessionsDir);
+	    	if(!parent.exists())
 	    	{
-	    	   System.err.println("Could not create parent directories");
+	    		System.err.println("Parent directories do not exist");
+		    	if (!parent.mkdirs())
+		    	{
+		    	   System.err.println("Could not create parent directories");
+		    	}
 	    	}
-    	}
-    	final File someFile = new File(AppBlade.sessionsDir, sessionsIndexFileName);
-    	if(!someFile.exists()){
-        	Log.d(AppBlade.LogTag, "Sessions file does not exist yet. creating Sessions file.");
-    		someFile.createNewFile();
-    	}
-    }catch (IOException ex) {
-    	Log.d(AppBlade.LogTag, "Error making Sessions file");
-    	ex.printStackTrace();
-    }
+	    	final File someFile = new File(AppBlade.sessionsDir, sessionsIndexFileName);
+	    	if(!someFile.exists()){
+	        	Log.d(AppBlade.LogTag, "Sessions file does not exist yet. creating Sessions file.");
+	    		someFile.createNewFile();
+	    	}
+	    }catch (IOException ex) {
+	    	Log.d(AppBlade.LogTag, "Error making Sessions file");
+	    	ex.printStackTrace();
+	    }
        BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(filename));
@@ -308,8 +392,8 @@ public class SessionHelper {
         }
         SessionData ud;
         String row;
-       for(int i=0; i<userDataList.size(); i++) {
-           ud = userDataList.get(i);
+       for(int i=0; i<sessionDataList.size(); i++) {
+           ud = sessionDataList.get(i);
            row = ud.sessionAsStoredString();
             try {
             	Log.d(AppBlade.LogTag, "writing "+row);

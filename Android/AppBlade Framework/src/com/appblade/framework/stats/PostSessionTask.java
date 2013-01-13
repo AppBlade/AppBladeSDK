@@ -9,6 +9,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * Task to post sessions asynchronously.
+ * On exec(sessions) will post all sessions to AppBlade.
+ * @see SessionHelper.postSessions(List<SessionData>)
+ * @author andrew.tremblay@raizlabs
+ */
 public class PostSessionTask extends AsyncTask<List<SessionData>, Void, Void>{
 
 	Context context;
