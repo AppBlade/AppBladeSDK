@@ -5,7 +5,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpHead;
 
-
+/**
+ * Class for all the basic HTTP functions we need.
+ * @author rich.stern@raizlabs
+ * @author andrew.tremblay@raizlabs
+ */
 public class HttpUtils {
 	
 	public final static String HeaderLastModified = "Last-Modified";
