@@ -467,10 +467,12 @@ public class AppBlade {
 	 */
 	
 	/**
-	 * Register AppBladeExceptionHandler as the default uncaught exception handler on the current thread.
-	 * Will call on every uncaught exception and will pass that exception to AppBlade.notify(final Throwable e).
+	 * Register AppBladeExceptionHandler as the default uncaught exception handler on the current thread. <br>
+	 * Will call on every uncaught exception and will pass that exception to {@link AppBlade#notify(Throwable)}. <br>
+	 * If there was a previous default handler set, AppBladeExceptionHandler stores it internally and calls whatever it would call after calling {@link #notify(Throwable)} .<br>
+	 * This function is called automatically inside {@link AppBlade#register(Context, String, String, String, String)}
 	 */
-	private static void registerExceptionHandler() {
+	public static void registerExceptionHandler() {
 		UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
 		if(! (current instanceof AppBladeExceptionHandler))
 		{
@@ -479,14 +481,29 @@ public class AppBlade {
 	}
 
 	/**
-	 * Notify the AppBlade Server of a crash, given the thrown error/exception
+	 * UN-Register AppBladeExceptionHandler as the default uncaught exception handler on the current thread. <br>
+	 * You'll have to manually opt out of our crash reporting, since {@link AppBlade#register(Context, String, String, String, String)} calls {@link AppBlade#registerExceptionHandler()} internally.<br>
+	 * If there was a previous default handler set, we set it back to the default handler.
+	 */
+	public static void unregisterExceptionHandler() {
+		UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
+		if(current instanceof AppBladeExceptionHandler){
+			Thread.setDefaultUncaughtExceptionHandler(((AppBladeExceptionHandler)current).defaultHandler);
+		}
+	}
+
+	
+	/**
+	 * Notify the AppBlade Server of a crash, if we have the permissions, given the thrown error/exception
 	 * @param e The Throwable to send to AppBlade
 	 */
 	public static void notify(final Throwable e)
 	{
 		if(e != null && canWriteToDisk)
 		{
-			Log.d(AppBlade.LogTag, e.getLocalizedMessage());
+			if(e.getLocalizedMessage() != null){
+				Log.d(AppBlade.LogTag, e.getLocalizedMessage());
+			}
 			CrashReportData data = new CrashReportData(e);
 			new PostCrashReportTask(null).execute(data);
 		}
