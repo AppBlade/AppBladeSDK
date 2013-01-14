@@ -10,7 +10,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
  */		
 public class AppBladeExceptionHandler implements UncaughtExceptionHandler {
 	
-	private UncaughtExceptionHandler defaultHandler;
+	public UncaughtExceptionHandler defaultHandler;
 
 	public AppBladeExceptionHandler(UncaughtExceptionHandler defaultHandler) {
 		this.defaultHandler = defaultHandler;
