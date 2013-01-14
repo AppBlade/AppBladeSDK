@@ -184,6 +184,27 @@ public class AppBlade {
 	}
 	
 	
+	/**
+	 * A hard call check if we have successfully registered with AppBlade. Will throw IllegalArgumentException if we are not registered. 
+	 * @throws IllegalArgumentException
+	 */
+	public static void hardCheckIsRegistered() {
+		if(appInfo == null || !appInfo.isValid()){
+			final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+			String methodName = null; 
+			if(ste.length > 3){ //Should always call, but still. Just in case.
+				methodName = ste[3].getMethodName();
+			}
+			if(StringUtils.isNullOrEmpty(methodName)){
+				throw new IllegalArgumentException("You must register AppBlade before arriving at this point in the code. You might have called AppBlade.hardCheckIsRegistered erroneously.");
+			}
+			else
+			{
+			throw new IllegalArgumentException("You failed to register AppBlade before calling "+methodName+", please read the documentation.");
+			}
+		}
+	}
+
 	
 
 	/********************************************************
@@ -199,6 +220,7 @@ public class AppBlade {
 	 * @param activity
 	 */
 	public static void authorize(Activity activity) {
+		hardCheckIsRegistered();
 		authorize(activity, false);
 	}
 
@@ -210,6 +232,8 @@ public class AppBlade {
 	 * @param fromLoopBack whether the authorize call is from the authorization window or not, (defaults to false)
 	 */
 	public static void authorize(final Activity activity, boolean fromLoopBack) {
+		hardCheckIsRegistered();
+
 		// If we don't have enough stored information to authorize the current user,
 		// delegate to the AuthHelper
 		if(!isAuthorized(activity))
@@ -263,6 +287,8 @@ public class AppBlade {
 	 * @return Whether we have a valid access token (a token exists AND we are still within the ttl)
 	 */
 	private static boolean isAuthorized(Activity activity) {
+		hardCheckIsRegistered();
+
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
 		setDeviceId(accessToken);
 
@@ -276,6 +302,8 @@ public class AppBlade {
 	 * @return Whether we have a valid access token (a token exists AND we are still within the ttl)
 	 */
 	private static boolean isAuthorized(Context context) {
+		hardCheckIsRegistered();
+
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
 		setDeviceId(accessToken);
 
@@ -307,6 +335,8 @@ public class AppBlade {
 	 */
 	public static void startSession(Context context, boolean onlyAuthorized)
 	{
+		hardCheckIsRegistered();
+
 		if(onlyAuthorized){
 			if(isAuthorized(context)) {
 				//check for existing sessions, post them.
@@ -342,6 +372,8 @@ public class AppBlade {
 	 */
 	public static void endSession(Context context, boolean onlyAuthorized)
 	{
+		hardCheckIsRegistered();
+
 		if(onlyAuthorized){
 			if(isAuthorized(context)) {
 				SessionHelper.endSession(context);
@@ -372,6 +404,8 @@ public class AppBlade {
 	 * @param context Context to use to display the dialog. 
 	 */
 	public static void doFeedback(Context context) {
+		hardCheckIsRegistered();
+
 		doFeedbackWithScreenshot(context, null, null);
 	}
 
@@ -382,6 +416,8 @@ public class AppBlade {
 	 * @param activity Activity to screenshot.
 	 */
 	public static void doFeedbackWithScreenshot(Context context, Activity activity) {
+		hardCheckIsRegistered();
+
 		View view = activity.getWindow().getDecorView().findViewById(android.R.id.content);
 		doFeedbackWithScreenshot(context, view);
 	}
@@ -393,6 +429,8 @@ public class AppBlade {
 	 * @param view View to screenshot.
 	 */
 	public static void doFeedbackWithScreenshot(Context context, View view) {
+		hardCheckIsRegistered();
+
 		doFeedbackWithScreenshot(context, AppBlade.getBitmapFromView(view));
 	}
 
@@ -403,6 +441,8 @@ public class AppBlade {
 	 * @param screenshot The screenshot Bitmap to post to AppBlade.
 	 */
 	public static void doFeedbackWithScreenshot(Context context, Bitmap screenshot) {
+		hardCheckIsRegistered();
+
 		String screenshotName = "feedback.png"; //keep for appblade logic
 		doFeedbackWithScreenshot(context, screenshot, screenshotName);
 	}
@@ -415,6 +455,8 @@ public class AppBlade {
 	 * @param screenshotName The filename to use for the screenshot.
 	 */
 	public static void doFeedbackWithScreenshot(final Context context, Bitmap screenshot, String screenshotName) {
+		hardCheckIsRegistered();
+
 		FeedbackData data = new FeedbackData();
 		data.ScreenshotName = screenshotName;
 		data.setPersistentScreenshot(screenshot);
@@ -434,6 +476,8 @@ public class AppBlade {
 	 * @param screenshot The screenshot Bitmap to post to AppBlade. (can be null)
 	 */
 	public static void sendFeedbackData(final Context context, String feedbackMessage, Bitmap screenshot) {
+		hardCheckIsRegistered();
+
 		FeedbackData data = new FeedbackData();
 		data.ScreenshotName = "feedback.png"; //keep for appblade logic
 		data.Notes = feedbackMessage;
@@ -452,6 +496,7 @@ public class AppBlade {
 	 * @return A bitmap of the given view.
 	 */
 	public static Bitmap getBitmapFromView(View view) {
+		
 		boolean wasCacheEnabled = view.isDrawingCacheEnabled();
 		view.setDrawingCacheEnabled(true);
 		Bitmap viewScreenshot = view.getDrawingCache();
@@ -526,6 +571,8 @@ public class AppBlade {
 	 */
 	public static void setCustomParameter(Context context, String key, Object value) 
 	{
+		hardCheckIsRegistered();
+
 		try {
 			AppBlade.setCustomParameterThrowy(context, key, value);
 		} catch (JSONException e) {
@@ -543,6 +590,8 @@ public class AppBlade {
 	 */
 	public static void setCustomParameterThrowy(Context context, String key, Object value) throws JSONException
 	{
+		hardCheckIsRegistered();
+
 		CustomParamData currentParams = CustomParamDataHelper.getCurrentCustomParams();
 		currentParams.put(key, value);
 		CustomParamDataHelper.storeCurrentCustomParams(context, currentParams);
@@ -554,6 +603,8 @@ public class AppBlade {
 	 */
 	public static void clearCustomParameters(Context context)
 	{
+		hardCheckIsRegistered();
+
 		CustomParamData emptyData = new CustomParamData();
 		CustomParamDataHelper.storeCurrentCustomParams(context, emptyData);		
 	}
@@ -589,6 +640,8 @@ public class AppBlade {
 	 * @param accessToken the access token to that will be the new deviceID, defaults to AppInfo.DefaultUDID if null or an empty string
 	 */
 	public static void setDeviceId(String accessToken) {
+		hardCheckIsRegistered();
+
 		Log.d(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
 
 		if(!StringUtils.isNullOrEmpty(accessToken))
