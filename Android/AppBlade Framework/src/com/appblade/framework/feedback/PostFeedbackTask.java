@@ -17,7 +17,7 @@ import android.widget.Toast;
  * @see #CustomParamDataHelper.getCurrentCustomParams()
  * @author andrew.tremblay@raizlabs
  */
-public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Void>{
+public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Boolean>{
 
 	Context context;
 	ProgressDialog progress;
@@ -32,18 +32,22 @@ public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Void>{
 	}
 	
 	@Override
-	protected Void doInBackground(FeedbackData... params) {
+	protected Boolean doInBackground(FeedbackData... params) {
 		if(params.length == 1){
 			FeedbackData data = params[0];
 			CustomParamData paramData = CustomParamDataHelper.getCurrentCustomParams();
 			Log.d(AppBlade.LogTag, "customParams " + paramData.toString());
 			success = FeedbackHelper.postFeedbackWithCustomParams(data, paramData);
+			
+			if(success){
+				data.clearData();
+			}
 		}
-		return null;
+		return success;
 	}
 	
 	@Override
-	protected void onPostExecute(Void result) {
+	protected void onPostExecute(Boolean result) {
 		String toastMessage = FAIL_MESSAGE;
 		if (success) {
 			toastMessage = SUCCESS_MESSAGE;
