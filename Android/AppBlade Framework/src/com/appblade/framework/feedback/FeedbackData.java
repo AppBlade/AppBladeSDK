@@ -97,4 +97,12 @@ public class FeedbackData {
 		return this.Screenshot;
 	}
 
+	public void clearData() {
+		// TODO remove all data from the stored files, if we're doing that.
+		File f = new File(this.ScreenshotFileLocation);
+		if(f.exists() && f.isFile()){
+			f.delete();
+		}
+	}
+
 }
