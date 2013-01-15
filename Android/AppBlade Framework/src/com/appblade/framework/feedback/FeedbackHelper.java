@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.CheckBox;
@@ -148,7 +149,9 @@ public class FeedbackHelper {
 		
 		final TextView screenshotCheckboxTitle = new TextView(context);
 		screenshotCheckboxTitle.setText("Send Screenshot");
+		screenshotCheckboxTitle.setTextColor(Color.WHITE);
 		checkboxLayout.addView(screenshotCheckboxTitle);
+		
 		wrapperView.addView(checkboxLayout);
 		
 		final EditText editText = new EditText(context);
