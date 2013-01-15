@@ -153,8 +153,13 @@ You can download a compiled .jar from [our website](http://appblade.com/sdk/down
 				
 				AppBlade.register(this, token, secret, uuid, issuance);
 			}
+
+4. Be sure that your application has permission to access the internet to communicate with our server (and store failed requests when it can't) by adding the following permissions to the manifest:
+		<uses-permission android:name="android.permission.INTERNET" />
+		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 	
-4. To allow AppBlade to enforce user authorization in your app, call AppBlade.authorize statically from your main activity's onResume method.
+5. To enable the AppBlade killswitch and allow AppBlade to enforce user authorization in your app, call AppBlade.authorize statically from your main activity's onResume method.
 
 			public class MainActivity extends Activity {
 				
@@ -163,16 +168,25 @@ You can download a compiled .jar from [our website](http://appblade.com/sdk/down
 					AppBlade.authorize(this);
 				}
 
- * You'll need to declare our `RemoteAuthorizeActivity` in your manifest as well.
+ * You'll need to declare our `RemoteAuthorizeActivity` in your manifest as well, or roll your own Activity.
+			<activity   android:name="com.appblade.framework.RemoteAuthorizeActivity" />
 
-			<activity   android:name="com.appblade.framework.RemoteAuthorizeActivity"
-			            android:screenOrientation="portrait" />
-			
+6. Enabling feedback reporting is easy, just call the folowing from within your Activity.
+				AppBlade.doFeedback(YourActivity.this);
+
+ * To also include a screenshot to send to appblade with your feedback, include an Activity, a View, or a Bitmap or with one of the following functions:
+			AppBlade.doFeedbackWithScreenshot(Context context, Activity activity);
+			AppBlade.doFeedbackWithScreenshot(Context context, View view);
+			AppBlade.doFeedbackWithScreenshot(Context context, Bitmap bitmap);
+	* A precoded dialog will then prompt the user to fill out a message and an option to send the included screenshot. To code a custom dialog, check out our wiki. 			
+	
+ 		
+7. To use Session counting, call `AppBlade.startSession()` and  `AppBlade.endSession()` in the `onResume()` and `onPause()` functions of your main `Activity`, respectively. 
+**(Or wherever you think is appropriate, the lifespan of Android apps are notoriously difficult to track, and will vary depending on your implementiation.)**
+
+8. Custom Parameters can be included along with Feeback and Crash reports, call `AppBlade.setCustomParameter(Context, String, Object)` to set or clear a value to send or call `AppBlade.clearCustomParameters(Context)` to clear all stored variables. 
 
 
- Be sure that your application has permission to access the internet to allow the AppBlade SDK to communicate with our servers by adding the following permission to the manifest:
-
-		<uses-permission android:name="android.permission.INTERNET" />
 
 #Resources:#
 ###[AppBlade.com](https://appblade.com/)###
