@@ -134,6 +134,9 @@ public class FeedbackHelper {
 	 */
 	public static void getFeedbackData(Context context, FeedbackData data,
 			final OnFeedbackDataAcquiredListener listener) {
+		if (data == null)
+			data = new FeedbackData();
+		
 		AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 		dialog.setTitle("Feedback");
 
@@ -143,30 +146,33 @@ public class FeedbackHelper {
 		
 		final LinearLayout checkboxLayout = new LinearLayout(context);
 		checkboxLayout.setGravity(Gravity.CENTER_VERTICAL);
+		
 		final CheckBox screenshotCheckBox = new CheckBox(context);
-		screenshotCheckBox.setChecked(true); 
-		checkboxLayout.addView(screenshotCheckBox);
+		screenshotCheckBox.setChecked(false);
+		if(data.Screenshot != null){
+			screenshotCheckBox.setChecked(true); 
+			checkboxLayout.addView(screenshotCheckBox);
 		
-		final TextView screenshotCheckboxTitle = new TextView(context);
-		screenshotCheckboxTitle.setText("Send Screenshot");
-		screenshotCheckboxTitle.setTextColor(Color.WHITE);
-		checkboxLayout.addView(screenshotCheckboxTitle);
-		
-		wrapperView.addView(checkboxLayout);
+			final TextView screenshotCheckboxTitle = new TextView(context);
+			screenshotCheckboxTitle.setText("Send Screenshot");
+			screenshotCheckboxTitle.setTextColor(Color.WHITE);
+			checkboxLayout.addView(screenshotCheckboxTitle);
+				
+			wrapperView.addView(checkboxLayout);
+		}
 		
 		final EditText editText = new EditText(context);
 		editText.setLines(5);
 		editText.setGravity(Gravity.TOP);
 		editText.setHint("Enter any feedback...");
 		wrapperView.addView(editText);
-		
+			
 		
 		dialog.setView(wrapperView);
-		if (data == null)
-			data = new FeedbackData();
 		
 		final FeedbackData fData = data;
-		
+		Log.d(AppBlade.LogTag, "feedback data : "+ fData.FileName + " is " + (fData.Screenshot != null ? "here" : "not here") );
+
 		dialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				fData.Notes = editText.getText().toString();
