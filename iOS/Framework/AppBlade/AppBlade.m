@@ -716,14 +716,38 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     CGRect screenFrame = self.window.frame;
     
+    CGRect vFrame = CGRectZero;
+    if([[self.window subviews] count] > 0){
+        UIView *v = [[self.window subviews] objectAtIndex:0];
+        vFrame = v.frame; //adjust for any possible offset in the subview we'll add our feedback to.
+    }
+    
+    CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+    
     if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        //make an adjustment for the case where the view we're adding to is stretched beyond the window.
+        screenFrame.origin.x = screenFrame.origin.x -vFrame.origin.x + statusBarFrame.size.width;
+        
         // We need to react properly to interface orientations
         CGSize size = screenFrame.size;
         screenFrame.size.width = size.height;
         screenFrame.size.height = size.width;
+        CGPoint origin = screenFrame.origin;
+        screenFrame.origin.x = origin.y;
+        screenFrame.origin.y = origin.x;
+    }
+    else
+    {
+        //make an adjustment for the case where the view we're adding to is stretched beyond the window.
+        screenFrame.origin.y = screenFrame.origin.y -vFrame.origin.y + statusBarFrame.size.height;
     }
     
-    FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(0, 0, screenFrame.size.width, screenFrame.size.height)];
+    NSLog(@"Displaying feedback dialog in frame X:%.f Y:%.f W:%.f H:%.f",
+          screenFrame.origin.x, screenFrame.origin.y,
+          screenFrame.size.width, screenFrame.size.height);
+    
+    
+    FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(screenFrame.origin.x, screenFrame.origin.y, screenFrame.size.width, screenFrame.size.height)];
     feedback.delegate = self;
     
     // get the first window in the application if one was not supplied.

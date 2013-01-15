@@ -41,7 +41,8 @@
         // overlay view
         self.backgroundColor = [UIColor clearColor];
         self.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
-        UIView *overlayView = [[UIView alloc] initWithFrame:self.frame];
+        CGRect overlayFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+        UIView *overlayView = [[UIView alloc] initWithFrame:overlayFrame];
         overlayView.alpha = 0.0;
         overlayView.backgroundColor = [UIColor blackColor];
         overlayView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
