@@ -111,10 +111,7 @@ public class AppBlade {
 			throw new IllegalArgumentException("Invalid context registered with AppBlade");
 		}
 
-		if(		StringUtils.isNullOrEmpty(token) ||
-				StringUtils.isNullOrEmpty(secret) ||
-				StringUtils.isNullOrEmpty(uuid) ||
-				StringUtils.isNullOrEmpty(issuance))
+		if(StringUtils.isNullOrEmpty(token) || StringUtils.isNullOrEmpty(secret) || StringUtils.isNullOrEmpty(uuid) || StringUtils.isNullOrEmpty(issuance))
 		{
 			throw new IllegalArgumentException("Invalid application info registered with AppBlade");
 		}

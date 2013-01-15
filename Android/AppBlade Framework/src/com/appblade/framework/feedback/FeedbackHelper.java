@@ -159,7 +159,6 @@ public class FeedbackHelper {
 		
 		
 		dialog.setView(wrapperView);
-		
 		if (data == null)
 			data = new FeedbackData();
 		
