@@ -93,10 +93,10 @@ public class KillSwitch {
 			shouldUpdate = false;
 		
 		// If TTL is satisfied (we are within the time to live from the last time updated), do not require update
-		else if(ttlLastUpdated > (ttl * MillisPerDay + ttlLastUpdated))
+		else if((ttlLastUpdated + ttl) > now)
 			shouldUpdate = false;
 
-		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d", ttl, ttlLastUpdated));
+		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
 		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate? %b", shouldUpdate));
 		
 		return shouldUpdate;
