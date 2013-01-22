@@ -283,13 +283,16 @@ public class AppBlade {
 	 * @param activity Activity to check for authorization
 	 * @return Whether we have a valid access token (a token exists AND we are still within the ttl)
 	 */
-	private static boolean isAuthorized(Activity activity) {
+	public static boolean isAuthorized(Activity activity) {
 		hardCheckIsRegistered();
 
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
 		setDeviceId(accessToken);
 
+		Log.v("AppBlade MDM",  !StringUtils.isNullOrEmpty(accessToken) ? "Access Token exists" : "Access Token does not exist"); 
+
 		boolean isTtlValid = !KillSwitch.shouldUpdate();
+		Log.v("AppBlade MDM",  isTtlValid ? "TTL still valid" : "TTL invalid"); 
 		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
 	}
 	
@@ -298,7 +301,7 @@ public class AppBlade {
 	 * @param context The Context we want to check for authorization
 	 * @return Whether we have a valid access token (a token exists AND we are still within the ttl)
 	 */
-	private static boolean isAuthorized(Context context) {
+	public static boolean isAuthorized(Context context) {
 		hardCheckIsRegistered();
 
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
