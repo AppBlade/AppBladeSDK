@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.appblade.framework"
     android:versionCode="2"
-    android:versionName="0.9.3" >
+    android:versionName="0.9.3"  >
 
     <uses-sdk android:minSdkVersion="7" />
+    <uses-sdk android:targetSdkVersion="17" />
 
     <application
         android:icon="@drawable/ic_launcher"

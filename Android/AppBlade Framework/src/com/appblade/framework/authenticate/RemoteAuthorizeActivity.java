@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -13,7 +12,6 @@ import android.webkit.WebViewClient;
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
-import com.appblade.framework.authenticate.AuthTokensDownloadTask.OnPostExecuteListener;
 
 
 /**
@@ -27,7 +25,7 @@ public class RemoteAuthorizeActivity extends Activity {
 	private static final String EndpointAuthNew = "/oauth/authorization/new?client_id=%s&response_type=code";
 	
 	ProgressDialog progress;
-	JavascriptInterface jsInterface;
+	AuthJavascriptInterface jsInterface;
 	
 	WebView webview;
 	
@@ -47,7 +45,7 @@ public class RemoteAuthorizeActivity extends Activity {
 	private void initControls() {
         String path = String.format(EndpointAuthNew, AppBlade.appInfo.Token);
         final String authUrl = WebServiceHelper.getUrl(path);
-        jsInterface = new JavascriptInterface();
+        jsInterface = new AuthJavascriptInterface(RemoteAuthorizeActivity.this);
 
         webview.getSettings().setJavaScriptEnabled(true);
         webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -82,27 +80,4 @@ public class RemoteAuthorizeActivity extends Activity {
         
 		webview.loadUrl(authUrl);
 	}
-	
-	/**
-	 * Javascript interface that will download the AuthTokens to local storage (inside RemoteAuthHelper) on notification. It confirms the storage by reauthorizing through AppBlade.
-	 */
-	class JavascriptInterface {
-		public void notifyAuthCode(final String code) {
-			final String message = String.format("JavascriptInterface.notifyAuthCode code: %s", code);
-			Log.d(AppBlade.LogTag, message);
-			
-			runOnUiThread(new Runnable() {
-				public void run() {
-					AuthTokensDownloadTask task = new AuthTokensDownloadTask(RemoteAuthorizeActivity.this);
-					task.setOnPostExecuteListener(new OnPostExecuteListener() {
-						public void onPostExecute() {
-							AppBlade.authorize(RemoteAuthorizeActivity.this, true);
-						}
-					});
-					task.execute(code);
-				}
-			});
-		}
-	}
-
 }
