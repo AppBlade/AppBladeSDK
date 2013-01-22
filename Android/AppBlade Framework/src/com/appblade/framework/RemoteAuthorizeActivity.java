@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -16,7 +17,7 @@ public class RemoteAuthorizeActivity extends Activity {
 	private static final String EndpointAuthNew = "/oauth/authorization/new?client_id=%s&response_type=code";
 	
 	ProgressDialog progress;
-	JavascriptInterface jsInterface;
+	AuthJavascriptInterface jsInterface;
 	
 	WebView webview;
 	
@@ -33,7 +34,7 @@ public class RemoteAuthorizeActivity extends Activity {
 	private void initControls() {
         String path = String.format(EndpointAuthNew, AppBlade.appInfo.Token);
         final String authUrl = WebServiceHelper.getUrl(path);
-        jsInterface = new JavascriptInterface();
+        jsInterface = new AuthJavascriptInterface();
 
         webview.getSettings().setJavaScriptEnabled(true);
         webview.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
@@ -77,9 +78,11 @@ public class RemoteAuthorizeActivity extends Activity {
 		webview.loadUrl(authUrl);
 	}
 	
-	class JavascriptInterface {
+	class AuthJavascriptInterface {
+		
+		@JavascriptInterface
 		public void notifyAuthCode(final String code) {
-			final String message = String.format("JavascriptInterface.notifyAuthCode code: %s", code);
+			final String message = String.format("AuthJavascriptInterface.notifyAuthCode code: %s", code);
 			Log.d(AppBlade.LogTag, message);
 			
 			runOnUiThread(new Runnable() {
