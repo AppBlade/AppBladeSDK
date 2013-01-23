@@ -66,17 +66,17 @@ public class WebServiceHelper {
 		String methodName = method.toString();
 		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
 		
-		String requestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
+		String normalizedRequestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
 				nonce, methodName, requestBodyRaw, appInfo.CurrentEndpointNoPort, WebServiceHelper.getCurrentPortAsString(), requestBodyHash, appInfo.Ext);
-		String mac = StringUtils.hmacSha256(appInfo.Secret, requestBody).trim();
+		String mac = StringUtils.hmacSha256(appInfo.Secret, normalizedRequestBody).trim();
 		
-		byte[] normalizedRequestBodySha256 = StringUtils.sha256(requestBody);
+		byte[] normalizedRequestBodySha256 = StringUtils.sha256(normalizedRequestBody);
 		String normalizedRequestBodyHash = Base64.encodeToString(normalizedRequestBodySha256, 0);
 
-		Log.d(AppBlade.LogTag, String.format("requestBody: %s", requestBody));
-		Log.d(AppBlade.LogTag, String.format("requestBody length: %d", requestBody.length()));
-		Log.d(AppBlade.LogTag, String.format("requestBody sha256+base64: %s", normalizedRequestBodyHash));
-		Log.d(AppBlade.LogTag, String.format("requestBody sha256+base64 length: %d", normalizedRequestBodyHash.length()));
+		Log.d(AppBlade.LogTag, String.format("normalizedRequestBody: %s", normalizedRequestBody));
+		Log.d(AppBlade.LogTag, String.format("normalizedRequestBody length: %d", normalizedRequestBody.length()));
+		Log.d(AppBlade.LogTag, String.format("normalizedRequestBody Hash sha256+base64: %s", normalizedRequestBody));
+		Log.d(AppBlade.LogTag, String.format("normalizedRequestBody Hash sha256+base64 length: %d", normalizedRequestBodyHash.length()));
 		Log.d(AppBlade.LogTag, String.format("mac: %s", mac));
 		
 		StringBuilder builder = new StringBuilder();
