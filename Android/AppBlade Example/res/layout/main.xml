@@ -40,13 +40,89 @@
                 android:background="#464e54"
                 android:layout_marginBottom="5dip" />
             
+            <LinearLayout 
+                 android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            		android:orientation="horizontal"
+                >
 		    <Button
 		        android:id="@+id/btnDivideByZero"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="@string/divide_by_zero" />
+		    <Button
+		        android:id="@+id/btnDivideByZeroUncaught"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/divide_by_zero_uncaught" />
+           </LinearLayout>
+		    		    
+		    <!-- Feedback sections... -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/feedback"
+                android:textColor="#464e54"
+                android:textStyle="bold"
+                android:layout_marginTop="10dip"
+                android:layout_marginLeft="10dip" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="3dip"
+                android:background="#464e54"
+                android:layout_marginBottom="5dip" />
+		            <LinearLayout 
+                 android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            		android:orientation="horizontal"
+                >
+            
+		    <Button
+		        android:id="@+id/btnFeedback"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/send_feedback" />
+		    <Button
+		        android:id="@+id/btnFeedbackNoImage"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/send_feedback_no_screenshot" />
+		    </LinearLayout>
 
-		    <!-- Remote authorization sections... -->
+        	<!-- Session Counting sections... -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/session_counting"
+                android:textColor="#464e54"
+                android:textStyle="bold"
+                android:layout_marginTop="10dip"
+                android:layout_marginLeft="10dip" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="3dip"
+                android:background="#464e54"
+                android:layout_marginBottom="5dip" />
+			 <LinearLayout 
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+			            
+			    <Button
+			        android:id="@+id/btnSessionStart"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="@string/start_session" />
+			    <Button
+			        android:id="@+id/btnSessionEnd"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="@string/end_session" />
+		    </LinearLayout>
+		    
+		            
+		            		    
+   		   <!-- Remote authorization sections... -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,26 +143,7 @@
 		        android:layout_height="wrap_content"
 		        android:text="@string/clear_authorization_data" />
 		    
-		    <!-- Feedback sections... -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/feedback"
-                android:textColor="#464e54"
-                android:textStyle="bold"
-                android:layout_marginTop="10dip"
-                android:layout_marginLeft="10dip" />
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="3dip"
-                android:background="#464e54"
-                android:layout_marginBottom="5dip" />
-		
-		    <Button
-		        android:id="@+id/btnFeedback"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:text="@string/send_feedback" />
+		    
         </LinearLayout>
         
     </ScrollView>

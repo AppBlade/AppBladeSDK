@@ -40,9 +40,17 @@ public class MainActivity extends Activity {
 
 	private void initControls() {
 		View btnDivideByZero = findViewById(R.id.btnDivideByZero);
-		View btnClearAuthData = findViewById(R.id.btnClearAuthData);
-		View btnFeedback = findViewById(R.id.btnFeedback);
+		View btnDivideByZeroUncaught = findViewById(R.id.btnDivideByZeroUncaught);
 
+		View btnFeedback = findViewById(R.id.btnFeedback);
+		View btnFeedbackNoScreenshot = findViewById(R.id.btnFeedbackNoImage);
+
+		View btnStartSession = findViewById(R.id.btnSessionStart);
+		View btnEndSession = findViewById(R.id.btnSessionEnd);
+
+		View btnClearAuthData = findViewById(R.id.btnClearAuthData);
+		
+		//Exception Reporting
 		btnDivideByZero.setOnClickListener(new OnClickListener() {
 			@SuppressWarnings("unused")
 			public void onClick(View v) {
@@ -55,7 +63,38 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+		btnDivideByZeroUncaught.setOnClickListener(new OnClickListener() {
+			@SuppressWarnings("unused")
+			public void onClick(View v) {
+				int divideByZero = 1 / 0;
+			}
+		});
 
+		//Feedback Counting
+		btnFeedback.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AppBlade.doFeedbackWithScreenshot(MainActivity.this, MainActivity.this);
+			}
+		});
+		btnFeedbackNoScreenshot.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AppBlade.doFeedback(MainActivity.this);
+			}
+		});
+		
+		//Session Counting
+		btnStartSession.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AppBlade.startSession(MainActivity.this);
+			}
+		});
+		btnEndSession.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AppBlade.endSession(MainActivity.this);
+			}
+		});
+		
+		//Authentication
 		btnClearAuthData.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				RemoteAuthHelper.clear(MainActivity.this);
@@ -72,21 +111,18 @@ public class MainActivity extends Activity {
 				builder.show();
 			}
 		});
-
-		btnFeedback.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				MainActivity.this.doFeedbackWithScreenshot();
-			}
-		});
 	}
 
+	
+	
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		int action = event.getAction();
 		switch (action & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_POINTER_DOWN:
 			if (event.getPointerCount() == 3) {
-				doFeedbackWithScreenshot();
+				doFeedbackWithScreenshotAndSetCustomParams();
 				return true;
 			}
 		}
@@ -94,9 +130,9 @@ public class MainActivity extends Activity {
 		return super.onTouchEvent(event);
 	}
 
-	private void doFeedbackWithScreenshot() {
+	private void doFeedbackWithScreenshotAndSetCustomParams() {
 		AppBlade.setCustomParameter(getApplicationContext(), "AppState",
-				"Did A Feedback");
+				"Did A Feedback From Touch Event");
 
 		AppBlade.doFeedbackWithScreenshot(this, this);
 	}
