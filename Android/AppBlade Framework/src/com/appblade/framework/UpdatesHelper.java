@@ -192,6 +192,7 @@ public class UpdatesHelper {
 		return dir;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static void notifyDownloading(Activity context) {
 		Intent blank = new Intent();
 		PendingIntent contentIntent = PendingIntent.getBroadcast(context, 0, blank, 0);
@@ -204,6 +205,7 @@ public class UpdatesHelper {
 		notificationManager.notify(NotificationNewVersionDownloading, notification);
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void notifyUpdate(Activity context, JSONObject update) {
 		Log.d(AppBlade.LogTag, "KillSwitch.processUpdate");
 		try

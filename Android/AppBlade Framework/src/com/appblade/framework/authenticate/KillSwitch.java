@@ -47,6 +47,7 @@ public class KillSwitch {
 	private static int ttl = Integer.MIN_VALUE;
 	private static long ttlLastUpdated = Long.MIN_VALUE;
 	private static final int MillisPerHour = 1000 * 60 * 60;
+	@SuppressWarnings("unused")
 	private static final int MillisPerDay = MillisPerHour * 24;
 	
 	private static boolean inProgress = false;

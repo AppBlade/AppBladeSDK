@@ -2,6 +2,7 @@ package com.appblade.framework;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Random;
 
 import org.apache.http.HttpRequest;
@@ -52,7 +53,7 @@ public class WebServiceHelper {
 		//do we need this AppInfo to be passed here since AppBlade already has what we declared within AppBlade.appInfo? Probably not, but well keep in the event that we'll have larger services in place that will need it. 
 			String requestBodyRaw = null;
 		if(!StringUtils.isNullOrEmpty(contents))
-			requestBodyRaw = String.format("%s?%s", urlPath, contents);
+			requestBodyRaw = String.format(Locale.US, "%s?%s", urlPath, contents);
 		else
 			requestBodyRaw = urlPath;
 				
@@ -60,7 +61,7 @@ public class WebServiceHelper {
 		String requestBodyHash = Base64.encodeToString(requestBodyRawSha256, 0).trim();
 
 		int seconds = (int) ((System.currentTimeMillis() / 1000) - StringUtils.safeParse(appInfo.Issuance, 0));
-		String nonce = String.format("%d:%s", seconds, getRandomNonceString(WebServiceHelper.NonceRandomStringLength));
+		String nonce = String.format(Locale.US, "%d:%s", seconds, getRandomNonceString(WebServiceHelper.NonceRandomStringLength));
 		
 		String methodName = method.toString();
 		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
@@ -107,6 +108,7 @@ public class WebServiceHelper {
 	 * </ul>
 	 * @param request The HttpRequest to which we've added the above headers. 
 	 */
+	@SuppressWarnings("deprecation")
 	public static void addCommonHeaders(HttpRequest request) {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
@@ -168,7 +170,7 @@ public class WebServiceHelper {
 	 * @return String of the current port, usually 443.
 	 */
 	public static String getCurrentPortAsString() {
-		return String.format("%d", WebServiceHelper.getCurrentPort());
+		return String.format(Locale.US, "%d", WebServiceHelper.getCurrentPort());
 	}
 	
 	/**
