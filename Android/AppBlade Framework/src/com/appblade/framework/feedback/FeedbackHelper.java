@@ -79,16 +79,11 @@ public class FeedbackHelper {
 			HttpPost request = new HttpPost();
 			request.setEntity(content);
 			
-			
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			content.writeTo(outputStream);
 			String multipartRawContent = outputStream.toString();
 			
 			String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, multipartRawContent, HttpMethod.POST);
-
-			Log.d(AppBlade.LogTag, urlPath);
-			Log.d(AppBlade.LogTag, url);
-			Log.d(AppBlade.LogTag, authHeader);
 
 			request.setURI(new URI(url));
 			request.addHeader("Content-Type", HttpUtils.ContentTypeMultipartFormData + "; boundary=" + sharedBoundary);

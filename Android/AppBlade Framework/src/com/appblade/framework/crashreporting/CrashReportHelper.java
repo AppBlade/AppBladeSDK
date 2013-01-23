@@ -118,9 +118,6 @@ public class CrashReportHelper {
 				String url = WebServiceHelper.getUrl(urlPath);
 				String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, content, HttpMethod.POST);
 
-				Log.d(AppBlade.LogTag, urlPath);
-				Log.d(AppBlade.LogTag, url);
-				Log.d(AppBlade.LogTag, authHeader);
 
 				HttpPost request = new HttpPost();
 				request.setURI(new URI(url));
