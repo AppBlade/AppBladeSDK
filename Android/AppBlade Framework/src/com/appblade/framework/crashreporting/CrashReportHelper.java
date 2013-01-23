@@ -1,6 +1,7 @@
 package com.appblade.framework.crashreporting;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -116,11 +117,16 @@ public class CrashReportHelper {
 			{
 				String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
 				String url = WebServiceHelper.getUrl(urlPath);
-				String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, content, HttpMethod.POST);
-
 
 				HttpPost request = new HttpPost();
 				request.setURI(new URI(url));
+				
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+				crashContent.writeTo(outputStream);
+				String multipartRawContent = outputStream.toString();
+
+				String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, multipartRawContent, HttpMethod.POST);
+				request.addHeader("Content-Type", HttpUtils.ContentTypeMultipartFormData + "; boundary=" + sharedBoundary);
 				request.addHeader("Authorization", authHeader);
 				WebServiceHelper.addCommonHeaders(request);
 
