@@ -130,6 +130,7 @@ public class AppBlade {
 				URL hostCheck = new URL(customHost);
 				hostCheck.toURI();
 				appInfo.CurrentEndpoint  = hostCheck.getHost();
+				appInfo.CurrentEndpointNoPort = hostCheck.getHost();
 				if(hostCheck.getPort() != -1){
 					appInfo.CurrentEndpoint = String.format("%s:%d", hostCheck.getHost(), hostCheck.getPort());
 				}
@@ -144,6 +145,7 @@ public class AppBlade {
 				//the URL was not valid, fallback to default
 				Log.d(LogTag, String.format("%s was not a valid URL, falling back to %s", customHost, AppInfo.DefaultAppBladeHost));
 				appInfo.CurrentEndpoint  = AppInfo.DefaultAppBladeHost;
+				appInfo.CurrentEndpointNoPort = AppInfo.DefaultAppBladeHost;
 				appInfo.CurrentServiceScheme = AppInfo.DefaultServiceScheme;
 			}
 		}

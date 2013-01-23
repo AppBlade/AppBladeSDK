@@ -67,7 +67,7 @@ public class WebServiceHelper {
 		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
 		
 		String requestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
-				nonce, methodName, requestBodyRaw, appInfo.CurrentEndpoint, WebServiceHelper.getCurrentPortAsString(), requestBodyHash, appInfo.Ext);
+				nonce, methodName, requestBodyRaw, appInfo.CurrentEndpointNoPort, WebServiceHelper.getCurrentPortAsString(), requestBodyHash, appInfo.Ext);
 		String mac = StringUtils.hmacSha256(appInfo.Secret, requestBody).trim();
 		
 		byte[] normalizedRequestBodySha256 = StringUtils.sha256(requestBody);
@@ -86,6 +86,8 @@ public class WebServiceHelper {
 		StringUtils.append(builder, "body-hash=\"%s\", ", requestBodyHash);
 		StringUtils.append(builder, "ext=\"%s\", ", appInfo.Ext);
 		StringUtils.append(builder, "mac=\"%s\"", mac);
+		
+		
 		
 		String authHeader = builder.toString();
 		return authHeader;

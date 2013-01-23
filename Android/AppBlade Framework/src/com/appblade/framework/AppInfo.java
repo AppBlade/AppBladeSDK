@@ -31,6 +31,7 @@ public class AppInfo {
 	public String Issuance;
 	public String Ext = DefaultUDID;
 	public String CurrentEndpoint = DefaultAppBladeHost;
+	public String CurrentEndpointNoPort = DefaultAppBladeHost;
 	public String CurrentServiceScheme = DefaultServiceScheme;
 	
 	PackageInfo PackageInfo;
@@ -127,7 +128,7 @@ public class AppInfo {
 
 	/**
 	 * Checks validity (existence) of AppBlade variables. If we don't have that we prety much can't do anything. 
-	 * @return
+	 * @return if we are valid 
 	 */
 	public boolean isValid() {
 		return
