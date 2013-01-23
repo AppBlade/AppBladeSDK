@@ -3,7 +3,8 @@
     android:versionCode="1"
     android:versionName="0.9.2" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk android:minSdkVersion="7" />
+    <uses-sdk android:minSdkVersion="7" 
+              android:targetSdkVersion="17" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -12,7 +13,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar"
-        android:name=".MyApplication">
+        android:name=".MyApplication"
+        android:allowBackup="true">
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
@@ -26,7 +28,6 @@
         <activity
             android:name="com.appblade.framework.authenticate.RemoteAuthorizeActivity"
             android:screenOrientation="portrait" />
-        
     </application>
 
 </manifest>
