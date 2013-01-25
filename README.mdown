@@ -108,7 +108,7 @@ Some prefer to include the AppBlade source code directly to their project, eithe
 
 		[[AppBlade sharedManager] catchAndReportCrashes];
 
-            
+
 ####Enable feedback###
    - To enable feedback reporting (triggered by a three finger double tap) add the following code to `-application:didFinishLaunchingWithOptions:` afrer your AppBlade project information
 
@@ -121,6 +121,7 @@ Some prefer to include the AppBlade source code directly to their project, eithe
     and then prompt the feedback window somewhere in your app with `[[AppBlade sharedManager]  showFeedbackDialogue]`. See the `presentFeedback` button callback in our Maps example project for a full example.
             
    **Note:** Feedback requires there be a `keyWindow`, so call any feedback-related code after `[self.window makeKeyAndVisible]` so it can grab the one your AppDelegate generates. If you want to handle making a keywindow yourself, you can call `allowFeedbackReportingForWindow:(UIWindow*)window` or `setupCustomFeedbackReportingForWindow:(UIWindow*)window`  instead.
+
 
 ####Setting Custom Parameters for Feedback and Crash Reports###
 Custom parameters are treated as an `NSDictionary` whose variables can be set from anywhere (after your appblade code is registered). Set them with the call `-(void)setCustomParams:(NSDictionary *)newFieldValues`
@@ -186,7 +187,13 @@ You can download a compiled .jar from [our website](http://appblade.com/sdk/down
  <br/>You'll need to declare our `RemoteAuthorizeActivity` in your manifest as well, or roll your own Activity.
 			<activity   android:name="com.appblade.framework.RemoteAuthorizeActivity" />
 
-6. Unlike iOS, Android does not require any setup call to enable feedback reporting. To prompt a basic feedback reporting dialog, just call the folowing from within your Activity.
+####Enable crash logging###
+
+To enable crash logging globally for your app for all uncaught exceptions, call `AppBlade.registerExceptionHandler();` after your `AppBlade.register(this, token, secret, uuid, issuance);` call. This will grab all uncaught exceptions and attempt to mnotify appblade of them on the next resume of the app. (If you already registered an UncauahtExceptionHandler, our exception handler will store a reference to it and pass the exception down to it).
+You can also notify AppBlade for a specific exception within your code that you are catching yourself. With in the `try/catch` block of the exception, Add `AppBlade.notify(ex);` of the Exception `ex` that you're catching. See our example project for a working example.
+
+####Enable feedback###
+Unlike iOS, Android does not require any setup call to enable feedback reporting. To prompt a basic feedback reporting dialog, just call the folowing from within your Activity.
 
 				AppBlade.doFeedback(YourActivity.this);
 
@@ -197,10 +204,13 @@ You can download a compiled .jar from [our website](http://appblade.com/sdk/down
 	<br/> A precoded dialog will then prompt the user to fill out a message and an option to send the included screenshot. To code a custom dialog, check out our wiki. 			
 	
  		
-7. To use Session counting, call `AppBlade.startSession()` and  `AppBlade.endSession()` in the `onResume()` and `onPause()` functions of your main `Activity`, respectively. 
-*(Or wherever you think is appropriate. The lifespan of Android apps are notoriously difficult to track, and will vary depending on your implementiation.)*
+####Setting Custom Parameters for Feedback and Crash Reports###
+Custom Parameters can be included along with Feeback and Crash reports, call `AppBlade.setCustomParameter(Context, String, Object)` to set or clear a value to send or call `AppBlade.clearCustomParameters(Context)` to clear all stored variables. <br/>
+*Unlike the iOS implementation of AppBlade, the Android SDK uses persistent custom parameters, so you'll have to manually clear them if you don't want them sent.*
 
-8. Custom Parameters can be included along with Feeback and Crash reports, call `AppBlade.setCustomParameter(Context, String, Object)` to set or clear a value to send or call `AppBlade.clearCustomParameters(Context)` to clear all stored variables. 
+####User Statistics###
+To use Session counting, call `AppBlade.startSession()` and  `AppBlade.endSession()` in the `onResume()` and `onPause()` functions of your main `Activity`, respectively. 
+*(Or wherever you think is appropriate. The lifespan of Android apps are notoriously difficult to track, and will vary depending on your implementiation.)*
 
 
 
