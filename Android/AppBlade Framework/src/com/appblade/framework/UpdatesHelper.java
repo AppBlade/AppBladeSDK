@@ -16,6 +16,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appblade.framework.authenticate.KillSwitch;
+import com.appblade.framework.utils.HttpClientProvider;
+import com.appblade.framework.utils.HttpUtils;
+import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.SystemUtils;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,22 +37,33 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+/**
+ * Class containing functions that will handle a download and installation of an apk update for the given app.
+ * @author rich.stern@raizlabs  
+ * @author andrew.tremblay@raizlabs
+ * @see KillSwitch
+ */
 public class UpdatesHelper {
 
 	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;
 
-	public static void processUpdate(Activity context, JSONObject update) {
-		
+	/**
+	 * We have been given a response from the server through {@link KillSwitch} that an update is available.<br>
+	 * Kick off an update and install if we have the write permissions. Notify the user of the download if we don't have write permissions.
+	 * @param activity Activity to handle the notification or installation.
+	 * @param update JSONObject containing the necessary update information.
+	 */
+	public static void processUpdate(Activity activity, JSONObject update) {
 		PackageInfo pkg = AppBlade.getPackageInfo();
 		String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 		if(SystemUtils.hasPermission(pkg, permission)) {
 			Log.d(AppBlade.LogTag, "UpdatesHelper.processUpdate - permission to write to sd, downloading...");
-			downloadUpdate(context, update);
+			downloadUpdate(activity, update);
 		}
 		else {
 			Log.d(AppBlade.LogTag, "UpdatesHelper.processUpdate - no permission to write to sd, notifying...");
-			notifyUpdate(context, update);
+			notifyUpdate(activity, update);
 		}
 	}
 
@@ -72,7 +89,7 @@ public class UpdatesHelper {
 			
 			HttpGet request = new HttpGet();
 			request.setURI(new URI(url));
-			HttpClient client = HttpClientProvider.newInstance("Android");
+			HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 			HttpResponse response = client.execute(request);
 			if(response != null) {
 				
@@ -164,16 +181,18 @@ public class UpdatesHelper {
 		});
 	}
 
+	
 	private static File getRootDirectory() {
 		String rootDir = ".appblade";
-		String path = String.format("%s/%s",
-				Environment.getExternalStorageDirectory().getAbsolutePath(),
+		String path = String.format("%s%s%s",
+				Environment.getExternalStorageDirectory().getAbsolutePath(), "/",
 				rootDir);
 		File dir = new File(path);
 		dir.mkdirs();
 		return dir;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static void notifyDownloading(Activity context) {
 		Intent blank = new Intent();
 		PendingIntent contentIntent = PendingIntent.getBroadcast(context, 0, blank, 0);
@@ -186,6 +205,7 @@ public class UpdatesHelper {
 		notificationManager.notify(NotificationNewVersionDownloading, notification);
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void notifyUpdate(Activity context, JSONObject update) {
 		Log.d(AppBlade.LogTag, "KillSwitch.processUpdate");
 		try

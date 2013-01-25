@@ -1,10 +1,15 @@
-package com.appblade.framework;
+package com.appblade.framework.utils;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpHead;
 
+/**
+ * Class for all the basic HTTP functions we need.
+ * @author rich.stern@raizlabs
+ * @author andrew.tremblay@raizlabs
+ */
 public class HttpUtils {
 	
 	public final static String HeaderLastModified = "Last-Modified";
@@ -15,7 +20,8 @@ public class HttpUtils {
 	public final static String ContentTypeJson = "application/json";
 	public final static String ContentTypeJpeg = "image/jpeg";
 	public final static String ContentTypeMultipartFormData = "multipart/form-data";
-	
+	public final static String ContentTypeOctetStream = "application/octet-stream";
+
 	public static long getHeaderAsLong(String url, String name) {
 		long val = 0;
 		Header header = getHeader(url, name);
@@ -32,7 +38,7 @@ public class HttpUtils {
 		HttpResponse response = null;
 		try
 		{
-			HttpClient client = HttpClientProvider.newInstance("Android");
+			HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 			HttpHead request = new HttpHead(url);
 		    response = client.execute(request);
 		}

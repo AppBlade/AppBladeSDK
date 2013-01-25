@@ -1,4 +1,4 @@
-package com.appblade.framework;
+package com.appblade.framework.authenticate;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -17,11 +17,25 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appblade.framework.AppBlade;
+import com.appblade.framework.WebServiceHelper;
+import com.appblade.framework.utils.HttpClientProvider;
+import com.appblade.framework.utils.HttpUtils;
+import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.StringUtils;
+import com.appblade.framework.utils.SystemUtils;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/**
+ * AsyncTask to help download and store a valid auth token after singing in with RemoteAuthorizeActivity.
+ * @author rich.stern@raizlabs
+ * @author andrew.tremblay@raizlabs 
+ * @see RemoteAuthorizeActivity
+ */
 public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 
 	ProgressDialog progress;
@@ -45,7 +59,7 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 	protected Void doInBackground(String... params) {
 		
 		String code = params[0];
-		HttpClient client = HttpClientProvider.newInstance("Android");
+		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 		
 		try {
 			String url = WebServiceHelper.getUrl(WebServiceHelper.ServicePathOauthTokens);
@@ -78,17 +92,17 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 		if(HttpUtils.isOK(response)) {
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.d(AppBlade.LogTag, data);
+				Log.d(AppBlade.LogTag, "authData recieved " + data);
 				JSONObject json = new JSONObject(data);
 				
 				String accessToken = json.getString("access_token");
 				
 				// Currently unused
-//				int expires = json.getInt("expires_in");
-//				String token_type = json.getString("token_type");
-//				String refresh_token = json.getString("refresh_token");
+				String token_type = json.getString("token_type");
+				String refresh_token = json.getString("refresh_token");
+				int expires = json.getInt("expires_in");
 				
-				RemoteAuthHelper.store(context, accessToken);
+				RemoteAuthHelper.store(context, token_type, accessToken, refresh_token, expires);
 			}
 			catch (IOException ex) { }
 			catch (JSONException ex) { }
