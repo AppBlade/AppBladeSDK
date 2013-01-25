@@ -19,6 +19,8 @@ public class MyApplication extends Application {
 		String issuance = "";
 		
 		AppBlade.register(this, token, secret, uuid, issuance);
+		
+		AppBlade.registerExceptionHandler();
 	}
 
 }
