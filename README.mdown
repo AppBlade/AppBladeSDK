@@ -168,21 +168,22 @@ You can download a compiled .jar from [our website](http://appblade.com/sdk/down
 					AppBlade.authorize(this);
 				}
 
- * You'll need to declare our `RemoteAuthorizeActivity` in your manifest as well, or roll your own Activity.
+ <br/>You'll need to declare our `RemoteAuthorizeActivity` in your manifest as well, or roll your own Activity.
 			<activity   android:name="com.appblade.framework.RemoteAuthorizeActivity" />
 
-6. Enabling feedback reporting is easy, just call the folowing from within your Activity.
+6. Unlike iOS, Android does not require any setup call to enable feedback reporting. To prompt a basic feedback reporting dialog, just call the folowing from within your Activity.
+
 				AppBlade.doFeedback(YourActivity.this);
 
- * To also include a screenshot to send to appblade with your feedback, include an Activity, a View, or a Bitmap or with one of the following functions:
+ <br/> To also include a screenshot to send to AppBlade with your feedback, include an Activity, a View, or a Bitmap or with one of the following functions:
 			AppBlade.doFeedbackWithScreenshot(Context context, Activity activity);
 			AppBlade.doFeedbackWithScreenshot(Context context, View view);
 			AppBlade.doFeedbackWithScreenshot(Context context, Bitmap bitmap);
-	* A precoded dialog will then prompt the user to fill out a message and an option to send the included screenshot. To code a custom dialog, check out our wiki. 			
+	<br/> A precoded dialog will then prompt the user to fill out a message and an option to send the included screenshot. To code a custom dialog, check out our wiki. 			
 	
  		
 7. To use Session counting, call `AppBlade.startSession()` and  `AppBlade.endSession()` in the `onResume()` and `onPause()` functions of your main `Activity`, respectively. 
-**(Or wherever you think is appropriate, the lifespan of Android apps are notoriously difficult to track, and will vary depending on your implementiation.)**
+*(Or wherever you think is appropriate. The lifespan of Android apps are notoriously difficult to track, and will vary depending on your implementiation.)*
 
 8. Custom Parameters can be included along with Feeback and Crash reports, call `AppBlade.setCustomParameter(Context, String, Object)` to set or clear a value to send or call `AppBlade.clearCustomParameters(Context)` to clear all stored variables. 
 
