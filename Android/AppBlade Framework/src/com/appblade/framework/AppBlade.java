@@ -156,8 +156,6 @@ public class AppBlade {
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
 		setDeviceId(accessToken);
 
-		registerExceptionHandler();
-
 		try
 		{
 			String packageName = context.getPackageName();
