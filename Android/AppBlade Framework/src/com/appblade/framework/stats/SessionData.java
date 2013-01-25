@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,10 +43,15 @@ public class SessionData implements Comparator<Object> {
 		//storedString should match the output of sessionAsStoredString
         // Copy the content into the array
         String[] tokens = storedString.split(storageDividerKey);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
 		try {
-			this.began = format.parse(tokens[0]);
-			this.ended = format.parse(tokens[1]);
+			if(tokens.length == 2){
+				this.began = format.parse(tokens[0]);
+				this.ended = format.parse(tokens[1]);
+			}else{
+				this.began = new Date();
+				this.ended = new Date();
+			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
