@@ -1,9 +1,19 @@
-package com.appblade.framework;
+package com.appblade.framework.utils;
 
 
-class ExceptionUtils {
+/**
+ * Helper class for handling exceptions.
+ * @author rich.stern@raizlabs
+ * @author andrew.tremblay@raizlabs
+ */
+public class ExceptionUtils {
 	
-	static String getStackTrace(Throwable e)
+	/**
+	 * returns A formatted string of the message of the given Throwable as well as the class name, file name, and line number of where the error occured. 
+	 * @param e The Throwable we want to format. 
+	 * @return A formatted String of the given throwable. 
+	 */
+	public static String getStackTrace(Throwable e)
 	{
 		StringBuilder builder = new StringBuilder();
 		

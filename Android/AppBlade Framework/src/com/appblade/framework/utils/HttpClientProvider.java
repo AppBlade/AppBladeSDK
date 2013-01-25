@@ -1,4 +1,4 @@
-package com.appblade.framework;
+package com.appblade.framework.utils;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.conn.ClientConnectionManager;
@@ -14,11 +14,22 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
+/**
+ * Class for functions to instantiate our HttpConnections;
+ * 
+ * @author rich.stern@raizlabs
+ * @author andrew.tremblay@raizlabs
+ */
 public class HttpClientProvider {
 	
     // Default connection and socket timeout of 60 seconds. Tweak to taste.
     private static final int SOCKET_OPERATION_TIMEOUT = 60 * 1000;
 	
+    /**
+     * Create a threadsafe HTTP 1.1 HttpClient with default content charset,
+     * @param userAgent String name of the useragent we want to use
+     * @return a DefaultHttpClient instance given our userAgent.
+     */
 	public static DefaultHttpClient newInstance(String userAgent)
 	{
 		HttpParams params = new BasicHttpParams();

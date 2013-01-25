@@ -20,11 +20,11 @@
  - **Capture application crash logs**
    - Capture, view & download crash logs via AppBlade  
  - **Application Feedback**
- 	- At any point in the app, users can send a screenshot and a note to AppBlade by doing (iOS only) a three-finger double tap or (iOS and Android) a custom defined action.
+ 	- At any point in the app, users can send a screenshot and a note to AppBlade (in iOS) by doing a three-finger double tap or (iOS and Android) a custom defined action.
 	- v0.3.0 is required to submit feedback with screenshots, due to security changes on the AppBlade API
- - **Custom Data Fields When Reporting** *(iOS Only, added in v0.3)*
+ - **Custom Data Fields When Reporting** 
  	- Developers can pass additional custom parameters about an application when reporting feedback or crashes. 
- - **User Statistics** *(iOS Only, added in v0.3)*
+ - **User Statistics** 
  	- Project managers can track specific data like when an AppBlade-integrated app was opened, how long it stayed open, and who opened it. 
 
  	
@@ -99,16 +99,18 @@ Some prefer to include the AppBlade source code directly to their project, eithe
             
     You may also use a `plist` to load these keys by calling `loadSDKKeysFromPlist:` and pass in the path to the plist. See our example project for further details.
     
+1.  To enable the optional AppBlade kill switch, add the following code to `-applicationDidBecomeActive:` in your application delegate. This feature will be bypassed if the application was downloaded from the Apple AppStore.
 
-1.  Enable crash logging
+		[[AppBlade sharedManager] checkApproval];
 
-            [[AppBlade sharedManager] catchAndReportCrashes];
+####Enable crash logging###
+   - To enable the ability to report an app crashing, add the following after you enter your AppBlade information.
 
-1.  To enable the AppBlade kill switch, add the following code to `-applicationDidBecomeActive:` in your application delegate. This feature will be bypassed if the application was downloaded from the Apple AppStore.
+		[[AppBlade sharedManager] catchAndReportCrashes];
 
-            [[AppBlade sharedManager] checkApproval];
-            
-1. To enable feedback reporting (triggered by a three finger double tap) add the following code to `-application:didFinishLaunchingWithOptions:`
+
+####Enable feedback###
+   - To enable feedback reporting (triggered by a three finger double tap) add the following code to `-application:didFinishLaunchingWithOptions:` afrer your AppBlade project information
 
             [[AppBlade sharedManager] allowFeedbackReporting];
 
@@ -121,6 +123,19 @@ Some prefer to include the AppBlade source code directly to their project, eithe
    **Note:** Feedback requires there be a `keyWindow`, so call any feedback-related code after `[self.window makeKeyAndVisible]` so it can grab the one your AppDelegate generates. If you want to handle making a keywindow yourself, you can call `allowFeedbackReportingForWindow:(UIWindow*)window` or `setupCustomFeedbackReportingForWindow:(UIWindow*)window`  instead.
 
 
+####Setting Custom Parameters for Feedback and Crash Reports###
+Custom parameters are treated as an `NSDictionary` whose variables can be set from anywhere (after your appblade code is registered). Set them with the call `-(void)setCustomParams:(NSDictionary *)newFieldValues`
+and get the current set params with `-(NSDictionary *)getCustomParams`. To set a single key/value pair, use `-(void)setCustomParam:(id)key withValue:(id)value`, and to clear all params, call `-(void)clearAllCustomParams`.
+<br/>Custom parameters are considered unique to every crash or feedback, so you'll have to reenter data that you want to be persistent.
+<br/>Currently there isn't a limit to how many you can send, or what they can contain, but please don't go too crazy with them.
+
+
+####User Statistics###
+User statistics are great for tracking when users open and background your application. 
+Call `[[AppBlade sharedManager] startSession];` under `- (void)applicationDidBecomeActive:(UIApplication *)application` in your AppDelegate. <br/>
+Add a call to `[[AppBlade sharedManager] endSession];` under both `- (void)applicationWillTerminate:(UIApplication *)application` and `- (void)applicationWillResignActive:(UIApplication *)application` in your AppDelegate. If your app is also meant to background for a specific reason, (such as opening a webpage in Safari), you might need to add conditionals to ensure that you're ending sessions appropriately based on how you want your app to work.
+
+
 
 ######A Note on Xcode 4.5 and Above###
 Starting on iOS 6 and Xcode 4.5, Apple has officially dropped support for armv6 processors (And, subsequently, the ability to exclusively publish to iPhone 3G and below).
@@ -129,6 +144,7 @@ For those who would like to continue to use older versions of Xcode or iOS for l
 
 #Android#
 You can download a compiled .jar from [our website](http://appblade.com/sdk/download), or compile it yourself from source.
+<br/>You'll need at least Android 2.1 installed and ideally Android 4.2 (our current target).
 
 ##Adding and Configuring AppBlade##
 
@@ -153,8 +169,13 @@ You can download a compiled .jar from [our website](http://appblade.com/sdk/down
 				
 				AppBlade.register(this, token, secret, uuid, issuance);
 			}
+
+4. Be sure that your application has permission to access the internet to communicate with our server (and store failed requests when it can't) by adding the following permissions to the manifest:
+		<br/>`<uses-permission android:name="android.permission.INTERNET" />`
+		<br/>`<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />`
+
 	
-4. To allow AppBlade to enforce user authorization in your app, call AppBlade.authorize statically from your main activity's onResume method.
+5. To enable the AppBlade killswitch and allow AppBlade to enforce user authorization in your app, call AppBlade.authorize statically from your main activity's onResume method.
 
 			public class MainActivity extends Activity {
 				
@@ -163,16 +184,35 @@ You can download a compiled .jar from [our website](http://appblade.com/sdk/down
 					AppBlade.authorize(this);
 				}
 
- * You'll need to declare our `RemoteAuthorizeActivity` in your manifest as well.
+ <br/>You'll need to declare our `RemoteAuthorizeActivity` in your manifest as well, or roll your own Activity.
+			<activity   android:name="com.appblade.framework.RemoteAuthorizeActivity" />
 
-			<activity   android:name="com.appblade.framework.RemoteAuthorizeActivity"
-			            android:screenOrientation="portrait" />
-			
+####Enable crash logging###
+
+To enable crash logging globally for your app for all uncaught exceptions, call `AppBlade.registerExceptionHandler();` after your `AppBlade.register(this, token, secret, uuid, issuance);` call. This will grab all uncaught exceptions and attempt to mnotify appblade of them on the next resume of the app. (If you already registered an UncauahtExceptionHandler, our exception handler will store a reference to it and pass the exception down to it).
+You can also notify AppBlade for a specific exception within your code that you are catching yourself. With in the `try/catch` block of the exception, Add `AppBlade.notify(ex);` of the Exception `ex` that you're catching. See our example project for a working example.
+
+####Enable feedback###
+Unlike iOS, Android does not require any setup call to enable feedback reporting. To prompt a basic feedback reporting dialog, just call the folowing from within your Activity.
+
+				AppBlade.doFeedback(YourActivity.this);
+
+ <br/> To also include a screenshot to send to AppBlade with your feedback, include an Activity, a View, or a Bitmap or with one of the following functions:
+			AppBlade.doFeedbackWithScreenshot(Context context, Activity activity);
+			AppBlade.doFeedbackWithScreenshot(Context context, View view);
+			AppBlade.doFeedbackWithScreenshot(Context context, Bitmap bitmap);
+	<br/> A precoded dialog will then prompt the user to fill out a message and an option to send the included screenshot. To code a custom dialog, check out our wiki. 			
+	
+ 		
+####Setting Custom Parameters for Feedback and Crash Reports###
+Custom Parameters can be included along with Feeback and Crash reports, call `AppBlade.setCustomParameter(Context, String, Object)` to set or clear a value to send or call `AppBlade.clearCustomParameters(Context)` to clear all stored variables. <br/>
+*Unlike the iOS implementation of AppBlade, the Android SDK uses persistent custom parameters, so you'll have to manually clear them if you don't want them sent.*
+
+####User Statistics###
+To use Session counting, call `AppBlade.startSession()` and  `AppBlade.endSession()` in the `onResume()` and `onPause()` functions of your main `Activity`, respectively. 
+*(Or wherever you think is appropriate. The lifespan of Android apps are notoriously difficult to track, and will vary depending on your implementiation.)*
 
 
- Be sure that your application has permission to access the internet to allow the AppBlade SDK to communicate with our servers by adding the following permission to the manifest:
-
-		<uses-permission android:name="android.permission.INTERNET" />
 
 #Resources:#
 ###[AppBlade.com](https://appblade.com/)###
