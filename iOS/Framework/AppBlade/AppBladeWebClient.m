@@ -19,12 +19,12 @@
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
-static NSString *defaultURLScheme           = @"https";
-static NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
-static NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
-static NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
-static NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
-static NSString *sessionURLFormat           = @"%@/api/user_sessions";
+NSString *defaultURLScheme           = @"https";
+NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
+NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
+NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
+NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
+NSString *sessionURLFormat           = @"%@/api/user_sessions";
 
 
 @interface AppBladeWebClient ()
@@ -251,39 +251,42 @@ static BOOL is_encrypted () {
 
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)paramsDict {
     _api = AppBladeWebClientAPI_ReportCrash;
-
-    
+    @synchronized (self)
+    {
     // Retrieve UDID, used in URL.
     NSString* udid = [self udid];
-
+        NSLog(@"udid %@", udid);
     // Build report URL.
     NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
     NSURL* urlCrashReport = [NSURL URLWithString:urlCrashReportString];    
-    
+        
+        NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
     // Create the API request.
     NSMutableURLRequest* apiRequest = [self requestForURL:urlCrashReport];
-    [apiRequest setHTTPMethod:@"POST"];       
-    NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
-
-    [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
+        [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
+    [apiRequest setHTTPMethod:@"POST"];
     
     NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Disposition: form-data; name=\"file\"; filename=\"report.crash\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Type: text/plain\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSData* data = [crashReport dataUsingEncoding:NSUTF8StringEncoding];
-    
     [body appendData:data];
-    
-    
     
     if([NSPropertyListSerialization propertyList:paramsDict isValidForFormat:NSPropertyListXMLFormat_v1_0]){
         NSError* error = nil;
         NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:paramsDict format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:paramsData];
+        if(error == nil){
+            [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:paramsData];
+            NSLog(@"Parsed params! They were included.");
+        }
+        else
+        {
+            NSLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
+        }
     }
     
     [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -291,12 +294,11 @@ static BOOL is_encrypted () {
     [apiRequest setHTTPBody:body];
     [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
 
-    [apiRequest setHTTPBody:data];
-
     [self addSecurityToRequest:apiRequest];
 
     // Issue the request.
    self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+    }
 }
 
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console params:(NSDictionary*)paramsDict
@@ -332,14 +334,20 @@ static BOOL is_encrypted () {
         NSData* screenshotData = [[self encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
         [body appendData:screenshotData];
         
-        NSError* error = nil;
         if([NSPropertyListSerialization propertyList:paramsDict isValidForFormat:NSPropertyListXMLFormat_v1_0]){
+            NSError* error = nil;
             NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:paramsDict format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-            NSLog(@"paramsDict %@ \nparamsData %@", paramsDict, paramsData);
-            [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:paramsData];
+            if(error == nil){
+                [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+                [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+                [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+                [body appendData:paramsData];
+                NSLog(@"Parsed params! They were included.");
+            }
+            else
+            {
+                NSLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
+            }
         }
         
         [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];

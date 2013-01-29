@@ -19,6 +19,14 @@ typedef enum {
     AppBladeWebClientAPI_AllTypes
 } AppBladeWebClientAPI;
 
+extern NSString *defaultURLScheme;
+extern NSString *defaultAppBladeHostURL;
+extern NSString *approvalURLFormat    ;
+extern NSString *reportCrashURLFormat  ;
+extern NSString *reportFeedbackURLFormat ;
+extern NSString *sessionURLFormat;
+
+
 @protocol AppBladeWebClientDelegate <NSObject>
 
 @required
