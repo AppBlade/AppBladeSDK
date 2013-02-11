@@ -10,6 +10,8 @@ import com.appblade.framework.AppInfo;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 
 /**
@@ -33,6 +35,28 @@ public class SystemUtils {
 		}
 		return false;
 	}
+	
+	/**
+	 * We will probably slowly phase this in to handle device identifiers, and patch it quite often whenever we have to deal with manufacturer edge cases.
+	 * <br>Right now though, this is a pretty concise method to generate a udid that's consistent accross wipes and updates whenever possible.
+	 * @return A unique-enough device identifier for when we need that.
+	 */
+	public static String getBestUniqueDeviceID() {
+		String toRet = Settings.Secure.ANDROID_ID; //Not factory reset safe. But will hold up across boots and updates
+		String stupidVerison = "9774d56d682e549c"; //for the infamous Droid2 bug of API 7 that broke everything (https://groups.google.com/forum/?fromgroups=#!topic/android-developers/U4mOUI-rRPY)
+		if(stupidVerison.equals(toRet))
+		{
+			toRet = Build.FINGERPRINT;//holds up across boots, but not wipes (or even updates) can be "unknown" in certain cases
+			//note other solutions like Wifi MAC-address and the phones Telephony IMEI were considered but are too unreliable at the moment.
+			//MAC address might not be reported if Wifi is turned off, and IMEI might not be available without a SIM card
+			//Also TelephonyManager requires another permission: android.permission.READ_PHONE_STATE 
+			
+		}
+		
+		return toRet;
+	
+	}
+
 	
 	//"[Package Name]:[Version Name]:[Version Code]:[Timestamp of the last time classes.dex was edited]"
 	@Deprecated
