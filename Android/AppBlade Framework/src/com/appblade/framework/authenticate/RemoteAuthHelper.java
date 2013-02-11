@@ -58,7 +58,7 @@ public class RemoteAuthHelper {
 			
 			AppBlade.setDeviceId(accessToken);
 		}
-		catch (Exception ex) { }
+		catch (Exception ex) { ex.printStackTrace(); }
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public class RemoteAuthHelper {
 			
 			AppBlade.setDeviceId(null);
 		}
-		catch (Exception ex) { }
+		catch (Exception ex) { ex.printStackTrace(); }
 	}
 	
 	/**
@@ -94,7 +94,7 @@ public class RemoteAuthHelper {
 		    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 		    accessToken = bufferedReader.readLine();
 		}
-		catch (Exception ex) { }
+		catch (Exception ex) { ex.printStackTrace(); }
 		
 		Log.d(AppBlade.LogTag, String.format("getAccessToken File:%s, token:%s", filename, accessToken));
 		return accessToken;
