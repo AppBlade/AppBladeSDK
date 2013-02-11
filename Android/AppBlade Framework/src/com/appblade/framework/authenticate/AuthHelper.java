@@ -69,6 +69,7 @@ public class AuthHelper {
 		}
 		else {
 			Intent intent = new Intent(activity, RemoteAuthorizeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			activity.startActivity(intent);
 		}
 	}
