@@ -44,14 +44,16 @@ public class SystemUtils {
 	 */
 	public static String getBestUniqueDeviceID(ContentResolver cr) 
 	{
-		String toRet = Build.FINGERPRINT;
+		cr = null;
+		String toRet = Build.FINGERPRINT.replace("/", "__").replace(".", "-").replace(":", "-"); //make it so the fingerprint doesn't break routes
 		if(cr != null)
 		{
-			toRet = Settings.Secure.getString(cr, Settings.Secure.ANDROID_ID); ; //Not factory reset safe. But will hold up across boots and updates, might be "android_id"
+			String android_id = Settings.Secure.getString(cr, Settings.Secure.ANDROID_ID); ; //Not factory reset safe. But will hold up across boots and updates, might be "android_id"
+			//not secure with rooted phones (but then again, nothing is) [adb shell sqlite3 /data/data/com.android.providers.settings/databases/settings.db "UPDATE secure SET value='IDHERE' WHERE name='android_id'"]
 			String stupidVerison = "9774d56d682e549c"; //for the infamous Droid2 bug of API 7 that broke everything (https://groups.google.com/forum/?fromgroups=#!topic/android-developers/U4mOUI-rRPY)
-			if(stupidVerison.equals(toRet) || toRet == null)
+			if(!stupidVerison.equals(android_id) && !StringUtils.isNullOrEmpty(android_id ))
 			{
-				toRet = Build.FINGERPRINT; //holds up across boots, but not guaranteed for wipes (or even updates) can be "unknown" in certain cases
+				toRet = android_id; //holds up across boots, but not guaranteed for wipes (or even updates) can be "unknown" in certain cases
 				//note other solutions like Wifi MAC-address and the phones Telephony IMEI were considered but are too unreliable at the moment.
 				//MAC address might not be reported if Wifi is turned off, and IMEI might not be available without a SIM card
 				//Also TelephonyManager requires another permission: android.permission.READ_PHONE_STATE 
