@@ -203,7 +203,7 @@ public class AppBlade {
 			}
 			else
 			{
-			throw new IllegalArgumentException("You failed to register AppBlade before calling "+methodName+", please read the documentation.");
+				throw new IllegalArgumentException("You failed to register AppBlade before calling "+methodName+", please read the documentation.");
 			}
 		}
 	}
@@ -342,22 +342,19 @@ public class AppBlade {
 	public static void startSession(Context context, boolean onlyAuthorized)
 	{
 		hardCheckIsRegistered();
+		SessionHelper.postExistingSessions(context); //post any pending sessions 
 
-		registerForLocationSettings(context);
+		if(sessionLocationEnabled)
+		{
+			registerForLocationSettings(context);
+		}
 		
-		if(onlyAuthorized){
-			if(isAuthorized(context)) {
-				//check for existing sessions, post them.
-				SessionHelper.startSession(context);
-			}
-			else
-			{
-				Log.d(LogTag, "Client is not yet authorized, cannot start session");
-			}
+		if(onlyAuthorized && !isAuthorized(context)){
+			Log.d(LogTag, "Client is not yet authorized, cannot start session");
 		}
 		else
 		{
-			//we don't care about authorization
+			//either we're authorized or we don't care about authorization
 			SessionHelper.startSession(context);
 		}
 
@@ -382,25 +379,20 @@ public class AppBlade {
 	{
 		hardCheckIsRegistered();
 
-		if(onlyAuthorized){
-			if(isAuthorized(context)) {
-				SessionHelper.endSession(context);
-			}
-			else
-			{
-				Log.d(LogTag, "Client is not yet authorized, cannot end session");			
-			}
+		if(onlyAuthorized && !isAuthorized(context)) {
+			Log.d(LogTag, "Client is not yet authorized, cannot end session");			
 		}
 		else
 		{
 			//we don't care about authorization
 			SessionHelper.endSession(context);
 		}
-		SessionHelper.postExistingSessions(context);
+		SessionHelper.postExistingSessions(context); //we have at least one complete session, post it. 
 	}
 
 	/**
-	 * Location check that will try to set up our location tracking if the user has given us permission.
+	 * Location check that will try to set up our location tracking if the user has given us permission. <br>
+	 * {@code <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION">}
 	 * @param context Context to track
 	 */
 	public static void registerForLocationSettings(Context context){

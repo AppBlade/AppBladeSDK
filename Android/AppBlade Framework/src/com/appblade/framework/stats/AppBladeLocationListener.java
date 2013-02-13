@@ -1,7 +1,10 @@
 package com.appblade.framework.stats;
 
+import com.appblade.framework.AppBlade;
+
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -13,18 +16,29 @@ import android.util.Log;
 public class AppBladeLocationListener implements LocationListener {
 	public void onLocationChanged(Location location) {
 	    if (location != null) {
-		    Log.d("LOCATION CHANGED", location.getLatitude() + "");
-		    Log.d("LOCATION CHANGED", location.getLongitude() + "");
+		    if(AppBlade.sessionLocationEnabled && AppBlade.currentSession != null){
+		    	AppBlade.currentSession.latitude = String.valueOf(location.getLatitude());
+		    	AppBlade.currentSession.longitude = String.valueOf(location.getLongitude());
+		    }
 	    }
 	}
 	public void onProviderDisabled(String provider) {
-		
+		Log.d(AppBlade.LogTag, "User disabled AppBlade Location Service.");
+	    if(AppBlade.sessionLocationEnabled && AppBlade.currentSession != null){
+	    	//Be polite. You didn't see anything.  
+	    	AppBlade.currentSession.latitude = null;
+			AppBlade.currentSession.longitude = null;
+	    }
 	}
 	public void onProviderEnabled(String provider) {
-		
+		Log.d(AppBlade.LogTag, "User is now using AppBlade Location Service.");
 	}
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-		
+		if(status == LocationProvider.OUT_OF_SERVICE){
+			Log.d(AppBlade.LogTag, provider + " is out of service. AppBlade Location might not be accurate");
+		}
+		if(status == LocationProvider.TEMPORARILY_UNAVAILABLE){
+			Log.d(AppBlade.LogTag, provider + " is temporarily unavailable. AppBlade Location might not be accurate");
+		}
 	}
 }
