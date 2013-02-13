@@ -10,6 +10,8 @@ import java.util.Locale;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appblade.framework.utils.StringUtils;
+
 /**
  * object representing a single Session.
  * Contains date a session ended and date a session began. All other data about the app and the device is included in the headers.
@@ -19,10 +21,16 @@ import org.json.JSONObject;
 public class SessionData implements Comparator<Object> {
 	public static String sessionBeganKey = "started_at";
 	public static String sessionEndedKey = "ended_at";
+	
+	public static String sessionLocationLatKey = "lattitude";
+	public static String sessionLocationLongKey = "longitude";
+
 	public static String storageDividerKey = ", ";
 	
 	public Date began;
 	public Date ended;
+	public String latitude;
+	public String longitude;
 	
 	
 	public SessionData(){
@@ -34,10 +42,11 @@ public class SessionData implements Comparator<Object> {
 		this.began = _began;
 		this.ended = _ended;
 	}
+
 	
 	//*****************storage input
 	/**
-	 * @param storedString String formatted as "[startTime in (yyyy-MM-dd HH:mm:ss.SSS)], [endTime in (yyyy-MM-dd HH:mm:ss.SSS)]"
+	 * @param storedString String formatted as "[startTime in (yyyy-MM-dd HH:mm:ss.SSS)], [endTime in (yyyy-MM-dd HH:mm:ss.SSS)], [latitude], [longitude] (optional but paired)
 	 */
 	public SessionData(String storedString){
 		//storedString should match the output of sessionAsStoredString
@@ -45,7 +54,12 @@ public class SessionData implements Comparator<Object> {
         String[] tokens = storedString.split(storageDividerKey);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
 		try {
-			if(tokens.length == 2){
+			if(tokens.length == 4){
+				this.began = format.parse(tokens[0]);
+				this.ended = format.parse(tokens[1]);
+				this.latitude = tokens[2];
+				this.longitude = tokens[3];
+			}else if(tokens.length == 2){
 				this.began = format.parse(tokens[0]);
 				this.ended = format.parse(tokens[1]);
 			}else{
@@ -73,25 +87,39 @@ public class SessionData implements Comparator<Object> {
 	    java.sql.Timestamp timeStampEnded = new 
 	    		 Timestamp(this.ended.getTime());
 	    
+	    String toRet = timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
 
+	    if(!StringUtils.isNullOrEmpty(this.latitude) && !StringUtils.isNullOrEmpty(this.longitude))
+	    {
+	    	toRet = toRet + storageDividerKey + this.latitude + storageDividerKey + this.longitude;
+	    }
 
-		return timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
+		return toRet;
 	}
 		
 	/**
-	 * Compare method so we can confirm another object is essentially the same.
-	 * internally compares both start and end times, if they are both the same, theobjects are equal.
+	 * Compare method so we can confirm another object is essentially the same. <br>
+	 * Internally compares both start and end times, if they are both the same, the objects are considered equal.<br>
+	 * If not the same, the one with the earlier [began] is first.<br>
+	 * If both begans are equal, the one with the earlier [ended] is first.
+	 * Does not check for optional variables. (For efficiency)
 	 */
 	public int compare(Object o1, Object o2)
 	{
+		int compareValue;
 		SessionData session1 = (SessionData)o1;
 		SessionData session2 = (SessionData)o2;
-		if( session1 != null && session2 != null 
-				&& session1.began.equals(session2.began) && session1.ended.equals(session2.ended) )
+		if( session1 != null && session2 != null)
 		{
-			return 0;
+			if(session1.began.equals(session2.began)){
+				compareValue = session1.ended.compareTo(session2.ended);
+			}else{
+				compareValue = session1.began.compareTo(session2.began);
+			}
+		}else{
+			compareValue = 0; //nulls equal each other
 		}
-		return 1;
+		return compareValue;
 	}	
 	
 	

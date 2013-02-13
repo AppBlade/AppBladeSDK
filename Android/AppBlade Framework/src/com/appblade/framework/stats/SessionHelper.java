@@ -32,6 +32,9 @@ import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.SystemUtils;
 
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.os.Bundle;
 import android.util.Log;
 
 /**
@@ -418,5 +421,5 @@ public class SessionHelper {
               ex.printStackTrace();
         }
     }	
-	
 }
+

@@ -232,4 +232,22 @@ public class StringUtils {
         return hexString.toString();
 	}
 
+	
+	/**
+	 * Helper Function for printing the most error detail we can find.
+	 * @param e Exception that we want printed
+	 */
+	public static String exceptionInfo(Exception e)
+	{
+		String toRet = null;
+		if(e != null){
+			toRet = e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage();
+		}
+		else
+		{
+			toRet = "[exception is null]";
+		}
+		
+		return toRet;
+	}
 }

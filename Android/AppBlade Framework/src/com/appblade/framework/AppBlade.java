@@ -15,6 +15,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.LocationManager;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +30,7 @@ import com.appblade.framework.feedback.FeedbackData;
 import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
+import com.appblade.framework.stats.AppBladeLocationListener;
 import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
 import com.appblade.framework.utils.StringUtils;
@@ -63,7 +65,11 @@ public class AppBlade {
 	public static String customParamsDir = null;
 
 	public static SessionData currentSession;
-
+	public static boolean sessionLocationEnabled;
+	public static AppBladeLocationListener locationListener;
+	static long locationUpdateMinTimeMillis = 0; //thresholds for when our listener will be updating location
+	static float locationUpdateMinDistMeters = 0;
+	
 	//keeping folders all in one place (the rootDir)
 	public static final String AppBladeExceptionsFolder = "app_blade_exceptions";
 	public static final String AppBladeFeedbackFolder = "app_blade_feedback";
@@ -337,6 +343,8 @@ public class AppBlade {
 	{
 		hardCheckIsRegistered();
 
+		registerForLocationSettings(context);
+		
 		if(onlyAuthorized){
 			if(isAuthorized(context)) {
 				//check for existing sessions, post them.
@@ -391,6 +399,23 @@ public class AppBlade {
 		SessionHelper.postExistingSessions(context);
 	}
 
+	/**
+	 * Location check that will try to set up our location tracking if the user has given us permission.
+	 * @param context Context to track
+	 */
+	public static void registerForLocationSettings(Context context){
+	    LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+	    locationListener = new AppBladeLocationListener();
+	    try{
+	    	lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateMinTimeMillis, locationUpdateMinDistMeters, locationListener);
+	    }
+	    catch(Exception e)
+	    {
+	    	Log.e(AppBlade.LogTag, "Error requesting location updates: "+ StringUtils.exceptionInfo(e) );
+	    	e.printStackTrace();
+	    }
+	}
+	
 	
 	/********************************************************
 	 ********************************************************

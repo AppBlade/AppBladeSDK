@@ -139,7 +139,7 @@ public class WebServiceHelper {
 		request.addHeader("device_model", Build.MODEL);
 		request.addHeader("device_id", Build.ID);
 		request.addHeader("device_brand", Build.BRAND);
-		request.addHeader("device_fingerprint", Build.FINGERPRINT);
+		request.addHeader("device_fingerprint", SystemUtils.getBestUniqueDeviceID(null)); // Build.FINGERPRINT);
 	}
 
 	/**
