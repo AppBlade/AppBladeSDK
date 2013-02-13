@@ -89,7 +89,7 @@ public class SessionData implements Comparator<Object> {
 	    
 	    String toRet = timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
 
-	    if(!StringUtils.isNullOrEmpty(this.latitude) && !StringUtils.isNullOrEmpty(this.longitude))
+	    if(this.hasLocation())
 	    {
 	    	toRet = toRet + storageDividerKey + this.latitude + storageDividerKey + this.longitude;
 	    }
@@ -97,6 +97,11 @@ public class SessionData implements Comparator<Object> {
 		return toRet;
 	}
 		
+	public boolean hasLocation()
+	{
+		return !StringUtils.isNullOrEmpty(this.latitude) && !StringUtils.isNullOrEmpty(this.longitude);
+	}
+	
 	/**
 	 * Compare method so we can confirm another object is essentially the same. <br>
 	 * Internally compares both start and end times, if they are both the same, the objects are considered equal.<br>
@@ -155,6 +160,12 @@ public class SessionData implements Comparator<Object> {
 		try {
 			json.put("started_at",timeStampBegan);
 			json.put("ended_at", timeStampEnded); 
+		    if(this.hasLocation())
+		    {
+				json.put("latitude", this.latitude);
+				json.put("longitude", this.longitude); 		    	
+		    }
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} 
