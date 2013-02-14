@@ -12,8 +12,9 @@ import android.view.View.OnClickListener;
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
+import com.appblade.framework.stats.AppBladeSessionActivity;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppBladeSessionActivity {
 
 	/** Called when the activity is first created. */
 	@Override
