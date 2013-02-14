@@ -182,8 +182,6 @@ public class AppBlade {
 		File exceptionsDirectory = new File(exceptionsDir);
 		canWriteToDisk = exceptionsDirectory.exists();
 		
-		
-		sessionLoggingService = new AppBladeSessionLoggingService(context);
 	}
 
 	/**
