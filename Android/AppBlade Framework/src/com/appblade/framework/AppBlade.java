@@ -330,9 +330,15 @@ public class AppBlade {
 	 * Methods to store and send when a session is started and ended (usually reserved for when an application or activity is resumed or paused)
 	 */
 	
-	public static void useSessionLoggingService(Context context)
+	/**
+	 * Allows us to initialize our session logging service at the application level.  As well as any other variables we need relative to sessions.
+	 * @param context Usually {@code getApplicationContext()}, the context we want the sessionLogging service to keep track of and use for session storage/reporting. 
+	 * @param trackLocations Flag to tell whether we want to try to GeoLocate the device. Requires additional permissions.
+	 */
+	public static void useSessionLoggingService(Context context, boolean trackLocations)
 	{
 		AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(context);
+		AppBlade.sessionLocationEnabled = trackLocations;
 	}
 	
 	/**
