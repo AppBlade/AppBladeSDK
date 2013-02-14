@@ -28,7 +28,7 @@ public class MainActivity extends AppBladeSessionActivity {
 	public void onResume() {
 		super.onResume();
 		AppBlade.startSession(this.getApplicationContext());
-		AppBlade.authorize(this);
+		//AppBlade.authorize(this);
 
 		AppBlade.setCustomParameter(getApplicationContext(), "AppState",
 				"Resumed");

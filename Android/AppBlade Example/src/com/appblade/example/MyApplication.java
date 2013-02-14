@@ -19,7 +19,9 @@ public class MyApplication extends Application {
 		String issuance = "";
 		
 		AppBlade.register(this, token, secret, uuid, issuance);
+		AppBlade.useSessionLoggingService(this.getApplicationContext());
 		
+		AppBlade.sessionLocationEnabled = true;
 		AppBlade.registerExceptionHandler();
 	}
 
