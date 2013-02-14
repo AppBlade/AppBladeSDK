@@ -9,18 +9,22 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class AppBladeSessionLoggingService extends Service {
-	Context mContext;
+	public Context mContext;
+	public AppBladeSessionServiceConnection appbladeSessionServiceConnection;
 	
 	public AppBladeSessionLoggingService()
 	{
         super();
 		mContext = null;
+		appbladeSessionServiceConnection = new AppBladeSessionServiceConnection();
 	}
 	
 	public AppBladeSessionLoggingService(Context context)
 	{
         super();
 		mContext = context;
+		appbladeSessionServiceConnection = new AppBladeSessionServiceConnection();
+
 		Log.d(AppBlade.LogTag, "Service contructed");
 	}
 	

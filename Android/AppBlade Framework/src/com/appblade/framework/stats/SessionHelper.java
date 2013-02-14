@@ -80,14 +80,34 @@ public class SessionHelper {
 	 */
 	public static void bindToSessionService(Activity activity)
 	{
-		if(AppBladeSessionActivity.class.isAssignableFrom(activity.getClass()))
-		{
-			SessionHelper.bindAppBladeActivityToSessionService((AppBladeSessionActivity) activity);
+		if(AppBlade.sessionLoggingService == null){
+			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(activity);
+		}
+
+		if(activity != null && AppBlade.sessionLoggingService.appbladeSessionServiceConnection != null){				
+			try
+			{
+				Intent bindIntent = new Intent();
+				bindIntent.setAction("com.appblade.framework.stats.AppBladeSessionLoggingService");
+			    boolean succeeded = activity.bindService(bindIntent, AppBlade.sessionLoggingService.appbladeSessionServiceConnection, Context.BIND_AUTO_CREATE);		
+			    if(succeeded)
+			    {
+					Log.d(AppBlade.LogTag, "Success binding the Session.");
+			    }
+			    else
+			    {
+					Log.d(AppBlade.LogTag, "Error binding the Session. Make sure the SessionService is properly in your manifest.");
+			    }
+
+			}catch(SecurityException e){
+				Log.e(AppBlade.LogTag, "Error binding to Session Logging service: " + StringUtils.exceptionInfo(e));
+				e.printStackTrace();
+			}
 		}
 		else
 		{
-			Log.e(AppBlade.LogTag, "Error binding activity, activity was incompatible");
-		}
+			Log.e(AppBlade.LogTag, "Error unbinding activity. Possible null value.");
+		}	
 	}
 	
 	/**
@@ -96,71 +116,17 @@ public class SessionHelper {
 	 */
 	public static void unbindFromSessionService(Activity activity)
 	{
-		if(AppBladeSessionActivity.class.isAssignableFrom(activity.getClass()))
-		{
-			SessionHelper.unbindAppBladeActivityFromSessionService((AppBladeSessionActivity)activity);
+		if(AppBlade.sessionLoggingService != null && activity != null && AppBlade.sessionLoggingService.appbladeSessionServiceConnection != null){
+			activity.unbindService(AppBlade.sessionLoggingService.appbladeSessionServiceConnection);
 		}
 		else
 		{
-			Log.e(AppBlade.LogTag, "Error unbinding activity, activity was incompatible");
+			Log.e(AppBlade.LogTag, "Error unbinding activity. Possible null value.");
 		}
 	}
 
 	
 	
-	/**
-	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
-	 * @param activity The Activity to bind to the service.
-	 */
-	public static void bindAppBladeActivityToSessionService(AppBladeSessionActivity activity)
-	{
-		if(activity == null)
-		{
-			Log.d(AppBlade.LogTag, "Bad activity to track sessions");
-		}
-		
-		if(AppBlade.sessionLoggingService == null){
-			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(activity);
-//			Log.d(AppBlade.LogTag, "Starting session service");
-//			Intent startServiceIntent = new Intent();
-//			startServiceIntent.setAction("com.appblade.framework.stats.AppBladeSessionLoggingService");
-//			activity.startService(startServiceIntent);
-		}
-		if(activity.appbladeSessionServiceConnection == null)
-		{
-			activity.appbladeSessionServiceConnection = new AppBladeSessionServiceConnection();
-		}
-		
-		try
-		{
-			Intent bindIntent = new Intent();
-			bindIntent.setAction("com.appblade.framework.stats.AppBladeSessionLoggingService");
-		    boolean succeeded = activity.bindService(bindIntent, activity.appbladeSessionServiceConnection, Context.BIND_AUTO_CREATE);		
-		    if(succeeded)
-		    {
-				Log.d(AppBlade.LogTag, "Success binding the Session.");
-		    }
-		    else
-		    {
-				Log.d(AppBlade.LogTag, "Error binding the Session. Make sure the SessionService is properly in your manifest.");
-		    }
-
-		}catch(SecurityException e){
-			Log.e(AppBlade.LogTag, "Error binding to Session Logging service: " + StringUtils.exceptionInfo(e));
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Helper function to unbind from session service. Better for tracking sessions across the life of the application.
-	 * @param activity The Activity to bind to the service.
-	 */
-	public static void unbindAppBladeActivityFromSessionService(AppBladeSessionActivity activity)
-	{
-		if(AppBlade.sessionLoggingService != null && activity != null && activity.appbladeSessionServiceConnection != null){
-			activity.unbindService(activity.appbladeSessionServiceConnection);
-		}
-	}
 
 	
 	//*****************API RELATED FUNCTIONS
