@@ -330,6 +330,11 @@ public class AppBlade {
 	 * Methods to store and send when a session is started and ended (usually reserved for when an application or activity is resumed or paused)
 	 */
 	
+	public static void useSessionLoggingService(Context context)
+	{
+		AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(context);
+	}
+	
 	/**
 	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
 	 * @param activity
