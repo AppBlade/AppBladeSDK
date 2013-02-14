@@ -9,7 +9,6 @@ import android.app.Activity;
  * @author andrew.tremblay
  */
 public class AppBladeSessionActivity extends Activity {
-	public AppBladeSessionServiceConnection appbladeSessionServiceConnection;
 	
 	@Override
 	protected void onResume() {
