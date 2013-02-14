@@ -29,12 +29,11 @@ import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.StringUtils;
 import com.appblade.framework.utils.SystemUtils;
 
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import android.os.Bundle;
+import android.content.Intent;
 import android.util.Log;
 
 /**
@@ -71,6 +70,37 @@ public class SessionHelper {
 			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended);
 			insertSessionData(context, sessionToStore);
 			AppBlade.currentSession = null;
+		}
+	}
+	
+	/**
+	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
+	 * @param activity The Activity to bind to the service.
+	 */
+	public static void bindToSessionService(AppBladeSessionActivity activity)
+	{
+		if(AppBlade.sessionLoggingService == null){
+			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(activity);
+		}
+		Intent bindIntent = new Intent(activity, AppBladeSessionLoggingService.class);
+		activity.appbladeSessionServiceConnection = new AppBladeSessionServiceConnection();
+		try
+		{
+		    activity.bindService(bindIntent, activity.appbladeSessionServiceConnection, Context.BIND_AUTO_CREATE);		
+		}catch(SecurityException e){
+			Log.e(AppBlade.LogTag, "Error binding to Session Logging service: " + StringUtils.exceptionInfo(e));
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Helper function to unbind from session service. Better for tracking sessions across the life of the application.
+	 * @param activity The Activity to bind to the service.
+	 */
+	public static void unbindFromSessionService(AppBladeSessionActivity activity)
+	{
+		if(AppBlade.sessionLoggingService != null && activity != null && activity.appbladeSessionServiceConnection != null){
+			activity.unbindService(activity.appbladeSessionServiceConnection);
 		}
 	}
 

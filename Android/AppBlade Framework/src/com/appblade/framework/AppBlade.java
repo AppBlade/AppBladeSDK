@@ -31,8 +31,10 @@ import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
 import com.appblade.framework.stats.AppBladeLocationListener;
+import com.appblade.framework.stats.AppBladeSessionActivity;
 import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
+import com.appblade.framework.stats.AppBladeSessionLoggingService;
 import com.appblade.framework.utils.StringUtils;
 
 /**
@@ -65,6 +67,8 @@ public class AppBlade {
 	public static String customParamsDir = null;
 
 	public static SessionData currentSession;
+	public static AppBladeSessionLoggingService sessionLoggingService;
+	
 	public static boolean sessionLocationEnabled;
 	public static AppBladeLocationListener locationListener;
 	static long locationUpdateMinTimeMillis = 0; //thresholds for when our listener will be updating location
@@ -177,6 +181,9 @@ public class AppBlade {
 		customParamsDir  = makeDirFromRoot(AppBladeCustomParamsFolder, context);
 		File exceptionsDirectory = new File(exceptionsDir);
 		canWriteToDisk = exceptionsDirectory.exists();
+		
+		
+		sessionLoggingService = new AppBladeSessionLoggingService(context);
 	}
 
 	/**
@@ -324,6 +331,25 @@ public class AppBlade {
 	 * SESSION COUNTING
 	 * Methods to store and send when a session is started and ended (usually reserved for when an application or activity is resumed or paused)
 	 */
+	
+	/**
+	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
+	 * @param activity
+	 */
+	public static void bindToSessionService(AppBladeSessionActivity activity)
+	{
+		SessionHelper.bindToSessionService(activity);
+	}
+
+	/**
+	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
+	 * @param activity
+	 */
+	public static void unbindFromSessionService(AppBladeSessionActivity activity)
+	{
+		SessionHelper.unbindFromSessionService(activity);
+	}
+
 	
 	/**
 	 * Static point for beginning a session (posts any existing sessions by default) 
