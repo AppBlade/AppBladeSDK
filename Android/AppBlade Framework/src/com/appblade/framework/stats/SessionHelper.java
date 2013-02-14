@@ -114,14 +114,37 @@ public class SessionHelper {
 	 */
 	public static void bindAppBladeActivityToSessionService(AppBladeSessionActivity activity)
 	{
+		if(activity == null)
+		{
+			Log.d(AppBlade.LogTag, "Bad activity to track sessions");
+		}
+		
 		if(AppBlade.sessionLoggingService == null){
 			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(activity);
+//			Log.d(AppBlade.LogTag, "Starting session service");
+//			Intent startServiceIntent = new Intent();
+//			startServiceIntent.setAction("com.appblade.framework.stats.AppBladeSessionLoggingService");
+//			activity.startService(startServiceIntent);
 		}
-		Intent bindIntent = new Intent(activity, AppBladeSessionLoggingService.class);
-		activity.appbladeSessionServiceConnection = new AppBladeSessionServiceConnection();
+		if(activity.appbladeSessionServiceConnection == null)
+		{
+			activity.appbladeSessionServiceConnection = new AppBladeSessionServiceConnection();
+		}
+		
 		try
 		{
-		    activity.bindService(bindIntent, activity.appbladeSessionServiceConnection, Context.BIND_AUTO_CREATE);		
+			Intent bindIntent = new Intent();
+			bindIntent.setAction("com.appblade.framework.stats.AppBladeSessionLoggingService");
+		    boolean succeeded = activity.bindService(bindIntent, activity.appbladeSessionServiceConnection, Context.BIND_AUTO_CREATE);		
+		    if(succeeded)
+		    {
+				Log.d(AppBlade.LogTag, "Success binding the Session.");
+		    }
+		    else
+		    {
+				Log.d(AppBlade.LogTag, "Error binding the Session. Make sure the SessionService is properly in your manifest.");
+		    }
+
 		}catch(SecurityException e){
 			Log.e(AppBlade.LogTag, "Error binding to Session Logging service: " + StringUtils.exceptionInfo(e));
 			e.printStackTrace();

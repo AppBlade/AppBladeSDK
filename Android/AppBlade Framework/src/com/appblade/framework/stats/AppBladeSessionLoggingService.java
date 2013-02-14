@@ -6,24 +6,62 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 public class AppBladeSessionLoggingService extends Service {
 	Context mContext;
 	
+	public AppBladeSessionLoggingService()
+	{
+        super();
+		mContext = null;
+	}
+	
 	public AppBladeSessionLoggingService(Context context)
 	{
+        super();
 		mContext = context;
+		Log.d(AppBlade.LogTag, "Service contructed");
+	}
+	
+		
+	@Override
+	public void onCreate() {
+		Log.d(AppBlade.LogTag, "Service created");
+	}
+	
+	
+	@Override
+	public void onStart(Intent intent, int startid) {
+		Log.d(AppBlade.LogTag, "Service started");
+	}
+
+
+	
+	@Override
+	public void onDestroy() {
+		Log.d(AppBlade.LogTag, "Service ended");
 	}
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		AppBlade.startSession(mContext);
+		Log.d(AppBlade.LogTag, "Service onBind");
+		if(mContext != null){
+			Log.d(AppBlade.LogTag, "Service starting session");
+			AppBlade.startSession(mContext);
+		}
+
 		return null; //we don't need an IBinder
 	}
 
 	@Override
 	public boolean onUnbind (Intent intent) {
-		AppBlade.endSession(mContext);
+		Log.d(AppBlade.LogTag, "Service unBind");
+		if(mContext != null){
+			Log.d(AppBlade.LogTag, "Service ending session");
+			AppBlade.endSession(mContext);
+		}
+		
 		return false; // we don't need onRebind
 	}
 }
