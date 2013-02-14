@@ -32,6 +32,7 @@ import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
 import com.appblade.framework.utils.SystemUtils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -77,7 +78,41 @@ public class SessionHelper {
 	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
 	 * @param activity The Activity to bind to the service.
 	 */
-	public static void bindToSessionService(AppBladeSessionActivity activity)
+	public static void bindToSessionService(Activity activity)
+	{
+		if(AppBladeSessionActivity.class.isAssignableFrom(activity.getClass()))
+		{
+			SessionHelper.bindAppBladeActivityToSessionService((AppBladeSessionActivity) activity);
+		}
+		else
+		{
+			Log.e(AppBlade.LogTag, "Error binding activity, activity was incompatible");
+		}
+	}
+	
+	/**
+	 * Helper function to unbind from session service. Better for tracking sessions across the life of the application.
+	 * @param activity The Activity to bind to the service.
+	 */
+	public static void unbindFromSessionService(Activity activity)
+	{
+		if(AppBladeSessionActivity.class.isAssignableFrom(activity.getClass()))
+		{
+			SessionHelper.unbindAppBladeActivityFromSessionService((AppBladeSessionActivity)activity);
+		}
+		else
+		{
+			Log.e(AppBlade.LogTag, "Error unbinding activity, activity was incompatible");
+		}
+	}
+
+	
+	
+	/**
+	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
+	 * @param activity The Activity to bind to the service.
+	 */
+	public static void bindAppBladeActivityToSessionService(AppBladeSessionActivity activity)
 	{
 		if(AppBlade.sessionLoggingService == null){
 			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(activity);
@@ -97,7 +132,7 @@ public class SessionHelper {
 	 * Helper function to unbind from session service. Better for tracking sessions across the life of the application.
 	 * @param activity The Activity to bind to the service.
 	 */
-	public static void unbindFromSessionService(AppBladeSessionActivity activity)
+	public static void unbindAppBladeActivityFromSessionService(AppBladeSessionActivity activity)
 	{
 		if(AppBlade.sessionLoggingService != null && activity != null && activity.appbladeSessionServiceConnection != null){
 			activity.unbindService(activity.appbladeSessionServiceConnection);

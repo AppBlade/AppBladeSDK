@@ -336,7 +336,7 @@ public class AppBlade {
 	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
 	 * @param activity
 	 */
-	public static void bindToSessionService(AppBladeSessionActivity activity)
+	public static void bindToSessionService(Activity activity)
 	{
 		SessionHelper.bindToSessionService(activity);
 	}
@@ -345,7 +345,7 @@ public class AppBlade {
 	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
 	 * @param activity
 	 */
-	public static void unbindFromSessionService(AppBladeSessionActivity activity)
+	public static void unbindFromSessionService(Activity activity)
 	{
 		SessionHelper.unbindFromSessionService(activity);
 	}
