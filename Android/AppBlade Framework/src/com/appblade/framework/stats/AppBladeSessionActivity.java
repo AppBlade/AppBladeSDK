@@ -11,16 +11,16 @@ import android.app.Activity;
 public class AppBladeSessionActivity extends Activity {
 	public AppBladeSessionServiceConnection appbladeSessionServiceConnection;
 	
-	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		AppBlade.bindToSessionService(AppBladeSessionActivity.this);
+		AppBlade.bindToSessionService(this);
+
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		AppBlade.unbindFromSessionService(AppBladeSessionActivity.this);
+	protected void onStop() {
+		super.onStop();
+		AppBlade.unbindFromSessionService(this);
 	}
 }
