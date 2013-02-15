@@ -14,11 +14,18 @@ import android.util.Log;
  * @author andrew.tremblay
  */
 public class AppBladeLocationListener implements LocationListener {
+	public static String lastLongitude;
+	public static String lastLatitude;
+	
+	
 	public void onLocationChanged(Location location) {
 	    if (location != null) {
 		    if(AppBlade.sessionLocationEnabled && AppBlade.currentSession != null){
 		    	AppBlade.currentSession.latitude = String.valueOf(location.getLatitude());
 		    	AppBlade.currentSession.longitude = String.valueOf(location.getLongitude());
+				lastLongitude =  String.valueOf(location.getLatitude());
+				lastLatitude = String.valueOf(location.getLongitude());
+
 		    }
 	    }
 	}
@@ -28,6 +35,10 @@ public class AppBladeLocationListener implements LocationListener {
 	    	//Be polite. You didn't see anything.  
 	    	AppBlade.currentSession.latitude = null;
 			AppBlade.currentSession.longitude = null;
+			lastLongitude = null;
+			lastLatitude = null;
+			
+
 	    }
 	}
 	public void onProviderEnabled(String provider) {

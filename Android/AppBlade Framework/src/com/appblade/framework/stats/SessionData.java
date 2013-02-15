@@ -137,8 +137,10 @@ public class SessionData implements Comparator<Object> {
 	 * 		"sessions" : [
 	 * ************************** THIS PART >>>
 	 * 		{
-	 * 			"started_at": "2007-03-01T13:00:00Z", 
-	 * 			"ended_at": "2007-03-01T13:04:30Z"
+	 * 			"started_at": 	"2007-03-01T13:00:00Z", 
+	 * 			"ended_at": 	"2007-03-01T13:04:30Z",
+	 * 			"latitude": 	"123123412", 
+	 * 			"longitude":	"5543254234"
 	 * 		}
 	 * **************************  << THAT PART
 	 * **************************  POSSIBLY MULTIPLE ONES
@@ -164,6 +166,10 @@ public class SessionData implements Comparator<Object> {
 		    {
 				json.put("latitude", this.latitude);
 				json.put("longitude", this.longitude); 		    	
+		    }else
+		    {
+				json.put("latitude", "none");
+				json.put("longitude", "none"); 		    	
 		    }
 			
 		} catch (JSONException e) {

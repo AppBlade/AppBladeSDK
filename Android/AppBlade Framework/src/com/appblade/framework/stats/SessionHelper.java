@@ -68,6 +68,13 @@ public class SessionHelper {
 		Log.d(AppBlade.LogTag, "Ending Session");
 		if(AppBlade.currentSession != null){
 			AppBlade.currentSession.ended = new Date();
+			
+			if(AppBlade.sessionLocationEnabled)
+			{
+				AppBlade.currentSession.latitude = AppBladeLocationListener.lastLatitude;
+				AppBlade.currentSession.longitude = AppBladeLocationListener.lastLongitude;
+			}
+			
 			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended);
 			insertSessionData(context, sessionToStore);
 			AppBlade.currentSession = null;
