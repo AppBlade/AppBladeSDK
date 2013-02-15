@@ -15,14 +15,12 @@ public class AppBladeSessionLoggingService extends Service {
 	public AppBladeSessionLoggingService()
 	{
         super();
-		mContext = null;
 		appbladeSessionServiceConnection = new AppBladeSessionServiceConnection();
 	}
 	
 	public AppBladeSessionLoggingService(Context context)
 	{
         super();
-		mContext = context;
 		appbladeSessionServiceConnection = new AppBladeSessionServiceConnection();
 
 		Log.d(AppBlade.LogTag, "Service contructed");
@@ -50,22 +48,16 @@ public class AppBladeSessionLoggingService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		Log.d(AppBlade.LogTag, "Service onBind");
-		if(mContext != null){
-			Log.d(AppBlade.LogTag, "Service starting session");
-			AppBlade.startSession(mContext);
-		}
-
+		AppBlade.startSession(this);
+		
 		return null; //we don't need an IBinder
 	}
 
 	@Override
 	public boolean onUnbind (Intent intent) {
 		Log.d(AppBlade.LogTag, "Service unBind");
-		if(mContext != null){
-			Log.d(AppBlade.LogTag, "Service ending session");
-			AppBlade.endSession(mContext);
-		}
-		
+		AppBlade.endSession(this);
+
 		return false; // we don't need onRebind
 	}
 }
