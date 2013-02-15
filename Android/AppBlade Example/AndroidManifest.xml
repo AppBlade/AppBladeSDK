@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="com.appblade.framework.permissions.SESSION_LOGGING_PERMISSION"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
+	   <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" /> 
 	<!-- android.permission.ACCESS_COARSE_LOCATION will also work fine -->
     
     <application
