@@ -380,17 +380,18 @@ public class AppBlade {
 	{
 		hardCheckIsRegistered();
 		SessionHelper.postExistingSessions(context); //post any pending sessions 
-
-		if(sessionLocationEnabled)
-		{
-			registerForLocationSettings(context);
-		}
 		
 		if(onlyAuthorized && !isAuthorized(context)){
 			Log.d(LogTag, "Client is not yet authorized, cannot start session");
 		}
 		else
 		{
+			if(sessionLocationEnabled)
+			{
+				registerForLocationSettings(context);
+				Log.d(LogTag, "Sessions registerForLocationSettings");
+			}
+
 			//either we're authorized or we don't care about authorization
 			SessionHelper.startSession(context);
 		}
@@ -435,6 +436,7 @@ public class AppBlade {
 	public static void registerForLocationSettings(Context context){
 	    LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 	    locationListener = new AppBladeLocationListener();
+	    locationListener.subscribeToLocationUpdates(context);
 	    try{
 	    	lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateMinTimeMillis, locationUpdateMinDistMeters, locationListener);
 	    }
