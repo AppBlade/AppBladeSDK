@@ -282,8 +282,7 @@ public class AppBlade {
 		else if (fromLoopBack)
 		{
 			Log.d(AppBlade.LogTag,
-					String.format("AppBlade.authorize: user is authorized, closing activity: %s",
-							activity.getLocalClassName()));
+			String.format("AppBlade.authorize: user is authorized, closing activity: %s", activity.getLocalClassName()));
 			activity.finish();
 		}
 	}
@@ -337,7 +336,10 @@ public class AppBlade {
 	 */
 	public static void useSessionLoggingService(Context context, boolean trackLocations)
 	{
-		AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(context);
+		if(AppBlade.sessionLoggingService == null){
+			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(context);
+		}
+		AppBlade.sessionLoggingService.mContext = context;
 		AppBlade.sessionLocationEnabled = trackLocations;
 	}
 	
