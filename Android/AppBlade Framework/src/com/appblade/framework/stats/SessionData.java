@@ -37,13 +37,16 @@ public class SessionData implements Comparator<Object> {
 		this.ended = null;
 	}
 	
-	public SessionData(Date _began, Date _ended){
+	public SessionData(Date _began, Date _ended, String _latitude, String _longitude, JSONObject _customParams){
 		this.began = _began;
 		this.ended = _ended;
+		this.latitude = _latitude;
+		this.longitude = _longitude;
+		this.customParams = _customParams;
 	}
 
 	
-	//*****************storage input
+	//*****************   Constructor for storage handling
 	/**
 	 * @param storedString String formatted as "[startTime in (yyyy-MM-dd HH:mm:ss.SSS)], [endTime in (yyyy-MM-dd HH:mm:ss.SSS)], [latitude], [longitude] (optional but paired)
 	 */
@@ -53,14 +56,18 @@ public class SessionData implements Comparator<Object> {
         String[] tokens = storedString.split(storageDividerKey);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
 		try {
-			if(tokens.length == 4){
+			if(tokens.length > 2){
 				this.began = format.parse(tokens[0]);
 				this.ended = format.parse(tokens[1]);
 				this.latitude = tokens[2];
 				this.longitude = tokens[3];
+				this.customParams = StringUtils.parseStringToJSONObject(tokens[4]);
 			}else if(tokens.length == 2){
 				this.began = format.parse(tokens[0]);
 				this.ended = format.parse(tokens[1]);
+		    	this.latitude = "nothingStored";
+		    	this.longitude = "nothingStored";
+		    	this.customParams = new JSONObject();
 			}else{
 				this.began = new Date();
 				this.ended = new Date();
@@ -85,6 +92,12 @@ public class SessionData implements Comparator<Object> {
 	    		 Timestamp(this.began.getTime());
 	    java.sql.Timestamp timeStampEnded = new 
 	    		 Timestamp(this.ended.getTime());
+	    
+	    if(this.latitude == null || this.longitude == null)
+		{
+	    	this.latitude = "nothingToStore";
+	    	this.longitude = "nothingToStore";
+	    }
 	    
 	    String toRet = timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
 	    toRet = toRet + storageDividerKey + this.latitude + storageDividerKey + this.longitude;

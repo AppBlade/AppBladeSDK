@@ -2,8 +2,10 @@ package com.appblade.framework.stats;
 
 import com.appblade.framework.AppBlade;
 
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,15 +18,32 @@ import android.util.Log;
 public class AppBladeLocationListener implements LocationListener {
 	public static String lastLongitude;
 	public static String lastLatitude;
+	public static String lastLocationTime;
+
+	LocationManager lm;
 	
+    public void subscribeToLocationUpdates(Context context) {
+        this.lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        
+        onLocationChanged(lm.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+    }
 	
 	public void onLocationChanged(Location location) {
+		Log.d(AppBlade.LogTag, "User is now using AppBlade Location Service.");
+
 	    if (location != null) {
-		    if(AppBlade.sessionLocationEnabled && AppBlade.currentSession != null){
-		    	AppBlade.currentSession.latitude = String.valueOf(location.getLatitude());
-		    	AppBlade.currentSession.longitude = String.valueOf(location.getLongitude());
-				lastLongitude =  String.valueOf(location.getLatitude());
-				lastLatitude = String.valueOf(location.getLongitude());
+	    	lastLocationTime = String.valueOf(location.getTime());
+			lastLongitude =  String.valueOf(location.getLatitude());
+			lastLatitude = String.valueOf(location.getLongitude());
+			Log.d(AppBlade.LogTag, "AppBlade Location Service reports location: " + location);
+			Log.d(AppBlade.LogTag, "AppBlade Location Service reports Lat: " + lastLatitude + "  Long: " +lastLongitude);
+
+			if(AppBlade.sessionLocationEnabled && AppBlade.currentSession != null){
+		    	AppBlade.currentSession.longitude = lastLongitude;
+				AppBlade.currentSession.latitude = lastLatitude;
+
+				Log.d(AppBlade.LogTag, "AppBlade Location Service reports Lat: " + lastLatitude + "  Long: " +lastLongitude);
 
 		    }
 	    }

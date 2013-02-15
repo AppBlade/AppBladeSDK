@@ -22,10 +22,12 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.customparams.CustomParamDataHelper;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
@@ -74,8 +76,14 @@ public class SessionHelper {
 				AppBlade.currentSession.latitude = AppBladeLocationListener.lastLatitude;
 				AppBlade.currentSession.longitude = AppBladeLocationListener.lastLongitude;
 			}
+			else
+			{
+				Log.d(AppBlade.LogTag, "Locations weren't enabled for this session.");
+			}
 			
-			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended);
+			AppBlade.currentSession.customParams = CustomParamDataHelper.getCustomParamsAsJSON();
+			
+			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended, AppBlade.currentSession.latitude, AppBlade.currentSession.longitude, AppBlade.currentSession.customParams);
 			insertSessionData(context, sessionToStore);
 			AppBlade.currentSession = null;
 		}
@@ -295,13 +303,13 @@ public class SessionHelper {
 
 	//*****************Sessions storage/queue logic
 	/**
-	 * Generator for a SessionData object that we absolutely HAVE to have stored staticlly before we get it. 
+	 * Generator for a SessionData object that we absolutely HAVE to have stored statically before we get it. 
 	 * @param context Context to use for file maintenance.
 	 * @return A SessionData object
 	 */
 	public static SessionData createPersistentSession(Context context) {
 		Log.d(AppBlade.LogTag, "Creating New Session ");
-		SessionData data = new SessionData(new Date(), new Date());
+		SessionData data = new SessionData(new Date(), new Date(), "initial", "initial", new JSONObject());
 		//check if file exists
 		File f = new File(sessionsIndexFileURI());
 		if(f.exists()){
