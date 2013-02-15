@@ -21,8 +21,7 @@ import com.appblade.framework.utils.StringUtils;
 public class SessionData implements Comparator<Object> {
 	public static String sessionBeganKey = "started_at";
 	public static String sessionEndedKey = "ended_at";
-	
-	public static String sessionLocationLatKey = "lattitude";
+	public static String sessionLocationLatKey = "latitude";
 	public static String sessionLocationLongKey = "longitude";
 
 	public static String storageDividerKey = ", ";
@@ -88,11 +87,7 @@ public class SessionData implements Comparator<Object> {
 	    		 Timestamp(this.ended.getTime());
 	    
 	    String toRet = timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
-
-	    if(this.hasLocation())
-	    {
-	    	toRet = toRet + storageDividerKey + this.latitude + storageDividerKey + this.longitude;
-	    }
+	    toRet = toRet + storageDividerKey + this.latitude + storageDividerKey + this.longitude;
 
 		return toRet;
 	}
@@ -137,10 +132,10 @@ public class SessionData implements Comparator<Object> {
 	 * 		"sessions" : [
 	 * ************************** THIS PART >>>
 	 * 		{
-	 * 			"started_at": 	"2007-03-01T13:00:00Z", 
-	 * 			"ended_at": 	"2007-03-01T13:04:30Z",
-	 * 			"latitude": 	"123123412", 
-	 * 			"longitude":	"5543254234"
+	 * 			<sessionBeganKey>: 	"2007-03-01T13:00:00Z", 
+	 * 			<sessionEndedKey>: 	"2007-03-01T13:04:30Z",
+	 * 			<sessionLocationLatKey>: 	"123123412", 
+	 * 			<sessionLocationLongKey>:	"5543254234"
 	 * 		}
 	 * **************************  << THAT PART
 	 * **************************  POSSIBLY MULTIPLE ONES
@@ -160,18 +155,10 @@ public class SessionData implements Comparator<Object> {
 	    		 Timestamp(this.ended.getTime());
 		
 		try {
-			json.put("started_at",timeStampBegan);
-			json.put("ended_at", timeStampEnded); 
-		    if(this.hasLocation())
-		    {
-				json.put("latitude", this.latitude);
-				json.put("longitude", this.longitude); 		    	
-		    }else
-		    {
-				json.put("latitude", "none");
-				json.put("longitude", "none"); 		    	
-		    }
-			
+			json.put(sessionBeganKey,timeStampBegan);
+			json.put(sessionEndedKey, timeStampEnded); 
+			json.put(sessionLocationLatKey, this.latitude);
+			json.put(sessionLocationLongKey, this.longitude); 		    	
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} 
