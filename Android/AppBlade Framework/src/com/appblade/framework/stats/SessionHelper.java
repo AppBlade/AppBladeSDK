@@ -73,8 +73,11 @@ public class SessionHelper {
 			
 			if(AppBlade.sessionLocationEnabled)
 			{
-				AppBlade.currentSession.latitude = AppBladeLocationListener.lastLatitude;
-				AppBlade.currentSession.longitude = AppBladeLocationListener.lastLongitude;
+				if(AppBlade.currentSession.locations == null)
+				{
+					AppBlade.currentSession.locations = new JSONArray();
+				}
+		    	AppBlade.currentSession.locations.put(AppBladeLocationListener.getLastLocationAsArray());
 			}
 			else
 			{
@@ -83,7 +86,7 @@ public class SessionHelper {
 			
 			AppBlade.currentSession.customParams = CustomParamDataHelper.getCustomParamsAsJSON();
 			
-			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended, AppBlade.currentSession.latitude, AppBlade.currentSession.longitude, AppBlade.currentSession.customParams);
+			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended, AppBlade.currentSession.locations, AppBlade.currentSession.customParams);
 			insertSessionData(context, sessionToStore);
 			AppBlade.currentSession = null;
 		}
@@ -309,7 +312,7 @@ public class SessionHelper {
 	 */
 	public static SessionData createPersistentSession(Context context) {
 		Log.d(AppBlade.LogTag, "Creating New Session ");
-		SessionData data = new SessionData(new Date(), new Date(), "initial", "initial", new JSONObject());
+		SessionData data = new SessionData(new Date(), new Date(), new JSONArray(), new JSONObject());
 		//check if file exists
 		File f = new File(sessionsIndexFileURI());
 		if(f.exists()){

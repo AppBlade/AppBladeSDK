@@ -1,5 +1,8 @@
 package com.appblade.framework.stats;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.appblade.framework.AppBlade;
 
 import android.content.Context;
@@ -20,12 +23,13 @@ public class AppBladeLocationListener implements LocationListener {
 	public static String lastLatitude;
 	public static String lastLocationTime;
 
+	//probably keep an array in here. 
+	
 	LocationManager lm;
 	
     public void subscribeToLocationUpdates(Context context) {
         this.lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        
         onLocationChanged(lm.getLastKnownLocation(LocationManager.GPS_PROVIDER));
     }
 	
@@ -33,31 +37,49 @@ public class AppBladeLocationListener implements LocationListener {
 		Log.d(AppBlade.LogTag, "User is now using AppBlade Location Service.");
 
 	    if (location != null) {
-	    	lastLocationTime = String.valueOf(location.getTime());
-			lastLongitude =  String.valueOf(location.getLatitude());
 			lastLatitude = String.valueOf(location.getLongitude());
-			Log.d(AppBlade.LogTag, "AppBlade Location Service reports location: " + location);
+			lastLongitude =  String.valueOf(location.getLatitude());
+	    	lastLocationTime = String.valueOf(location.getTime());
+
+	    	Log.d(AppBlade.LogTag, "AppBlade Location Service reports location: " + location);
 			Log.d(AppBlade.LogTag, "AppBlade Location Service reports Lat: " + lastLatitude + "  Long: " +lastLongitude);
 
 			if(AppBlade.sessionLocationEnabled && AppBlade.currentSession != null){
-		    	AppBlade.currentSession.longitude = lastLongitude;
-				AppBlade.currentSession.latitude = lastLatitude;
+		    	AppBlade.currentSession.locations.put(AppBladeLocationListener.getLastLocationAsArray());
 
-				Log.d(AppBlade.LogTag, "AppBlade Location Service reports Lat: " + lastLatitude + "  Long: " +lastLongitude);
+				Log.d(AppBlade.LogTag, "AppBlade Location Service adds Lat: " + lastLatitude + "  Long: " +lastLongitude + " to the list of " + AppBlade.currentSession.locations.length() + " stored locations");
 
 		    }
 	    }
 	}
+	
+	
+	public static JSONArray getLastLocationAsArray()
+	{
+		JSONArray toRet = new JSONArray();
+		try {
+			toRet.put(0, lastLatitude);
+			toRet.put(1, lastLongitude);
+			toRet.put(2, lastLocationTime);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return toRet;
+	}
+	
+	public JSONArray getAllStoredLocations()
+	{
+		JSONArray toRet = new JSONArray();
+		toRet.put(getLastLocationAsArray());
+		return toRet;
+	}
+	
+	
 	public void onProviderDisabled(String provider) {
 		Log.d(AppBlade.LogTag, "User disabled AppBlade Location Service.");
 	    if(AppBlade.sessionLocationEnabled && AppBlade.currentSession != null){
 	    	//Be polite. You didn't see anything.  
-	    	AppBlade.currentSession.latitude = null;
-			AppBlade.currentSession.longitude = null;
-			lastLongitude = null;
-			lastLatitude = null;
-			
-
+	    	AppBlade.currentSession.locations = new JSONArray();			
 	    }
 	}
 	public void onProviderEnabled(String provider) {

@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,17 +22,14 @@ import com.appblade.framework.utils.StringUtils;
 public class SessionData implements Comparator<Object> {
 	public static String sessionBeganKey = "started_at";
 	public static String sessionEndedKey = "ended_at";
-	public static String sessionLocationLatKey = "latitude";
-	public static String sessionLocationLongKey = "longitude";
+	public static String sessionLocationKey = "locations";
 	public static String sessionCustomParamsKey = "custom_params";
-
 	
 	public static String storageDividerKey = ", ";
 	
 	public Date began;
 	public Date ended;
-	public String latitude;
-	public String longitude;
+	public JSONArray locations;
 	public JSONObject customParams;
 	
 	
@@ -40,11 +38,10 @@ public class SessionData implements Comparator<Object> {
 		this.ended = null;
 	}
 	
-	public SessionData(Date _began, Date _ended, String _latitude, String _longitude, JSONObject _customParams){
+	public SessionData(Date _began, Date _ended, JSONArray _locations, JSONObject _customParams){
 		this.began = _began;
 		this.ended = _ended;
-		this.latitude = _latitude;
-		this.longitude = _longitude;
+		this.locations = _locations;
 		this.customParams = _customParams;
 	}
 
@@ -62,14 +59,12 @@ public class SessionData implements Comparator<Object> {
 			if(tokens.length > 2){
 				this.began = format.parse(tokens[0]);
 				this.ended = format.parse(tokens[1]);
-				this.latitude = tokens[2];
-				this.longitude = tokens[3];
-				this.customParams = StringUtils.parseStringToJSONObject(tokens[4]);
+				this.locations = StringUtils.parseStringToJSONArray(tokens[2]);
+				this.customParams = StringUtils.parseStringToJSONObject(tokens[3]);
 			}else if(tokens.length == 2){
 				this.began = format.parse(tokens[0]);
 				this.ended = format.parse(tokens[1]);
-		    	this.latitude = "nothingStored";
-		    	this.longitude = "nothingStored";
+				this.locations = new JSONArray();
 		    	this.customParams = new JSONObject();
 			}else{
 				this.began = new Date();
@@ -96,15 +91,13 @@ public class SessionData implements Comparator<Object> {
 	    java.sql.Timestamp timeStampEnded = new 
 	    		 Timestamp(this.ended.getTime());
 	    
-	    if(this.latitude == null || this.longitude == null)
+	    if(this.locations == null)
 		{
-	    	this.latitude = "nothingToStore";
-	    	this.longitude = "nothingToStore";
+	    	this.locations = new JSONArray();
 	    }
 	    
 	    String toRet = timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
-	    toRet = toRet + storageDividerKey + this.latitude + storageDividerKey + this.longitude;
-	    
+	    toRet = toRet + storageDividerKey + this.locations;
 	    
 	    if(this.customParams == null)
 	    {
@@ -118,7 +111,7 @@ public class SessionData implements Comparator<Object> {
 		
 	public boolean hasLocation()
 	{
-		return !StringUtils.isNullOrEmpty(this.latitude) && !StringUtils.isNullOrEmpty(this.longitude);
+		return this.locations.length() == 0;
 	}
 	
 	
@@ -133,8 +126,7 @@ public class SessionData implements Comparator<Object> {
 	 * 		{
 	 * 			<sessionBeganKey>: 	"2007-03-01T13:00:00Z", 
 	 * 			<sessionEndedKey>: 	"2007-03-01T13:04:30Z",
-	 * 			<sessionLocationLatKey>: 	"123123412", 
-	 * 			<sessionLocationLongKey>:	"5543254234",
+	 * 			<sessionLocationKey>: [	[ "12.3123412", "-55.4354234", "112333330300" ] .. ]
 	 * 			<sessionCustomParamsKey>: {  whatever custom_params we had when this session was ended  }
 	 * 		}
 	 * **************************  << THAT PART
@@ -157,16 +149,13 @@ public class SessionData implements Comparator<Object> {
 		try {
 			json.put(sessionBeganKey,timeStampBegan);
 			json.put(sessionEndedKey, timeStampEnded); 
-			json.put(sessionLocationLatKey, this.latitude);
-			json.put(sessionLocationLongKey, this.longitude); 		    	
+			json.put(sessionLocationKey, this.locations );
 			json.put(sessionCustomParamsKey, this.customParams); 		    	
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} 
 		return json;
 	}
-
-	
 
 	
 	/**
