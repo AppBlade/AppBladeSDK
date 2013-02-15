@@ -23,13 +23,16 @@ public class SessionData implements Comparator<Object> {
 	public static String sessionEndedKey = "ended_at";
 	public static String sessionLocationLatKey = "latitude";
 	public static String sessionLocationLongKey = "longitude";
+	public static String sessionCustomParamsKey = "custom_params";
 
+	
 	public static String storageDividerKey = ", ";
 	
 	public Date began;
 	public Date ended;
 	public String latitude;
 	public String longitude;
+	public JSONObject customParams;
 	
 	
 	public SessionData(){
@@ -81,7 +84,7 @@ public class SessionData implements Comparator<Object> {
 	}
 
 	
-	//*****************FILE I/O
+	//*****************FILE I/O RELATED
 	/**
 	 * Gets the current object as a formatted string for storage. (start and end time stored as timestamps)
 	 * @return String formatted as "[startTime as (yyyy-MM-dd HH:mm:ss.SSS)], [endTime as (yyyy-MM-dd HH:mm:ss.SSS)]"
@@ -101,7 +104,15 @@ public class SessionData implements Comparator<Object> {
 	    
 	    String toRet = timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
 	    toRet = toRet + storageDividerKey + this.latitude + storageDividerKey + this.longitude;
-
+	    
+	    
+	    if(this.customParams == null)
+	    {
+	    	this.customParams = new JSONObject();
+	    }
+	    
+	    toRet = toRet + storageDividerKey + this.customParams.toString(); 
+	    
 		return toRet;
 	}
 		
@@ -109,6 +120,54 @@ public class SessionData implements Comparator<Object> {
 	{
 		return !StringUtils.isNullOrEmpty(this.latitude) && !StringUtils.isNullOrEmpty(this.longitude);
 	}
+	
+	
+	//*****************API RELATED
+	/*
+	 * 	{	
+	 * 		"device_id": "8989ffBB", 
+	 * 		"project_id": "87FF98", 
+	 * 		"executable_uuid":"0123013", 
+	 * 		"sessions" : [
+	 * ************************** THIS PART >>>
+	 * 		{
+	 * 			<sessionBeganKey>: 	"2007-03-01T13:00:00Z", 
+	 * 			<sessionEndedKey>: 	"2007-03-01T13:04:30Z",
+	 * 			<sessionLocationLatKey>: 	"123123412", 
+	 * 			<sessionLocationLongKey>:	"5543254234",
+	 * 			<sessionCustomParamsKey>: {  whatever custom_params we had when this session was ended  }
+	 * 		}
+	 * **************************  << THAT PART
+	 * **************************  POSSIBLY MULTIPLE ONES
+	 * 		]
+	 * 	}
+	 */
+	/**
+	 * Formats the current objects as JSON
+	 * @return JSONObject containing <code>started_at</code> and <code>ended_at</code> values.
+	 */
+	public JSONObject formattedSessionAsJSON()
+	{
+		JSONObject json = new JSONObject();
+	    java.sql.Timestamp timeStampBegan = new 
+	    		 Timestamp(this.began.getTime());
+	    java.sql.Timestamp timeStampEnded = new 
+	    		 Timestamp(this.ended.getTime());
+		
+		try {
+			json.put(sessionBeganKey,timeStampBegan);
+			json.put(sessionEndedKey, timeStampEnded); 
+			json.put(sessionLocationLatKey, this.latitude);
+			json.put(sessionLocationLongKey, this.longitude); 		    	
+			json.put(sessionCustomParamsKey, this.customParams); 		    	
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} 
+		return json;
+	}
+
+	
+
 	
 	/**
 	 * Compare method so we can confirm another object is essentially the same. <br>
@@ -134,51 +193,4 @@ public class SessionData implements Comparator<Object> {
 		}
 		return compareValue;
 	}	
-	
-	
-	//*****************API REALATED
-	/*
-	 * 	{	
-	 * 		"device_id": "8989ffBB", 
-	 * 		"project_id": "87FF98", 
-	 * 		"executable_uuid":"0123013", 
-	 * 		"sessions" : [
-	 * ************************** THIS PART >>>
-	 * 		{
-	 * 			<sessionBeganKey>: 	"2007-03-01T13:00:00Z", 
-	 * 			<sessionEndedKey>: 	"2007-03-01T13:04:30Z",
-	 * 			<sessionLocationLatKey>: 	"123123412", 
-	 * 			<sessionLocationLongKey>:	"5543254234"
-	 * 		}
-	 * **************************  << THAT PART
-	 * **************************  POSSIBLY MULTIPLE ONES
-	 * 		]
-	 * 	}
-	 */
-	/**
-	 * Formats the current objects as JSON
-	 * @return JSONObject containing <code>started_at</code> and <code>ended_at</code> values.
-	 */
-	public JSONObject formattedSessionAsJSON()
-	{
-		JSONObject json = new JSONObject();
-	    java.sql.Timestamp timeStampBegan = new 
-	    		 Timestamp(this.began.getTime());
-	    java.sql.Timestamp timeStampEnded = new 
-	    		 Timestamp(this.ended.getTime());
-		
-		try {
-			json.put(sessionBeganKey,timeStampBegan);
-			json.put(sessionEndedKey, timeStampEnded); 
-			json.put(sessionLocationLatKey, this.latitude);
-			json.put(sessionLocationLongKey, this.longitude); 		    	
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} 
-		return json;
-	}
-
-	
-
-
 }

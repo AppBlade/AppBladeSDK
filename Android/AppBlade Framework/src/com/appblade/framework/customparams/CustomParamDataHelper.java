@@ -55,7 +55,7 @@ public class CustomParamDataHelper {
 	/**
 	 * Parses a file at the given location, returns a JSONObject. Assumes valid read/write permissions.
 	 * @param customParamsResourceLocation String URL of the file in json format to read.
-	 * @return a new JSONObject with all stored values.
+	 * @return a new JSONObject with all stored values. Or an empty JSONObject
 	 */
 	public static synchronized JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
         JSONObject json = new JSONObject();
@@ -87,7 +87,7 @@ public class CustomParamDataHelper {
 			}
 		}
 
-		Log.d(AppBlade.LogTag, "Text in customparams.json: "+ jsonTxt);
+		Log.d(AppBlade.LogTag, "Text in "+customParamsFileName+": "+ jsonTxt);
         
         if(jsonTxt != null){
 			try {
