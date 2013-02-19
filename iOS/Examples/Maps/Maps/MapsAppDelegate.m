@@ -19,16 +19,21 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Configure AppBlade
-    AppBlade *blade = [AppBlade sharedManager];
 
     // Populate with values from the project SDK settings or load keys from plist
-    // see README for details
-//    blade.appBladeProjectID = @""; //UUID
-//    blade.appBladeProjectToken = @""; //Token
-//    blade.appBladeProjectSecret = @""; //Secret
-//    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
-    
 
+    //copy this into your app delegate
+    //remember: you must still import AppBlade.h
+    AppBlade *blade = [AppBlade sharedManager];
+    blade.appBladeProjectID = @"ca460dcb-b7c2-43c1-ba50-8b6cda63f369";
+    blade.appBladeProjectToken = @"8f1792db8a39108c14fa8c89663eec98";
+    blade.appBladeProjectSecret = @"c8536a333fb292ba46fc98719c1cfdf6";
+    blade.appBladeProjectIssuedTimestamp = @"1316609918";
+    blade.appBladeHost = @"http://10.1.10.42:3000";
+    
+    // Check the app blade status of this application.
+    [[AppBlade sharedManager] checkApproval];
+    
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
     // [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]]
@@ -41,6 +46,7 @@
     [self.window makeKeyAndVisible];
     
     [blade allowFeedbackReporting];
+    [blade allowLocationLogging];
 
     return YES;
 }

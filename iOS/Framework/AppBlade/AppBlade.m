@@ -35,6 +35,8 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
 
+#define DEFAULT_LOCATION_LOGGING_DISTANCE 10 //every ten meters
+#define DEFAULT_LOCATION_LOGGING_TIME 900 //or every fifteen minutes
 
 
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
@@ -963,6 +965,16 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {   //check active clients for API_Sessions
     NSInteger sessionClients = [self activeClientsOfType:AppBladeWebClientAPI_Sessions];
     return sessionClients > 0;
+}
+
+- (void)allowLocationLogging
+{
+    [self allowLocationLoggingForDistance:DEFAULT_LOCATION_LOGGING_DISTANCE andOrTime:DEFAULT_LOCATION_LOGGING_TIME];
+}
+
+- (void)allowLocationLoggingForDistance:(int)meters andOrTime:(int)seconds
+{
+
 }
 
 + (void)startSession

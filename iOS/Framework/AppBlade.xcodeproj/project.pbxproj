@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3129604116D2AA6A00596E6F /* AppBladeLocationSingleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 3129603F16D2AA6A00596E6F /* AppBladeLocationSingleton.h */; };
+		3129604216D2AA6A00596E6F /* AppBladeLocationSingleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 3129603F16D2AA6A00596E6F /* AppBladeLocationSingleton.h */; };
+		3129604316D2AA6A00596E6F /* AppBladeLocationSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3129604016D2AA6A00596E6F /* AppBladeLocationSingleton.m */; };
+		3129604416D2AA6A00596E6F /* AppBladeLocationSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3129604016D2AA6A00596E6F /* AppBladeLocationSingleton.m */; };
 		31B29E7813FC1BFC00AF9D5D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31B29E7713FC1BFC00AF9D5D /* Security.framework */; };
 		31BD74C213FF2AEA00C3B6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31BD74C113FF2AEA00C3B6AE /* UIKit.framework */; };
 		620217591404450A00A14BA7 /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217261404450900A14BA7 /* CrashReporter.m */; };
@@ -73,6 +77,8 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
+		3129603F16D2AA6A00596E6F /* AppBladeLocationSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeLocationSingleton.h; sourceTree = "<group>"; };
+		3129604016D2AA6A00596E6F /* AppBladeLocationSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeLocationSingleton.m; sourceTree = "<group>"; };
 		31B29E7713FC1BFC00AF9D5D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		31BD74C113FF2AEA00C3B6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		620217251404450900A14BA7 /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReporter.h; path = AppBlade/CrashReporter/Source/CrashReporter.h; sourceTree = SOURCE_ROOT; };
@@ -304,6 +310,8 @@
 				A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */,
 				7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */,
 				7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */,
+				3129603F16D2AA6A00596E6F /* AppBladeLocationSingleton.h */,
+				3129604016D2AA6A00596E6F /* AppBladeLocationSingleton.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -318,6 +326,7 @@
 				CB51D33514293D0600A43CB5 /* AppBlade.h in Headers */,
 				7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */,
 				7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
+				3129604216D2AA6A00596E6F /* AppBladeLocationSingleton.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +337,7 @@
 				A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */,
 				7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */,
 				7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
+				3129604116D2AA6A00596E6F /* AppBladeLocationSingleton.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +441,7 @@
 				7E71754F156556A500D810DF /* AppBladeSimpleKeychain.m in Sources */,
 				7E717550156556A800D810DF /* AppBladeWebClient.m in Sources */,
 				7E717551156556AC00D810DF /* FeedbackDialogue.m in Sources */,
+				3129604416D2AA6A00596E6F /* AppBladeLocationSingleton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +482,7 @@
 				A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */,
 				7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */,
 				7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
+				3129604316D2AA6A00596E6F /* AppBladeLocationSingleton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
