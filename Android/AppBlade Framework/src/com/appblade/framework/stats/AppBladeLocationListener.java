@@ -37,8 +37,8 @@ public class AppBladeLocationListener implements LocationListener {
 		Log.d(AppBlade.LogTag, "User is now using AppBlade Location Service.");
 
 	    if (location != null) {
-			lastLatitude = String.valueOf(location.getLongitude());
-			lastLongitude =  String.valueOf(location.getLatitude());
+			lastLatitude =  String.valueOf(location.getLatitude());
+			lastLongitude = String.valueOf(location.getLongitude());
 	    	lastLocationTime = String.valueOf(location.getTime());
 
 	    	Log.d(AppBlade.LogTag, "AppBlade Location Service reports location: " + location);

@@ -126,7 +126,7 @@ public class SessionData implements Comparator<Object> {
 	 * 		{
 	 * 			<sessionBeganKey>: 	"2007-03-01T13:00:00Z", 
 	 * 			<sessionEndedKey>: 	"2007-03-01T13:04:30Z",
-	 * 			<sessionLocationKey>: [	[ "12.3123412", "-55.4354234", "112333330300" ] .. ]
+	 * 			<sessionLocationKey>: [	[ [latitude]"12.3123412", [longitude]"-55.4354234", [time location read]"112333330300" ] ... ]
 	 * 			<sessionCustomParamsKey>: {  whatever custom_params we had when this session was ended  }
 	 * 		}
 	 * **************************  << THAT PART
