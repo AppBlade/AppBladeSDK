@@ -48,14 +48,14 @@ static AppBladeLocationSingleton* sharedSingleton = nil;
 #pragma mark - Location update lifecycle
 -(void)enableLocationTracking
 {
-    if([CLLocationManager locationServicesEnabled] && [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)
-    {
+//    if([CLLocationManager locationServicesEnabled] && [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)
+//    {
         self.loggingEnabled = true;
         [[self locationManager] startMonitoringSignificantLocationChanges];
-    }else{
-        self.loggingEnabled = false;
-        NSLog(@"Location Services are not enabled for this device.");
-    }
+//    }else{
+//        self.loggingEnabled = false;
+//        NSLog(@"Location Services are not enabled for this device.");
+//    }
 }
 
 -(void)disableLocationTracking
@@ -72,9 +72,16 @@ static AppBladeLocationSingleton* sharedSingleton = nil;
     {
         self.minUpdateDistance = [NSNumber numberWithInt:meters];
         self.minUpdateTime = [NSNumber numberWithInt:seconds];
+        
+        self.locationManager.distanceFilter = [self.minUpdateDistance doubleValue];
+        
+        [[self locationManager] startUpdatingLocation];
+        
         if([CLLocationManager deferredLocationUpdatesAvailable])
         {
             [[self locationManager] allowDeferredLocationUpdatesUntilTraveled:[self.minUpdateDistance doubleValue] timeout:[self.minUpdateTime doubleValue]];
+            [locationManager startMonitoringSignificantLocationChanges];
+
         }
     }
 }
@@ -104,7 +111,6 @@ static AppBladeLocationSingleton* sharedSingleton = nil;
 - (void)clearStoredLocations
 {
     self.currentStoredLocations = [NSMutableArray array];
-    
 }
 
 
@@ -118,16 +124,22 @@ static AppBladeLocationSingleton* sharedSingleton = nil;
     if(newLocation != nil && oldLocation != nil)
     {
         NSLog(@"Location Update: %@ - %@", newLocation, oldLocation);
-        if (self.latestLocation && (-[self.latestLocation.timestamp timeIntervalSinceNow]) > [self.minUpdateTime doubleValue])
+        if (nil == self.latestLocation)
         {
-            if (!self.latestLocation || NSOrderedDescending == [oldLocation.timestamp compare:self.latestLocation.timestamp])
+            self.latestLocation = newLocation;
+        }
+        else
+        {
+            if ((-[self.latestLocation.timestamp timeIntervalSinceNow]) > [self.minUpdateTime doubleValue])
             {
-                self.latestLocation = oldLocation;
-            }
-            
-            if (!self.latestLocation || NSOrderedDescending == [newLocation.timestamp compare:self.latestLocation.timestamp])
-            {
-                self.latestLocation = newLocation;
+                if (!self.latestLocation || NSOrderedDescending == [oldLocation.timestamp compare:self.latestLocation.timestamp])
+                {
+                    self.latestLocation = oldLocation;
+                }
+                if (!self.latestLocation || NSOrderedDescending == [newLocation.timestamp compare:self.latestLocation.timestamp])
+                {
+                    self.latestLocation = newLocation;
+                }
             }
         }
     }
