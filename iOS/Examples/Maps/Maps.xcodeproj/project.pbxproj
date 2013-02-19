@@ -26,6 +26,7 @@
 		31817C36161207D000392343 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817C35161207D000392343 /* Security.framework */; };
 		31817C38161207E000392343 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817C37161207E000392343 /* MapKit.framework */; };
 		31817C3B1612082F00392343 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31817C3A1612082F00392343 /* MainWindow-iPad.xib */; };
+		31CF770C16D405D3008AAEA1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31CF770B16D405D3008AAEA1 /* CoreLocation.framework */; };
 		31D6BF9716120A5A0051283A /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D6BF9616120A5A0051283A /* MainWindow.xib */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +80,7 @@
 		31817C35161207D000392343 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		31817C37161207E000392343 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		31817C3A1612082F00392343 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		31CF770B16D405D3008AAEA1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		31D434E4165AD0940075D028 /* AppBlade.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AppBlade.xcodeproj; path = ../../Framework/AppBlade.xcodeproj; sourceTree = "<group>"; };
 		31D6BF9616120A5A0051283A /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31CF770C16D405D3008AAEA1 /* CoreLocation.framework in Frameworks */,
 				3110533A165AD258008FC128 /* libAppBlade.a in Frameworks */,
 				31817C38161207E000392343 /* MapKit.framework in Frameworks */,
 				31817C36161207D000392343 /* Security.framework in Frameworks */,
@@ -103,6 +106,7 @@
 		31817BE5161202EB00392343 = {
 			isa = PBXGroup;
 			children = (
+				31CF770B16D405D3008AAEA1 /* CoreLocation.framework */,
 				31D434E4165AD0940075D028 /* AppBlade.xcodeproj */,
 				31817BFA161202EB00392343 /* Maps */,
 				31817BF3161202EB00392343 /* Frameworks */,
