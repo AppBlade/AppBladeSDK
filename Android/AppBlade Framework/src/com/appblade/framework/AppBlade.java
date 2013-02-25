@@ -159,7 +159,7 @@ public class AppBlade {
 				appInfo.CurrentServiceScheme = AppInfo.DefaultServiceScheme;
 			}
 		}
-		Log.d(LogTag, String.format("Using a endpoint URL, %s %s", appInfo.CurrentServiceScheme, appInfo.CurrentEndpoint));
+		Log.d(LogTag, String.format("Using a endpoint URL, %s%s", appInfo.CurrentServiceScheme, appInfo.CurrentEndpoint));
 
 		
 		// Set the device ID for exception reporting requests
