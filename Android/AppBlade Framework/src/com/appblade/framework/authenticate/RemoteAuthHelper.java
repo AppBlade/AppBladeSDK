@@ -1,6 +1,7 @@
 package com.appblade.framework.authenticate;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -89,6 +90,10 @@ public class RemoteAuthHelper {
 		
 		try
 		{
+			File authFile = new File(filename);
+			if(!authFile.exists()){
+				authFile.createNewFile();
+			}
 			FileInputStream fis = context.openFileInput(filename);
 		    InputStreamReader inputStreamReader = new InputStreamReader(fis);
 		    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
