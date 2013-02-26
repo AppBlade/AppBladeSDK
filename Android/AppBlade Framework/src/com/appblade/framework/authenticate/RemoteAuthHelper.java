@@ -65,10 +65,10 @@ public class RemoteAuthHelper {
 
 		try
 		{
-			String filename = getAccessTokenFilePath(context);
-			FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
-			Log.d(AppBlade.LogTag, "RemoteAuthHelper.store writing " + accessToken);
+			String filename = getAccessTokenFilename(context.getApplicationContext());
+			Log.d(AppBlade.LogTag, "RemoteAuthHelper.store writing " + accessToken + " to " + filename);
 
+			FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
 			fos.write(accessToken.getBytes());
 			IOUtils.safeClose(fos);
 
@@ -87,7 +87,7 @@ public class RemoteAuthHelper {
 	public static void clear(Context context) {
 		try
 		{
-			String filename = getAccessTokenFilePath(context);
+			String filename = getAccessTokenFilename(context.getApplicationContext());
 			context.deleteFile(filename);
 
 			Log.d(AppBlade.LogTag, String.format("RemoteAuthHelper.clear (delete file) path:%s", filename));
@@ -104,15 +104,16 @@ public class RemoteAuthHelper {
 	 */	
 	public static String getAccessToken(Context context) {
 		String accessToken = "";
-		String filename = getAccessTokenFilePath(context);
-		File authFile = new File(filename);
+		String filename = getAccessTokenFilename(context.getApplicationContext());
+		File authFile = context.getDir(filename, Context.MODE_PRIVATE);
 		try
 		{
 			if(!authFile.exists()){
-				Log.e(AppBlade.LogTag, "Did not create Authfile location : " + authFile);
+				Log.e(AppBlade.LogTag, "Trying to create Authfile location : " + authFile.getAbsolutePath());
+				authFile.mkdirs();
 				authFile.createNewFile();
 			}
-			FileInputStream fis = context.openFileInput(authFile.getName());
+			FileInputStream fis = context.openFileInput(filename);
 		    InputStreamReader inputStreamReader = new InputStreamReader(fis);
 		    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 		    accessToken = bufferedReader.readLine();
