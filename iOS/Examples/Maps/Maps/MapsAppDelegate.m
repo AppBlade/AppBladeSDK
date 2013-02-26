@@ -21,6 +21,12 @@
     // Configure AppBlade
 
     // Populate with values from the project SDK settings or load keys from plist
+    // see README for details
+    //copy this into your app delegate
+    //remember: you must still import AppBlade.h
+    
+    // Check the app blade status of this application.
+    [[AppBlade sharedManager] checkApproval];
 
     //copy this into your app delegate
     //remember: you must still import AppBlade.h
@@ -29,7 +35,15 @@
     blade.appBladeProjectToken = @"8f1792db8a39108c14fa8c89663eec98";
     blade.appBladeProjectSecret = @"c8536a333fb292ba46fc98719c1cfdf6";
     blade.appBladeProjectIssuedTimestamp = @"1316609918";
-    blade.appBladeHost = @"http://10.1.10.42:3000";
+    
+    
+    blade.appBladeProjectID = @"4e00b9c7-f80b-43ee-98ef-6144b9162c04";
+    blade.appBladeProjectToken = @"412ceb21adf6214270a19854bd375ee7";
+    blade.appBladeProjectSecret = @"8ddbfe87a73e55e2a4c13c0df0c4eae9";
+    blade.appBladeProjectIssuedTimestamp = @"1359040311";
+
+    
+//    blade.appBladeHost = @"http://10.1.10.42:3000";
     
     // Check the app blade status of this application.
     [[AppBlade sharedManager] checkApproval];
