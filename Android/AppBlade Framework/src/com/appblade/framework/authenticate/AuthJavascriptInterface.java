@@ -26,11 +26,15 @@ public class AuthJavascriptInterface {
 			Log.d(AppBlade.LogTag, message);
 			
 			if(mActivity != null){
+				Log.d(AppBlade.LogTag, String.format("storing token"));
+
 				mActivity.runOnUiThread(new Runnable() {
 					public void run() {
 						AuthTokensDownloadTask task = new AuthTokensDownloadTask(mActivity);
 						task.setOnPostExecuteListener(new OnPostExecuteListener() {
 							public void onPostExecute() {
+								Log.d(AppBlade.LogTag, String.format("reauthorizing"));
+
 								AppBlade.authorize(mActivity, true);
 							}
 						});
@@ -40,7 +44,7 @@ public class AuthJavascriptInterface {
 			}
 			else
 			{
-
+				Log.d(AppBlade.LogTag, "mActivity null, no token");
 			}
 		}
 }
