@@ -29,36 +29,46 @@ import android.content.Intent;
 import android.util.Log;
 
 /**
- * Helper class for functions related to authorization. 
- * These functions shouldn't need to be called directly, call {@link AppBlade.authorize(Activity)} instead. 
+ * Helper class for functions related to authorization. These functions
+ * shouldn't need to be called directly, call {@link
+ * AppBlade.authorize(Activity)} instead.
+ * 
  * @author rich.stern@raizlabs
- * @author andrew.tremblay@raizlabs 
+ * @author andrew.tremblay@raizlabs
  * */
 public class AuthHelper {
-	
+
 	/**
-	 * Checks whether the given activity is authorized, prompts an optional dialog beforehand. 
-	 * @param activity Activity to check authorization/prompt dialog. 
-	 * @param shouldPrompt boolean of whether an "Authorization Required" dialog should be shown to the user first.
+	 * Checks whether the given activity is authorized, prompts an optional
+	 * dialog beforehand.
+	 * 
+	 * @param activity
+	 *            Activity to check authorization/prompt dialog.
+	 * @param shouldPrompt
+	 *            boolean of whether an "Authorization Required" dialog should
+	 *            be shown to the user first.
 	 */
-	public static void checkAuthorization(final Activity activity, boolean shouldPrompt) {
-		if(shouldPrompt) {
+	public static void checkAuthorization(final Activity activity,
+			boolean shouldPrompt) {
+		if (shouldPrompt) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setMessage("Authorization Required");
-			builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-				
-				public void onClick(DialogInterface dialog, int which) {
-					authorize(activity);
-				}
-			});
-			builder.setNegativeButton("No thanks", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-					activity.finish();
-				}
-			});
+			builder.setPositiveButton("Continue",
+					new DialogInterface.OnClickListener() {
+
+						public void onClick(DialogInterface dialog, int which) {
+							authorize(activity);
+						}
+					});
+			builder.setNegativeButton("No thanks",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+							activity.finish();
+						}
+					});
 			builder.setOnCancelListener(new OnCancelListener() {
-				
+
 				public void onCancel(DialogInterface dialog) {
 					dialog.dismiss();
 					activity.finish();
@@ -66,77 +76,87 @@ public class AuthHelper {
 			});
 			builder.setCancelable(false);
 			builder.show();
-		}
-		else
-		{
+		} else {
 			authorize(activity);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Function to authorize the given activity. <br>
-	 * First checks if the user has an accessToken already with {@link RemoteAuthHelper.getAccessToken(Activity)}<br>
-	 * If an accessToken exists, calls {@link KillSwitch.authorize(Activity)}
-	 * If we don't have an accessToken, we start a {@link RemoteAuthorizeActivity} from the given activity.
-	 * @param activity Activity to check for an accessToken and/or call a RemoteAuthorizeActivity Intent. 
+	 * First checks if the user has an accessToken already with {@link
+	 * RemoteAuthHelper.getAccessToken(Activity)}<br>
+	 * If an accessToken exists, calls {@link KillSwitch.authorize(Activity)} If
+	 * we don't have an accessToken, we start a {@link RemoteAuthorizeActivity}
+	 * from the given activity.
+	 * 
+	 * @param activity
+	 *            Activity to check for an accessToken and/or call a
+	 *            RemoteAuthorizeActivity Intent.
 	 */
 	private static void authorize(Activity activity) {
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
-		
-		if(!StringUtils.isNullOrEmpty(accessToken)) {
+
+		if (!StringUtils.isNullOrEmpty(accessToken)) {
 			KillSwitch.authorize(activity);
-		}
-		else {
+		} else {
 			Intent intent = new Intent(activity, RemoteAuthorizeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			activity.startActivity(intent);
 		}
 	}
-	
-	
+
 	public static void acceptDebugSSL() {
-	    try {
-	    	SSLContext ctx = SSLContext.getInstance("TLS");
-	    	ctx.init(null, new TrustManager[] {
-	    	  new X509TrustManager() {
-	    	    public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-	    	    public void checkServerTrusted(X509Certificate[] chain, String authType) {}
-	    	    public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[]{}; }
-	    	  }
-	    	}, null);
-	    	HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-	    } catch (Exception e) {
-	    	Log.e(AppBlade.LogTag, "Debug SSL could not be initialized");
-	    	e.printStackTrace();
-	    }
-	}
-	
-	 public static DefaultHttpClient sslClient(HttpClient client) {
-		    try {
-		        X509TrustManager tm = new X509TrustManager() { 
-		            public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-		            }
+		try {
+			SSLContext ctx = SSLContext.getInstance("TLS");
+			ctx.init(null, new TrustManager[] { new X509TrustManager() {
+				public void checkClientTrusted(X509Certificate[] chain,
+						String authType) {
+				}
 
-		            public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-		            }
+				public void checkServerTrusted(X509Certificate[] chain,
+						String authType) {
+				}
 
-		            public X509Certificate[] getAcceptedIssuers() {
-		                return null;
-		            }
-		        };
-		        SSLContext ctx = SSLContext.getInstance("TLS");
-		        ctx.init(null, new TrustManager[]{tm}, null);
-		        SSLSocketFactory ssf = new MySSLSocketFactory(ctx);
-		        ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-		        ClientConnectionManager ccm = client.getConnectionManager();
-		        SchemeRegistry sr = ccm.getSchemeRegistry();
-		        sr.register(new Scheme("https", ssf, 443));
-		        return new DefaultHttpClient(ccm, client.getParams());
-		    } catch (Exception ex) {
-		    	ex.printStackTrace();
-		        return null;
-		    }
+				public X509Certificate[] getAcceptedIssuers() {
+					return new X509Certificate[] {};
+				}
+			} }, null);
+			HttpsURLConnection.setDefaultSSLSocketFactory(ctx
+					.getSocketFactory());
+		} catch (Exception e) {
+			Log.e(AppBlade.LogTag, "Debug SSL could not be initialized");
+			e.printStackTrace();
 		}
-	
+	}
+
+	public static DefaultHttpClient sslClient(HttpClient client) {
+		try {
+			X509TrustManager tm = new X509TrustManager() {
+				public void checkClientTrusted(X509Certificate[] xcs,
+						String string) throws CertificateException {
+				}
+
+				public void checkServerTrusted(X509Certificate[] xcs,
+						String string) throws CertificateException {
+				}
+
+				public X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+			};
+			SSLContext ctx = SSLContext.getInstance("TLS");
+			ctx.init(null, new TrustManager[] { tm }, null);
+			SSLSocketFactory ssf = new MySSLSocketFactory(ctx);
+			ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			ClientConnectionManager ccm = client.getConnectionManager();
+			SchemeRegistry sr = ccm.getSchemeRegistry();
+			sr.register(new Scheme("https", ssf, 443));
+			return new DefaultHttpClient(ccm, client.getParams());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
 }
