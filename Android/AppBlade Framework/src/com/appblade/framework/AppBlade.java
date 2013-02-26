@@ -16,6 +16,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
@@ -126,12 +127,15 @@ public class AppBlade {
 			throw new IllegalArgumentException("Invalid application info registered with AppBlade");
 		}
 
+		
 		// Initialize App Info
 		appInfo = new AppInfo();
 		appInfo.AppId = uuid;
 		appInfo.Token = token;
 		appInfo.Secret = secret;
 		appInfo.Issuance = issuance;
+		appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		
 
 		if(customHost != null)
 		{

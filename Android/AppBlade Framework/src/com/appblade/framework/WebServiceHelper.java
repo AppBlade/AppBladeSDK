@@ -11,8 +11,10 @@ import com.appblade.framework.utils.Base64;
 import com.appblade.framework.utils.StringUtils;
 import com.appblade.framework.utils.SystemUtils;
 
+import android.content.ContentResolver;
 import android.content.pm.PackageInfo;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 
 /**
@@ -139,7 +141,10 @@ public class WebServiceHelper {
 		request.addHeader("device_model", Build.MODEL);
 		request.addHeader("device_id", Build.ID);
 		request.addHeader("device_brand", Build.BRAND);
-		request.addHeader("device_fingerprint", SystemUtils.getBestUniqueDeviceID(null)); // Build.FINGERPRINT);
+		request.addHeader("device_fingerprint", SystemUtils.getReadableFINGERPRINT());
+		request.addHeader("android_id", AppBlade.StoredANDROID_ID);
+
+		
 	}
 
 	/**

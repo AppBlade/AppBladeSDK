@@ -9,6 +9,7 @@ import com.appblade.framework.AppBlade;
 import com.appblade.framework.AppInfo;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
@@ -44,8 +45,7 @@ public class SystemUtils {
 	 */
 	public static String getBestUniqueDeviceID(ContentResolver cr) 
 	{
-		cr = null;
-		String toRet = Build.FINGERPRINT.replace("/", "__").replace(".", "-").replace(":", "-"); //make it so the fingerprint doesn't break routes
+		String toRet = getReadableFINGERPRINT();
 		if(cr != null)
 		{
 			String android_id = Settings.Secure.getString(cr, Settings.Secure.ANDROID_ID); ; //Not factory reset safe. But will hold up across boots and updates, might be "android_id"
@@ -150,6 +150,14 @@ public class SystemUtils {
 		} 
 		return toRet;
 	}
+
+
+	public static String getReadableFINGERPRINT() {
+		return Build.FINGERPRINT.replace("/", "__").replace(".", "-").replace(":", "-"); //make it so the fingerprint doesn't break routes
+	}
+
+	
+
 
 	
 }
