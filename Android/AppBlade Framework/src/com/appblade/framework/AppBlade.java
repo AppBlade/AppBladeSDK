@@ -15,6 +15,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
@@ -29,8 +31,11 @@ import com.appblade.framework.feedback.FeedbackData;
 import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
+import com.appblade.framework.stats.AppBladeLocationListener;
+import com.appblade.framework.stats.AppBladeSessionActivity;
 import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
+import com.appblade.framework.stats.AppBladeSessionLoggingService;
 import com.appblade.framework.utils.StringUtils;
 
 /**
@@ -63,7 +68,13 @@ public class AppBlade {
 	public static String customParamsDir = null;
 
 	public static SessionData currentSession;
-
+	public static AppBladeSessionLoggingService sessionLoggingService;
+	
+	public static boolean sessionLocationEnabled;
+	public static AppBladeLocationListener locationListener;
+	static long locationUpdateMinTimeMillis = 0; //thresholds for when our listener will be updating location
+	static float locationUpdateMinDistMeters = 0;
+	
 	//keeping folders all in one place (the rootDir)
 	public static final String AppBladeExceptionsFolder = "app_blade_exceptions";
 	public static final String AppBladeFeedbackFolder = "app_blade_feedback";
@@ -116,12 +127,15 @@ public class AppBlade {
 			throw new IllegalArgumentException("Invalid application info registered with AppBlade");
 		}
 
+		
 		// Initialize App Info
 		appInfo = new AppInfo();
 		appInfo.AppId = uuid;
 		appInfo.Token = token;
 		appInfo.Secret = secret;
 		appInfo.Issuance = issuance;
+		appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		
 
 		if(customHost != null)
 		{
@@ -149,7 +163,7 @@ public class AppBlade {
 				appInfo.CurrentServiceScheme = AppInfo.DefaultServiceScheme;
 			}
 		}
-		Log.d(LogTag, String.format("Using a endpoint URL, %s %s", appInfo.CurrentServiceScheme, appInfo.CurrentEndpoint));
+		Log.d(LogTag, String.format("Using a endpoint URL, %s%s", appInfo.CurrentServiceScheme, appInfo.CurrentEndpoint));
 
 		
 		// Set the device ID for exception reporting requests
@@ -171,6 +185,7 @@ public class AppBlade {
 		customParamsDir  = makeDirFromRoot(AppBladeCustomParamsFolder, context);
 		File exceptionsDirectory = new File(exceptionsDir);
 		canWriteToDisk = exceptionsDirectory.exists();
+		
 	}
 
 	/**
@@ -197,7 +212,7 @@ public class AppBlade {
 			}
 			else
 			{
-			throw new IllegalArgumentException("You failed to register AppBlade before calling "+methodName+", please read the documentation.");
+				throw new IllegalArgumentException("You failed to register AppBlade before calling "+methodName+", please read the documentation.");
 			}
 		}
 	}
@@ -271,8 +286,7 @@ public class AppBlade {
 		else if (fromLoopBack)
 		{
 			Log.d(AppBlade.LogTag,
-					String.format("AppBlade.authorize: user is authorized, closing activity: %s",
-							activity.getLocalClassName()));
+			String.format("AppBlade.authorize: user is authorized, closing activity: %s", activity.getLocalClassName()));
 			activity.finish();
 		}
 	}
@@ -320,6 +334,39 @@ public class AppBlade {
 	 */
 	
 	/**
+	 * Allows us to initialize our session logging service at the application level.  As well as any other variables we need relative to sessions.
+	 * @param context Usually {@code getApplicationContext()}, the context we want the sessionLogging service to keep track of and use for session storage/reporting. 
+	 * @param trackLocations Flag to tell whether we want to try to GeoLocate the device. Requires additional permissions.
+	 */
+	public static void useSessionLoggingService(Context context, boolean trackLocations)
+	{
+		if(AppBlade.sessionLoggingService == null){
+			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(context);
+		}
+		AppBlade.sessionLoggingService.mContext = context;
+		AppBlade.sessionLocationEnabled = trackLocations;
+	}
+	
+	/**
+	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
+	 * @param activity
+	 */
+	public static void bindToSessionService(Activity activity)
+	{
+		SessionHelper.bindToSessionService(activity);
+	}
+
+	/**
+	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
+	 * @param activity
+	 */
+	public static void unbindFromSessionService(Activity activity)
+	{
+		SessionHelper.unbindFromSessionService(activity);
+	}
+
+	
+	/**
 	 * Static point for beginning a session (posts any existing sessions by default) 
 	 * @param context Context to use to control the posting of the session.
 	 */
@@ -336,20 +383,20 @@ public class AppBlade {
 	public static void startSession(Context context, boolean onlyAuthorized)
 	{
 		hardCheckIsRegistered();
-
-		if(onlyAuthorized){
-			if(isAuthorized(context)) {
-				//check for existing sessions, post them.
-				SessionHelper.startSession(context);
-			}
-			else
-			{
-				Log.d(LogTag, "Client is not yet authorized, cannot start session");
-			}
+		SessionHelper.postExistingSessions(context); //post any pending sessions 
+		
+		if(onlyAuthorized && !isAuthorized(context)){
+			Log.d(LogTag, "Client is not yet authorized, cannot start session");
 		}
 		else
 		{
-			//we don't care about authorization
+			if(sessionLocationEnabled)
+			{
+				registerForLocationSettings(context);
+				Log.d(LogTag, "Sessions registerForLocationSettings");
+			}
+
+			//either we're authorized or we don't care about authorization
 			SessionHelper.startSession(context);
 		}
 
@@ -374,23 +421,36 @@ public class AppBlade {
 	{
 		hardCheckIsRegistered();
 
-		if(onlyAuthorized){
-			if(isAuthorized(context)) {
-				SessionHelper.endSession(context);
-			}
-			else
-			{
-				Log.d(LogTag, "Client is not yet authorized, cannot end session");			
-			}
+		if(onlyAuthorized && !isAuthorized(context)) {
+			Log.d(LogTag, "Client is not yet authorized, cannot end session");			
 		}
 		else
 		{
 			//we don't care about authorization
 			SessionHelper.endSession(context);
 		}
-		SessionHelper.postExistingSessions(context);
+		SessionHelper.postExistingSessions(context); //we have at least one complete session, post it. 
 	}
 
+	/**
+	 * Location check that will try to set up our location tracking if the user has given us permission. <br>
+	 * {@code <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION">}
+	 * @param context Context to track
+	 */
+	public static void registerForLocationSettings(Context context){
+	    LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+	    locationListener = new AppBladeLocationListener();
+	    locationListener.subscribeToLocationUpdates(context);
+	    try{
+	    	lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateMinTimeMillis, locationUpdateMinDistMeters, locationListener);
+	    }
+	    catch(Exception e)
+	    {
+	    	Log.e(AppBlade.LogTag, "Error requesting location updates: "+ StringUtils.exceptionInfo(e) );
+	    	e.printStackTrace();
+	    }
+	}
+	
 	
 	/********************************************************
 	 ********************************************************
