@@ -142,7 +142,7 @@ public class WebServiceHelper {
 		request.addHeader("device_id", Build.ID);
 		request.addHeader("device_brand", Build.BRAND);
 		request.addHeader("device_fingerprint", SystemUtils.getReadableFINGERPRINT());
-		request.addHeader("android_id", AppBlade.StoredANDROID_ID);
+		request.addHeader("android_id", AppBlade.appInfo.storedANDROID_ID);
 
 		
 	}
