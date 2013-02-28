@@ -16,10 +16,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.StringUtils;
 import com.appblade.framework.utils.SystemUtils;
 
 import android.Manifest;
@@ -28,12 +30,14 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
@@ -44,10 +48,89 @@ import android.util.Log;
  * @see KillSwitch
  */
 public class UpdatesHelper {
-
 	private static final int NotificationNewVersion = 0;
-	private static final int NotificationNewVersionDownloading = 1;
+	private static final int NotificationNewVersionDownloading = 1;	
+	
+	public static void checkForAnonymousUpdate(Activity activity)
+	{
+		//check if we're already processing the update / downloading / installing anything
+		UpdateTask updateTask = new UpdateTask(activity);
+		updateTask.execute();
+	}
+	
+	
 
+	static class UpdateTask extends AsyncTask<Void, Void, Void> {
+		Activity context;
+		ProgressDialog progress;
+		public UpdateTask(Activity context) {
+			this.context = context;
+		}
+		@Override
+		protected void onPreExecute() {
+			//check if we already hae an apk downloaded but havent installed. No need to reinsatall then.
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			HttpResponse response = UpdatesHelper.getUpdateResponse();
+			if(response != null){
+				Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			}
+			handleResponse(response);
+			return null;
+		}
+
+		/**
+		 * Handles the response back from the server. Gets new ttl and an optional update notification. 
+		 * @see UpdatesHelper
+		 * @param response
+		 */
+		private void handleResponse(HttpResponse response) {
+			if(HttpUtils.isOK(response)) {
+				try {
+					String data = StringUtils.readStream(response.getEntity().getContent());
+					Log.d(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
+					JSONObject json = new JSONObject(data);
+					int timeToLive = json.getInt("ttl");
+					if(json.has("update")) {
+						JSONObject update = json.getJSONObject("update");
+						if(update != null)
+							UpdatesHelper.processUpdate(context, update);
+					}
+				}
+				catch (IOException ex) { }
+				catch (JSONException ex) { }
+			}
+		}
+	}
+	
+	/**
+	 * Synchronized generator for device authorization. 
+	 * @return HttpResponse for kill switch api.
+	 */
+	public static synchronized HttpResponse getUpdateResponse() {
+		HttpResponse response = null;
+		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
+		String urlPath = String.format(WebServiceHelper.ServicePathKillSwitchFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+		String url = WebServiceHelper.getUrl(urlPath);
+		String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, null, HttpMethod.GET);
+		try {
+			HttpGet request = new HttpGet();
+			request.setURI(new URI(url));
+			request.addHeader("Authorization", authHeader);
+			WebServiceHelper.addCommonHeaders(request);
+		    response = client.execute(request);
+		}
+		catch(Exception ex)
+		{
+			Log.d(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+		}
+		
+		return response;
+	}
+
+	
 	/**
 	 * We have been given a response from the server through {@link KillSwitch} that an update is available.<br>
 	 * Kick off an update and install if we have the write permissions. Notify the user of the download if we don't have write permissions.
