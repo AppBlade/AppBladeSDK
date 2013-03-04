@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.authenticate.KillSwitch;
@@ -20,7 +22,10 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
+		String versionString = "Version: " + getAppVersion();
+		TextView versionTextView = (TextView)findViewById(R.id.versionText);
+		versionTextView.setText(versionString);
 		initControls();
 	}
 
@@ -136,5 +141,17 @@ public class MainActivity extends Activity {
 
 		AppBlade.doFeedbackWithScreenshot(this, this);
 	}
+	
+	
+	private String getAppVersion() {
+		String toRet = "Not Found";
+		PackageInfo info = AppBlade.getPackageInfo();
+		if(info != null)
+		{
+			toRet = info.versionName;
+		}
+		return toRet;
+	}
+
 
 }
