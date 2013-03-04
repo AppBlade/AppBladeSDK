@@ -79,7 +79,7 @@ public class AuthHelper {
 	 * If we don't have an accessToken, we start a {@link RemoteAuthorizeActivity} from the given activity.
 	 * @param activity Activity to check for an accessToken and/or call a RemoteAuthorizeActivity Intent. 
 	 */
-	private static void authorize(Activity activity) {
+	public static void authorize(Activity activity) {
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
 		
 		if(!StringUtils.isNullOrEmpty(accessToken)) {

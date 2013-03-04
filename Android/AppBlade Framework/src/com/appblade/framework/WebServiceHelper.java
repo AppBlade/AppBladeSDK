@@ -35,6 +35,7 @@ public class WebServiceHelper {
 	public static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
 	public static final String ServicePathSessionFormat =  "/api/user_sessions";
 	public static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
+	public static final String ServicePathUpdateFormat = "/api/2/projects/%s/devices/%s";  //same as kill switch. but don't worry your little head 'bout that.
 	public static final String ServicePathOauthTokens = "/oauth/tokens";
 	
 	/**

@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.authenticate.AuthHelper;
 import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
@@ -50,7 +51,42 @@ import android.util.Log;
 public class UpdatesHelper {
 	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;	
+
 	
+	/**
+	 * Update check that soft-checks for the best update method available. <br>
+	 * If activity is authenticated, we call {@link #checkForAuthenticatedUpdate(Activity)}. <br>
+	 * If not authenticated, we checks with {@link #checkForAnonymousUpdate(Activity)}. <br> 
+	 * @param activity the Activity to handle the update. Should belong to the same application context that was authenticated if authenticated updates are required. 
+	 */
+	public static void checkForUpdate(Activity activity)
+	{
+		//falls into the best behavior available. 
+		//if authenticated, check for authenticated update.
+		if(AuthHelper.isAuthorized(activity))
+		{
+			checkForAuthenticatedUpdate(activity);
+		} 
+		else 
+		{ //if not authenticated, go anonymous.
+			checkForAnonymousUpdate(activity);
+		}
+	}
+
+	/**
+	 * Authentication check that uses authorization credentials to determine if an update is available. <br> 
+	 * Will prompt a login dialog if credentials are not immediately found to be available.
+	 * Note that this is essentially unnecessary to call right after {@link AppBlade.authenticate(Activity)} since that handles authentication by default. 
+	 * @param activity activity to check authorization and run the {@link UpdateTask}
+	 */
+	public static void checkForAuthenticatedUpdate(Activity activity)
+	{
+		//check if we're already processing the update / downloading / installing anything
+		UpdateTask updateTask = new UpdateTask(activity, true);
+		updateTask.execute();
+	}
+
+
 	public static void checkForAnonymousUpdate(Activity activity)
 	{
 		//check if we're already processing the update / downloading / installing anything
@@ -59,21 +95,72 @@ public class UpdatesHelper {
 	}
 	
 	
-
+	/**
+	 * Class to check for updates asychronously, will automatically kick off a download in the event that one is available.<br>
+	 * If the requireAuthCredentials flag is set to true (default is false) then the update check will hard-check for authentication of the activity first. Potentially prompting a login dialog.
+	 * @author andrewtremblay
+	 */
 	static class UpdateTask extends AsyncTask<Void, Void, Void> {
-		Activity context;
+		Activity activity;
 		ProgressDialog progress;
-		public UpdateTask(Activity context) {
-			this.context = context;
+		public boolean requireAuthCredentials = false;
+		
+		
+		public UpdateTask(Activity _activity) {
+			this.activity = _activity;
+			this.requireAuthCredentials = false; // default anonymous
 		}
+
+		public UpdateTask(Activity _activity, boolean hardCheckAuthenticate) {
+			this.activity = _activity;
+			this.requireAuthCredentials = hardCheckAuthenticate; // default anonymous
+		}
+
+		
 		@Override
 		protected void onPreExecute() {
-			//check if we already hae an apk downloaded but havent installed. No need to reinsatall then.
+			//check if we already have an apk downloaded but haven't installed. No need to redownload if we do.
 		}
 		
 		@Override
 		protected Void doInBackground(Void... params) {
-			HttpResponse response = UpdatesHelper.getUpdateResponse();
+			HttpResponse response = null; 
+			if(this.requireAuthCredentials)
+			{
+				if(AuthHelper.isAuthorized(activity))
+				{
+					response = UpdatesHelper.getUpdateResponse();
+				}
+				else
+				{
+					//pop up an authentication dialog, if the user cancels then an update check will not continue, but the user will not be locked out of the app
+					AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+					builder.setMessage("Authorization Required To Check for Updates");
+					builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							AuthHelper.authorize(activity);
+						}
+					});
+					builder.setNegativeButton("No thanks", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					builder.setOnCancelListener(new OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							dialog.dismiss();
+						}
+					});
+					builder.setCancelable(false);
+					builder.show();
+					//response is still null here, the rest of the update handling will be skipped
+				}
+			}
+			else
+			{ //default anonymous behavior
+				response = UpdatesHelper.getUpdateResponse();
+			}
+			
 			if(response != null){
 				Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
 			}
@@ -90,17 +177,18 @@ public class UpdatesHelper {
 			if(HttpUtils.isOK(response)) {
 				try {
 					String data = StringUtils.readStream(response.getEntity().getContent());
-					Log.d(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
+					Log.d(AppBlade.LogTag, String.format("UpdateTask response OK %s", data));
 					JSONObject json = new JSONObject(data);
 					int timeToLive = json.getInt("ttl");
 					if(json.has("update")) {
 						JSONObject update = json.getJSONObject("update");
-						if(update != null)
-							UpdatesHelper.processUpdate(context, update);
+						if(update != null) {
+							UpdatesHelper.processUpdate(this.activity, update);
+						}
 					}
 				}
-				catch (IOException ex) { }
-				catch (JSONException ex) { }
+				catch (IOException ex) { ex.printStackTrace(); }
+				catch (JSONException ex) { ex.printStackTrace(); }
 			}
 		}
 	}
@@ -112,7 +200,7 @@ public class UpdatesHelper {
 	public static synchronized HttpResponse getUpdateResponse() {
 		HttpResponse response = null;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
-		String urlPath = String.format(WebServiceHelper.ServicePathKillSwitchFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+		String urlPath = String.format(WebServiceHelper.ServicePathUpdateFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
 		String url = WebServiceHelper.getUrl(urlPath);
 		String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, null, HttpMethod.GET);
 		try {
@@ -124,7 +212,7 @@ public class UpdatesHelper {
 		}
 		catch(Exception ex)
 		{
-			Log.d(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+			Log.e(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
 		
 		return response;
@@ -290,7 +378,7 @@ public class UpdatesHelper {
 
 	@SuppressWarnings("deprecation")
 	private static void notifyUpdate(Activity context, JSONObject update) {
-		Log.d(AppBlade.LogTag, "KillSwitch.processUpdate");
+		Log.d(AppBlade.LogTag, "UpdatesHelper.processUpdate");
 		try
 		{
 			String url = update.getString("url");
