@@ -22,16 +22,21 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.customparams.CustomParamDataHelper;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.StringUtils;
 import com.appblade.framework.utils.SystemUtils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 /**
@@ -65,11 +70,81 @@ public class SessionHelper {
 		Log.d(AppBlade.LogTag, "Ending Session");
 		if(AppBlade.currentSession != null){
 			AppBlade.currentSession.ended = new Date();
-			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended);
+			
+			if(AppBlade.sessionLocationEnabled)
+			{
+				if(AppBlade.currentSession.locations == null)
+				{
+					AppBlade.currentSession.locations = new JSONArray();
+				}
+		    	AppBlade.currentSession.locations.put(AppBladeLocationListener.getLastLocationAsArray());
+			}
+			else
+			{
+				Log.d(AppBlade.LogTag, "Locations weren't enabled for this session.");
+			}
+			
+			AppBlade.currentSession.customParams = CustomParamDataHelper.getCustomParamsAsJSON();
+			
+			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended, AppBlade.currentSession.locations, AppBlade.currentSession.customParams);
 			insertSessionData(context, sessionToStore);
 			AppBlade.currentSession = null;
 		}
 	}
+	
+	/**
+	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
+	 * @param activity The Activity to bind to the service.
+	 */
+	public static void bindToSessionService(Activity activity)
+	{
+		if(AppBlade.sessionLoggingService == null){
+			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(activity);
+		}
+
+		if(activity != null && AppBlade.sessionLoggingService.appbladeSessionServiceConnection != null){				
+			try
+			{
+				Intent bindIntent = new Intent();
+				bindIntent.setAction("com.appblade.framework.stats.AppBladeSessionLoggingService");
+			    boolean succeeded = activity.bindService(bindIntent, AppBlade.sessionLoggingService.appbladeSessionServiceConnection, Context.BIND_AUTO_CREATE);		
+			    if(succeeded)
+			    {
+					Log.d(AppBlade.LogTag, "Success binding the Session.");
+			    }
+			    else
+			    {
+					Log.d(AppBlade.LogTag, "Error binding the Session. Make sure the SessionService is properly in your manifest.");
+			    }
+
+			}catch(SecurityException e){
+				Log.e(AppBlade.LogTag, "Error binding to Session Logging service: " + StringUtils.exceptionInfo(e));
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			Log.e(AppBlade.LogTag, "Error unbinding activity. Possible null value.");
+		}	
+	}
+	
+	/**
+	 * Helper function to unbind from session service. Better for tracking sessions across the life of the application.
+	 * @param activity The Activity to bind to the service.
+	 */
+	public static void unbindFromSessionService(Activity activity)
+	{
+		if(AppBlade.sessionLoggingService != null && activity != null && AppBlade.sessionLoggingService.appbladeSessionServiceConnection != null){
+			activity.unbindService(AppBlade.sessionLoggingService.appbladeSessionServiceConnection);
+		}
+		else
+		{
+			Log.e(AppBlade.LogTag, "Error unbinding activity. Possible null value.");
+		}
+	}
+
+	
+	
 
 	
 	//*****************API RELATED FUNCTIONS
@@ -231,13 +306,13 @@ public class SessionHelper {
 
 	//*****************Sessions storage/queue logic
 	/**
-	 * Generator for a SessionData object that we absolutely HAVE to have stored staticlly before we get it. 
+	 * Generator for a SessionData object that we absolutely HAVE to have stored statically before we get it. 
 	 * @param context Context to use for file maintenance.
 	 * @return A SessionData object
 	 */
 	public static SessionData createPersistentSession(Context context) {
 		Log.d(AppBlade.LogTag, "Creating New Session ");
-		SessionData data = new SessionData(new Date(), new Date());
+		SessionData data = new SessionData(new Date(), new Date(), new JSONArray(), new JSONObject());
 		//check if file exists
 		File f = new File(sessionsIndexFileURI());
 		if(f.exists()){
@@ -418,5 +493,5 @@ public class SessionHelper {
               ex.printStackTrace();
         }
     }	
-	
 }
+

@@ -20,6 +20,11 @@ UIKIT_EXTERN int const kAppBladeParsingError;
 UIKIT_EXTERN int const kAppBladePermissionError;
 UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
+#define DEFAULT_APPBLADE_LOCATION_LOGGING_DISTANCE 10 //every ten meters
+#define DEFAULT_APPBLADE_LOCATION_LOGGING_TIME 900 //or every fifteen minutes
+
+
+
 @class AppBlade;
 
 @protocol AppBladeDelegate <NSObject>
@@ -107,6 +112,11 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
 + (void)startSession;
 + (void)endSession;
+
+//Geolocation Logging
+- (void)updateSessionLocations;
+- (void)allowLocationLogging;
+- (void)allowLocationLoggingForDistance:(int)meters andOrTime:(int)seconds;
 
 
 @end

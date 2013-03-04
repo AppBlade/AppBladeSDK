@@ -19,28 +19,48 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Configure AppBlade
-    AppBlade *blade = [AppBlade sharedManager];
 
     // Populate with values from the project SDK settings or load keys from plist
     // see README for details
-//    blade.appBladeProjectID = @""; //UUID
-//    blade.appBladeProjectToken = @""; //Token
-//    blade.appBladeProjectSecret = @""; //Secret
-//    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
+    //copy this into your app delegate
+    //remember: you must still import AppBlade.h
     
+    // Check the app blade status of this application.
+    [[AppBlade sharedManager] checkApproval];
 
+    //copy this into your app delegate
+    //remember: you must still import AppBlade.h
+    AppBlade *blade = [AppBlade sharedManager];
+    blade.appBladeProjectID = @"ca460dcb-b7c2-43c1-ba50-8b6cda63f369";
+    blade.appBladeProjectToken = @"8f1792db8a39108c14fa8c89663eec98";
+    blade.appBladeProjectSecret = @"c8536a333fb292ba46fc98719c1cfdf6";
+    blade.appBladeProjectIssuedTimestamp = @"1316609918";
+    
+    
+    blade.appBladeProjectID = @"4e00b9c7-f80b-43ee-98ef-6144b9162c04";
+    blade.appBladeProjectToken = @"412ceb21adf6214270a19854bd375ee7";
+    blade.appBladeProjectSecret = @"8ddbfe87a73e55e2a4c13c0df0c4eae9";
+    blade.appBladeProjectIssuedTimestamp = @"1359040311";
+
+    
+//    blade.appBladeHost = @"http://10.1.10.42:3000";
+    
+    // Check the app blade status of this application.
+    [[AppBlade sharedManager] checkApproval];
+    
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
     // [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]]
     // Fill AppBladeKeys.plist with your own credentials to test
     [blade setCustomParam:@"CustomKey1" withValue:@"FirstSend"];
     
-    [blade catchAndReportCrashes];
+    //[blade catchAndReportCrashes];
     
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
     
-    [blade allowFeedbackReporting];
+    //[blade allowFeedbackReporting];
+    [blade allowLocationLogging];
 
     return YES;
 }
@@ -78,11 +98,11 @@
     
     
     // Check the app blade status of this application.
-    [[AppBlade sharedManager] checkApproval];
+   // [[AppBlade sharedManager] checkApproval];
 
     [AppBlade startSession];
-    [[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)
-    [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
+    //[[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)
+    //[[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
 
 }
 

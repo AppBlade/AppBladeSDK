@@ -13,6 +13,10 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  * Utility class for helpful String methods
@@ -232,4 +236,63 @@ public class StringUtils {
         return hexString.toString();
 	}
 
+	/**
+	 * The difference between this and the normal JSONArray parsing is that this falls back to an empty array should there be an error like an unparseable string
+	 * @param stringToParse
+	 * @return JSONArray of the stringToParse or an empty JSONArray if stringToParse is unparesable
+	 */
+	public static JSONArray parseStringToJSONArray(String stringToParse)
+	{
+		JSONArray toRet = null;
+		
+		try {
+			toRet = new JSONArray(stringToParse);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			
+			toRet = new JSONArray();
+		}
+		
+		return toRet;
+
+	
+	}
+
+	/**
+	 * The difference between this and the normal JSONObject parsing is that this falls back to an empty array should there be an error like an unparseable string
+	 * @param stringToParse
+	 * @return JSONObject of the stringToParse or an empty JSONObject if stringToParse is unparesable
+	 */
+	public static JSONObject parseStringToJSONObject(String stringToParse)
+	{
+		JSONObject toRet = null;
+		
+		try {
+			toRet = new JSONObject(stringToParse);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			toRet = new JSONObject();
+		}
+		
+		return toRet;
+	}
+	
+	
+	/**
+	 * Helper Function for printing the most error detail we can find.
+	 * @param e Exception that we want printed
+	 */
+	public static String exceptionInfo(Exception e)
+	{
+		String toRet = null;
+		if(e != null){
+			toRet = e.getLocalizedMessage() == null ? e.toString() : e.getLocalizedMessage();
+		}
+		else
+		{
+			toRet = "[exception is null]";
+		}
+		
+		return toRet;
+	}
 }

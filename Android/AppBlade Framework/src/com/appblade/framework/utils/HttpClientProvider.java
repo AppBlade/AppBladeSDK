@@ -1,10 +1,18 @@
 package com.appblade.framework.utils;
 
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.apache.http.HttpVersion;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
@@ -13,6 +21,11 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+
+import android.util.Log;
+
+import com.appblade.framework.AppBlade;
+import com.appblade.framework.authenticate.AuthHelper;
 
 /**
  * Class for functions to instantiate our HttpConnections;
@@ -48,9 +61,13 @@ public class HttpClientProvider {
 		schReg.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
 		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
 
+		
 		DefaultHttpClient client = new DefaultHttpClient(conMgr, params);
 		
-		return client;
+		//if Debug mode (ssl for 3001)
+		DefaultHttpClient debugClient = AuthHelper.sslClient(client);
+		
+		return debugClient;
 	}
 
 }

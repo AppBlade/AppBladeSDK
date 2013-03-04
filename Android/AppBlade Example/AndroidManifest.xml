@@ -7,13 +7,28 @@
               android:targetSdkVersion="17" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="com.appblade.framework.permissions.SESSION_LOGGING_PERMISSION"/>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
+	   <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" /> 
+	<!-- android.permission.ACCESS_COARSE_LOCATION will also work fine -->
+    
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar"
         android:name=".MyApplication"
         android:allowBackup="true">
+        
+                
+       	<service android:name="com.appblade.framework.stats.AppBladeSessionLoggingService" 
+   	    	 android:enabled="true"
+   	    	 android:exported="false"
+   	    	 android:process=":remote">
+	  	    <intent-filter>
+	  	        <action android:name="com.appblade.framework.stats.AppBladeSessionLoggingService" />
+	  	    </intent-filter>
+    	</service>
+        
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
@@ -27,6 +42,8 @@
         <activity
             android:name="com.appblade.framework.authenticate.RemoteAuthorizeActivity"
             android:screenOrientation="portrait" />
+        
+        
     </application>
 
 </manifest>
