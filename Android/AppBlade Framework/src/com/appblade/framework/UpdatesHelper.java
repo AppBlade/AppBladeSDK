@@ -129,7 +129,7 @@ public class UpdatesHelper {
 			{
 				if(AuthHelper.isAuthorized(activity))
 				{
-					response = UpdatesHelper.getUpdateResponse();
+					response = UpdatesHelper.getUpdateResponse(true);
 				}
 				else
 				{
@@ -157,8 +157,8 @@ public class UpdatesHelper {
 				}
 			}
 			else
-			{ //default anonymous behavior
-				response = UpdatesHelper.getUpdateResponse();
+			{ //default anonymous behavior, server will balk if user has disabled anonymous updates
+				response = UpdatesHelper.getUpdateResponse(false);
 			}
 			
 			if(response != null){
@@ -197,16 +197,19 @@ public class UpdatesHelper {
 	 * Synchronized generator for device authorization. 
 	 * @return HttpResponse for kill switch api.
 	 */
-	public static synchronized HttpResponse getUpdateResponse() {
+	public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
 		HttpResponse response = null;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
-		String urlPath = String.format(WebServiceHelper.ServicePathUpdateFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+		String urlPath = String.format(WebServiceHelper.ServicePathUpdateFormat, AppBlade.appInfo.AppId);
 		String url = WebServiceHelper.getUrl(urlPath);
 		String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, null, HttpMethod.GET);
 		try {
 			HttpGet request = new HttpGet();
 			request.setURI(new URI(url));
 			request.addHeader("Authorization", authHeader);
+			if(!authorize){
+				request.addHeader("USE_ANONYMOUS", "true");
+			}
 			WebServiceHelper.addCommonHeaders(request);
 		    response = client.execute(request);
 		}
