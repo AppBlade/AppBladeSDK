@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.appblade.framework.AppBlade;
+import com.appblade.framework.UpdatesHelper;
 import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
 
@@ -54,6 +55,9 @@ public class MainActivity extends Activity {
 		View btnEndSession = findViewById(R.id.btnSessionEnd);
 
 		View btnClearAuthData = findViewById(R.id.btnClearAuthData);
+		
+		View btnCheckAuthUpdate = findViewById(R.id.btnCheckAuthUpdate);
+		View btnCheckAnonUpdate = findViewById(R.id.btnCheckAnonUpdate);
 		
 		//Exception Reporting
 		btnDivideByZero.setOnClickListener(new OnClickListener() {
@@ -114,6 +118,19 @@ public class MainActivity extends Activity {
 							}
 						});
 				builder.show();
+			}
+		});
+		
+		//Update Check 
+		btnCheckAuthUpdate.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				UpdatesHelper.checkForAuthenticatedUpdate(MainActivity.this);
+			}
+		});
+		//Authentication
+		btnCheckAnonUpdate.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				UpdatesHelper.checkForAnonymousUpdate(MainActivity.this);
 			}
 		});
 	}

@@ -128,7 +128,37 @@
 			        android:text="@string/end_session" />
 		    </LinearLayout>
 		    
-		            
+   		   <!-- Update check sections... -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Updating"
+                android:textColor="#464e54"
+                android:textStyle="bold"
+                android:layout_marginTop="10dip"
+                android:layout_marginLeft="10dip" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="3dip"
+                android:background="#464e54"
+                android:layout_marginBottom="5dip" />
+		
+			 <LinearLayout 
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+			            
+			    <Button
+			        android:id="@+id/btnCheckAnonUpdate"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Anonymously" />
+			    <Button
+			        android:id="@+id/btnCheckAuthUpdate"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Authenticated" />
+		    </LinearLayout>
 		            		    
    		   <!-- Remote authorization sections... -->
             <TextView
@@ -151,6 +181,9 @@
 		        android:layout_height="wrap_content"
 		        android:text="@string/clear_authorization_data" />
 		    
+		    
+		    		            		    
+	
 		    
         </LinearLayout>
         
