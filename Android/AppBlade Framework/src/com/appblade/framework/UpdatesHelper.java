@@ -208,10 +208,10 @@ public class UpdatesHelper {
 		    	}
 			}
 		}
-		catch(JSONException ex) { }
-		catch(URISyntaxException ex) { }
-		catch(ClientProtocolException ex) { }
-		catch(IOException ex) { }
+		catch(JSONException ex) { ex.printStackTrace(); }
+		catch(URISyntaxException ex) { ex.printStackTrace(); }
+		catch(ClientProtocolException ex) { ex.printStackTrace(); }
+		catch(IOException ex) { ex.printStackTrace(); }
 		finally
 		{
 			NotificationManager notificationManager =
@@ -308,6 +308,6 @@ public class UpdatesHelper {
 			}
 				
 		}
-		catch(JSONException ex) {}
+		catch(JSONException ex) { ex.printStackTrace(); }
 	}
 }
