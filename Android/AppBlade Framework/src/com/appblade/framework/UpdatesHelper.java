@@ -81,15 +81,22 @@ public class UpdatesHelper {
 	 */
 	public static void checkForAuthenticatedUpdate(Activity activity)
 	{
-		//check if we're already processing the update / downloading / installing anything
-		UpdateTask updateTask = new UpdateTask(activity, true);
-		updateTask.execute();
+		//TODO: check if we're already processing the update / downloading / installing anything
+		if(AuthHelper.isAuthorized(activity))
+		{
+			UpdateTask updateTask = new UpdateTask(activity, true);
+			updateTask.execute();
+		}
+		else
+		{
+			AuthHelper.checkAuthorization(activity, true);
+		}
 	}
 
 
 	public static void checkForAnonymousUpdate(Activity activity)
 	{
-		//check if we're already processing the update / downloading / installing anything
+		//TODO: check if we're already processing the update / downloading / installing anything
 		UpdateTask updateTask = new UpdateTask(activity);
 		updateTask.execute();
 	}
@@ -124,42 +131,7 @@ public class UpdatesHelper {
 		
 		@Override
 		protected Void doInBackground(Void... params) {
-			HttpResponse response = null; 
-			if(this.requireAuthCredentials)
-			{
-				if(AuthHelper.isAuthorized(activity))
-				{
-					response = UpdatesHelper.getUpdateResponse(true);
-				}
-				else
-				{
-					//pop up an authentication dialog, if the user cancels then an update check will not continue, but the user will not be locked out of the app
-					AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-					builder.setMessage("Authorization Required To Check for Updates");
-					builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							AuthHelper.authorize(activity);
-						}
-					});
-					builder.setNegativeButton("No thanks", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-					builder.setOnCancelListener(new OnCancelListener() {
-						public void onCancel(DialogInterface dialog) {
-							dialog.dismiss();
-						}
-					});
-					builder.setCancelable(false);
-					builder.show();
-					//response is still null here, the rest of the update handling will be skipped
-				}
-			}
-			else
-			{ //default anonymous behavior, server will balk if user has disabled anonymous updates
-				response = UpdatesHelper.getUpdateResponse(false);
-			}
+			HttpResponse response = UpdatesHelper.getUpdateResponse(!this.requireAuthCredentials);
 			
 			if(response != null){
 				Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
