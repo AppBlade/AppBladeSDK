@@ -146,7 +146,7 @@ public class KillSwitch {
 	 * Refreshes local varables ttl and ttlLAstUpdated from their stored location. 
 	 * @param activity Activity from which to load preferences. 
 	 */
-	private static void reloadSharedPrefs(Activity activity) {
+	public static void reloadSharedPrefs(Activity activity) {
 		SharedPreferences prefs = activity.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
 		ttl = prefs.getInt(PrefsKeyTTL, ttl);
 		ttlLastUpdated = prefs.getLong(PrefsKeyTTLUpdated, ttlLastUpdated);

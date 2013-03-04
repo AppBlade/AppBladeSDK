@@ -17,6 +17,24 @@ import android.content.Intent;
 public class AuthHelper {
 	
 	/**
+	 * Checks whether the given activity is authorized, does nothing else. <br>
+	 * For the login flow see {@link #checkAuthorization(Activity, boolean)};
+	 * @param activity Activity to check authorization/prompt dialog. 
+	 * @returns true if the current activity is authorized, false in all other cases.
+	 */
+	public static boolean isAuthorized(Activity activity)
+	{
+		boolean toRet = false;   // assume not authorized
+		String accessToken = RemoteAuthHelper.getAccessToken(activity);
+		if(!StringUtils.isNullOrEmpty(accessToken)) {  //we have a token 
+			KillSwitch.reloadSharedPrefs(activity); //set latest variables, for best accuracy.
+			toRet = KillSwitch.shouldUpdate(); // set if we're in the TTL
+		}
+		return toRet;
+	}
+	
+	
+	/**
 	 * Checks whether the given activity is authorized, prompts an optional dialog beforehand. 
 	 * @param activity Activity to check authorization/prompt dialog. 
 	 * @param shouldPrompt boolean of whether an "Authorization Required" dialog should be shown to the user first.
