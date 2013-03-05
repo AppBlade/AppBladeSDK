@@ -17,19 +17,18 @@ import com.appblade.framework.utils.StringUtils;
  * object representing a single Session.
  * Contains date a session ended and date a session began. All other data about the app and the device is included in the headers.
  * Note that the custom parameters ({@link com.appblade.framework.customparams.CustomParamData}) are not included in Session calls. 
+ * API support will be added for them in the near future.
  * @author andrew.tremblay@raizlabs
  */
 public class SessionData implements Comparator<Object> {
 	public static String sessionBeganKey = "started_at";
 	public static String sessionEndedKey = "ended_at";
-	public static String sessionLocationKey = "locations";
 	public static String sessionCustomParamsKey = "custom_params";
 	
 	public static String storageDividerKey = ", ";
 	
 	public Date began;
 	public Date ended;
-	public JSONArray locations;
 	public JSONObject customParams;
 	
 	
@@ -38,10 +37,9 @@ public class SessionData implements Comparator<Object> {
 		this.ended = null;
 	}
 	
-	public SessionData(Date _began, Date _ended, JSONArray _locations, JSONObject _customParams){
+	public SessionData(Date _began, Date _ended, JSONObject _customParams){
 		this.began = _began;
 		this.ended = _ended;
-		this.locations = _locations;
 		this.customParams = _customParams;
 	}
 
@@ -59,12 +57,10 @@ public class SessionData implements Comparator<Object> {
 			if(tokens.length > 2){
 				this.began = format.parse(tokens[0]);
 				this.ended = format.parse(tokens[1]);
-				this.locations = StringUtils.parseStringToJSONArray(tokens[2]);
-				this.customParams = StringUtils.parseStringToJSONObject(tokens[3]);
+				this.customParams = StringUtils.parseStringToJSONObject(tokens[2]);
 			}else if(tokens.length == 2){
 				this.began = format.parse(tokens[0]);
 				this.ended = format.parse(tokens[1]);
-				this.locations = new JSONArray();
 		    	this.customParams = new JSONObject();
 			}else{
 				this.began = new Date();
@@ -91,13 +87,7 @@ public class SessionData implements Comparator<Object> {
 	    java.sql.Timestamp timeStampEnded = new 
 	    		 Timestamp(this.ended.getTime());
 	    
-	    if(this.locations == null)
-		{
-	    	this.locations = new JSONArray();
-	    }
-	    
 	    String toRet = timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
-	    toRet = toRet + storageDividerKey + this.locations;
 	    
 	    if(this.customParams == null)
 	    {
@@ -109,10 +99,6 @@ public class SessionData implements Comparator<Object> {
 		return toRet;
 	}
 		
-	public boolean hasLocation()
-	{
-		return this.locations.length() == 0;
-	}
 	
 	
 	//*****************API RELATED
@@ -149,7 +135,6 @@ public class SessionData implements Comparator<Object> {
 		try {
 			json.put(sessionBeganKey,timeStampBegan);
 			json.put(sessionEndedKey, timeStampEnded); 
-			json.put(sessionLocationKey, this.locations );
 			json.put(sessionCustomParamsKey, this.customParams); 		    	
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -70,23 +70,10 @@ public class SessionHelper {
 		Log.d(AppBlade.LogTag, "Ending Session");
 		if(AppBlade.currentSession != null){
 			AppBlade.currentSession.ended = new Date();
-			
-			if(AppBlade.sessionLocationEnabled)
-			{
-				if(AppBlade.currentSession.locations == null)
-				{
-					AppBlade.currentSession.locations = new JSONArray();
-				}
-		    	AppBlade.currentSession.locations.put(AppBladeLocationListener.getLastLocationAsArray());
-			}
-			else
-			{
-				Log.d(AppBlade.LogTag, "Locations weren't enabled for this session.");
-			}
-			
+						
 			AppBlade.currentSession.customParams = CustomParamDataHelper.getCustomParamsAsJSON();
 			
-			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended, AppBlade.currentSession.locations, AppBlade.currentSession.customParams);
+			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended, AppBlade.currentSession.customParams);
 			insertSessionData(context, sessionToStore);
 			AppBlade.currentSession = null;
 		}

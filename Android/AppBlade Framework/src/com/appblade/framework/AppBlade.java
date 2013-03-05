@@ -31,7 +31,6 @@ import com.appblade.framework.feedback.FeedbackData;
 import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
-import com.appblade.framework.stats.AppBladeLocationListener;
 import com.appblade.framework.stats.AppBladeSessionActivity;
 import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
@@ -70,10 +69,6 @@ public class AppBlade {
 	public static SessionData currentSession;
 	public static AppBladeSessionLoggingService sessionLoggingService;
 	
-	public static boolean sessionLocationEnabled;
-	public static AppBladeLocationListener locationListener;
-	static long locationUpdateMinTimeMillis = 0; //thresholds for when our listener will be updating location
-	static float locationUpdateMinDistMeters = 0;
 	
 	//keeping folders all in one place (the rootDir)
 	public static final String AppBladeExceptionsFolder = "app_blade_exceptions";
@@ -336,15 +331,13 @@ public class AppBlade {
 	/**
 	 * Allows us to initialize our session logging service at the application level.  As well as any other variables we need relative to sessions.
 	 * @param context Usually {@code getApplicationContext()}, the context we want the sessionLogging service to keep track of and use for session storage/reporting. 
-	 * @param trackLocations Flag to tell whether we want to try to GeoLocate the device. Requires additional permissions.
 	 */
-	public static void useSessionLoggingService(Context context, boolean trackLocations)
+	public static void useSessionLoggingService(Context context)
 	{
 		if(AppBlade.sessionLoggingService == null){
 			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(context);
 		}
 		AppBlade.sessionLoggingService.mContext = context;
-		AppBlade.sessionLocationEnabled = trackLocations;
 	}
 	
 	/**
@@ -390,12 +383,6 @@ public class AppBlade {
 		}
 		else
 		{
-			if(sessionLocationEnabled)
-			{
-				registerForLocationSettings(context);
-				Log.d(LogTag, "Sessions registerForLocationSettings");
-			}
-
 			//either we're authorized or we don't care about authorization
 			SessionHelper.startSession(context);
 		}
@@ -431,26 +418,6 @@ public class AppBlade {
 		}
 		SessionHelper.postExistingSessions(context); //we have at least one complete session, post it. 
 	}
-
-	/**
-	 * Location check that will try to set up our location tracking if the user has given us permission. <br>
-	 * {@code <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION">}
-	 * @param context Context to track
-	 */
-	public static void registerForLocationSettings(Context context){
-	    LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-	    locationListener = new AppBladeLocationListener();
-	    locationListener.subscribeToLocationUpdates(context);
-	    try{
-	    	lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationUpdateMinTimeMillis, locationUpdateMinDistMeters, locationListener);
-	    }
-	    catch(Exception e)
-	    {
-	    	Log.e(AppBlade.LogTag, "Error requesting location updates: "+ StringUtils.exceptionInfo(e) );
-	    	e.printStackTrace();
-	    }
-	}
-	
 	
 	/********************************************************
 	 ********************************************************
