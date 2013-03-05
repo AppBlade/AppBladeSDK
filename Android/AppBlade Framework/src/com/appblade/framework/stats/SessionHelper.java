@@ -299,7 +299,7 @@ public class SessionHelper {
 	 */
 	public static SessionData createPersistentSession(Context context) {
 		Log.d(AppBlade.LogTag, "Creating New Session ");
-		SessionData data = new SessionData(new Date(), new Date(), new JSONArray(), new JSONObject());
+		SessionData data = new SessionData(new Date(), new Date(), new JSONObject());
 		//check if file exists
 		File f = new File(sessionsIndexFileURI());
 		if(f.exists()){
