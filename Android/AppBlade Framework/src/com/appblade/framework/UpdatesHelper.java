@@ -131,7 +131,7 @@ public class UpdatesHelper {
 		
 		@Override
 		protected Void doInBackground(Void... params) {
-			HttpResponse response = UpdatesHelper.getUpdateResponse(!this.requireAuthCredentials);
+			HttpResponse response = UpdatesHelper.getUpdateResponse(this.requireAuthCredentials);
 			
 			if(response != null){
 				Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
