@@ -143,7 +143,7 @@ public class AuthHelper {
 		}
 	}
 
-	public static DefaultHttpClient sslClient(HttpClient client) {
+	public static DefaultHttpClient sslDebugClient(HttpClient client) {
 		try {
 			X509TrustManager tm = new X509TrustManager() {
 				public void checkClientTrusted(X509Certificate[] xcs,

@@ -65,7 +65,7 @@ public class HttpClientProvider {
 		DefaultHttpClient client = new DefaultHttpClient(conMgr, params);
 		
 		//if Debug mode (ssl for 3001)
-		DefaultHttpClient debugClient = AuthHelper.sslClient(client);
+		DefaultHttpClient debugClient = AuthHelper.sslDebugClient(client);
 		
 		return debugClient;
 	}
