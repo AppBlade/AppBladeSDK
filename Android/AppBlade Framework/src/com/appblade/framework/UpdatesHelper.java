@@ -89,10 +89,46 @@ public class UpdatesHelper {
 		}
 		else
 		{
-			AuthHelper.checkAuthorization(activity, true);
+			UpdatesHelper.checkAuthorization(activity, true);
 		}
 	}
 
+
+	/**
+	 * Checks whether the given activity is authorized, prompts an optional dialog beforehand. 
+	 * Does not kill the activity should the user cancel the authentication.
+	 * @param activity Activity to check authorization/prompt dialog. 
+	 * @param shouldPrompt boolean of whether an "Authorization Required" dialog should be shown to the user first.
+	 */
+	private static void checkAuthorization(final Activity activity, boolean shouldPrompt) {
+			if (shouldPrompt) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				builder.setMessage("Authorization Required For Update");
+				builder.setPositiveButton("Continue",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								AuthHelper.authorize(activity);
+							}
+						});
+				builder.setNegativeButton("No thanks",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.dismiss();
+							}
+						});
+				builder.setOnCancelListener(new OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						dialog.dismiss();
+						activity.finish();
+					}
+				});
+				builder.setCancelable(false);
+				builder.show();
+			} else {
+				AuthHelper.authorize(activity);
+			}
+
+	}
 
 	public static void checkForAnonymousUpdate(Activity activity)
 	{
