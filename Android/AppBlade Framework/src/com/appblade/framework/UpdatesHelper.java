@@ -265,7 +265,9 @@ public class UpdatesHelper {
 		
 		try
 		{
-			url = update.getString("url");			
+			url = update.getString("url");	
+			url = url.replaceFirst("http://", "https://");
+			
 			expectedFileSize = HttpUtils.getHeaderAsLong(url, HttpUtils.HeaderContentLength);
 			Log.d(AppBlade.LogTag, String.format("Downloading %d bytes from %s", expectedFileSize, url));
 			
