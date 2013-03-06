@@ -1,14 +1,24 @@
 package com.appblade.example;
 
+import java.io.IOException;
+
+import org.apache.http.HttpResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.appblade.framework.AppBlade;
@@ -16,9 +26,13 @@ import com.appblade.framework.UpdatesHelper;
 import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
 import com.appblade.framework.stats.AppBladeSessionActivity;
+import com.appblade.framework.utils.HttpUtils;
+import com.appblade.framework.utils.StringUtils;
 
 public class MainActivity extends AppBladeSessionActivity {
 
+	static View updateSpinner = null;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +70,7 @@ public class MainActivity extends AppBladeSessionActivity {
 		
 		View btnCheckUpdatePrompt = findViewById(R.id.btnCheckUpdateLoud);
 		View btnCheckUpdateSilent = findViewById(R.id.btnCheckUpdateQuiet);
+		updateSpinner = findViewById(R.id.progressSpinnerUpdateCheck);
 		//Exception Reporting
 		btnDivideByZero.setOnClickListener(new OnClickListener() {
 			@SuppressWarnings("unused")
@@ -121,17 +136,25 @@ public class MainActivity extends AppBladeSessionActivity {
 		//Update Check 
 		btnCheckUpdatePrompt.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				AppBlade.checkForUpdates(MainActivity.this);
+				//AppBlade.checkForUpdates(MainActivity.this);
+				//^ this would be the only call we would need usually, but this is the example app, let's get FANCY
+				checkUpdateWithSpinner(true);
 			}
 		});
 		btnCheckUpdateSilent.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				AppBlade.checkForUpdates(MainActivity.this, false);
+				//AppBlade.checkForUpdates(MainActivity.this, false);
+				//^ this would be the only call we would need usually, but this is the example app, let's get FANCY
+				checkUpdateWithSpinner(false);
 			}
 		});
 
 	}
 
+	
+	
+	
+	
 	
 	
 	
@@ -165,6 +188,78 @@ public class MainActivity extends AppBladeSessionActivity {
 			toRet = info.versionName;
 		}
 		return toRet;
+	}
+
+	
+	protected void checkUpdateWithSpinner(boolean promptDownloadConfirm) {
+		new CustomUpdateTask(this, promptDownloadConfirm).execute(); //exactly the same code with the exception of the new spinner logic
+	}
+
+
+	static class CustomUpdateTask extends AsyncTask<Void, Void, Void> {
+		Activity activity;
+		ProgressDialog progress;
+		public boolean promptDownloadConfirm = true; // default noisy
+		
+		
+		public CustomUpdateTask(Activity _activity, boolean promptForDownload) {
+			this.activity = _activity;
+			this.promptDownloadConfirm = promptForDownload;
+		}
+
+
+		
+		@Override
+		protected void onPreExecute() {
+			//check if we already have an apk downloaded but haven't installed. No need to redownload if we do.
+			updateSpinner.setVisibility(View.VISIBLE);
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			HttpResponse response = UpdatesHelper.getUpdateResponse(false);
+			if(response != null){
+				Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			}
+			handleResponse(response);
+			return null;
+		}
+
+		/**
+		 * Handles the response back from the server. Gets new ttl and an optional update notification. 
+		 * @see UpdatesHelper
+		 * @param response
+		 */
+		private void handleResponse(HttpResponse response) {
+			if(HttpUtils.isOK(response)) {
+				try {
+					String data = StringUtils.readStream(response.getEntity().getContent());
+					Log.d(AppBlade.LogTag, String.format("UpdateTask response OK %s", data));
+					JSONObject json = new JSONObject(data);
+					int timeToLive = json.getInt("ttl");
+					if(json.has("update")) {
+						JSONObject update = json.getJSONObject("update");
+						if(update != null) {
+							if(this.promptDownloadConfirm)
+							{
+								UpdatesHelper.confirmUpdate(this.activity, update);
+							}
+							else
+							{
+								UpdatesHelper.processUpdate(this.activity, update);								
+							}
+						}
+					}
+					this.activity.runOnUiThread(new Runnable(){
+						public void run() {
+							updateSpinner.setVisibility(View.INVISIBLE);
+						}
+					});
+				}
+				catch (IOException ex) { ex.printStackTrace(); }
+				catch (JSONException ex) { ex.printStackTrace(); }
+			}
+		}
 	}
 
 

@@ -201,7 +201,7 @@ public class UpdatesHelper {
 	 * Synchronized generator for device authorization. 
 	 * @return HttpResponse for kill switch api.
 	 */
-	private static synchronized HttpResponse getUpdateResponse(boolean authorize) {
+	public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
 		HttpResponse response = null;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 		String urlPath = String.format(WebServiceHelper.ServicePathUpdateFormat, AppBlade.appInfo.AppId);
@@ -230,7 +230,7 @@ public class UpdatesHelper {
 	 * @param activity
 	 * @param update
 	 */
-	private static void confirmUpdate(final Activity activity, final JSONObject update) {
+	public static void confirmUpdate(final Activity activity, final JSONObject update) {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
 				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
