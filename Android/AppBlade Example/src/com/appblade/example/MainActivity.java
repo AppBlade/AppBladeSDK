@@ -54,9 +54,8 @@ public class MainActivity extends AppBladeSessionActivity {
 
 		View btnClearAuthData = findViewById(R.id.btnClearAuthData);
 		
-		View btnCheckAuthUpdate = findViewById(R.id.btnCheckAuthUpdate);
-		View btnCheckAnonUpdate = findViewById(R.id.btnCheckAnonUpdate);
-		View btnCheckBestUpdate = findViewById(R.id.btnCheckBestUpdate);
+		View btnCheckUpdatePrompt = findViewById(R.id.btnCheckUpdateLoud);
+		View btnCheckUpdateSilent = findViewById(R.id.btnCheckUpdateQuiet);
 		//Exception Reporting
 		btnDivideByZero.setOnClickListener(new OnClickListener() {
 			@SuppressWarnings("unused")
@@ -120,20 +119,14 @@ public class MainActivity extends AppBladeSessionActivity {
 		});
 		
 		//Update Check 
-		btnCheckAuthUpdate.setOnClickListener(new OnClickListener() {
+		btnCheckUpdatePrompt.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				UpdatesHelper.checkForAuthenticatedUpdate(MainActivity.this, true);
+				AppBlade.checkForUpdates(MainActivity.this);
 			}
 		});
-		//Authentication
-		btnCheckAnonUpdate.setOnClickListener(new OnClickListener() {
+		btnCheckUpdateSilent.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				UpdatesHelper.checkForAnonymousUpdate(MainActivity.this, true);
-			}
-		});
-		btnCheckBestUpdate.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				UpdatesHelper.checkForAuthenticatedUpdate(MainActivity.this, true);
+				AppBlade.checkForUpdates(MainActivity.this, true);
 			}
 		});
 

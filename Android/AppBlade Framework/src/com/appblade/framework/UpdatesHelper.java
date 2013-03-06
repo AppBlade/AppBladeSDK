@@ -55,7 +55,6 @@ public class UpdatesHelper {
 	
 	/**
 	 * Update check that soft-checks for the best update method available. <br>
-	 * If activity is authenticated, we call {@link #checkForAuthenticatedUpdate(Activity)}. <br>
 	 * If not authenticated, we checks with {@link #checkForAnonymousUpdate(Activity)}. <br> 
 	 * @param activity the Activity to handle the update. Should belong to the same application context that was authenticated if authenticated updates are required. 
 	 * @param promptForDownload 
@@ -238,6 +237,11 @@ public class UpdatesHelper {
 	}
 
 	
+	/**
+	 * Confirm with the user that an update should be downloaded. Kicks off {@link #processUpdate(Activity, JSONObject)}
+	 * @param activity
+	 * @param update
+	 */
 	public static void confirmUpdate(final Activity activity, final JSONObject update) {
 				AlertDialog.Builder ab = new AlertDialog.Builder(activity);
 				ab.setMessage("Are you sure you want to exit?")
@@ -252,7 +256,7 @@ public class UpdatesHelper {
 
 
 	/**
-	 * We have been given a response from the server through {@link KillSwitch} that an update is available.<br>
+	 * We have been given a response from the server through {@link #getUpdateResponse(boolean)} that an update is available.<br>
 	 * Kick off an update and install if we have the write permissions. Notify the user of the download if we don't have write permissions.
 	 * @param activity Activity to handle the notification or installation.
 	 * @param update JSONObject containing the necessary update information.
@@ -362,12 +366,10 @@ public class UpdatesHelper {
 
 	private static void open(final Activity context, final File file) {
 		context.runOnUiThread(new Runnable() {
-			
 			public void run() {
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
 				builder.setMessage("A new version has been downloaded, click OK to install");
 				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					
 					public void onClick(DialogInterface dialog, int which) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);
 						intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
@@ -376,9 +378,8 @@ public class UpdatesHelper {
 					}
 				});
 				builder.setOnCancelListener(new OnCancelListener() {
-					
 					public void onCancel(DialogInterface dialog) {
-						KillSwitch.kill(context);
+						//KillSwitch.kill(context);
 					}
 				});
 				builder.create().show();

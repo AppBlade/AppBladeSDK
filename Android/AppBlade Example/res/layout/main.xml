@@ -149,20 +149,15 @@
 				android:orientation="horizontal">
 			            
 			    <Button
-			        android:id="@+id/btnCheckAnonUpdate"
+			        android:id="@+id/btnCheckUpdateLoud"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:text="Anonymously" />
+			        android:text="With Prompt" />
 			    <Button
-			        android:id="@+id/btnCheckAuthUpdate"
+			        android:id="@+id/btnCheckUpdateQuiet"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:text="Authenticated" />
-			    <Button
-			        android:id="@+id/btnCheckBestUpdate"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="Use Best" />
+			        android:text="No Prompt" />
 		    </LinearLayout>
 		            		    
    		   <!-- Remote authorization sections... -->
