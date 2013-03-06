@@ -158,6 +158,11 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:text="Authenticated" />
+			    <Button
+			        android:id="@+id/btnCheckBestUpdate"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Use Best" />
 		    </LinearLayout>
 		            		    
    		   <!-- Remote authorization sections... -->

@@ -35,8 +35,7 @@ public class MainActivity extends AppBladeSessionActivity {
 		super.onResume();
 		//AppBlade.authorize(this);
 
-		AppBlade.setCustomParameter(getApplicationContext(), "AppState",
-				"Resumed");
+		AppBlade.setCustomParameter(getApplicationContext(), "AppState", "Resumed");
 	}
 
 	public void onPause() {
@@ -57,7 +56,7 @@ public class MainActivity extends AppBladeSessionActivity {
 		
 		View btnCheckAuthUpdate = findViewById(R.id.btnCheckAuthUpdate);
 		View btnCheckAnonUpdate = findViewById(R.id.btnCheckAnonUpdate);
-		
+		View btnCheckBestUpdate = findViewById(R.id.btnCheckBestUpdate);
 		//Exception Reporting
 		btnDivideByZero.setOnClickListener(new OnClickListener() {
 			@SuppressWarnings("unused")
@@ -123,15 +122,21 @@ public class MainActivity extends AppBladeSessionActivity {
 		//Update Check 
 		btnCheckAuthUpdate.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				UpdatesHelper.checkForAuthenticatedUpdate(MainActivity.this);
+				UpdatesHelper.checkForAuthenticatedUpdate(MainActivity.this, true);
 			}
 		});
 		//Authentication
 		btnCheckAnonUpdate.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				UpdatesHelper.checkForAnonymousUpdate(MainActivity.this);
+				UpdatesHelper.checkForAnonymousUpdate(MainActivity.this, true);
 			}
 		});
+		btnCheckBestUpdate.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				UpdatesHelper.checkForAuthenticatedUpdate(MainActivity.this, true);
+			}
+		});
+
 	}
 
 	
