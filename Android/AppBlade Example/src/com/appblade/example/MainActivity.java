@@ -126,7 +126,7 @@ public class MainActivity extends AppBladeSessionActivity {
 		});
 		btnCheckUpdateSilent.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				AppBlade.checkForUpdates(MainActivity.this, true);
+				AppBlade.checkForUpdates(MainActivity.this, false);
 			}
 		});
 
