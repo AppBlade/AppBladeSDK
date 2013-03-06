@@ -52,7 +52,6 @@ public class UpdatesHelper {
 	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;	
 
-	
 	/**
 	 * Update check that soft-checks for the best update method available. <br>
 	 * If not authenticated, we checks with {@link #checkForAnonymousUpdate(Activity)}. <br> 
@@ -60,21 +59,12 @@ public class UpdatesHelper {
 	 * @param promptForDownload 
 	 */
 	public static void checkForUpdate(Activity activity, boolean promptForDownload)
-	{
-		//falls into the best behavior available. 
-		//if authenticated, check for authenticated update.
-		if(AuthHelper.isAuthorized(activity))
-		{
-			checkForAuthenticatedUpdate(activity, promptForDownload);
-		} 
-		else 
-		{ //if not authenticated, go anonymous.
-			checkForAnonymousUpdate(activity, promptForDownload);
-		}
+	{	//falls into the best behavior available. Currently Anonymous update is the only supported behavior. 
+		checkForAnonymousUpdate(activity, promptForDownload);
 	}
 
 	
-	/**
+	/** <h2>NOT YET SUPPORTED BY THE API</h2>
 	 * Authentication check that uses authorization credentials to determine if an update is available. <br> 
 	 * Will prompt a login dialog if credentials are not immediately found to be available.
 	 * Note that this is essentially unnecessary to call right after {@link AppBlade.authenticate(Activity)} since that handles authentication by default. 
@@ -96,7 +86,7 @@ public class UpdatesHelper {
 	}
 
 
-	/**
+	/**<h2>NOT YET SUPPORTED BY THE API</h2>
 	 * Checks whether the given activity is authorized, prompts an optional dialog beforehand. 
 	 * Does not kill the activity should the user cancel the authentication.
 	 * @param activity Activity to check authorization/prompt dialog. 
@@ -138,10 +128,9 @@ public class UpdatesHelper {
 		UpdateTask updateTask = new UpdateTask(activity, false, promptForDownload);
 		updateTask.execute();
 	}
-	
-	
+		
 	/**
-	 * Class to check for updates asychronously, will automatically kick off a download in the event that one is available.<br>
+	 * Class to check for updates asychronously, will automatically kick off a download in the event that one is available and confirmation prompting is disabled.<br>
 	 * If the requireAuthCredentials flag is set to true (default is false) then the update check will hard-check for authentication of the activity first. Potentially prompting a login dialog.
 	 * @author andrewtremblay
 	 */
@@ -154,7 +143,7 @@ public class UpdatesHelper {
 		
 		public UpdateTask(Activity _activity, boolean hardCheckAuthenticate, boolean promptForDownload) {
 			this.activity = _activity;
-			this.requireAuthCredentials = hardCheckAuthenticate; 
+			//this.requireAuthCredentials = hardCheckAuthenticate; 
 			this.promptDownloadConfirm = promptForDownload;
 		}
 
@@ -191,7 +180,7 @@ public class UpdatesHelper {
 					if(json.has("update")) {
 						JSONObject update = json.getJSONObject("update");
 						if(update != null) {
-							if(promptDownloadConfirm)
+							if(this.promptDownloadConfirm)
 							{
 								UpdatesHelper.confirmUpdate(this.activity, update);
 							}
@@ -207,12 +196,12 @@ public class UpdatesHelper {
 			}
 		}
 	}
-	
+		
 	/**
 	 * Synchronized generator for device authorization. 
 	 * @return HttpResponse for kill switch api.
 	 */
-	public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
+	private static synchronized HttpResponse getUpdateResponse(boolean authorize) {
 		HttpResponse response = null;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 		String urlPath = String.format(WebServiceHelper.ServicePathUpdateFormat, AppBlade.appInfo.AppId);
@@ -236,28 +225,44 @@ public class UpdatesHelper {
 		return response;
 	}
 
-	
 	/**
-	 * Confirm with the user that an update should be downloaded. Kicks off {@link #processUpdate(Activity, JSONObject)}
+	 * Confirm with the user that an update should be downloaded. Kicks off {@link #processUpdate(Activity, JSONObject)} on the go ahead.
 	 * @param activity
 	 * @param update
 	 */
-	public static void confirmUpdate(final Activity activity, final JSONObject update) {
-				AlertDialog.Builder ab = new AlertDialog.Builder(activity);
-				ab.setMessage("Are you sure you want to exit?")
-				  .setPositiveButton("Download", new DialogInterface.OnClickListener(){
+	private static void confirmUpdate(final Activity activity, final JSONObject update) {
+		activity.runOnUiThread(new Runnable() {
+			public void run() {
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				builder.setMessage("A new version is available on AppBlade");
+				builder.setPositiveButton("Download", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						UpdatesHelper.processUpdate(activity, update);								
-					}
-				  })
-				  .setNegativeButton("Skip", null)
-				  .show();
-	}
+						Thread thread = new Thread()
+						{
+						    @Override
+						    public void run() {
+						        try {
+						        	processUpdate(activity, update);			
+						        }                               
+						        catch (Exception e) {
+						            e.printStackTrace();
+						        }
+						    }
+						};
 
+						thread.start(); 						
+					}
+				});
+				builder.setNegativeButton("Not Now", null);
+				builder.create().show();
+			}
+		});
+	}
 
 	/**
 	 * We have been given a response from the server through {@link #getUpdateResponse(boolean)} that an update is available.<br>
 	 * Kick off an update and install if we have the write permissions. Notify the user of the download if we don't have write permissions.
+	 * <br>Used in {@link com.appblade.framework.authenticate.KillSwitch}
 	 * @param activity Activity to handle the notification or installation.
 	 * @param update JSONObject containing the necessary update information.
 	 */
@@ -265,6 +270,7 @@ public class UpdatesHelper {
 		PackageInfo pkg = AppBlade.getPackageInfo();
 		String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 		if(SystemUtils.hasPermission(pkg, permission)) {
+			notifyDownloading(activity);
 			Log.d(AppBlade.LogTag, "UpdatesHelper.processUpdate - permission to write to sd, downloading...");
 			downloadUpdate(activity, update);
 		}
@@ -305,7 +311,6 @@ public class UpdatesHelper {
 				if(file.exists())
 					file.delete();
 				file.createNewFile();
-				notifyDownloading(context);
 				
 				inputStream = response.getEntity().getContent();
 				bufferedInputStream = new BufferedInputStream(inputStream);
@@ -364,6 +369,7 @@ public class UpdatesHelper {
 		}
 	}
 
+	//File I/O
 	private static void open(final Activity context, final File file) {
 		context.runOnUiThread(new Runnable() {
 			public void run() {
@@ -386,7 +392,6 @@ public class UpdatesHelper {
 			}
 		});
 	}
-
 	
 	private static File getRootDirectory() {
 		String rootDir = ".appblade";
@@ -398,6 +403,7 @@ public class UpdatesHelper {
 		return dir;
 	}
 	
+	//Notifiers
 	@SuppressWarnings("deprecation")
 	private static void notifyDownloading(Activity context) {
 		Intent blank = new Intent();
