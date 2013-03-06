@@ -320,7 +320,83 @@ public class AppBlade {
 		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
 	}
 
+	/********************************************************
+	 ********************************************************
+	 * APP Updating 
+	 * AppBlade testers and developers benefit from app-updating during development, but calls to it should be removed before Play Store release.
+	 */
+	
+	/**
+	 * Checks with AppBlade if an update is available. Will try to find the best method available <br>
+	 * (If app was previously authorized, see {@link #checkForAuthorizedUpdates(Activity)}. If there are no valid credentials, see {@link #checkForAnonymousUpdates(Activity)}.)<br>
+	 * User will be prompted before downloading the apk, see {@link #checkForUpdates(Activity, boolean)} to disable the prompt and download silently.
+	 * @param activity Activity to handle the download and prompt (should not be null)
+	 */
+	public static void checkForUpdates(Activity activity)
+	{
+		checkForUpdates(activity, true);
+	}
 
+	/**
+	 * Checks with AppBlade if an update is available. Will try to find the best method available <br>
+	 * (If app was previously authorized, see {@link #checkForAuthorizedUpdates(Activity)}. If there are no valid credentials, see {@link #checkForAnonymousUpdates(Activity)}.)<br>
+	 * @param activity Activity to handle the download and prompt (should not be null)
+	 * @param promptForDownload flag to display a prompt to the user that a download is available. The prompt gives user the option to cancel the update download process. false will load the update in the background.
+	 */
+	public static void checkForUpdates(Activity activity, boolean promptForDownload)
+	{
+		UpdatesHelper.checkForUpdate(activity, promptForDownload);
+	}
+
+	//AUTHORIZED CALLS
+	
+	/**
+	 * Checks with AppBlade if an authorized update is available. Prompts user to sign in valid if credentials  are not found (i.e. App is not already authorized) <br>
+	 * User will be prompted to sign in with an AppBlade account for authorization if {@link #authorize(Activity)} was not already called. <br>
+	 * User will be prompted before downloading the apk, see {@link #checkForUpdates(Activity, boolean)} to disable the prompt and download silently.
+	 * @param activity Activity to handle the download and prompts (should not be null)
+	 */
+	public static void checkForAuthorizedUpdates(Activity activity)
+	{
+		checkForAuthorizedUpdates(activity, true);
+	}
+		
+	/**
+	 * Checks with AppBlade if an authorized update is available.  <br>
+	 * @param activity Activity to handle the download and prompt (should not be null)
+	 * @param promptForDownload flag to display a prompt to the user that a download is available. The prompt gives user the option to cancel the update download process. false will load the update in the background.
+	 */
+	public static void checkForAuthorizedUpdates(Activity activity, boolean promptForDownload)
+	{
+		UpdatesHelper.checkForAuthenticatedUpdate(activity, promptForDownload);
+	}
+
+	//ANONYMOUS CALLS
+	
+	/**
+	 * Checks with AppBlade if an anonymous update is available. Will prompt the user to download the .apk from AppBlade if one is available. <br>
+	 * To turn off the prompt and download silently, see {@link #checkForAnonymousUpdates(Activity, boolean)} <br>
+	 * See AppBlade documentation for more about anonymous updates. 
+	 * @param activity Activity to handle the download and prompt (should not be null)
+	 */
+	public static void checkForAnonymousUpdates(Activity activity)
+	{
+		checkForAnonymousUpdates(activity, true);
+	}
+	
+	/**
+	 * Checks with AppBlade if an anonymous update is available. <br>
+	 * To turn off the prompt and download silently, see {@link #checkForAnonymousUpdates(Activity, boolean)} <br>
+	 * See AppBlade documentation for more about anonymous updates. 
+	 * @param activity Activity to handle the download and prompt (should not be null)
+	 * @param promptForDownload flag to notify the user that a download is available. Gives user the option to cancel the update process.
+	 */
+	public static void checkForAnonymousUpdates(Activity activity, boolean promptForDownload)
+	{
+		UpdatesHelper.checkForAnonymousUpdate(activity, promptForDownload);
+	}
+
+	
 	
 	/********************************************************
 	 ********************************************************

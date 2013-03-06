@@ -58,33 +58,36 @@ public class UpdatesHelper {
 	 * If activity is authenticated, we call {@link #checkForAuthenticatedUpdate(Activity)}. <br>
 	 * If not authenticated, we checks with {@link #checkForAnonymousUpdate(Activity)}. <br> 
 	 * @param activity the Activity to handle the update. Should belong to the same application context that was authenticated if authenticated updates are required. 
+	 * @param promptForDownload 
 	 */
-	public static void checkForUpdate(Activity activity)
+	public static void checkForUpdate(Activity activity, boolean promptForDownload)
 	{
 		//falls into the best behavior available. 
 		//if authenticated, check for authenticated update.
 		if(AuthHelper.isAuthorized(activity))
 		{
-			checkForAuthenticatedUpdate(activity);
+			checkForAuthenticatedUpdate(activity, promptForDownload);
 		} 
 		else 
 		{ //if not authenticated, go anonymous.
-			checkForAnonymousUpdate(activity);
+			checkForAnonymousUpdate(activity, promptForDownload);
 		}
 	}
 
+	
 	/**
 	 * Authentication check that uses authorization credentials to determine if an update is available. <br> 
 	 * Will prompt a login dialog if credentials are not immediately found to be available.
 	 * Note that this is essentially unnecessary to call right after {@link AppBlade.authenticate(Activity)} since that handles authentication by default. 
 	 * @param activity activity to check authorization and run the {@link UpdateTask}
+	 * @param promptForDownload 
 	 */
-	public static void checkForAuthenticatedUpdate(Activity activity)
+	public static void checkForAuthenticatedUpdate(Activity activity, boolean promptForDownload)
 	{
-		//TODO: check if we're already processing the update / downloading / installing anything
+		//TODO: check if we're already processing the update / downloading / installing anything. Shouldn't be an issue as long as there's enough time between calls.
 		if(AuthHelper.isAuthorized(activity))
 		{
-			UpdateTask updateTask = new UpdateTask(activity, true);
+			UpdateTask updateTask = new UpdateTask(activity, true, promptForDownload);
 			updateTask.execute();
 		}
 		else
@@ -130,10 +133,10 @@ public class UpdatesHelper {
 
 	}
 
-	public static void checkForAnonymousUpdate(Activity activity)
+	public static void checkForAnonymousUpdate(Activity activity, boolean promptForDownload)
 	{
-		//TODO: check if we're already processing the update / downloading / installing anything
-		UpdateTask updateTask = new UpdateTask(activity);
+		//TODO: check if we're already processing the update / downloading / installing anything. Shouldn't be an issue as long as there's enough time between calls.
+		UpdateTask updateTask = new UpdateTask(activity, false, promptForDownload);
 		updateTask.execute();
 	}
 	
@@ -146,18 +149,16 @@ public class UpdatesHelper {
 	static class UpdateTask extends AsyncTask<Void, Void, Void> {
 		Activity activity;
 		ProgressDialog progress;
-		public boolean requireAuthCredentials = false;
+		public boolean requireAuthCredentials = false; // default anonymous
+		public boolean promptDownloadConfirm = true; // default noisy
 		
 		
-		public UpdateTask(Activity _activity) {
+		public UpdateTask(Activity _activity, boolean hardCheckAuthenticate, boolean promptForDownload) {
 			this.activity = _activity;
-			this.requireAuthCredentials = false; // default anonymous
+			this.requireAuthCredentials = hardCheckAuthenticate; 
+			this.promptDownloadConfirm = promptForDownload;
 		}
 
-		public UpdateTask(Activity _activity, boolean hardCheckAuthenticate) {
-			this.activity = _activity;
-			this.requireAuthCredentials = hardCheckAuthenticate; // default anonymous
-		}
 
 		
 		@Override
@@ -191,7 +192,14 @@ public class UpdatesHelper {
 					if(json.has("update")) {
 						JSONObject update = json.getJSONObject("update");
 						if(update != null) {
-							UpdatesHelper.processUpdate(this.activity, update);
+							if(promptDownloadConfirm)
+							{
+								UpdatesHelper.confirmUpdate(this.activity, update);
+							}
+							else
+							{
+								UpdatesHelper.processUpdate(this.activity, update);								
+							}
 						}
 					}
 				}
@@ -230,6 +238,19 @@ public class UpdatesHelper {
 	}
 
 	
+	public static void confirmUpdate(final Activity activity, final JSONObject update) {
+				AlertDialog.Builder ab = new AlertDialog.Builder(activity);
+				ab.setMessage("Are you sure you want to exit?")
+				  .setPositiveButton("Download", new DialogInterface.OnClickListener(){
+					public void onClick(DialogInterface dialog, int which) {
+						UpdatesHelper.processUpdate(activity, update);								
+					}
+				  })
+				  .setNegativeButton("Skip", null)
+				  .show();
+	}
+
+
 	/**
 	 * We have been given a response from the server through {@link KillSwitch} that an update is available.<br>
 	 * Kick off an update and install if we have the write permissions. Notify the user of the download if we don't have write permissions.
@@ -391,7 +412,7 @@ public class UpdatesHelper {
 
 	@SuppressWarnings("deprecation")
 	private static void notifyUpdate(Activity context, JSONObject update) {
-		Log.d(AppBlade.LogTag, "UpdatesHelper.processUpdate");
+		Log.d(AppBlade.LogTag, "UpdatesHelper.notifyUpdate");
 		try
 		{
 			String url = update.getString("url");
@@ -411,4 +432,5 @@ public class UpdatesHelper {
 		}
 		catch(JSONException ex) { ex.printStackTrace(); }
 	}
+
 }
