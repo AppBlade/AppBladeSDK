@@ -18,18 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Configure AppBlade
 
-    // Populate with values from the project SDK settings or load keys from plist
-    // see README for details
-    //copy this into your app delegate
-    //remember: you must still import AppBlade.h
-    
-    // Check the app blade status of this application.
-    [[AppBlade sharedManager] checkApproval];
-
-    //copy this into your app delegate
-    //remember: you must still import AppBlade.h
     AppBlade *blade = [AppBlade sharedManager];
     blade.appBladeProjectID = @"ca460dcb-b7c2-43c1-ba50-8b6cda63f369";
     blade.appBladeProjectToken = @"8f1792db8a39108c14fa8c89663eec98";
@@ -46,7 +35,6 @@
 //    blade.appBladeHost = @"http://10.1.10.42:3000";
     
     // Check the app blade status of this application.
-    [[AppBlade sharedManager] checkApproval];
     
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
@@ -95,8 +83,9 @@
      */
     
     
-    // Check the app blade status of this application.
-   // [[AppBlade sharedManager] checkApproval];
+    // Check the app blade update status of this application.
+   
+    [[AppBlade sharedManager] checkForUpdates];
 
     [AppBlade startSession];
     //[[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)

@@ -90,8 +90,11 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
  *    store with a call to |-checkApproval|, for example, could result in app termination or rejection.
  */
 
-// Checks with AppBlade to see if the app is allowed to run on this device.
+// Checks with AppBlade to see if the app is allowed to run on this device. Will also notify of updates.
 - (void)checkApproval;
+
+// Checks with AppBlade anonymously to see if the app can be updated with a new build.
+- (void)checkForUpdates;
 
 + (NSString*)cachesDirectoryPath;
 

@@ -203,10 +203,19 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)checkApproval
 {
     [self validateProjectConfiguration];
-
+    
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
-    [client checkPermissions];    
+    [client checkPermissions];
+}
+
+- (void)checkForUpdates
+{
+    [self validateProjectConfiguration];
+    
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
+    [client checkForUpdates];
 }
 
 - (void)catchAndReportCrashes
@@ -376,6 +385,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     {
         NSLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
     }
+    else if(client.api == AppBladeWebClientAPI_UpdateCheck)
+    {
+        NSLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
+    }
     else
     {
         NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
@@ -432,6 +445,23 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self.activeClients removeObject:client];
     
     
+}
+
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)updateData
+{
+    // determine if there is an update available
+    NSDictionary* update = [updateData objectForKey:@"update"];
+    if(update)
+    {
+        NSString* updateMessage = [update objectForKey:@"message"];
+        NSString* updateURL = [update objectForKey:@"url"];
+        
+        if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
+            [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
+        }
+    }
+    
+    [self.activeClients removeObject:client];
 }
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
