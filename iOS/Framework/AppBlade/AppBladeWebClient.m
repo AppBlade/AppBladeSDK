@@ -257,14 +257,12 @@ static BOOL is_encrypted () {
     }else{
         // Create the request.
         _api = AppBladeWebClientAPI_UpdateCheck;
-        NSString* udid = [self udid];
         NSString* urlString = [NSString stringWithFormat:updateURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
         [self addSecurityToRequest:apiRequest]; //don't need security, but we could do better with it.
         [apiRequest addValue:@"true" forHTTPHeaderField:@"USE_ANONYMOUS"];
-        [apiRequest addValue:udid forHTTPHeaderField:@"DEVICE_FINGERPRINT"];
         NSLog(@"Update call %@", urlString);
         // Issue the request.
         self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
@@ -465,7 +463,8 @@ static BOOL is_encrypted () {
     NSString *rawVersionString = [self osVersionBuild];
     NSString *test = [[rawVersionString componentsSeparatedByCharactersInSet:nonAsciiCharacterSet] componentsJoinedByString:@""];
     NSLog(@"osVersionBuild %@", test);
-    
+    NSString* udid = [self udid];
+    [apiRequest addValue:udid forHTTPHeaderField:@"DEVICE_FINGERPRINT"];
     [apiRequest addValue:test forHTTPHeaderField:@"IOS_RELEASE"];
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
     [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
