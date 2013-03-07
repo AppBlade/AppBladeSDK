@@ -8,7 +8,6 @@
 
 #import "AppBlade.h"
 #import "AppBladeSimpleKeychain.h"
-#import "AppBladeLocationSingleton.h"
 
 #import "PLCrashReporter.h"
 #import "PLCrashReport.h"
@@ -966,16 +965,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return sessionClients > 0;
 }
 
-- (void)allowLocationLogging
-{
-    [self allowLocationLoggingForDistance:DEFAULT_APPBLADE_LOCATION_LOGGING_DISTANCE andOrTime:DEFAULT_APPBLADE_LOCATION_LOGGING_TIME];
-}
-
-- (void)allowLocationLoggingForDistance:(int)meters andOrTime:(int)seconds
-{
-    [[AppBladeLocationSingleton sharedInstance] enableLocationTracking];
-    [[AppBladeLocationSingleton sharedInstance] setLocationUpdateDistance:meters andTimeOut:seconds];
-}
 
 + (void)startSession
 {
@@ -983,11 +972,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [[AppBlade sharedManager] logSessionStart];
 }
 
--(void)updateSessionLocations
-{
-    [[AppBladeLocationSingleton sharedInstance] enableLocationTracking];
-    [[AppBladeLocationSingleton sharedInstance] updateStoredLocations];
-}
 
 + (void)endSession
 {
@@ -1020,7 +1004,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)logSessionEnd
 {
-    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", [[AppBladeLocationSingleton sharedInstance] currentStoredLocations], @"locations", nil];
+    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
     
     NSMutableArray* pastSessions = nil;
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
@@ -1036,7 +1020,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
     [sessionData writeToFile:sessionFilePath atomically:YES];
-    [[AppBladeLocationSingleton sharedInstance] clearStoredLocations];
 }
 
 #pragma mark - AppBlade Custom Params

@@ -109,14 +109,8 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // Shows a feedback dialogue and handles screenshot
 - (void)showFeedbackDialogue;
 
-
 + (void)startSession;
 + (void)endSession;
-
-//Geolocation Logging
-- (void)updateSessionLocations;
-- (void)allowLocationLogging;
-- (void)allowLocationLoggingForDistance:(int)meters andOrTime:(int)seconds;
 
 
 @end

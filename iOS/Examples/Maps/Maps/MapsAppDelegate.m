@@ -59,8 +59,6 @@
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
     
-    //[blade allowFeedbackReporting];
-    [blade allowLocationLogging];
 
     return YES;
 }
