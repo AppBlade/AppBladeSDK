@@ -9,6 +9,9 @@
 #import "MapsAppDelegate.h"
 #import "MainViewController.h"
 #import "AppBlade.h"
+#import "Crittercism.h"
+
+
 
 @implementation MapsAppDelegate
 
@@ -18,6 +21,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    //Configuring Crittercism
+    [Crittercism enableWithAppID: @"some hash or something whatever"];
+    
     // Configure AppBlade
     AppBlade *blade = [AppBlade sharedManager];
 
@@ -28,15 +35,12 @@
 //    blade.appBladeProjectSecret = @""; //Secret
 //    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
     
-
     // See AppBladeKeys.plist for the format in which to send your keys.
     // This is optional, but you should not set the keys yourself AND use the plist.
     // [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]]
     // Fill AppBladeKeys.plist with your own credentials to test
     [blade setCustomParam:@"CustomKey1" withValue:@"FirstSend"];
-    
-    [blade catchAndReportCrashes];
-    
+        
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
     
@@ -82,7 +86,6 @@
 
     [AppBlade startSession];
     [[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)
-    [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
 
 }
 

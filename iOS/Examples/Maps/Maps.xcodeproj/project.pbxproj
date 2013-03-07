@@ -27,6 +27,9 @@
 		31817C38161207E000392343 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817C37161207E000392343 /* MapKit.framework */; };
 		31817C3B1612082F00392343 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31817C3A1612082F00392343 /* MainWindow-iPad.xib */; };
 		31D6BF9716120A5A0051283A /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D6BF9616120A5A0051283A /* MainWindow.xib */; };
+		31DF476716E94B4E006FC596 /* libCrittercism_v3_4_9.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31DF476616E94B4E006FC596 /* libCrittercism_v3_4_9.a */; };
+		31DF476A16E94CD9006FC596 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31DF476916E94CD9006FC596 /* QuartzCore.framework */; };
+		31DF476C16E94CE0006FC596 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31DF476B16E94CE0006FC596 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +84,11 @@
 		31817C3A1612082F00392343 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		31D434E4165AD0940075D028 /* AppBlade.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AppBlade.xcodeproj; path = ../../Framework/AppBlade.xcodeproj; sourceTree = "<group>"; };
 		31D6BF9616120A5A0051283A /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		31DF476416E94B4E006FC596 /* Crittercism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crittercism.h; sourceTree = "<group>"; };
+		31DF476516E94B4E006FC596 /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
+		31DF476616E94B4E006FC596 /* libCrittercism_v3_4_9.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v3_4_9.a; sourceTree = "<group>"; };
+		31DF476916E94CD9006FC596 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		31DF476B16E94CE0006FC596 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,12 +96,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31DF476C16E94CE0006FC596 /* SystemConfiguration.framework in Frameworks */,
+				31DF476A16E94CD9006FC596 /* QuartzCore.framework in Frameworks */,
 				3110533A165AD258008FC128 /* libAppBlade.a in Frameworks */,
 				31817C38161207E000392343 /* MapKit.framework in Frameworks */,
 				31817C36161207D000392343 /* Security.framework in Frameworks */,
 				31817BF5161202EB00392343 /* UIKit.framework in Frameworks */,
 				31817BF7161202EB00392343 /* Foundation.framework in Frameworks */,
 				31817BF9161202EB00392343 /* CoreGraphics.framework in Frameworks */,
+				31DF476716E94B4E006FC596 /* libCrittercism_v3_4_9.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,6 +114,8 @@
 		31817BE5161202EB00392343 = {
 			isa = PBXGroup;
 			children = (
+				31DF476B16E94CE0006FC596 /* SystemConfiguration.framework */,
+				31DF476916E94CD9006FC596 /* QuartzCore.framework */,
 				31D434E4165AD0940075D028 /* AppBlade.xcodeproj */,
 				31817BFA161202EB00392343 /* Maps */,
 				31817BF3161202EB00392343 /* Frameworks */,
@@ -121,6 +134,7 @@
 		31817BF3161202EB00392343 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31DF476316E94B4E006FC596 /* CrittercismSDK */,
 				31817C35161207D000392343 /* Security.framework */,
 				31817C37161207E000392343 /* MapKit.framework */,
 				31817BF4161202EB00392343 /* UIKit.framework */,
@@ -180,6 +194,16 @@
 				31D434EC165AD0940075D028 /* libAppBladeUniversal.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		31DF476316E94B4E006FC596 /* CrittercismSDK */ = {
+			isa = PBXGroup;
+			children = (
+				31DF476416E94B4E006FC596 /* Crittercism.h */,
+				31DF476516E94B4E006FC596 /* CrittercismDelegate.h */,
+				31DF476616E94B4E006FC596 /* libCrittercism_v3_4_9.a */,
+			);
+			path = CrittercismSDK;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -369,6 +393,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Maps/AppBladeSDK\"",
+					"\"$(SRCROOT)/CrittercismSDK\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -384,6 +409,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Maps/AppBladeSDK\"",
+					"\"$(SRCROOT)/CrittercismSDK\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

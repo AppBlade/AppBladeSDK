@@ -65,14 +65,6 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // Pass in the full path to the plist
 - (void)loadSDKKeysFromPlist:(NSString*)plist;
 
-// Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
-- (void)catchAndReportCrashes;
-
-//method to call if you want to attempt to send crash reports more often than ususal 
-- (void)checkForExistingCrashReports;
-
-
-
 //Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
