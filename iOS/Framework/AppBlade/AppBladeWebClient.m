@@ -25,7 +25,7 @@ NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
 NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
 NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
 NSString *sessionURLFormat           = @"%@/api/user_sessions";
-NSString *updateURLFormat            = @"%@/api/projects/%@/updates/";
+NSString *updateURLFormat            = @"%@/api/2/projects/%@/updates";
 
 
 @interface AppBladeWebClient ()
@@ -258,12 +258,14 @@ static BOOL is_encrypted () {
         // Create the request.
         _api = AppBladeWebClientAPI_UpdateCheck;
         NSString* udid = [self udid];
-        NSString* urlString = [NSString stringWithFormat:updateURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
+        NSString* urlString = [NSString stringWithFormat:updateURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
         [self addSecurityToRequest:apiRequest]; //don't need security, but we could do better with it.
         [apiRequest addValue:@"true" forHTTPHeaderField:@"USE_ANONYMOUS"];
+        [apiRequest addValue:udid forHTTPHeaderField:@"DEVICE_FINGERPRINT"];
+        NSLog(@"Update call %@", urlString);
         // Issue the request.
         self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
     }
@@ -454,7 +456,17 @@ static BOOL is_encrypted () {
     // set up various headers on the request.
     [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"bundle_identifier"];
     [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
-    [apiRequest addValue:[self osVersionBuild] forHTTPHeaderField:@"IOS_RELEASE"];
+    
+    NSMutableString *asciiCharacters = [NSMutableString string];
+    for (NSInteger i = 32; i < 127; i++)  {
+        [asciiCharacters appendFormat:@"%c", i];
+    }
+    NSCharacterSet *nonAsciiCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:asciiCharacters] invertedSet];
+    NSString *rawVersionString = [self osVersionBuild];
+    NSString *test = [[rawVersionString componentsSeparatedByCharactersInSet:nonAsciiCharacterSet] componentsJoinedByString:@""];
+    NSLog(@"osVersionBuild %@", test);
+    
+    [apiRequest addValue:test forHTTPHeaderField:@"IOS_RELEASE"];
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
     [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
