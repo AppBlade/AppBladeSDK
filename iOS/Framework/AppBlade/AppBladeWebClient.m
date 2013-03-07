@@ -461,11 +461,10 @@ static BOOL is_encrypted () {
     }
     NSCharacterSet *nonAsciiCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:asciiCharacters] invertedSet];
     NSString *rawVersionString = [self osVersionBuild];
-    NSString *test = [[rawVersionString componentsSeparatedByCharactersInSet:nonAsciiCharacterSet] componentsJoinedByString:@""];
-    NSLog(@"osVersionBuild %@", test);
+    NSString *safeVersionString = [[rawVersionString componentsSeparatedByCharactersInSet:nonAsciiCharacterSet] componentsJoinedByString:@""];
+    [apiRequest addValue:safeVersionString forHTTPHeaderField:@"IOS_RELEASE"];
     NSString* udid = [self udid];
     [apiRequest addValue:udid forHTTPHeaderField:@"DEVICE_FINGERPRINT"];
-    [apiRequest addValue:test forHTTPHeaderField:@"IOS_RELEASE"];
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
     [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
