@@ -21,9 +21,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.appblade.framework.AppBlade;
-import com.appblade.framework.UpdatesHelper;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.updates.UpdatesHelper;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.StringUtils;

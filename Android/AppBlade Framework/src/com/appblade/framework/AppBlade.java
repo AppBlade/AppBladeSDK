@@ -35,6 +35,7 @@ import com.appblade.framework.stats.AppBladeSessionActivity;
 import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
 import com.appblade.framework.stats.AppBladeSessionLoggingService;
+import com.appblade.framework.updates.UpdatesHelper;
 import com.appblade.framework.utils.StringUtils;
 
 /**
