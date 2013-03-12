@@ -21,7 +21,7 @@
           android:layout_height="wrap_content"
           android:layout_below="@+id/imgLogo"
           android:gravity="center_horizontal"
-          android:textSize="10sp"
+          android:textSize="20sp"
           android:textStyle="bold" />
 
     <ScrollView
