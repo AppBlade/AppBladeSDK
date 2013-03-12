@@ -18,8 +18,8 @@ public class MyApplication extends Application {
 		String token = "c45a434195a05650955193180869c9aa";
 		String secret = "f865fdd96f1ed6b3e6db0063762c84db";
 		String issuance = "1358808370";
-		AppBlade.register(this, token, secret, uuid, issuance, "http://172.20.10.6:3000");
-		AppBlade.useSessionLoggingService(this.getApplicationContext());
+		AppBlade.register(this, token, secret, uuid, issuance);
+//		AppBlade.useSessionLoggingService(this.getApplicationContext());
 		AppBlade.registerExceptionHandler();
 	}
 

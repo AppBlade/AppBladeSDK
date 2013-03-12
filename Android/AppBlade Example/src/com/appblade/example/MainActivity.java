@@ -48,8 +48,8 @@ public class MainActivity extends AppBladeSessionActivity {
 	public void onResume() {
 		super.onResume();
 		//AppBlade.authorize(this);
-
 		AppBlade.setCustomParameter(getApplicationContext(), "AppState", "Resumed");
+		
 	}
 
 	public void onPause() {
@@ -132,6 +132,7 @@ public class MainActivity extends AppBladeSessionActivity {
 				builder.show();
 			}
 		});
+		btnClearAuthData.setVisibility(View.GONE);
 		
 		//Update Check 
 		btnCheckUpdatePrompt.setOnClickListener(new OnClickListener() {
@@ -148,6 +149,9 @@ public class MainActivity extends AppBladeSessionActivity {
 				checkUpdateWithSpinner(false);
 			}
 		});
+		
+		btnCheckUpdatePrompt.setVisibility(View.GONE);
+		btnCheckUpdateSilent.setVisibility(View.GONE);
 
 	}
 
