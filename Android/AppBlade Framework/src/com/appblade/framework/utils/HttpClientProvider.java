@@ -62,12 +62,8 @@ public class HttpClientProvider {
 		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
 
 		
-		DefaultHttpClient client = new DefaultHttpClient(conMgr, params);
-		
-		//if Debug mode (ssl for 3001)
-		DefaultHttpClient debugClient = AuthHelper.sslDebugClient(client);
-		
-		return debugClient;
+		DefaultHttpClient client = new DefaultHttpClient(conMgr, params);		
+		return client;
 	}
 
 }
