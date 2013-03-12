@@ -16,27 +16,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.appblade.framework.AppBlade;
-import com.appblade.framework.R;
-import com.appblade.framework.WebServiceHelper;
-import com.appblade.framework.R.drawable;
-import com.appblade.framework.WebServiceHelper.HttpMethod;
-import com.appblade.framework.authenticate.AuthHelper;
-import com.appblade.framework.authenticate.KillSwitch;
-import com.appblade.framework.utils.HttpClientProvider;
-import com.appblade.framework.utils.HttpUtils;
-import com.appblade.framework.utils.IOUtils;
-import com.appblade.framework.utils.StringUtils;
-import com.appblade.framework.utils.SystemUtils;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DownloadManager.Request;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;

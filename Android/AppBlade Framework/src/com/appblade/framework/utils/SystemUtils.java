@@ -9,7 +9,6 @@ import com.appblade.framework.AppBlade;
 import com.appblade.framework.AppInfo;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;

@@ -17,18 +17,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar"
         android:name=".MyApplication"
-        android:allowBackup="true">
-        
-                
-       	<service android:name="com.appblade.framework.stats.AppBladeSessionLoggingService" 
-   	    	 android:enabled="true"
-   	    	 android:exported="false"
-   	    	 android:process=":remote">
-	  	    <intent-filter>
-	  	        <action android:name="com.appblade.framework.stats.AppBladeSessionLoggingService" />
-	  	    </intent-filter>
-    	</service>
-        
+        android:allowBackup="true">        
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"

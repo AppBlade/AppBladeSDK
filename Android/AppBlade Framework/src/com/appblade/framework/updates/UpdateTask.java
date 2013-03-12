@@ -1,40 +1,17 @@
 package com.appblade.framework.updates;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.appblade.framework.AppBlade;
-import com.appblade.framework.WebServiceHelper;
-import com.appblade.framework.WebServiceHelper.HttpMethod;
-import com.appblade.framework.authenticate.KillSwitch;
-import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
-import com.appblade.framework.utils.IOUtils;
 import com.appblade.framework.utils.StringUtils;
-import com.appblade.framework.utils.SystemUtils;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
