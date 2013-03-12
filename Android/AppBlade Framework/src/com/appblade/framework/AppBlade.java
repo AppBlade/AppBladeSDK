@@ -334,6 +334,7 @@ public class AppBlade {
 	 */
 	public static void checkForUpdates(Activity activity)
 	{
+		hardCheckIsRegistered();
 		checkForUpdates(activity, true);
 	}
 
@@ -344,6 +345,7 @@ public class AppBlade {
 	 */
 	public static void checkForUpdates(Activity activity, boolean promptForDownload)
 	{
+		hardCheckIsRegistered();
 		UpdatesHelper.checkForAnonymousUpdate(activity, promptForDownload);
 	}
 	
