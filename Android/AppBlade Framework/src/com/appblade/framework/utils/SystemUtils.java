@@ -145,13 +145,16 @@ public class SystemUtils {
 				toRet = hashedUuidOfPackageFile(pi, "META-INF/CERT.RSA");				
 			}
 			if(toRet == null){
-				toRet = "signed";
+				toRet = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"; //hash of null
 			}
 		} 
 		return toRet;
 	}
 
-
+	/**
+	 * Grabs the fingerprint of the device and swaps out the non-web-friendly characters to match the appblade slug
+	 * @return Build.FINGERPRINT without the "/"s, "."s, and ":"s (swapped with "__", "-", and "-" respectively).
+	 */
 	public static String getReadableFINGERPRINT() {
 		return Build.FINGERPRINT.replace("/", "__").replace(".", "-").replace(":", "-"); //make it so the fingerprint doesn't break routes
 	}
