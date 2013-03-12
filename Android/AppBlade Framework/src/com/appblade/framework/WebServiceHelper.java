@@ -116,22 +116,15 @@ public class WebServiceHelper {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
 			request.addHeader("bundle_version", pi.versionName);
-			
-			String executable_uuid = SystemUtils.hashedExecutableUuid(pi);
-			if(executable_uuid != null){
-				request.addHeader("executable_uuid",  executable_uuid);			
-				Log.d(AppBlade.LogTag, "executable_uuid " + request.getFirstHeader("executable_uuid"));
-			}
-			String static_resource_uuid = SystemUtils.hashedStaticResourcesUuid(pi);
-			if(static_resource_uuid != null){
-				request.addHeader("static_resource_uuid", static_resource_uuid );			
-				Log.d(AppBlade.LogTag, "static_resource_uuid " + request.getFirstHeader("static_resource_uuid"));
-			}
-			String certificate_uuid = SystemUtils.hashedCertificateUuid(pi);
-			if(certificate_uuid != null){
+				request.addHeader("executable_uuid",  SystemUtils.hashedExecutableUuid(pi));			
+				request.addHeader("static_resource_uuid", SystemUtils.hashedStaticResourcesUuid(pi) );			
 				request.addHeader("certificate_uuid", SystemUtils.hashedCertificateUuid(pi) );			
-				Log.d(AppBlade.LogTag, "certificate_uuid " + request.getFirstHeader("certificate_uuid"));
-			}
+				request.addHeader("manifest_uuid", SystemUtils.hashedManifestFileUuid(pi) );			
+
+				Log.d(AppBlade.LogTag, " " + request.getFirstHeader("executable_uuid"));
+				Log.d(AppBlade.LogTag, " " + request.getFirstHeader("static_resource_uuid"));
+				Log.d(AppBlade.LogTag, " " + request.getFirstHeader("certificate_uuid"));
+				Log.d(AppBlade.LogTag, " " + request.getFirstHeader("manifest_uuid"));
 		}
 		
 		request.addHeader("android_release", Build.VERSION.RELEASE);

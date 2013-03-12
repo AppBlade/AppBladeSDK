@@ -112,6 +112,17 @@ public class SystemUtils {
 
 	}
 
+
+	/**
+	 * A hash representing the manifest file included in the APK, the value will change when the file does and not at any other time.
+	 * @param pi
+	 * @return The (SHA256) of AndroidManifest.xml, the file representing all compiled classes in the apk.
+	 */
+	public static String hashedManifestFileUuid(PackageInfo pi){
+		return hashedUuidOfPackageFile(pi, "AndroidManifest.xml");  //use this instead of META-INF/MANIFEST.MF, not enough data there.
+	}
+
+	
 	/**
 	 * A hash representing all classes in the APK, the value will change when the classes do and not at any other time.
 	 * @param pi
