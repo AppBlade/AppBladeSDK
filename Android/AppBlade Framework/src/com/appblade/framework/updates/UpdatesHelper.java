@@ -30,9 +30,19 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+
+import com.appblade.framework.AppBlade;
+import com.appblade.framework.R;
+import com.appblade.framework.WebServiceHelper;
+import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.authenticate.AuthHelper;
+import com.appblade.framework.authenticate.KillSwitch;
+import com.appblade.framework.utils.HttpClientProvider;
+import com.appblade.framework.utils.HttpUtils;
+import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.SystemUtils;
 
 /**
  * Class containing functions that will handle a download and installation of an apk update for the given app.
@@ -92,12 +102,13 @@ public class UpdatesHelper {
 		SharedPreferences prefs = activity.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
 		ttl = prefs.getInt(PrefsKeyTTL, ttl);
 		ttlLastUpdated = prefs.getLong(PrefsKeyTTLUpdated, ttlLastUpdated);
-
+		
 		boolean shouldUpdate = true;
 		long now = System.currentTimeMillis();
+		long timeTTLUpdates = ttl + ttlLastUpdated;
 		
 		// If we have updated TTL value from AppBlade within the last hour, do not require update
-		if(ttlLastUpdated > (now - MillisPerHour))
+		if(timeTTLUpdates > (now - MillisPerHour))
 			shouldUpdate = false;
 		
 		// If TTL is satisfied (we are within the time to live from the last time updated), do not require update
@@ -359,7 +370,7 @@ private static void downloadUpdate(Activity context, JSONObject update) {
  * Stores ttl and ttlLastUpdated in their static locations.
  * @param timeToLive
  */
-public void saveTtl(int timeToLive, Context context) {
+public static void saveTtl(int timeToLive, Context context) {
 	ttl = timeToLive;
 	ttlLastUpdated = System.currentTimeMillis();
 	SharedPreferences prefs = context.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);

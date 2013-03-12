@@ -21,14 +21,14 @@ import android.util.Log;
  * @author andrewtremblay
  */
 public class UpdateTask extends AsyncTask<Void, Void, Void> {
-	Activity activity;
-	ProgressDialog progress;
+	protected Activity taskActivity;
+	protected ProgressDialog progress;
 	public boolean requireAuthCredentials = false; // default anonymous
 	public boolean promptDownloadConfirm = true; // default noisy
 	
 	
 	public UpdateTask(Activity _activity, boolean hardCheckAuthenticate, boolean promptForDownload) {
-		this.activity = _activity;
+		this.taskActivity = _activity;
 		//this.requireAuthCredentials = hardCheckAuthenticate; 
 		this.promptDownloadConfirm = promptForDownload;
 	}
@@ -62,17 +62,18 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 				String data = StringUtils.readStream(response.getEntity().getContent());
 				Log.d(AppBlade.LogTag, String.format("UpdateTask response OK %s", data));
 				JSONObject json = new JSONObject(data);
-				int timeToLive = json.getInt("ttl");
+				int timeToLive = json.getInt("ttl");//update ttl
+				UpdatesHelper.saveTtl(timeToLive, this.taskActivity);
 				if(json.has("update")) {
 					JSONObject update = json.getJSONObject("update");
 					if(update != null) {
 						if(this.promptDownloadConfirm)
 						{
-							UpdatesHelper.confirmUpdate(this.activity, update);
+							UpdatesHelper.confirmUpdate(this.taskActivity, update);
 						}
 						else
 						{
-							UpdatesHelper.processUpdate(this.activity, update);								
+							UpdatesHelper.processUpdate(this.taskActivity, update);								
 						}
 					}
 				}
