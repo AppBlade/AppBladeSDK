@@ -170,7 +170,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		31BD6FAD13FEA96E00C3B6AE /* AB_CrashReporter */ = {
+		31BD6FAD13FEA96E00C3B6AE /* CrashReporter */ = {
 			isa = PBXGroup;
 			children = (
 				620217251404450900A14BA7 /* CrashReporter.h */,
@@ -227,7 +227,7 @@
 				620217911404457200A14BA7 /* crash_report.proto */,
 				31BD701113FEA99500C3B6AE /* Protobuf */,
 			);
-			name = AB_CrashReporter;
+			name = CrashReporter;
 			path = "AppBlade/plcrashreporter-1.0/Source";
 			sourceTree = "<group>";
 		};
@@ -255,7 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				628A131E141EB60400EEB082 /* LICENSE.md */,
-				31BD6FAD13FEA96E00C3B6AE /* AB_CrashReporter */,
+				31BD6FAD13FEA96E00C3B6AE /* CrashReporter */,
 				CBF479FD13969C2B00949297 /* AppBlade */,
 				CBF479FA13969C2B00949297 /* Frameworks */,
 				CBF479F913969C2B00949297 /* Products */,

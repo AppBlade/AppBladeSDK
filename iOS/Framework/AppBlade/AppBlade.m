@@ -212,7 +212,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)checkForUpdates
 {
     [self validateProjectConfiguration];
-    
+    NSLog(@"Checking for updates");
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
     [client checkForUpdates];
