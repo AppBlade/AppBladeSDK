@@ -1,6 +1,9 @@
 package com.appblade.framework.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -199,6 +202,24 @@ public class StringUtils {
 	    return hash;
 	}
 	
+	/**
+	 * @warning Mostly deprecated due to vulnerabilities with MD5
+	 * @param file File to MD5 
+	 * @return MD5 String
+	 */
+	public static String md5FromFile(File file)  {
+		String toRet = StringUtils.md5OfNull; //md5 hash of null, default if we don't find anything or if there's an error
+		if(file.exists() || file.canRead()){
+			//open the file as an input string
+			try {
+				InputStream is = new FileInputStream(file);
+				toRet = StringUtils.md5FromInputStream(is);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		return toRet;
+	}
 	
 	/**
 	 * @warning Mostly deprecated due to vulnerabilities with MD5
