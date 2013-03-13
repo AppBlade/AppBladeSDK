@@ -155,7 +155,7 @@ public class SystemUtils {
 				toRet = hashedUuidOfPackageFile(pi, "META-INF/CERT.RSA");				
 			}
 			if(toRet == null){
-				toRet = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"; //hash of null
+				toRet = StringUtils.sha256OfNull; //hash of null
 			}
 		} 
 		return toRet;
