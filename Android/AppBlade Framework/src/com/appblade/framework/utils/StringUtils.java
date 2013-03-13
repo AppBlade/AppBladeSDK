@@ -20,6 +20,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appblade.framework.AppBlade;
+
+import android.util.Log;
+
 
 /**
  * Utility class for helpful String methods
@@ -208,16 +212,22 @@ public class StringUtils {
 	 * @return MD5 String
 	 */
 	public static String md5FromFile(File file)  {
-		String toRet = StringUtils.md5OfNull; //md5 hash of null, default if we don't find anything or if there's an error
-		if(file.exists() || file.canRead()){
-			//open the file as an input string
+		String toRet = "ERROR";
+		//open the file as an input string
 			try {
 				InputStream is = new FileInputStream(file);
+				Log.d(AppBlade.LogTag, "opened " + file.getAbsolutePath());
+				try {
+					Log.d(AppBlade.LogTag, is.available() +  " bytes available");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
 				toRet = StringUtils.md5FromInputStream(is);
+				Log.d(AppBlade.LogTag, "closed" + file.getAbsolutePath());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-		}
 		return toRet;
 	}
 	
@@ -236,17 +246,22 @@ public class StringUtils {
 		}
 		
 		if(md != null){
-			try {
-				is = new DigestInputStream(is, md);
-				// read stream to EOF as normal...
-			}
-			finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			DigestInputStream dis = new DigestInputStream(is, md);
+		    byte[] buffer = new byte[BUFFER_SIZE];
+		   try {
+			   try {
+					while (dis.read(buffer) != -1) {
+					 //
+					}
+			        dis.close();
+			   }
+			   finally {
+				   is.close();
+		       }
+		   }
+		   catch (IOException e) {
+				e.printStackTrace();
+		   }
 			byteArray = md.digest();
 		}
 		

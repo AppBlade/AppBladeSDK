@@ -51,9 +51,11 @@ import com.appblade.framework.utils.SystemUtils;
  * Class containing functions that will handle a download and installation of an apk update for the given app.
  * @author rich.stern@raizlabs  
  * @author andrew.tremblay@raizlabs
- * @see KillSwitch
  */
 public class UpdatesHelper {
+	private static final String rootDir = ".appblade";//where we will store our downloaded apks externally
+
+	
 	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;	
 
@@ -117,8 +119,8 @@ public class UpdatesHelper {
 		else if((ttlLastUpdated + ttl) > now)
 			shouldUpdate = false;
 
-		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
-		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate? %b", shouldUpdate));
+		Log.d(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
+		Log.d(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate? %b", shouldUpdate));
 		
 		return shouldUpdate;
 	}
@@ -278,7 +280,7 @@ public static void processUpdate(Activity activity, JSONObject update) {
 	}
 }
 
-private static void downloadUpdate(Activity context, JSONObject update) {
+public static void downloadUpdate(Activity context, JSONObject update) {
 	File fileDownloadLocation = null; //filename is determined by the server
 
 	long expectedFileSize = 0;
@@ -335,13 +337,27 @@ private static void downloadUpdate(Activity context, JSONObject update) {
 		    		}
 	    		}
 	    	}
+	    	
+	    	bufferedOutput.flush();
+			IOUtils.safeClose(bufferedInputStream);
+			IOUtils.safeClose(bufferedOutput);
+			IOUtils.safeClose(fileOutput);
+	    	
+			if(expectedFileSize > 0 && expectedFileSize == totalBytesRead)
+				savedSuccessfully = true;
+
+			
 	    	if(savedSuccessfully)
 	    	{
 	    		//check md5 of the local file with the one we expect from the server, don't bother if we already know the bytestream was interrupted
 	    		String md5OnServer = update.getString("md5");
 	    		String md5Local = StringUtils.md5FromFile(fileDownloadLocation);
-	    		Log.d(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? ");
+	    		Log.d(AppBlade.LogTag, "" + fileDownloadLocation.getAbsolutePath() + " " + (fileDownloadLocation.exists() ? "exists" : "does not exist" ) );
+	    		Log.d(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? " + (md5OnServer.equals(md5Local) ? "equal" : "not equal" ));
 	    		savedSuccessfully = md5OnServer.equals(md5Local);
+	    		if(!savedSuccessfully){
+	    			notifyRetryDownload(context, update);
+	    		}
 	    	}
 	    	
 		}
@@ -356,65 +372,53 @@ private static void downloadUpdate(Activity context, JSONObject update) {
 				(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(NotificationNewVersionDownloading);
 		
-		IOUtils.safeClose(bufferedInputStream);
-		IOUtils.safeClose(bufferedOutput);
-		
 		Log.d(AppBlade.LogTag, String.format("%d bytes downloaded from %s", totalBytesRead, url));
-		
-		if(expectedFileSize > 0 && expectedFileSize == totalBytesRead)
-			savedSuccessfully = true;
 		
 		if(savedSuccessfully && fileDownloadLocation != null) {
 			Log.d(AppBlade.LogTag, String.format("Download succeeded, opening file at %s", fileDownloadLocation.getAbsolutePath()));
 			openWithAlert(context, fileDownloadLocation);
 		}
-		else {
-			Log.d(AppBlade.LogTag, "Download failed, fall back to notifying and let the browser handle it");
-			notifyUpdate(context, update);
-		}
 	}
 }
+	
+	private static void notifyRetryDownload(final Activity context, final JSONObject update) 
+	{
+		Log.d(AppBlade.LogTag, "Download failed, notify the user");
 
-public static File fileFromUpdateJSON(JSONObject update) throws JSONException {
-	String identifierOnServer = update.getString("bundle_identifier");
-	String newFileName = String.format("%s%s", identifierOnServer, ".apk");
-	return new File(UpdatesHelper.getRootDirectory(), newFileName); //might exist
-}
+		context.runOnUiThread(new Runnable() {
+			public void run() {
+				AlertDialog.Builder builder = new AlertDialog.Builder(context);
+				builder.setMessage("A there was a problem downloading an update for your app.");
+				builder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						UpdateTask updateTask = new UpdateTask(context, false, false);
+						updateTask.execute();
+					}
+				});
+				builder.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						notifyUpdate(context, update);
+					}
+				});
+
+				builder.setOnCancelListener(new OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+					}
+				});
+				builder.create().show();
+			}
+		});
+
+		
+	}
 
 
-/**
- * Stores ttl and ttlLastUpdated in their static locations.
- * @param timeToLive
- */
-public static void saveTtl(int timeToLive, Context context) {
-	ttl = timeToLive;
-	ttlLastUpdated = System.currentTimeMillis();
-	SharedPreferences prefs = context.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
-	Editor editor = prefs.edit();
-	editor.putInt(PrefsKeyTTL, ttl);
-	editor.putLong(PrefsKeyTTLUpdated, ttlLastUpdated);
-	editor.commit();
-}
+	public static File fileFromUpdateJSON(JSONObject update) throws JSONException {
+		String identifierOnServer = update.getString("bundle_identifier").replaceAll("\\.", "_");
+		String newFileName = String.format("%s%s", identifierOnServer, ".apk");
+		return new File(UpdatesHelper.getRootDirectory(), newFileName); //might exist
+	}
 
-/**
- * Loads ttl from static location. Does not assign to the private variable.
- * @param context
- * @return the value of stored ttl
- */
-public int loadTtl(Context context) {
-	SharedPreferences prefs = context.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
-	return prefs.getInt(PrefsKeyTTL, Integer.MIN_VALUE);
-}
-
-/**
- * Loads TtlLastUpdated from static location. Does not assign to the private variable.
- * @param context
- * @return the value the ttl was last updated
- */
-public int loadTtlLastUpdated(Context context) {
-	SharedPreferences prefs = context.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
-	return prefs.getInt(PrefsKeyTTLUpdated, Integer.MIN_VALUE);
-}
 
 
 	//File I/O
@@ -440,7 +444,6 @@ public int loadTtlLastUpdated(Context context) {
 	}
 	
 	private static File getRootDirectory() {
-		String rootDir = ".appblade";
 		String path = String.format("%s%s%s",
 				Environment.getExternalStorageDirectory().getAbsolutePath(), "/",
 				rootDir);
@@ -457,7 +460,7 @@ public int loadTtlLastUpdated(Context context) {
 	{
 		String packageDir = "error_no_package_name.apk";
 		if(AppBlade.hasPackageInfo()){
-			packageDir = String.format("%s%s", AppBlade.getPackageInfo().packageName, ".apk");
+			packageDir = String.format("%s%s", AppBlade.getPackageInfo().packageName.replaceAll("\\.", "_"), ".apk");
 		}
 		File rootDir = UpdatesHelper.getRootDirectory(); 
 		return new File(rootDir, packageDir);
@@ -508,5 +511,42 @@ public int loadTtlLastUpdated(Context context) {
 		}
 		catch(JSONException ex) { ex.printStackTrace(); }
 	}
+
+	//TTL handling 
+	
+	/**
+	 * Stores ttl and ttlLastUpdated in their static locations.
+	 * @param timeToLive
+	 */
+	public static void saveTtl(int timeToLive, Context context) {
+		ttl = timeToLive;
+		ttlLastUpdated = System.currentTimeMillis();
+		SharedPreferences prefs = context.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putInt(PrefsKeyTTL, ttl);
+		editor.putLong(PrefsKeyTTLUpdated, ttlLastUpdated);
+		editor.commit();
+	}
+	
+	/**
+	 * Loads ttl from static location. Does not assign to the private variable.
+	 * @param context
+	 * @return the value of stored ttl
+	 */
+	public int loadTtl(Context context) {
+		SharedPreferences prefs = context.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
+		return prefs.getInt(PrefsKeyTTL, Integer.MIN_VALUE);
+	}
+	
+	/**
+	 * Loads TtlLastUpdated from static location. Does not assign to the private variable.
+	 * @param context
+	 * @return the value the ttl was last updated
+	 */
+	public int loadTtlLastUpdated(Context context) {
+		SharedPreferences prefs = context.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
+		return prefs.getInt(PrefsKeyTTLUpdated, Integer.MIN_VALUE);
+	}
+	
 	
 }
