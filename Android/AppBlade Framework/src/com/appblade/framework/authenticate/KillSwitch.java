@@ -31,9 +31,7 @@ import com.appblade.framework.utils.SystemUtils;
 
 /**
  * Class used for asynchronously authenticating an app and closing the app if unauthorized.
- * Will also handle kicking off the update behavior, since the API authenticate response will also notify us of an update. 
  * @see KillSwitchTask
- * @see UpdatesHelper.processUpdate(Activity, JSONObject)
  * @author rich.stern@raizlabs
  * @author andrew.tremblay@raizlabs 
  */
@@ -207,15 +205,9 @@ public class KillSwitch {
 					Log.d(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
 					JSONObject json = new JSONObject(data);
 					int timeToLive = json.getInt("ttl");
-					if(json.has("update")) {
-						JSONObject update = json.getJSONObject("update");
-						if(update != null)
-							UpdatesHelper.processUpdate(context, update);
-					}
-					else
-						kill(context);
-						
 					save(timeToLive);
+
+					kill(context);
 				}
 				catch (IOException ex) { }
 				catch (JSONException ex) { }
