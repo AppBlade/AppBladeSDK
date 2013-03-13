@@ -7,7 +7,7 @@
 	* Android now sends a hash of AndroidManifest.xml to better identify it among uploaded versions for anonymous updating.  
 	* iOS sends a hash of its info.plist for version identification. 
 
-	Added alternate (i.e. better) session logging implementation for Android. You can now attach session logging as a Service, which tracks the opening and closing of an app more intuitively. See com.appblade.framework.stats.AppBladeSessionLoggingService in the source code for new implementation. 
+	Added alternate (i.e. better) session logging implementation for Android. You can now attach session logging as a Service, which tracks the opening and closing of an app more intuitively. It's a bit harder to set up, so it's not the officially suggested method to track sessions. See com.appblade.framework.stats.AppBladeSessionLoggingService in the source code. 
 
 2012-12-03 	Andrew Tremblay  <andrew.tremblay@raizlabs.com>
 	Updated iOS Source to be compatible with objective-C++ compilers (app delegates with the .mm suffix were throwing errors when importing AppBlade.h)
