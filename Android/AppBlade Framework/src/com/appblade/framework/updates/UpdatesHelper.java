@@ -3,6 +3,8 @@ package com.appblade.framework.updates;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +44,7 @@ import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
+import com.appblade.framework.utils.StringUtils;
 import com.appblade.framework.utils.SystemUtils;
 
 /**
@@ -88,7 +91,6 @@ public class UpdatesHelper {
 	 */
 	public static void checkForUpdateWithTimeout(Activity activity, boolean promptForDownload)
 	{	
-		
 		if(UpdatesHelper.shouldUpdate(activity)){
 			checkForAnonymousUpdate(activity, promptForDownload);
 		}
@@ -260,26 +262,25 @@ public static void confirmUpdate(final Activity activity, final JSONObject updat
  * Kick off an update and install if we have the write permissions. Notify the user of the download if we don't have write permissions.
  * <br>Used in {@link com.appblade.framework.authenticate.KillSwitch}
  * @param activity Activity to handle the notification or installation.
- * @param update JSONObject containing the necessary update information.
+ * @param update JSONObject containing the necessary update information (like where to install).
  */
 public static void processUpdate(Activity activity, JSONObject update) {
 	PackageInfo pkg = AppBlade.getPackageInfo();
 	String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 	if(SystemUtils.hasPermission(pkg, permission)) {
 		notifyDownloading(activity);
-		Log.d(AppBlade.LogTag, "UpdatesHelper.processUpdate - permission to write to sd, downloading...");
+		Log.i(AppBlade.LogTag, "UpdatesHelper.processUpdate - permission to write to sd, processing download");
 		downloadUpdate(activity, update);
 	}
 	else {
-		Log.d(AppBlade.LogTag, "UpdatesHelper.processUpdate - no permission to write to sd, notifying...");
+		Log.i(AppBlade.LogTag, "UpdatesHelper.processUpdate - download available but there are no permissions to write to sd, notifying...");
 		notifyUpdate(activity, update);
 	}
 }
 
 private static void downloadUpdate(Activity context, JSONObject update) {
-	File dir = getRootDirectory();
-	File file = new File(dir, "install.apk");
-	
+	File fileDownloadLocation = null; //filename is determined by the server
+
 	long expectedFileSize = 0;
 	long totalBytesRead = 0;
 	boolean savedSuccessfully = false;
@@ -292,8 +293,8 @@ private static void downloadUpdate(Activity context, JSONObject update) {
 	
 	try
 	{
+		fileDownloadLocation = UpdatesHelper.fileFromUpdateJSON(update);
 		url = update.getString("url");	
-		url = url.replaceFirst("http://", "https://");
 		
 		expectedFileSize = HttpUtils.getHeaderAsLong(url, HttpUtils.HeaderContentLength);
 		Log.d(AppBlade.LogTag, String.format("Downloading %d bytes from %s", expectedFileSize, url));
@@ -305,14 +306,14 @@ private static void downloadUpdate(Activity context, JSONObject update) {
 		HttpResponse response = client.execute(request);
 		if(response != null) {
 			
-			if(file.exists())
-				file.delete();
-			file.createNewFile();
+			if(fileDownloadLocation.exists()) //this location needs to start empty
+				fileDownloadLocation.delete();
+			fileDownloadLocation.createNewFile();
 			
 			inputStream = response.getEntity().getContent();
 			bufferedInputStream = new BufferedInputStream(inputStream);
 			
-	    	fileOutput = new FileOutputStream(file);
+	    	fileOutput = new FileOutputStream(fileDownloadLocation);
 	    	bufferedOutput = new BufferedOutputStream(fileOutput);
 	    	
 	        byte[] buffer = new byte[1024 * 16];
@@ -329,11 +330,20 @@ private static void downloadUpdate(Activity context, JSONObject update) {
 		    		}
 		    		else {
 		    			// end of file...
-		    			savedSuccessfully = true;
+		    			savedSuccessfully = true; //ever the optimist
 		    			break;
 		    		}
 	    		}
 	    	}
+	    	if(savedSuccessfully)
+	    	{
+	    		//check md5 of the local file with the one we expect from the server, don't bother if we already know the bytestream was interrupted
+	    		String md5OnServer = update.getString("md5");
+	    		String md5Local = StringUtils.md5FromFile(fileDownloadLocation);
+	    		Log.d(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? ");
+	    		savedSuccessfully = md5OnServer.equals(md5Local);
+	    	}
+	    	
 		}
 	}
 	catch(JSONException ex) { ex.printStackTrace(); }
@@ -354,17 +364,23 @@ private static void downloadUpdate(Activity context, JSONObject update) {
 		if(expectedFileSize > 0 && expectedFileSize == totalBytesRead)
 			savedSuccessfully = true;
 		
-		if(savedSuccessfully) {
-			Log.d(AppBlade.LogTag, String.format("Download succeeded, opening file at %s", file.getAbsolutePath()));
-			open(context, file);
+		if(savedSuccessfully && fileDownloadLocation != null) {
+			Log.d(AppBlade.LogTag, String.format("Download succeeded, opening file at %s", fileDownloadLocation.getAbsolutePath()));
+			openWithAlert(context, fileDownloadLocation);
 		}
 		else {
 			Log.d(AppBlade.LogTag, "Download failed, fall back to notifying and let the browser handle it");
 			notifyUpdate(context, update);
-			KillSwitch.kill(context);
 		}
 	}
 }
+
+public static File fileFromUpdateJSON(JSONObject update) throws JSONException {
+	String identifierOnServer = update.getString("bundle_identifier");
+	String newFileName = String.format("%s%s", identifierOnServer, ".apk");
+	return new File(UpdatesHelper.getRootDirectory(), newFileName); //might exist
+}
+
 
 /**
  * Stores ttl and ttlLastUpdated in their static locations.
@@ -402,7 +418,7 @@ public int loadTtlLastUpdated(Context context) {
 
 
 	//File I/O
-	private static void open(final Activity context, final File file) {
+	private static void openWithAlert(final Activity context, final File file) {
 		context.runOnUiThread(new Runnable() {
 			public void run() {
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -412,12 +428,10 @@ public int loadTtlLastUpdated(Context context) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);
 						intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
 						context.startActivity(intent);
-						KillSwitch.kill(context);
 					}
 				});
 				builder.setOnCancelListener(new OnCancelListener() {
 					public void onCancel(DialogInterface dialog) {
-						//KillSwitch.kill(context);
 					}
 				});
 				builder.create().show();
@@ -433,6 +447,29 @@ public int loadTtlLastUpdated(Context context) {
 		File dir = new File(path);
 		dir.mkdirs();
 		return dir;
+	}
+	
+	/**
+	 * The current location of the downloaded file (does not check existence)
+	 * @return new instance of the unique downloaded file location for this package
+	 */
+	public static File downloadedFile()
+	{
+		String packageDir = "error_no_package_name.apk";
+		if(AppBlade.hasPackageInfo()){
+			packageDir = String.format("%s%s", AppBlade.getPackageInfo().packageName, ".apk");
+		}
+		File rootDir = UpdatesHelper.getRootDirectory(); 
+		return new File(rootDir, packageDir);
+	}
+
+	public static void deleteCurrentFile() {
+		File currentFile = UpdatesHelper.downloadedFile();
+		if(currentFile.delete())
+		{
+			Log.d(AppBlade.LogTag, "Deleted now-unnecessary apk: " + currentFile.getName());
+		}
+		Log.d(AppBlade.LogTag, "Everything up-to-date");		
 	}
 	
 	//Notifiers
@@ -471,5 +508,5 @@ public int loadTtlLastUpdated(Context context) {
 		}
 		catch(JSONException ex) { ex.printStackTrace(); }
 	}
-
+	
 }

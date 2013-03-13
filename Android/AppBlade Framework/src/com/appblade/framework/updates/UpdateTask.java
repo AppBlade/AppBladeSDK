@@ -1,5 +1,6 @@
 package com.appblade.framework.updates;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.http.HttpResponse;
@@ -64,10 +65,25 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 				JSONObject json = new JSONObject(data);
 				int timeToLive = json.getInt("ttl");//update ttl
 				UpdatesHelper.saveTtl(timeToLive, this.taskActivity);
-				if(json.has("update")) {
+				//now for the good part
+				if(json.has("update")) { 
 					JSONObject update = json.getJSONObject("update");
 					if(update != null) {
-						if(this.promptDownloadConfirm)
+						//check if we already have it, assume we don't 
+						boolean notDownloadedYet = true;
+						
+						String md5OnServer = update.getString("md5");
+						File destFile = UpdatesHelper.fileFromUpdateJSON(update);
+						if(destFile.exists()){
+							//stage one complete! check the hash.
+							String md5Local = StringUtils.md5FromFile(destFile);
+							if(md5Local.equals(md5OnServer) && !md5Local.equals(StringUtils.md5OfNull)){ 
+								//a match! and it's not a null of something!
+								notDownloadedYet = false;
+							}
+						}
+						 
+						if(this.promptDownloadConfirm && notDownloadedYet)
 						{
 							UpdatesHelper.confirmUpdate(this.taskActivity, update);
 						}
@@ -76,6 +92,14 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 							UpdatesHelper.processUpdate(this.taskActivity, update);								
 						}
 					}
+					else
+					{
+						UpdatesHelper.deleteCurrentFile();
+					}
+				}
+				else
+				{
+					UpdatesHelper.deleteCurrentFile();
 				}
 			}
 			catch (IOException ex) { ex.printStackTrace(); }
