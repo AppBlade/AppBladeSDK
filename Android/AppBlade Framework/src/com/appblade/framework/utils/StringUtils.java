@@ -26,6 +26,9 @@ import org.json.JSONObject;
  */
 public class StringUtils {
 	 public static final int BUFFER_SIZE = 2048;
+	 public static final String md5OfNull = "d41d8cd98f00b204e9800998ecf8427e";
+	 public static final String sha256OfNull = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+		 
 	 
 	/**
 	 * Utility method for pulling plain text from an InputStream object
