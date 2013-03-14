@@ -42,6 +42,7 @@ public class RemoteAuthHelper {
 	 * @param context
 	 * @return filename of access token
 	 */
+	@SuppressWarnings("unused")
 	private static String getAccessTokenFilePath(Context context) {
 		String tokenFile = getAccessTokenFilename(context);		
 		String packageName = context.getFilesDir().getPath().toString() ;//context.getApplicationInfo().dataDir;
