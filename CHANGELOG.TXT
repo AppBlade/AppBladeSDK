@@ -1,3 +1,8 @@
+2013-03-14 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
+	UPDATED CUSTOM PARAM CALL
+	* Was -(void)setCustomParam:(id)newObject withValue:(NSString*)key; 
+	* Now -(void)setCustomParam:(NSString *)key withValue:(id)value;
+
 2013-03-13 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
 	Added Anonymous Update call. This call sends anonymous information on the current build to AppBlade and checks if there is a newer version available. See documentation/wiki for a walkthrough. 
 	* AppBlade.checkForUpdates(Activity activity); in Android
