@@ -1091,7 +1091,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
 }
 
--(void)setCustomParam:(id)key withValue:(id)value
+-(void)setCustomParam:(NSString *)key withValue:(id)value
 {
     NSDictionary* currentFields = [self getCustomParams];
     if (currentFields == nil) {
