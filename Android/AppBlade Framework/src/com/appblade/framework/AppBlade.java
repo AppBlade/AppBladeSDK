@@ -327,13 +327,13 @@ public class AppBlade {
 	
 	/**
 	 * Checks with AppBlade if an update is available. Will try to find the best method available <br>
-	 * User will be prompted before downloading the apk, see {@link #checkForUpdates(Activity, boolean)} to disable the prompt and download silently.
+	 * User will not be prompted before downloading the apk, see {@link #checkForUpdates(Activity, boolean)} to enable a prompt and not download silently.
 	 * @param activity Activity to handle the download and prompt (should not be null)
 	 */
 	public static void checkForUpdates(Activity activity)
 	{
 		hardCheckIsRegistered();
-		checkForUpdates(activity, true);
+		checkForUpdates(activity, false);
 	}
 
 	/**
@@ -345,6 +345,18 @@ public class AppBlade {
 	{
 		hardCheckIsRegistered();
 		UpdatesHelper.checkForUpdateWithTimeout(activity, promptForDownload);
+	}
+	
+
+	/**
+	 * Checks with AppBlade if an update is available regardless of whether we've already checked recently. Will try to find the best method available <br>
+	 * @param activity Activity to handle the download and prompt (should not be null)
+	 * @param promptForDownload flag to display a prompt to the user that a download is available. The prompt gives user the option to cancel the update download process. false will load the update in the background.
+	 */
+	public static void checkForUpdatesIgnoreTimeout(Activity activity, boolean promptForDownload)
+	{
+		hardCheckIsRegistered();
+		UpdatesHelper.checkForUpdate(activity, promptForDownload);
 	}
 	
 	
