@@ -62,8 +62,8 @@ public class UpdatesHelper {
 	private static final String PrefsKeyTTLUpdated = "AppBlade.UpdatesHelper.TTLUpdated";
 
 	
-	private static int ttl = Integer.MIN_VALUE;
-	private static long ttlLastUpdated = Long.MIN_VALUE;
+	private static Long ttl = Long.MIN_VALUE;
+	private static Long ttlLastUpdated = Long.MIN_VALUE;
 	private static final int MillisPerHour = 1000 * 60 * 60;
 	@SuppressWarnings("unused")
 	private static final int MillisPerDay = MillisPerHour * 24;
@@ -101,20 +101,17 @@ public class UpdatesHelper {
 	 */
 	public static boolean shouldUpdate(Activity activity) {
 		SharedPreferences prefs = activity.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
-		ttl = prefs.getInt(PrefsKeyTTL, ttl);
+		ttl = prefs.getLong(PrefsKeyTTL, ttl);
 		ttlLastUpdated = prefs.getLong(PrefsKeyTTLUpdated, ttlLastUpdated);
 		
 		boolean shouldUpdate = true;
 		long now = System.currentTimeMillis();
-		long timeTTLUpdates = ttl + ttlLastUpdated;
-		
-		// If we have updated TTL value from AppBlade within the last hour, do not require update
-		if(timeTTLUpdates > (now - MillisPerHour))
-			shouldUpdate = false;
-		
+		long timeToUpdate = (ttlLastUpdated + ttl);
 		// If TTL is satisfied (we are within the time to live from the last time updated), do not require update
-		else if((ttlLastUpdated + ttl) > now)
+		if(timeToUpdate > now)
+		{
 			shouldUpdate = false;
+		}
 
 		Log.d(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
 		Log.d(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate? %b", shouldUpdate));
@@ -515,12 +512,12 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	 * Stores ttl and ttlLastUpdated in their static locations.
 	 * @param timeToLive
 	 */
-	public static void saveTtl(int timeToLive, Context context) {
+	public static void saveTtl(long timeToLive, Context context) {
 		ttl = timeToLive;
 		ttlLastUpdated = System.currentTimeMillis();
 		SharedPreferences prefs = context.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
-		editor.putInt(PrefsKeyTTL, ttl);
+		editor.putLong(PrefsKeyTTL, ttl);
 		editor.putLong(PrefsKeyTTLUpdated, ttlLastUpdated);
 		editor.commit();
 	}

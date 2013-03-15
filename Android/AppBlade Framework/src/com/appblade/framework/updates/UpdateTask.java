@@ -63,7 +63,7 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 				String data = StringUtils.readStream(response.getEntity().getContent());
 				Log.d(AppBlade.LogTag, String.format("UpdateTask response OK %s", data));
 				JSONObject json = new JSONObject(data);
-				int timeToLive = json.getInt("ttl");//update ttl
+				long timeToLive = json.getLong("ttl")*1000;//update ttl (this comes in as seconds, not millis)
 				UpdatesHelper.saveTtl(timeToLive, this.taskActivity);
 				//now for the good part
 				if(json.has("update")) { 
