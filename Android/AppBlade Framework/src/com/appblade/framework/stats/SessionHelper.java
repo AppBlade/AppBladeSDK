@@ -397,12 +397,13 @@ public class SessionHelper {
             try
             {
                 fstream = new FileInputStream(sessionsIndexFileURI());
-                BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+				BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
                 String strLine = "";
                 //Read file line by line
                 while ((strLine = br.readLine()) != null)   {
                   listofusers.add(new SessionData(strLine));
                 }
+                br.close();
             }
             catch (IOException e) {
               e.printStackTrace();
