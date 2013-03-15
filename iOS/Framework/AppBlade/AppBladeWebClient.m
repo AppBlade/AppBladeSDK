@@ -660,7 +660,7 @@ static BOOL is_encrypted () {
         else
         {
             NSLog(@"Error parsing update plist: %@", [error debugDescription]);
-            [_delegate appBladeWebClientFailed:self withErrorString:@"An invalid response was received from AppBlade; please contact support"];
+            [_delegate appBladeWebClientFailed:self withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
         }
         
 
