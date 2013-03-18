@@ -168,7 +168,6 @@ public class UpdatesHelper {
 				builder.setOnCancelListener(new OnCancelListener() {
 					public void onCancel(DialogInterface dialog) {
 						dialog.dismiss();
-						activity.finish();
 					}
 				});
 				builder.setCancelable(false);
