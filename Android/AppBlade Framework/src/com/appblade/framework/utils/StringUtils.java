@@ -212,7 +212,7 @@ public class StringUtils {
 	 * @return MD5 String
 	 */
 	public static String md5FromFile(File file)  {
-		String toRet = "ERROR";
+		String toRet = "";
 		//open the file as an input string
 			try {
 				InputStream is = new FileInputStream(file);
