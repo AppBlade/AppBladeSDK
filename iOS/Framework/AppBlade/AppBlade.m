@@ -1099,6 +1099,27 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
 }
 
+-(void)setCustomParam:(id)newObject withValue:(NSString*)key{
+    NSDictionary* currentFields = [self getCustomParams];
+    if (currentFields == nil) {
+        currentFields = [NSDictionary dictionary];
+    }
+    NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
+    if(key && newObject){
+        [mutableFields setObject:newObject forKey:key];
+    }else if(key && !newObject){
+        [mutableFields removeObjectForKey:key];
+    }
+    else
+    {
+        NSLog(@"invalid nil key");
+    }
+    NSLog(@"setting to %@", mutableFields);
+    currentFields = (NSDictionary *)mutableFields;
+    [self setCustomParams:currentFields];
+}
+
+
 -(void)setCustomParam:(id)object forKey:(NSString*)key;
 {
     NSDictionary* currentFields = [self getCustomParams];
