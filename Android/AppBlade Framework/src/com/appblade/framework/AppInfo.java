@@ -116,7 +116,7 @@ public class AppInfo {
 		boolean toRet = false;
 		TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		String networkOperator = tm.getNetworkOperatorName();
-		Log.d(AppBlade.LogTag, "networkOperator "+networkOperator);
+		Log.v(AppBlade.LogTag, "networkOperator "+networkOperator);
 		if("Android".equals(networkOperator)) {
 		    // Emulator
 			toRet = true;

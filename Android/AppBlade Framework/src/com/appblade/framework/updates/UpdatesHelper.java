@@ -113,8 +113,8 @@ public class UpdatesHelper {
 			shouldUpdate = false;
 		}
 
-		Log.d(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
-		Log.d(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate? %b", shouldUpdate));
+		Log.v(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
+		Log.v(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate? %b", shouldUpdate));
 		
 		return shouldUpdate;
 	}
@@ -205,8 +205,8 @@ public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
 		}
 		WebServiceHelper.addCommonHeaders(request);
 		
-		Log.d(AppBlade.LogTag, "DEVICE_FINGERPRINT: " + request.getFirstHeader("DEVICE_FINGERPRINT"));
-		Log.d(AppBlade.LogTag, "android_id: " + request.getFirstHeader("android_id"));
+		Log.v(AppBlade.LogTag, "DEVICE_FINGERPRINT: " + request.getFirstHeader("DEVICE_FINGERPRINT"));
+		Log.v(AppBlade.LogTag, "android_id: " + request.getFirstHeader("android_id"));
 	    response = client.execute(request);
 		Log.e(AppBlade.LogTag, String.format("%s", request.getURI() ) );
 	}
@@ -292,7 +292,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 		url = update.getString("url");	
 		
 		expectedFileSize = HttpUtils.getHeaderAsLong(url, HttpUtils.HeaderContentLength);
-		Log.d(AppBlade.LogTag, String.format("Downloading %d bytes from %s", expectedFileSize, url));
+		Log.v(AppBlade.LogTag, String.format("Downloading %d bytes from %s", expectedFileSize, url));
 		
 		HttpGet request = new HttpGet();
 		request.setURI(new URI(url));
@@ -345,8 +345,8 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	    		//check md5 of the local file with the one we expect from the server, don't bother if we already know the bytestream was interrupted
 	    		String md5OnServer = update.getString("md5");
 	    		String md5Local = StringUtils.md5FromFile(fileDownloadLocation);
-	    		Log.d(AppBlade.LogTag, "" + fileDownloadLocation.getAbsolutePath() + " " + (fileDownloadLocation.exists() ? "exists" : "does not exist" ) );
-	    		Log.d(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? " + (md5OnServer.equals(md5Local) ? "equal" : "not equal" ));
+	    		Log.v(AppBlade.LogTag, "" + fileDownloadLocation.getAbsolutePath() + " " + (fileDownloadLocation.exists() ? "exists" : "does not exist" ) );
+	    		Log.v(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? " + (md5OnServer.equals(md5Local) ? "equal" : "not equal" ));
 	    		savedSuccessfully = md5OnServer.equals(md5Local);
 	    		if(!savedSuccessfully){
 	    			notifyRetryDownload(context, update);
@@ -355,20 +355,20 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	    	
 		}
 	}
-	catch(JSONException ex) { ex.printStackTrace(); }
-	catch(URISyntaxException ex) { ex.printStackTrace(); }
-	catch(ClientProtocolException ex) { ex.printStackTrace(); }
-	catch(IOException ex) { ex.printStackTrace(); }
+	catch(JSONException ex) { Log.w(AppBlade.LogTag, "JSON error when downloading update ", ex); }
+	catch(URISyntaxException ex) { Log.w(AppBlade.LogTag, "URI Syntax error when downloading update ", ex); }
+	catch(ClientProtocolException ex) { Log.w(AppBlade.LogTag, "Client protocol error when downloading update ", ex); }
+	catch(IOException ex) { Log.w(AppBlade.LogTag, "IO error when downloading update ", ex); }
 	finally
 	{
 		NotificationManager notificationManager =
 				(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(NotificationNewVersionDownloading);
 		
-		Log.d(AppBlade.LogTag, String.format("%d bytes downloaded from %s", totalBytesRead, url));
+		Log.v(AppBlade.LogTag, String.format("%d bytes downloaded from %s", totalBytesRead, url));
 		
 		if(savedSuccessfully && fileDownloadLocation != null) {
-			Log.d(AppBlade.LogTag, String.format("Download succeeded, opening file at %s", fileDownloadLocation.getAbsolutePath()));
+			Log.v(AppBlade.LogTag, String.format("Download succeeded, opening file at %s", fileDownloadLocation.getAbsolutePath()));
 			openWithAlert(context, fileDownloadLocation);
 		}
 	}
@@ -376,7 +376,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	
 	private static void notifyRetryDownload(final Activity context, final JSONObject update) 
 	{
-		Log.d(AppBlade.LogTag, "Download failed, notify the user");
+		Log.v(AppBlade.LogTag, "Download failed, notify the user");
 
 		context.runOnUiThread(new Runnable() {
 			public void run() {
@@ -463,14 +463,14 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 		File currentFile = UpdatesHelper.downloadedFile();
 		if(currentFile.delete())
 		{
-			Log.d(AppBlade.LogTag, "Deleted now-unnecessary apk: " + currentFile.getName());
+			Log.v(AppBlade.LogTag, "Deleted now-unnecessary apk: " + currentFile.getName());
 		}
-		Log.d(AppBlade.LogTag, "Everything up-to-date");		
+		Log.v(AppBlade.LogTag, "Everything up-to-date");		
 	}
 	
 	//Notifiers
 	@SuppressWarnings("deprecation")
-	private static void notifyDownloading(Activity context) {
+	private static void notifyDownloading(Context context) {
 		Intent blank = new Intent();
 		PendingIntent contentIntent = PendingIntent.getBroadcast(context, 0, blank, 0);
 		
@@ -483,8 +483,8 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static void notifyUpdate(Activity context, JSONObject update) {
-		Log.d(AppBlade.LogTag, "UpdatesHelper.notifyUpdate");
+	private static void notifyUpdate(Context context, JSONObject update) {
+		Log.v(AppBlade.LogTag, "UpdatesHelper.notifyUpdate");
 		try
 		{
 			String url = update.getString("url");
@@ -502,7 +502,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 			}
 				
 		}
-		catch(JSONException ex) { ex.printStackTrace(); }
+		catch(JSONException ex) { Log.w(AppBlade.LogTag, "JSON error when notifying of update ", ex); }
 	}
 
 	//TTL handling 

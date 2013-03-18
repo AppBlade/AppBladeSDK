@@ -46,7 +46,7 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 		HttpResponse response = UpdatesHelper.getUpdateResponse(this.requireAuthCredentials);
 		
 		if(response != null){
-			Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			Log.v(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
 		}
 		handleResponse(response);
 		return null;
@@ -61,7 +61,7 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 		if(HttpUtils.isOK(response)) {
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.d(AppBlade.LogTag, String.format("UpdateTask response OK %s", data));
+				Log.v(AppBlade.LogTag, String.format("UpdateTask response OK %s", data));
 				JSONObject json = new JSONObject(data);
 				long timeToLive = json.getLong("ttl")*1000;//update ttl (this comes in as seconds, not millis)
 				UpdatesHelper.saveTtl(timeToLive, this.taskActivity);
@@ -102,8 +102,8 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 					UpdatesHelper.deleteCurrentFile();
 				}
 			}
-			catch (IOException ex) { ex.printStackTrace(); }
-			catch (JSONException ex) { ex.printStackTrace(); }
+			catch (IOException ex) { Log.w(AppBlade.LogTag, "IO error when handling update response", ex); }
+			catch (JSONException ex) { Log.w(AppBlade.LogTag, "JSON error when handling update response ", ex); }
 		}
 	}
 }

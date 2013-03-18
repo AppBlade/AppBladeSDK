@@ -95,8 +95,8 @@ public class KillSwitch {
 		else if((ttlLastUpdated + ttl) > now)
 			shouldUpdate = false;
 
-		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
-		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate? %b", shouldUpdate));
+		Log.v(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
+		Log.v(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate? %b", shouldUpdate));
 		
 		return shouldUpdate;
 	}
@@ -134,7 +134,7 @@ public class KillSwitch {
 		}
 		catch(Exception ex)
 		{
-			Log.d(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+			Log.v(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
 		
 		return response;
@@ -172,7 +172,7 @@ public class KillSwitch {
 		protected Void doInBackground(Void... params) {
 			HttpResponse response = getKillSwitchResponse();
 			if(response != null){
-				Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+				Log.v(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
 			}
 			handleResponse(response);
 			return null;
@@ -202,7 +202,7 @@ public class KillSwitch {
 			if(HttpUtils.isOK(response)) {
 				try {
 					String data = StringUtils.readStream(response.getEntity().getContent());
-					Log.d(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
+					Log.v(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
 					JSONObject json = new JSONObject(data);
 					int timeToLive = json.getInt("ttl");
 					save(timeToLive);
@@ -230,10 +230,10 @@ public class KillSwitch {
 			String message = null;
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.d(AppBlade.LogTag, String.format("KillSwitch response unauthorized %s", data));
+				Log.v(AppBlade.LogTag, String.format("KillSwitch response unauthorized %s", data));
 				JSONObject json = new JSONObject(data);
 				message = json.getString("error");
-				Log.d(AppBlade.LogTag, json.toString());
+				Log.v(AppBlade.LogTag, json.toString());
 			}
 			catch (IOException ex) { }
 			catch (JSONException ex) { }

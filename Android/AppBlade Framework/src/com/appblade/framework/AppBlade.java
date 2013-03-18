@@ -279,7 +279,7 @@ public class AppBlade {
 		// close the activity context
 		else if (fromLoopBack)
 		{
-			Log.d(AppBlade.LogTag,
+			Log.v(AppBlade.LogTag,
 			String.format("AppBlade.authorize: user is authorized, closing activity: %s", activity.getLocalClassName()));
 			activity.finish();
 		}
@@ -613,7 +613,7 @@ public class AppBlade {
 		if(e != null && canWriteToDisk)
 		{
 			if(e.getLocalizedMessage() != null){
-				Log.d(AppBlade.LogTag, e.getLocalizedMessage());
+				Log.v(AppBlade.LogTag, e.getLocalizedMessage());
 			}
 			CrashReportData data = new CrashReportData(e);
 			new PostCrashReportTask(null).execute(data);
@@ -708,7 +708,7 @@ public class AppBlade {
 	public static void setDeviceId(String accessToken) {
 		hardCheckIsRegistered();
 
-		Log.d(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
+		Log.v(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
 
 		if(!StringUtils.isNullOrEmpty(accessToken))
 			AppBlade.appInfo.Ext = accessToken;

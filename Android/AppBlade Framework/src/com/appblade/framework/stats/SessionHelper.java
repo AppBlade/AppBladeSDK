@@ -58,7 +58,7 @@ public class SessionHelper {
 	 * @param context Context where we will be storing the session data.
 	 */
 	public static void startSession(Context context){
-		Log.d(AppBlade.LogTag, "Starting Session");
+		Log.v(AppBlade.LogTag, "Starting Session");
 		AppBlade.currentSession = new SessionData();
 	}
 	 
@@ -67,7 +67,7 @@ public class SessionHelper {
 	 * @param context Context where we will be storing the session data.
 	 */
 	public static void endSession(Context context){
-		Log.d(AppBlade.LogTag, "Ending Session");
+		Log.v(AppBlade.LogTag, "Ending Session");
 		if(AppBlade.currentSession != null){
 			AppBlade.currentSession.ended = new Date();
 						
@@ -97,11 +97,11 @@ public class SessionHelper {
 			    boolean succeeded = activity.bindService(bindIntent, AppBlade.sessionLoggingService.appbladeSessionServiceConnection, Context.BIND_AUTO_CREATE);		
 			    if(succeeded)
 			    {
-					Log.d(AppBlade.LogTag, "Success binding the Session.");
+					Log.v(AppBlade.LogTag, "Success binding the Session.");
 			    }
 			    else
 			    {
-					Log.d(AppBlade.LogTag, "Error binding the Session. Make sure the SessionService is properly in your manifest.");
+					Log.v(AppBlade.LogTag, "Error binding the Session. Make sure the SessionService is properly in your manifest.");
 			    }
 
 			}catch(SecurityException e){
@@ -171,9 +171,9 @@ public class SessionHelper {
 			
 			String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, multipartRawContent, HttpMethod.PUT);
 
-			Log.d(AppBlade.LogTag, urlPath);
-			Log.d(AppBlade.LogTag, url);
-			Log.d(AppBlade.LogTag, authHeader);
+			Log.v(AppBlade.LogTag, urlPath);
+			Log.v(AppBlade.LogTag, url);
+			Log.v(AppBlade.LogTag, authHeader);
 
 			request.setURI(new URI(url));
 			request.addHeader("Content-Type", HttpUtils.ContentTypeMultipartFormData + "; boundary=" + sharedBoundary);
@@ -186,13 +186,13 @@ public class SessionHelper {
 			if(response != null && response.getStatusLine() != null)
 			{
 				int statusCode = response.getStatusLine().getStatusCode();
-				Log.d(AppBlade.LogTag, "response: "+ statusCode);
+				Log.v(AppBlade.LogTag, "response: "+ statusCode);
 				return statusCode;
 			}
 		}
 		catch(Exception ex)
 		{
-			Log.d(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+			Log.v(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
 
 		IOUtils.safeClose(client);
@@ -219,7 +219,7 @@ public class SessionHelper {
 			entity.addPart("sessions", sessionsBody);			
 		} 
 		catch (IOException e) {
-			Log.d(AppBlade.LogTag, e.toString());
+			Log.v(AppBlade.LogTag, e.toString());
 		}
 		
 		return entity;
@@ -230,7 +230,7 @@ public class SessionHelper {
  	 * @param context Context to use for file maintenance.
  	 */
 	public static void postExistingSessions(final Context context){
-		Log.d(AppBlade.LogTag, "checking for existing sessions.");
+		Log.v(AppBlade.LogTag, "checking for existing sessions.");
 		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
 			@SuppressWarnings("unchecked")
 			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
@@ -252,12 +252,12 @@ public class SessionHelper {
 			final OnSessionDataAcquiredListener listener) {
 		File f = new File(sessionsIndexFileURI());
 		if(f.exists()){
-			Log.d(AppBlade.LogTag, sessionsIndexFileURI()+" exists.");
-				Log.d(AppBlade.LogTag, "Finished sessions might exist, posting them.");
+			Log.v(AppBlade.LogTag, sessionsIndexFileURI()+" exists.");
+				Log.v(AppBlade.LogTag, "Finished sessions might exist, posting them.");
 				List<SessionData> existingSessions = SessionHelper.readData(context);
 				listener.OnSessionDataAcquired(existingSessions);
 		}else{
-			Log.d(AppBlade.LogTag, "Sessions file does not exist, creating it.");
+			Log.v(AppBlade.LogTag, "Sessions file does not exist, creating it.");
 			List<SessionData> blankSessions = new ArrayList<SessionData>();
 			updateFile(context, sessionsIndexFileURI(), blankSessions);
 			listener.OnSessionDataAcquired(blankSessions);
@@ -298,7 +298,7 @@ public class SessionHelper {
 	 * @return A SessionData object
 	 */
 	public static SessionData createPersistentSession(Context context) {
-		Log.d(AppBlade.LogTag, "Creating New Session ");
+		Log.v(AppBlade.LogTag, "Creating New Session ");
 		SessionData data = new SessionData(new Date(), new Date(), new JSONObject());
 		//check if file exists
 		File f = new File(sessionsIndexFileURI());
@@ -320,7 +320,7 @@ public class SessionHelper {
 	 * @param data SessionData you want added. 
 	 */
 	public synchronized static void insertSessionData(final Context context, final SessionData data) {
-		Log.d(AppBlade.LogTag, "Adding Session to file");
+		Log.v(AppBlade.LogTag, "Adding Session to file");
 		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
 			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
 				acquiredData.add(data); //add data
@@ -338,7 +338,7 @@ public class SessionHelper {
 	 * @param data SessionData you want removed. 
 	 */
 	public synchronized static void removeSession(final Context context, final SessionData data) {
-		Log.d(AppBlade.LogTag, "Removing Session to file");
+		Log.v(AppBlade.LogTag, "Removing Session to file");
 		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
 			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
 				// remove object from ArrayList
@@ -390,7 +390,7 @@ public class SessionHelper {
 	 */
 	public synchronized  static List<SessionData> readData(Context context)
     {
-    	Log.d(AppBlade.LogTag, "reading in Sessions file. ");
+    	Log.v(AppBlade.LogTag, "reading in Sessions file. ");
 
             List<SessionData> listofusers = new ArrayList<SessionData>();
             FileInputStream fstream = null;
@@ -412,7 +412,7 @@ public class SessionHelper {
                 try { fstream.close(); } catch ( Exception ignore ) {}
             }
             
-        	Log.d(AppBlade.LogTag, "Read Sessions file. " +listofusers.size() +" sessions");
+        	Log.v(AppBlade.LogTag, "Read Sessions file. " +listofusers.size() +" sessions");
 
             return listofusers;
     }
@@ -425,7 +425,7 @@ public class SessionHelper {
 	 */
     public synchronized  static void updateFile(Context context, String filename, List<SessionData> sessionDataList) {
     	//check for existence of file, if no file, create file
-    	Log.d(AppBlade.LogTag, "Updating Sessions file. " +sessionDataList.size() +" sessions");
+    	Log.v(AppBlade.LogTag, "Updating Sessions file. " +sessionDataList.size() +" sessions");
 	    try{
 	    	final File parent = new File(AppBlade.sessionsDir);
 	    	if(!parent.exists())
@@ -438,21 +438,19 @@ public class SessionHelper {
 	    	}
 	    	final File someFile = new File(AppBlade.sessionsDir, sessionsIndexFileName);
 	    	if(!someFile.exists()){
-	        	Log.d(AppBlade.LogTag, "Sessions file does not exist yet. creating Sessions file.");
+	        	Log.v(AppBlade.LogTag, "Sessions file does not exist yet. creating Sessions file.");
 	    		someFile.createNewFile();
 	    	}
 	    }catch (IOException ex) {
-	    	Log.d(AppBlade.LogTag, "Error making Sessions file");
-	    	ex.printStackTrace();
+	    	Log.w(AppBlade.LogTag, "Error making Sessions file", ex);
 	    }
        BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(filename));
-        	Log.d(AppBlade.LogTag, "built bufferedWriter");
+        	Log.v(AppBlade.LogTag, "built bufferedWriter");
 
         } catch (IOException ex) {
-        	Log.d(AppBlade.LogTag, "Error writing Sessions file");
-        	ex.printStackTrace();
+        	Log.w(AppBlade.LogTag, "Error writing Sessions file", ex);
         }
         SessionData ud;
         String row;
@@ -460,25 +458,25 @@ public class SessionHelper {
            ud = sessionDataList.get(i);
            row = ud.sessionAsStoredString();
             try {
-            	Log.d(AppBlade.LogTag, "writing "+row);
+            	Log.v(AppBlade.LogTag, "writing "+row);
                 bufferedWriter.write(row);
                 bufferedWriter.newLine();
             } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
+    	    	Log.w(AppBlade.LogTag, "Error writing individual session", ex);
             } catch (IOException ex) {
-                ex.printStackTrace();
+    	    	Log.w(AppBlade.LogTag, "IO Error writing individual session", ex);
             }
         }
         //Close the BufferedWriter
         try {
               if (bufferedWriter != null) {
-              	Log.d(AppBlade.LogTag, "teardown bufferedWriter");
+              	Log.v(AppBlade.LogTag, "teardown bufferedWriter");
 
                   bufferedWriter.flush();
                   bufferedWriter.close();
               }
         } catch (IOException ex) {
-              ex.printStackTrace();
+	    	Log.w(AppBlade.LogTag, "IO Error writing session file", ex);
         }
     }	
 }

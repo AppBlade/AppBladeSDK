@@ -104,7 +104,7 @@ public class SystemUtils {
 				toRet = StringUtils.sha256FromInputStream(streamToHash);
 			}
 		} catch (IOException e) {
-			Log.d(AppBlade.LogTag, "Error reading "+filename);
+			Log.v(AppBlade.LogTag, "Error reading "+filename);
 			e.printStackTrace();
 		}
 		
@@ -116,7 +116,7 @@ public class SystemUtils {
 	/**
 	 * A hash representing the manifest file included in the APK, the value will change when the file does and not at any other time.
 	 * @param pi
-	 * @return The (SHA256) of AndroidManifest.xml, the file representing all compiled classes in the apk.
+	 * @return The (SHA256) of AndroidManifest.xml, the file representing all settings, permissions, and version values in the apk.
 	 */
 	public static String hashedManifestFileUuid(PackageInfo pi){
 		return hashedUuidOfPackageFile(pi, "AndroidManifest.xml");  //use this instead of META-INF/MANIFEST.MF, not enough data there.

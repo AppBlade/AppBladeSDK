@@ -216,15 +216,15 @@ public class StringUtils {
 		//open the file as an input string
 			try {
 				InputStream is = new FileInputStream(file);
-				Log.d(AppBlade.LogTag, "opened " + file.getAbsolutePath());
+				Log.v(AppBlade.LogTag, "opened " + file.getAbsolutePath());
 				try {
-					Log.d(AppBlade.LogTag, is.available() +  " bytes available");
+					Log.v(AppBlade.LogTag, is.available() +  " bytes available");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				
 				toRet = StringUtils.md5FromInputStream(is);
-				Log.d(AppBlade.LogTag, "closed" + file.getAbsolutePath());
+				Log.v(AppBlade.LogTag, "closed" + file.getAbsolutePath());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
