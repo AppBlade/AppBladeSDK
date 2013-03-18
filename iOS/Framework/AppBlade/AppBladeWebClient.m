@@ -223,7 +223,7 @@ static BOOL is_encrypted () {
 
 #pragma mark - AppBlade API
 
-- (void)checkPermissions
+- (void)checkPermissions:(BOOL)andForUpdates
 {
     _api = AppBladeWebClientAPI_Permissions;
     BOOL hasFairplay = is_encrypted();
@@ -231,13 +231,15 @@ static BOOL is_encrypted () {
         //we're signed by apple, skip authentication. Go straight to delegate.
         NSLog(@"Binary signed by Apple, skipping permissions check");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
-        [_delegate appBladeWebClient:self receivedPermissions:fairplayPermissions];
+        [self.delegate appBladeWebClient:self receivedPermissions:fairplayPermissions andShowUpdate:NO];
     }else{    
         // Create the request.
-        NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID]];
+        NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
+        [apiRequest addValue:andForUpdates ? @"YES" : @"NO" forHTTPHeaderField:@"CHECK_UPDATES"];
+
         [self addSecurityToRequest:apiRequest];
 
         // Issue the request.
@@ -246,18 +248,18 @@ static BOOL is_encrypted () {
 }
 
 
--(void)checkForUpdates
+- (void)checkForUpdates
 {
     BOOL hasFairplay = is_encrypted();
     if(hasFairplay){
         //we're signed by apple, skip updating. Go straight to delegate.
         NSLog(@"Binary signed by Apple, skipping permissions check");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
-        [_delegate appBladeWebClient:self receivedUpdate:fairplayPermissions];
+        [self.delegate appBladeWebClient:self receivedUpdate:fairplayPermissions];
     }else{
         // Create the request.
         _api = AppBladeWebClientAPI_UpdateCheck;
-        NSString* urlString = [NSString stringWithFormat:updateURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID]];
+        NSString* urlString = [NSString stringWithFormat:updateURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
@@ -277,7 +279,7 @@ static BOOL is_encrypted () {
     NSString* udid = [self udid];
         NSLog(@"udid %@", udid);
     // Build report URL.
-    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
+    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID], udid];
     NSURL* urlCrashReport = [NSURL URLWithString:urlCrashReportString];    
         
         NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
@@ -331,7 +333,7 @@ static BOOL is_encrypted () {
         NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
         
         // Build report URL.
-        NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
+        NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID], udid];
         NSURL* reportURL = [NSURL URLWithString:reportString];
     
         NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
@@ -386,7 +388,7 @@ static BOOL is_encrypted () {
 {
     _api = AppBladeWebClientAPI_Sessions;
     
-    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [_delegate appBladeHost]];
+    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [self.delegate appBladeHost]];
     NSURL* sessionURL = [NSURL URLWithString:sessionString];
     
     NSError* error = nil;
@@ -479,7 +481,7 @@ static BOOL is_encrypted () {
     [apiRequest addValue:plistHash forHTTPHeaderField:@"infoplist_hash"];
     
     BOOL hasFairplay = is_encrypted();
-    [apiRequest addValue:hasFairplay ? @"0" : @"1" forHTTPHeaderField:@"fairplay_encrypted"];
+    [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"fairplay_encrypted"];
     
     [_request release];
     _request = [apiRequest retain];
@@ -542,10 +544,10 @@ static BOOL is_encrypted () {
     NSLog(@"%@", [requestBodyRaw substringToIndex:MIN([requestBodyRaw length], 1000)]);
     
     // Digest the normalized request body.
-    NSString* mac = [self HMAC_SHA256_Base64:request_body with_key:[_delegate appBladeProjectSecret]];
+    NSString* mac = [self HMAC_SHA256_Base64:request_body with_key:[self.delegate appBladeProjectSecret]];
     
     NSMutableString *authHeader = [NSMutableString stringWithString:@"HMAC "];
-    [authHeader appendFormat:@"id=\"%@\"", [_delegate appBladeProjectToken]];
+    [authHeader appendFormat:@"id=\"%@\"", [self.delegate appBladeProjectToken]];
     [authHeader appendFormat:@", nonce=\"%@\"", nonce];
     [authHeader appendFormat:@", body-hash=\"%@\"", requestBodyHash];
     [authHeader appendFormat:@", ext=\"%@\"", ext];
@@ -601,7 +603,7 @@ static BOOL is_encrypted () {
     _receivedData = nil;
     
     NSLog(@"AppBlade failed with error: %@", error.localizedDescription);
-    [_delegate appBladeWebClientFailed:self];
+    [self.delegate appBladeWebClientFailed:self];
     
     [_request release];
     _request = nil;
@@ -617,54 +619,51 @@ static BOOL is_encrypted () {
         NSLog(@"Received Security Response from AppBlade: %@", string);
                 
         NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:_receivedData options:NSPropertyListImmutable format:&format error:&error];
-        
+        BOOL showUpdatePrompt = [_request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
+
         [_receivedData release];
         _receivedData = nil;
         
         if (plist && error == NULL) {
-            [_delegate appBladeWebClient:self receivedPermissions:plist];
+            [self.delegate appBladeWebClient:self receivedPermissions:plist andShowUpdate:showUpdatePrompt];
         }
         else
         {
             NSLog(@"Error parsing permisions plist: %@", [error debugDescription]);
-            [_delegate appBladeWebClientFailed:self withErrorString:@"An invalid response was received from AppBlade; please contact support"];
+            [self.delegate appBladeWebClientFailed:self withErrorString:@"An invalid response was received from AppBlade; please contact support"];
         }
         
     } else if (_api == AppBladeWebClientAPI_ReportCrash) {    
-        [_delegate appBladeWebClientCrashReported:self];
+        [self.delegate appBladeWebClientCrashReported:self];
     
     }else if (_api == AppBladeWebClientAPI_Feedback) {
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
-        [_delegate appBladeWebClientSentFeedback:self withSuccess:success];
+        [self.delegate appBladeWebClientSentFeedback:self withSuccess:success];
 
     }else if (_api == AppBladeWebClientAPI_Sessions) {
         NSString* receivedDataString = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSLog(@"Received Response from AppBlade Sessions %@", receivedDataString);
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
-        [_delegate appBladeWebClientSentSessions:self withSuccess:success];
+        [self.delegate appBladeWebClientSentSessions:self withSuccess:success];
 
     }else if(_api == AppBladeWebClientAPI_UpdateCheck) {
         NSError *error = nil;
         NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSLog(@"Received Update Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:_receivedData options:nil error:&error];
-        
         [_receivedData release];
         _receivedData = nil;
         
         if (json && error == NULL) {
-            [_delegate appBladeWebClient:self receivedUpdate:json];
+            [self.delegate appBladeWebClient:self receivedUpdate:json];
         }
         else
         {
             NSLog(@"Error parsing update plist: %@", [error debugDescription]);
-            [_delegate appBladeWebClientFailed:self withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
+            [self.delegate appBladeWebClientFailed:self withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
         }
-        
-
-    
     }else
     {
         NSLog(@"Unhandled connection with AppBladeWebClientAPI value %d", _api);

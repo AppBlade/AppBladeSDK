@@ -41,7 +41,7 @@ extern NSString *sessionURLFormat;
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString;
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary*)permissions;
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions andShowUpdate:(BOOL)showUpdatePrompt;
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success;
 - (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success;
@@ -78,7 +78,7 @@ extern NSString *sessionURLFormat;
 + (NSString *)buildHostURL:(NSString *)customURLString;
 
 // AppBlade API.
-- (void)checkPermissions;
+- (void)checkPermissions:(BOOL)andForUpdates;
 - (void)checkForUpdates;
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params;
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsData;

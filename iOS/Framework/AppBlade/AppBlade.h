@@ -81,7 +81,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 //Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
--(void)setCustomParam:(NSString *)key withValue:(id)value;
+-(void)setCustomParam:(id)object forKey:(NSString*)key;
 -(void)clearAllCustomParams;
 
 
@@ -93,9 +93,15 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // Checks with AppBlade to see if the app is allowed to run on this device. Will also notify of updates.
 - (void)checkApproval;
 
+// Approval check with ability to disable the check/notification for updates.
+- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt;
+
+
 // Checks with AppBlade anonymously to see if the app can be updated with a new build.
 - (void)checkForUpdates;
 
+
+//Path to the AppBlade cache directory. Useful for direct modificaion of stored requests.
 + (NSString*)cachesDirectoryPath;
 
 // Sets up a 3-finger double tap for reporting feedback

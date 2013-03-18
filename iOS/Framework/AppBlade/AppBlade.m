@@ -202,12 +202,19 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)checkApproval
 {
+    [self checkApprovalWithUpdatePrompt:YES];
+}
+
+- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt
+{
     [self validateProjectConfiguration];
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
-    [client checkPermissions];
+    [client checkPermissions:shouldPrompt];
 }
+
+
 
 - (void)checkForUpdates
 {
@@ -217,6 +224,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self.activeClients addObject:client];
     [client checkForUpdates];
 }
+
 
 - (void)catchAndReportCrashes
 {
@@ -397,7 +405,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self.activeClients removeObject:client];
 }
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions andShowUpdate:(BOOL)showUpdatePrompt
 {
     NSString *errorString = [permissions objectForKey:@"error"];
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
@@ -431,7 +439,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         
         // determine if there is an update available
         NSDictionary* update = [permissions objectForKey:@"update"];
-        if(update)
+        if(update && showUpdatePrompt)
         {
             NSString* updateMessage = [update objectForKey:@"message"];
             NSString* updateURL = [update objectForKey:@"url"];
@@ -1091,16 +1099,16 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
 }
 
--(void)setCustomParam:(NSString *)key withValue:(id)value
+-(void)setCustomParam:(id)object forKey:(NSString*)key;
 {
     NSDictionary* currentFields = [self getCustomParams];
     if (currentFields == nil) {
         currentFields = [NSDictionary dictionary];
     }
     NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
-    if(key && value){
-        [mutableFields setObject:value forKey:key];
-    }else if(key && !value){
+    if(key && object){
+        [mutableFields setObject:object forKey:key];
+    }else if(key && !object){
         [mutableFields removeObjectForKey:key];
     }
     else
