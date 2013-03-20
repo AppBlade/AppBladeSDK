@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,6 +31,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -50,11 +52,12 @@ import com.appblade.framework.utils.SystemUtils;
  * @author andrew.tremblay@raizlabs
  */
 public class UpdatesHelper {
-	private static final String rootDir = ".appblade";//where we will store our downloaded apks externally
+	private static final String rootDir = "appblade";//where we will store our downloaded apks externally
 
 	
 	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;	
+	private static final String APK_MIMETYPE = "application/vnd.android.package-archive";
 
 	
 	private static final String PrefsKey = "AppBlade.UpdatesHelper.SharedPrefs";
@@ -299,17 +302,21 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 		WebServiceHelper.addCommonHeaders(request);
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
 		HttpResponse response = client.execute(request);
-		if(response != null) {
-			
-			if(fileDownloadLocation.exists()) //this location needs to start empty
-				fileDownloadLocation.delete();
+		if(HttpUtils.isOK(response)) {
+			if(fileDownloadLocation.exists()){ //this location needs to start empty
+					fileDownloadLocation.delete();
+			}
 			fileDownloadLocation.createNewFile();
 			
 			inputStream = response.getEntity().getContent();
 			bufferedInputStream = new BufferedInputStream(inputStream);
 			
+			//fileOutput = context.getApplicationContext().openFileOutput(fileDownloadLocation.getName(), Context.MODE_WORLD_READABLE);
+	    	
+			
 	    	fileOutput = new FileOutputStream(fileDownloadLocation);
 	    	bufferedOutput = new BufferedOutputStream(fileOutput);
+			Log.v(AppBlade.LogTag, String.format("Downloading to %s ", fileDownloadLocation.getAbsolutePath()));
 	    	
 	        byte[] buffer = new byte[1024 * 16];
 	        totalBytesRead = 0;
@@ -351,8 +358,17 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	    		if(!savedSuccessfully){
 	    			notifyRetryDownload(context, update);
 	    		}
+	    		if(Build.VERSION.SDK_INT >= 12) //send to download manager if we can HONEYCOMB_MR1
+	    		{
+	    			DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+	    			manager.addCompletedDownload(fileDownloadLocation.getName(), md5OnServer, true, APK_MIMETYPE, fileDownloadLocation.getAbsolutePath(), totalBytesRead, true);
+	    		}
 	    	}
 	    	
+		}
+		else
+		{
+			notifyRetryDownload(context, update);
 		}
 	}
 	catch(JSONException ex) { Log.w(AppBlade.LogTag, "JSON error when downloading update ", ex); }
@@ -363,10 +379,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	{
 		NotificationManager notificationManager =
 				(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.cancel(NotificationNewVersionDownloading);
-		
-		Log.v(AppBlade.LogTag, String.format("%d bytes downloaded from %s", totalBytesRead, url));
-		
+		notificationManager.cancel(NotificationNewVersionDownloading);		
 		if(savedSuccessfully && fileDownloadLocation != null) {
 			Log.v(AppBlade.LogTag, String.format("Download succeeded, opening file at %s", fileDownloadLocation.getAbsolutePath()));
 			openWithAlert(context, fileDownloadLocation);
@@ -381,7 +394,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 		context.runOnUiThread(new Runnable() {
 			public void run() {
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
-				builder.setMessage("A there was a problem downloading an update for your app.");
+				builder.setMessage("There was a problem downloading an update for your app.");
 				builder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						UpdateTask updateTask = new UpdateTask(context, false, false);
@@ -423,7 +436,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+						intent.setDataAndType(Uri.fromFile(file), APK_MIMETYPE );
 						context.startActivity(intent);
 					}
 				});
@@ -437,12 +450,21 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	}
 	
 	private static File getRootDirectory() {
-		String path = String.format("%s%s%s",
-				Environment.getExternalStorageDirectory().getAbsolutePath(), "/",
-				rootDir);
+		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+		Log.d(AppBlade.LogTag, "getRootDirectory " + path);
 		File dir = new File(path);
-		dir.mkdirs();
+		if(!dir.exists()){
+			dir.mkdirs();
+		}
 		return dir;
+//		String path = String.format("%s%s%s", 		Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/",		rootDir);
+		//getDownloadCacheDirectory getExternalStoragePublicDirectory
+//		String path = String.format("%s%s%s", getExternalStoragePublicDirectory
+//				Environment.getExternalStorageDirectory().getAbsolutePath(), "/",
+//				rootDir);
+//		File dir = new File(path);
+//		dir.mkdirs();
+//		return dir;
 	}
 	
 	/**

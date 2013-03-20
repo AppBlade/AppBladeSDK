@@ -278,7 +278,7 @@ public class StringUtils {
 	/**
 	 * The difference between this and the normal JSONArray parsing is that this falls back to an empty array should there be an error like an unparseable string
 	 * @param stringToParse
-	 * @return JSONArray of the stringToParse or an empty JSONArray if stringToParse is unparesable
+	 * @return JSONArray of the stringToParse or an empty JSONArray if stringToParse is unparseable
 	 */
 	public static JSONArray parseStringToJSONArray(String stringToParse)
 	{
