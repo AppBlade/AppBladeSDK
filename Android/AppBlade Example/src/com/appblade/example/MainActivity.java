@@ -18,16 +18,15 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.appblade.framework.AppBlade;
-import com.appblade.framework.UpdatesHelper;
+import com.appblade.framework.stats.AppBladeSessionActivity;
+import com.appblade.framework.updates.UpdatesHelper;
 import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
-import com.appblade.framework.stats.AppBladeSessionActivity;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.StringUtils;
+import com.appblade.framework.AppBlade;
 
 public class MainActivity extends AppBladeSessionActivity {
 
