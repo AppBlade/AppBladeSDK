@@ -51,22 +51,29 @@ public class SessionHelper {
 	//API RELATED
 	public static String sessionsIndexMIMEType = "text/json"; 
 
+	//LOGIC RELATED
+	public static boolean SUCCESS = true; 
+	public static boolean FAILURE = false; 
+
+	
+	
 	//*****************Session Logging 
 
 	/**
 	 * Starts a session by reinitializing the curentSession object in the AppBLade singleton.
 	 * @param context Context where we will be storing the session data.
 	 */
-	public static void startSession(Context context){
+	public static boolean startSession(Context context){
 		Log.v(AppBlade.LogTag, "Starting Session");
 		AppBlade.currentSession = new SessionData();
+		return SUCCESS;
 	}
 	 
 	/**
 	 * Ends a session and kicks off a post request.
 	 * @param context Context where we will be storing the session data.
 	 */
-	public static void endSession(Context context){
+	public static boolean endSession(Context context){
 		Log.v(AppBlade.LogTag, "Ending Session");
 		if(AppBlade.currentSession != null){
 			AppBlade.currentSession.ended = new Date();
@@ -76,6 +83,10 @@ public class SessionHelper {
 			SessionData sessionToStore = new SessionData(AppBlade.currentSession.began, AppBlade.currentSession.ended, AppBlade.currentSession.customParams);
 			insertSessionData(context, sessionToStore);
 			AppBlade.currentSession = null;
+			return SUCCESS;
+		}else
+		{
+			return FAILURE;
 		}
 	}
 	
@@ -83,7 +94,7 @@ public class SessionHelper {
 	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
 	 * @param activity The Activity to bind to the service.
 	 */
-	public static void bindToSessionService(Activity activity)
+	public static boolean bindToSessionService(Activity activity)
 	{
 		if(AppBlade.sessionLoggingService == null){
 			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(activity);
@@ -98,20 +109,24 @@ public class SessionHelper {
 			    if(succeeded)
 			    {
 					Log.v(AppBlade.LogTag, "Success binding the Session.");
+					return SUCCESS;
 			    }
 			    else
 			    {
 					Log.v(AppBlade.LogTag, "Error binding the Session. Make sure the SessionService is properly in your manifest.");
+					return FAILURE;
 			    }
 
 			}catch(SecurityException e){
 				Log.e(AppBlade.LogTag, "Error binding to Session Logging service: " + StringUtils.exceptionInfo(e));
 				e.printStackTrace();
+				return FAILURE;
 			}
 		}
 		else
 		{
 			Log.e(AppBlade.LogTag, "Error unbinding activity. Possible null value.");
+			return FAILURE;
 		}	
 	}
 	
@@ -119,14 +134,16 @@ public class SessionHelper {
 	 * Helper function to unbind from session service. Better for tracking sessions across the life of the application.
 	 * @param activity The Activity to bind to the service.
 	 */
-	public static void unbindFromSessionService(Activity activity)
+	public static boolean unbindFromSessionService(Activity activity)
 	{
 		if(AppBlade.sessionLoggingService != null && activity != null && AppBlade.sessionLoggingService.appbladeSessionServiceConnection != null){
 			activity.unbindService(AppBlade.sessionLoggingService.appbladeSessionServiceConnection);
+			return SUCCESS;
 		}
 		else
 		{
 			Log.e(AppBlade.LogTag, "Error unbinding activity. Possible null value.");
+			return FAILURE;
 		}
 	}
 

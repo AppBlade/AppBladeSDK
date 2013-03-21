@@ -383,18 +383,18 @@ public class AppBlade {
 	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
 	 * @param activity
 	 */
-	public static void bindToSessionService(Activity activity)
+	public static boolean bindToSessionService(Activity activity)
 	{
-		SessionHelper.bindToSessionService(activity);
+		return SessionHelper.bindToSessionService(activity);
 	}
 
 	/**
 	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
 	 * @param activity
 	 */
-	public static void unbindFromSessionService(Activity activity)
+	public static boolean unbindFromSessionService(Activity activity)
 	{
-		SessionHelper.unbindFromSessionService(activity);
+		return SessionHelper.unbindFromSessionService(activity);
 	}
 
 	
@@ -402,9 +402,9 @@ public class AppBlade {
 	 * Static point for beginning a session (posts any existing sessions by default) 
 	 * @param context Context to use to control the posting of the session.
 	 */
-	public static void startSession(Context context)
+	public static boolean startSession(Context context)
 	{
-		startSession(context, false);
+		return startSession(context, false);
 	}
 	
 	/**
@@ -412,30 +412,29 @@ public class AppBlade {
 	 * @param context Context to use to control the posting of the session.
 	 * @param onlyAuthorized boolean to determine manually if you only want to log authorized sessions or not.
 	 */
-	public static void startSession(Context context, boolean onlyAuthorized)
+	public static boolean startSession(Context context, boolean onlyAuthorized)
 	{
 		hardCheckIsRegistered();
 		SessionHelper.postExistingSessions(context); //post any pending sessions 
 		
 		if(onlyAuthorized && !isAuthorized(context)){
 			Log.d(LogTag, "Client is not yet authorized, cannot start session");
+			return false; 
 		}
 		else
 		{
 			//either we're authorized or we don't care about authorization
-			SessionHelper.startSession(context);
+			return SessionHelper.startSession(context);
 		}
-
-
 	}
 
 	/**
 	 * Static point for ending a session
 	 * @param context Context to use to control the posting of the session.
 	 */
-	public static void endSession(Context context)
+	public static boolean endSession(Context context)
 	{
-		endSession(context, false);		
+		return endSession(context, false);		
 	}
 		
 	/**
@@ -443,19 +442,20 @@ public class AppBlade {
 	 * @param context Context to use to control the posting of the session.
 	 * @param onlyAuthorized boolean to determine manually if you only want to log authorized sessions or not.
 	 */
-	public static void endSession(Context context, boolean onlyAuthorized)
+	public static boolean endSession(Context context, boolean onlyAuthorized)
 	{
 		hardCheckIsRegistered();
-
+		boolean succeeded = false;
 		if(onlyAuthorized && !isAuthorized(context)) {
 			Log.d(LogTag, "Client is not yet authorized, cannot end session");			
 		}
 		else
 		{
 			//we don't care about authorization
-			SessionHelper.endSession(context);
+			succeeded = SessionHelper.endSession(context);
 		}
 		SessionHelper.postExistingSessions(context); //we have at least one complete session, post it. 
+		return succeeded;
 	}
 	
 	/********************************************************
