@@ -69,21 +69,7 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 				if(json.has("update")) { 
 					JSONObject update = json.getJSONObject("update");
 					if(update != null) {
-						//check if we already have it, assume we don't 
-						boolean notDownloadedYet = true;
-						
-						String md5OnServer = update.getString("md5");
-						File destFile = UpdatesHelper.fileFromUpdateJSON(update);
-						if(destFile.exists()){
-							//stage one complete! check the hash.
-							String md5Local = StringUtils.md5FromFile(destFile);
-							if(md5Local.equals(md5OnServer) && !md5Local.equals(StringUtils.md5OfNull)){ 
-								//a match! and it's not a null of something!
-								notDownloadedYet = false;
-							}
-						}
-						 
-						if(this.promptDownloadConfirm && notDownloadedYet)
+						if(this.promptDownloadConfirm && UpdatesHelper.fileFromJsonNotDownloadedYet(update))
 						{
 							UpdatesHelper.confirmUpdate(this.taskActivity, update);
 						}

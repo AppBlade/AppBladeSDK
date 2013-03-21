@@ -26,11 +26,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
@@ -52,8 +54,9 @@ import com.appblade.framework.utils.SystemUtils;
  * @author andrew.tremblay@raizlabs
  */
 public class UpdatesHelper {
-	private static final String rootDir = "appblade";//where we will store our downloaded apks externally
-
+	private static AlertDialog updateDialog = null;//for checking download process
+	private static UpdateTask updateTask = null;//for checking download process
+	private static Thread downloadThread = null; //for checking download process
 	
 	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;	
@@ -80,7 +83,7 @@ public class UpdatesHelper {
 	 */
 	public static void checkForUpdate(Activity activity, boolean promptForDownload)
 	{	//falls into the best behavior available. Currently Anonymous update is the only supported behavior. 
-		checkForAnonymousUpdate(activity, promptForDownload);
+		checkForAnonymousUpdate(activity, promptForDownload, false);
 	}
 
 
@@ -93,31 +96,59 @@ public class UpdatesHelper {
 	 */
 	public static void checkForUpdateWithTimeout(Activity activity, boolean promptForDownload)
 	{	
-		if(UpdatesHelper.shouldUpdate(activity)){
-			checkForAnonymousUpdate(activity, promptForDownload);
-		}
+		//falls into the best behavior available. Currently Anonymous update is the only supported behavior. 
+		checkForAnonymousUpdate(activity, promptForDownload, false);
 	}
 
 	/**
 	 * Checks the ttl against system time to see whether we need to update.
 	 * @return If it is time to update.
 	 */
-	public static boolean shouldUpdate(Activity activity) {
+	public static boolean shouldUpdate(Activity activity, boolean respectTimeout) {
 		SharedPreferences prefs = activity.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
 		ttl = prefs.getLong(PrefsKeyTTL, ttl);
 		ttlLastUpdated = prefs.getLong(PrefsKeyTTLUpdated, ttlLastUpdated);
 		
-		boolean shouldUpdate = true;
+		boolean shouldUpdate = true; //ever the optimist
 		long now = System.currentTimeMillis();
 		long timeToUpdate = (ttlLastUpdated + ttl);
 		// If TTL is satisfied (we are within the time to live from the last time updated), do not require update
-		if(timeToUpdate > now)
+		if(timeToUpdate > now && respectTimeout)
 		{
 			shouldUpdate = false;
 		}
 
 		Log.v(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
 		Log.v(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate? %b", shouldUpdate));
+		
+		
+		//check if the activity is already in the process of checking/downloading/confirming the download 
+		if(updateTask != null)
+		{
+			if(updateTask.getStatus() == AsyncTask.Status.PENDING || updateTask.getStatus() == AsyncTask.Status.RUNNING){
+				shouldUpdate = false;
+			}else if(updateTask.getStatus() == AsyncTask.Status.FINISHED){
+				updateTask = null; //clean up the task since we don't need it anymore
+			}
+		}
+		
+		//or if we're already displaying a dialog
+		if(updateDialog != null)
+		{
+			if(updateDialog.isShowing()){
+				shouldUpdate = false;
+			}else{
+				updateDialog = null;
+			}
+		}
+		
+		if(downloadThread != null){   
+			if(downloadThread.isAlive()){
+				shouldUpdate = false;
+			}else{
+				downloadThread = null;
+			}
+		}
 		
 		return shouldUpdate;
 	}
@@ -133,15 +164,21 @@ public class UpdatesHelper {
 	 */
 	public static void checkForAuthenticatedUpdate(Activity activity, boolean promptForDownload)
 	{
-		//TODO: check if we're already processing the update / downloading / installing anything. Shouldn't be an issue as long as there's enough time between calls.
-		if(AuthHelper.isAuthorized(activity))
-		{
-			UpdateTask updateTask = new UpdateTask(activity, true, promptForDownload);
-			updateTask.execute();
-		}
-		else
-		{
-			UpdatesHelper.checkAuthorization(activity, true);
+		checkForAuthenticatedUpdate( activity, promptForDownload, true); //we respect TTL by default
+	}	
+	
+	public static void checkForAuthenticatedUpdate(Activity activity, boolean promptForDownload, boolean respectUpdateTtl)
+	{
+		if(UpdatesHelper.shouldUpdate(activity, respectUpdateTtl)){
+			if(AuthHelper.isAuthorized(activity))
+			{
+				updateTask = new UpdateTask(activity, true, promptForDownload);
+				updateTask.execute();
+			}
+			else
+			{
+				UpdatesHelper.checkAuthorization(activity, true);
+			}
 		}
 	}
 
@@ -168,13 +205,14 @@ public class UpdatesHelper {
 								dialog.dismiss();
 							}
 						});
-				builder.setOnCancelListener(new OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						dialog.dismiss();
+				builder.setOnDismissListener(new OnDismissListener() {
+					public void onDismiss(DialogInterface dialog) {
+						dialog = null;
 					}
 				});
 				builder.setCancelable(false);
-				builder.show();
+				updateDialog = builder.create();
+				updateDialog.show();
 			} else {
 				AuthHelper.authorize(activity);
 			}
@@ -183,11 +221,19 @@ public class UpdatesHelper {
 
 	public static void checkForAnonymousUpdate(Activity activity, boolean promptForDownload)
 	{
-		//TODO: check if we're already processing the update / downloading / installing anything. Shouldn't be an issue as long as there's enough time between calls.
-		UpdateTask updateTask = new UpdateTask(activity, false, promptForDownload);
-		updateTask.execute();
+		checkForAnonymousUpdate(activity, promptForDownload, true); //we respect TTL by default 
 	}
-		
+	
+	public static void checkForAnonymousUpdate(Activity activity, boolean promptForDownload, boolean respectUpdateTtl)
+	{
+		if(UpdatesHelper.shouldUpdate(activity, respectUpdateTtl)){
+			updateTask = new UpdateTask(activity, false, promptForDownload);
+			updateTask.execute();
+		}
+	}
+
+
+
 	
 /**
  * Synchronized generator for device authorization. 
@@ -233,7 +279,7 @@ public static void confirmUpdate(final Activity activity, final JSONObject updat
 			builder.setMessage("A new version is available on AppBlade");
 			builder.setPositiveButton("Download", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
-					Thread thread = new Thread()
+					Thread processUpdateThread = new Thread()
 					{
 					    @Override
 					    public void run() {
@@ -245,12 +291,18 @@ public static void confirmUpdate(final Activity activity, final JSONObject updat
 					        }
 					    }
 					};
-
-					thread.start(); 						
+					processUpdateThread.start(); 						
 				}
 			});
+			builder.setOnDismissListener(new OnDismissListener() {
+				public void onDismiss(DialogInterface dialog) {
+					dialog = null;
+				}
+			});
+
 			builder.setNegativeButton("Not Now", null);
-			builder.create().show();
+			updateDialog = builder.create();
+			updateDialog.show();
 		}
 	});
 }
@@ -263,18 +315,48 @@ public static void confirmUpdate(final Activity activity, final JSONObject updat
  * @param update JSONObject containing the necessary update information (like where to install).
  */
 public static void processUpdate(Activity activity, JSONObject update) {
-	PackageInfo pkg = AppBlade.getPackageInfo();
-	String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-	if(SystemUtils.hasPermission(pkg, permission)) {
-		notifyDownloading(activity);
-		Log.i(AppBlade.LogTag, "UpdatesHelper.processUpdate - permission to write to sd, processing download");
-		downloadUpdate(activity, update);
-	}
-	else {
-		Log.i(AppBlade.LogTag, "UpdatesHelper.processUpdate - download available but there are no permissions to write to sd, notifying...");
-		notifyUpdate(activity, update);
+	if(UpdatesHelper.fileFromJsonNotDownloadedYet(update))
+	{
+		if(UpdatesHelper.appCanDownload()) {
+			notifyDownloading(activity);
+			Log.v(AppBlade.LogTag, "UpdatesHelper.processUpdate - permission to write to sd, processing download");
+			downloadUpdate(activity, update);
+		}
+		else {
+			Log.v(AppBlade.LogTag, "UpdatesHelper.processUpdate - download available but there are no permissions to write to sd, notifying...");
+			notifyUpdate(activity, update);
+		}
+	}else{
+		Log.v(AppBlade.LogTag, "UpdatesHelper.processUpdate - download available and already exists");
+		//we have this file already, open it/notify
+		try {
+			File downloadedFile = UpdatesHelper.fileFromUpdateJSON(update);		
+			UpdatesHelper.handleDownloadedFile(activity, downloadedFile);
+		} catch (JSONException e) {
+			Log.w(AppBlade.LogTag, "Error opening file from update for installation! ", e);
+		}
 	}
 }
+
+private static void handleDownloadedFile(Activity activity, File downloadedFile) {
+	//if(we want to notify)
+	//UpdatesHelper.openWithAlert(activity, downloadedFile); //push this check to a preference or a setting in the app. Can't keep passing these flags around!
+	
+	Intent intent = new Intent(Intent.ACTION_VIEW);
+	intent.setDataAndType(Uri.fromFile(downloadedFile), APK_MIMETYPE );
+	activity.startActivity(intent);
+
+}
+
+
+private static boolean appCanDownload() {
+	//currently only checks for valid permissions, since that's the only crucial one 
+	//TODO:additional stipulations (like only downloading off of a WiFi connection, or if we have enough space required)
+	PackageInfo pkg = AppBlade.getPackageInfo();
+	String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+	return SystemUtils.hasPermission(pkg, permission);
+}
+
 
 public static void downloadUpdate(Activity context, JSONObject update) {
 	File fileDownloadLocation = null; //filename is determined by the server
@@ -358,7 +440,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	    		if(!savedSuccessfully){
 	    			notifyRetryDownload(context, update);
 	    		}
-	    		if(Build.VERSION.SDK_INT >= 12) //send to download manager if we can HONEYCOMB_MR1
+	    		if(Build.VERSION.SDK_INT >= 12) //send to download manager if we can, HONEYCOMB_MR1 and above only
 	    		{
 	    			DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 	    			manager.addCompletedDownload(fileDownloadLocation.getName(), md5OnServer, true, APK_MIMETYPE, fileDownloadLocation.getAbsolutePath(), totalBytesRead, true);
@@ -382,7 +464,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 		notificationManager.cancel(NotificationNewVersionDownloading);		
 		if(savedSuccessfully && fileDownloadLocation != null) {
 			Log.v(AppBlade.LogTag, String.format("Download succeeded, opening file at %s", fileDownloadLocation.getAbsolutePath()));
-			openWithAlert(context, fileDownloadLocation);
+			UpdatesHelper.handleDownloadedFile(context, fileDownloadLocation);
 		}
 	}
 }
@@ -397,7 +479,10 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 				builder.setMessage("There was a problem downloading an update for your app.");
 				builder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						UpdateTask updateTask = new UpdateTask(context, false, false);
+						if(updateTask != null && updateTask.cancel(true)){ 
+							Log.v(AppBlade.LogTag, "Cancelling existing UpdateTask!"); //ensure the previous task is finished
+						}
+						updateTask = new UpdateTask(context, false, false);
 						updateTask.execute();
 					}
 				});
@@ -406,12 +491,13 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 						notifyUpdate(context, update);
 					}
 				});
-
-				builder.setOnCancelListener(new OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
+				builder.setOnDismissListener(new OnDismissListener() {
+					public void onDismiss(DialogInterface dialog) {
+						dialog = null;
 					}
 				});
-				builder.create().show();
+				updateDialog = builder.create();
+				updateDialog.show();
 			}
 		});
 
@@ -428,23 +514,30 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 
 
 	//File I/O
-	private static void openWithAlert(final Activity context, final File file) {
-		context.runOnUiThread(new Runnable() {
+	private static void openWithAlert(final Activity activity, final File file) {
+		activity.runOnUiThread(new Runnable() {
 			public void run() {
-				AlertDialog.Builder builder = new AlertDialog.Builder(context);
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 				builder.setMessage("A new version has been downloaded, click OK to install");
 				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);
 						intent.setDataAndType(Uri.fromFile(file), APK_MIMETYPE );
-						context.startActivity(intent);
+						activity.startActivity(intent);
 					}
 				});
-				builder.setOnCancelListener(new OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
+				builder.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
 					}
 				});
-				builder.create().show();
+				builder.setOnDismissListener(new OnDismissListener() {
+					public void onDismiss(DialogInterface dialog) {
+						updateDialog = null;
+					}
+				});
+				updateDialog = builder.create();
+				updateDialog.show();
 			}
 		});
 	}
@@ -561,6 +654,28 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	public int loadTtlLastUpdated(Context context) {
 		SharedPreferences prefs = context.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
 		return prefs.getInt(PrefsKeyTTLUpdated, Integer.MIN_VALUE);
+	}
+
+
+	//checks not only existence, but validity
+	public static boolean fileFromJsonNotDownloadedYet(JSONObject update) {
+		//check if we already have it, assume we don't 
+		boolean notDownloadedYet = true;
+		try {
+			String md5OnServer = update.getString("md5");
+			File destFile = UpdatesHelper.fileFromUpdateJSON(update);
+			if(destFile.exists()){
+				//stage one complete! check the hash.
+				String md5Local = StringUtils.md5FromFile(destFile);
+				if(md5Local.equals(md5OnServer) && !md5Local.equals(StringUtils.md5OfNull)){ 
+					//a match! and it's not a null of something!
+					notDownloadedYet = false;
+				}
+			}
+		} catch (JSONException e) {
+			Log.w(AppBlade.LogTag, "Couldn't check file at update JSON", e);
+		}
+		return notDownloadedYet;
 	}
 	
 	
