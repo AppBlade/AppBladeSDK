@@ -227,7 +227,7 @@ public class AppBlade {
 	 */
 	public static void authorize(Activity activity) {
 		hardCheckIsRegistered();
-		authorize(activity, false);
+		authorize(activity, false, true);
 	}
 
 	/**
@@ -238,6 +238,17 @@ public class AppBlade {
 	 * @param fromLoopBack whether the authorize call is from the authorization window or not, (defaults to false)
 	 */
 	public static void authorize(final Activity activity, boolean fromLoopBack) {
+		AppBlade.authorize(activity, fromLoopBack, false);
+	}
+	
+	/**
+	 * Static entry point for authorization logic and navigation
+	 * Prompts an Authorization view with a sign-in to AppBlade, fetches a token on successful login. 
+	 * If a valid token already exists, will not prompt anything.
+	 * @param activity
+	 * @param fromLoopBack whether the authorize call is from the authorization window or not, (defaults to false)
+	 */
+	public static void authorize(final Activity activity, boolean fromLoopBack, final boolean updateIfAvailable) {
 		hardCheckIsRegistered();
 
 		// If we don't have enough stored information to authorize the current user,
@@ -252,7 +263,7 @@ public class AppBlade {
 				builder.setMessage("Authorization Required");
 				builder.setPositiveButton("OK", new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						AuthHelper.checkAuthorization(activity, false);
+						AuthHelper.checkAuthorization(activity, false, updateIfAvailable);
 					}
 				});
 				builder.setNegativeButton("No, thanks", new OnClickListener() {
@@ -271,7 +282,7 @@ public class AppBlade {
 			// without bothering the user
 			else
 			{
-				AuthHelper.checkAuthorization(activity, false);
+				AuthHelper.checkAuthorization(activity, false, updateIfAvailable);
 			}
 		}
 

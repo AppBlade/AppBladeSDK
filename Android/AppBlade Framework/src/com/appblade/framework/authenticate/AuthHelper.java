@@ -42,8 +42,17 @@ public class AuthHelper {
 	 * @param activity Activity to check authorization/prompt dialog. 
 	 * @param shouldPrompt boolean of whether an "Authorization Required" dialog should be shown to the user first.
 	 */
-	public static void checkAuthorization(final Activity activity,
-			boolean shouldPrompt) {
+	public static void checkAuthorization(final Activity activity, boolean shouldPrompt) {
+		AuthHelper.checkAuthorization(activity, shouldPrompt, false);
+	}
+
+	/**
+	 * Checks whether the given activity is authorized, prompts an optional dialog beforehand. 
+	 * @param activity Activity to check authorization/prompt dialog. 
+	 * @param shouldPrompt boolean of whether an "Authorization Required" dialog should be shown to the user first.
+	 * @param updateCheck boolean of whether we should go through the update process after authorization.
+	 */
+	public static void checkAuthorization(final Activity activity, boolean shouldPrompt, boolean updateCheck) {
 		if (shouldPrompt) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setMessage("Authorization Required");
