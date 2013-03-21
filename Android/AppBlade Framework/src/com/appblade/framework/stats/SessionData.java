@@ -85,17 +85,17 @@ public class SessionData implements Comparator<Object> {
 	    		 Timestamp(this.began.getTime());
 	    java.sql.Timestamp timeStampEnded = new 
 	    		 Timestamp(this.ended.getTime());
-	    
-	    String toRet = timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
-	    
 	    if(this.customParams == null)
 	    {
 	    	this.customParams = new JSONObject();
 	    }
-	    
-	    toRet = toRet + storageDividerKey + this.customParams.toString(); 
-	    
-		return toRet;
+
+	    StringBuilder sb = new StringBuilder();
+	    sb.append(timeStampBegan.toString()).append(storageDividerKey)
+	    .append(timeStampEnded.toString()).append(storageDividerKey)
+	    .append(this.customParams.toString());
+	    	    
+		return sb.toString();
 	}
 		
 	
