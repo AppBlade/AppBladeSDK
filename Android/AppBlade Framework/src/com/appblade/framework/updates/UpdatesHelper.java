@@ -506,8 +506,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 
 
 	public static File fileFromUpdateJSON(JSONObject update) throws JSONException {
-		String identifierOnServer = update.getString("bundle_identifier").replaceAll("\\.", "_");
-		String newFileName = String.format("%s%s", identifierOnServer, ".apk");
+		String newFileName = SystemUtils.getReadableApkFileNameFromPackageName(update.getString("bundle_identifier"));
 		return new File(UpdatesHelper.getRootDirectory(), newFileName); //might exist
 	}
 
@@ -568,12 +567,15 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	{
 		String packageDir = "error_no_package_name.apk";
 		if(AppBlade.hasPackageInfo()){
-			packageDir = String.format("%s%s", AppBlade.getPackageInfo().packageName.replaceAll("\\.", "_"), ".apk");
+			packageDir = SystemUtils.getReadableApkFileNameFromPackageName(AppBlade.getPackageInfo().packageName);
 		}
 		File rootDir = UpdatesHelper.getRootDirectory(); 
 		return new File(rootDir, packageDir);
 	}
 
+	/**
+	 * One liner for deleting the downloaded update file for this app.
+	 */
 	public static void deleteCurrentFile() {
 		File currentFile = UpdatesHelper.downloadedFile();
 		if(currentFile.delete())

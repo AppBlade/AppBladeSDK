@@ -168,6 +168,17 @@ public class SystemUtils {
 	public static String getReadableFINGERPRINT() {
 		return Build.FINGERPRINT.replace("/", "__").replace(".", "-").replace(":", "-"); //make it so the fingerprint doesn't break routes
 	}
+	
+	/**
+	 * Formats packages into a File-system-readable apk name. 
+	 * @param packageName a package name, either from packageInfo or from an AppBlade server response. (com.appblade.example)
+	 * @return The formatted package name with the periods replaced by underscores (com_appblade_example)
+	 */
+	public static String getReadableApkFileNameFromPackageName(String packageName) {
+		String identifierSanitized = packageName.replaceAll("\\.", "_");
+		return String.format("%s%s", identifierSanitized, ".apk");
+	}
+	
 
 	
 
