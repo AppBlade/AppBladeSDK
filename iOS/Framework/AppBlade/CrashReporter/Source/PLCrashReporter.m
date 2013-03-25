@@ -187,7 +187,6 @@ static void uncaught_exception_handler (NSException *exception) {
 
 - (NSString *) queuedCrashReportDirectory;
 - (NSArray *) queuedCrashReportFiles;
-- (BOOL) hasQueuedCrashReports;
 
 - (NSString *) makeRandomFileName;
 - (NSString *) randomString: (int) len;
@@ -363,7 +362,7 @@ static void uncaught_exception_handler (NSException *exception) {
     crashCallbacks.handleSignal = callbacks->handleSignal;
 }
 
-- (BOOL)hasQueuedCrashReports
+- (BOOL) hasQueuedCrashReports
 {
     BOOL toRet = NO;
     NSArray *files = [self queuedCrashReportFiles];
