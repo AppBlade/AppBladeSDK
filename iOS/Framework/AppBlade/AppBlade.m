@@ -173,7 +173,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
     NSString *exceptionMessageFormat = [NSString stringWithFormat:@"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.", name];
     NSLog(@"%@", exceptionMessageFormat);
-    [NSException raise:@"AppBladeException" format:exceptionMessageFormat];
+    SEL sel = @selector(raise:format:); //[NSException raise:(NSString*) format:(NSString *),...]
+    IMP imp = [NSException instanceMethodForSelector:sel];
+    imp(self, sel, @"AppBladeException", exceptionMessageFormat);
     abort();
 }
 
