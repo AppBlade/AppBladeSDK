@@ -82,7 +82,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
 -(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated)); 
--(void)setCustomParam:(id)object forKey:(NSString*)key;
+-(void)setCustomParam:(id)object forKey:(NSString*)key; //use this instead of the deprecated -(void)setCustomParam:(id)newObject withValue:(NSString*)key
 -(void)clearAllCustomParams;
 
 

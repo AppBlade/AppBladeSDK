@@ -40,7 +40,7 @@
     // This is optional, but you should not set the keys yourself AND use the plist.
     // [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]]
     // Fill AppBladeKeys.plist with your own credentials to test
-    [blade setCustomParam:@"CustomKey1" withValue:@"FirstSend"];
+    [blade setCustomParam:@"CustomKey1" forKey:@"FirstSend"];
     
     [blade catchAndReportCrashes];
     
