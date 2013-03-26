@@ -21,7 +21,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
-import android.app.DownloadManager.Query;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -216,13 +215,14 @@ public class UpdatesHelper {
 								dialog.dismiss();
 							}
 						});
-				builder.setOnDismissListener(new OnDismissListener() {
-					public void onDismiss(DialogInterface dialog) {
-						dialog = null;
-					}
-				});
 				builder.setCancelable(false);
 				updateDialog = builder.create();
+				updateDialog.setOnDismissListener(new OnDismissListener() {
+					public void onDismiss(DialogInterface dialog) {
+						updateDialog = null;
+					}
+				});
+
 				updateDialog.show();
 			} else {
 				AuthHelper.authorize(activity);
@@ -305,14 +305,15 @@ public static void confirmUpdate(final Activity activity, final JSONObject updat
 					processUpdateThread.start(); 						
 				}
 			});
-			builder.setOnDismissListener(new OnDismissListener() {
-				public void onDismiss(DialogInterface dialog) {
-					dialog = null;
-				}
-			});
 
 			builder.setNegativeButton("Not Now", null);
 			updateDialog = builder.create();
+			updateDialog.setOnDismissListener(new OnDismissListener() {
+				public void onDismiss(DialogInterface dialog) {
+					updateDialog = null;
+				}
+			});
+
 			updateDialog.show();
 		}
 	});
@@ -364,7 +365,7 @@ private static boolean appCanDownload() {
 	//currently only checks for valid permissions, since that's the only crucial one 
 	PackageInfo pkg = AppBlade.getPackageInfo();
 	boolean hasAllPackagePermissions = SystemUtils.hasPermission(pkg, Manifest.permission.WRITE_EXTERNAL_STORAGE) && SystemUtils.hasPermission(pkg, Manifest.permission.INTERNET);
-	//TODO:additional stipulations (like only downloading off of a WiFi connection, or if we have enough space required)
+	//TODO:add additional stipulations (like only downloading off of a WiFi connection, or if we have enough space required)
 	return hasAllPackagePermissions;
 }
 
@@ -502,12 +503,13 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 						notifyUpdate(context, update);
 					}
 				});
-				builder.setOnDismissListener(new OnDismissListener() {
+				updateDialog = builder.create();
+				updateDialog.setOnDismissListener(new OnDismissListener() {
 					public void onDismiss(DialogInterface dialog) {
 						dialog = null;
 					}
 				});
-				updateDialog = builder.create();
+
 				updateDialog.show();
 			}
 		});
@@ -530,6 +532,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 
 
 	//File I/O
+	@SuppressWarnings("unused")
 	private static void openWithAlert(final Activity activity, final File file) {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
@@ -547,12 +550,12 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 						dialog.dismiss();
 					}
 				});
-				builder.setOnDismissListener(new OnDismissListener() {
+				updateDialog = builder.create();				
+				updateDialog.setOnDismissListener(new OnDismissListener() {
 					public void onDismiss(DialogInterface dialog) {
 						updateDialog = null;
 					}
 				});
-				updateDialog = builder.create();
 				updateDialog.show();
 			}
 		});
@@ -589,8 +592,9 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	 * @param description
 	 * @param length
 	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 	private static void addFileAndNotifyDownloadManager(File f, Context context, String description, long length) {
-		if(Build.VERSION.SDK_INT >= 12 && context != null) //send to download manager if we can, HONEYCOMB_MR1 and above only
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1 && context != null) //send to download manager if we can, HONEYCOMB_MR1 and above only
 		{
 			DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 			manager.addCompletedDownload(f.getName(), description, true, APK_MIMETYPE, f.getAbsolutePath(), length, true);
