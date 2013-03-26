@@ -80,7 +80,7 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 
 
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
-
+void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @end
 
 
