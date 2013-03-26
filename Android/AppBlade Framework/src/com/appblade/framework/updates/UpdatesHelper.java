@@ -17,20 +17,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.app.DownloadManager.Query;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -53,6 +55,7 @@ import com.appblade.framework.utils.SystemUtils;
  * @author rich.stern@raizlabs  
  * @author andrew.tremblay@raizlabs
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class UpdatesHelper {
 	private static AlertDialog updateDialog = null;//for checking download process
 	private static UpdateTask updateTask = null;//for checking download process
@@ -160,13 +163,21 @@ public class UpdatesHelper {
 	 * Will prompt a login dialog if credentials are not immediately found to be available.
 	 * Note that this is essentially unnecessary to call right after {@link AppBlade.authenticate(Activity)} since that handles authentication by default. 
 	 * @param activity activity to check authorization and run the {@link UpdateTask}
-	 * @param promptForDownload 
+	 * @param promptForDownload flag for whether we want to prompt the user before we start downloading the update, which is polite if they aren't on wifi or th eapk is very large. 
 	 */
 	public static void checkForAuthenticatedUpdate(Activity activity, boolean promptForDownload)
 	{
 		checkForAuthenticatedUpdate( activity, promptForDownload, true); //we respect TTL by default
 	}	
 	
+	/**<h2>NOT YET SUPPORTED BY THE API</h2>
+	 * Authentication check that uses authorization credentials to determine if an update is available. <br> 
+	 * Will prompt a login dialog if credentials are not immediately found to be available.
+	 * Note that this is essentially unnecessary to call right after {@link AppBlade.authenticate(Activity)} since that handles authentication by default. 
+	 * @param activity activity to check authorization and run the {@link UpdateTask}
+	 * @param promptForDownload flag for whether we want to prompt the user before we start downloading the update, which is polite if they aren't on wifi or th eapk is very large. 
+	 * @param respectUpdateTtl flag for whether we want to respect the timeout the server last gave. 
+	 */
 	public static void checkForAuthenticatedUpdate(Activity activity, boolean promptForDownload, boolean respectUpdateTtl)
 	{
 		if(UpdatesHelper.shouldUpdate(activity, respectUpdateTtl)){
@@ -351,13 +362,17 @@ private static void handleDownloadedFile(Activity activity, File downloadedFile)
 
 private static boolean appCanDownload() {
 	//currently only checks for valid permissions, since that's the only crucial one 
-	//TODO:additional stipulations (like only downloading off of a WiFi connection, or if we have enough space required)
 	PackageInfo pkg = AppBlade.getPackageInfo();
-	String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-	return SystemUtils.hasPermission(pkg, permission);
+	boolean hasAllPackagePermissions = SystemUtils.hasPermission(pkg, Manifest.permission.WRITE_EXTERNAL_STORAGE) && SystemUtils.hasPermission(pkg, Manifest.permission.INTERNET);
+	//TODO:additional stipulations (like only downloading off of a WiFi connection, or if we have enough space required)
+	return hasAllPackagePermissions;
 }
 
-
+/**
+ * Attempts to download the update given the response from the server.
+ * @param context Activity to handle the download and notifications
+ * @param update the JSONObject that the server returned. 
+ */
 public static void downloadUpdate(Activity context, JSONObject update) {
 	File fileDownloadLocation = null; //filename is determined by the server
 
@@ -386,7 +401,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 		HttpResponse response = client.execute(request);
 		if(HttpUtils.isOK(response)) {
 			if(fileDownloadLocation.exists()){ //this location needs to start empty
-					fileDownloadLocation.delete();
+					UpdatesHelper.deleteFileAndNotifyDownloadManager(fileDownloadLocation, context);
 			}
 			fileDownloadLocation.createNewFile();
 			
@@ -440,11 +455,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	    		if(!savedSuccessfully){
 	    			notifyRetryDownload(context, update);
 	    		}
-	    		if(Build.VERSION.SDK_INT >= 12) //send to download manager if we can, HONEYCOMB_MR1 and above only
-	    		{
-	    			DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-	    			manager.addCompletedDownload(fileDownloadLocation.getName(), md5OnServer, true, APK_MIMETYPE, fileDownloadLocation.getAbsolutePath(), totalBytesRead, true);
-	    		}
+	    		UpdatesHelper.addFileAndNotifyDownloadManager(fileDownloadLocation, context, md5OnServer, totalBytesRead);
 	    	}
 	    	
 		}
@@ -505,6 +516,12 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	}
 
 
+	/**
+	 * A helper function to get a readable local file location from the update response from the AppBlade server
+	 * @param update The "update" object within the JSON data that AppBlade optionally returns when a update is available. 
+	 * @return A readable file location form the bundle_identifier value in the update JSON.
+	 * @throws JSONException when the update parameter is invalid.
+	 */
 	public static File fileFromUpdateJSON(JSONObject update) throws JSONException {
 		String newFileName = SystemUtils.getReadableApkFileNameFromPackageName(update.getString("bundle_identifier"));
 		return new File(UpdatesHelper.getRootDirectory(), newFileName); //might exist
@@ -549,14 +566,6 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 			dir.mkdirs();
 		}
 		return dir;
-//		String path = String.format("%s%s%s", 		Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "/",		rootDir);
-		//getDownloadCacheDirectory getExternalStoragePublicDirectory
-//		String path = String.format("%s%s%s", getExternalStoragePublicDirectory
-//				Environment.getExternalStorageDirectory().getAbsolutePath(), "/",
-//				rootDir);
-//		File dir = new File(path);
-//		dir.mkdirs();
-//		return dir;
 	}
 	
 	/**
@@ -572,15 +581,67 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 		File rootDir = UpdatesHelper.getRootDirectory(); 
 		return new File(rootDir, packageDir);
 	}
+	
+	/**
+	 * DO NOT CHANGE f.getName(). It is required for the deletion code.
+	 * @param f
+	 * @param context
+	 * @param description
+	 * @param length
+	 */
+	private static void addFileAndNotifyDownloadManager(File f, Context context, String description, long length) {
+		if(Build.VERSION.SDK_INT >= 12 && context != null) //send to download manager if we can, HONEYCOMB_MR1 and above only
+		{
+			DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+			manager.addCompletedDownload(f.getName(), description, true, APK_MIMETYPE, f.getAbsolutePath(), length, true);
+		}
+	}
+	
+	/**
+	 * Deletes the file and notifies the DownloadManager that the file no longer exists.
+	 * @param f file to delete
+	 * @param context the context to use to notify the download manager
+	 * @return
+	 */
+	private static boolean deleteFileAndNotifyDownloadManager(File f, Context context) {
+		boolean deleted = f.delete();
+		if(deleted)
+		{
+    		if(Build.VERSION.SDK_INT >= 12 && context != null) //send to download manager if we can, HONEYCOMB_MR1 and above only
+    		{
+    			DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+    			DownloadManager.Query q = new DownloadManager.Query();
+    			q.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL);
+    			Cursor c = manager.query(q);
+    			int idIndex = c.getColumnIndexOrThrow(DownloadManager.COLUMN_ID);
+    			int titleIndex = c.getColumnIndexOrThrow(DownloadManager.COLUMN_TITLE);
+    			if(c.moveToFirst() && idIndex >= 0){
+    				long downloadId = c.getLong(idIndex);
+    				String downloadTitle = c.getString(titleIndex);
+    				if(f.getName().equals(downloadTitle))
+    					manager.remove(downloadId);
+    		        while(c.moveToNext())
+    		        {
+        				downloadId = c.getLong(idIndex);
+        				if(f.getName().equals(downloadTitle))
+        					manager.remove(downloadId);
+        		    }
+    			}
+    		}
+		}
+		return deleted;
+	}
+
 
 	/**
 	 * One liner for deleting the downloaded update file for this app.
 	 */
-	public static void deleteCurrentFile() {
+	public static void deleteCurrentFile(Context context) {
 		File currentFile = UpdatesHelper.downloadedFile();
-		if(currentFile.delete())
+		if(UpdatesHelper.deleteFileAndNotifyDownloadManager(currentFile, context))
 		{
 			Log.v(AppBlade.LogTag, "Deleted now-unnecessary apk: " + currentFile.getName());
+			
 		}
 		Log.v(AppBlade.LogTag, "Everything up-to-date");		
 	}

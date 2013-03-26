@@ -1,6 +1,5 @@
 package com.appblade.framework.updates;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.http.HttpResponse;
@@ -80,12 +79,12 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 					}
 					else
 					{
-						UpdatesHelper.deleteCurrentFile();
+						UpdatesHelper.deleteCurrentFile(this.taskActivity);
 					}
 				}
 				else
 				{
-					UpdatesHelper.deleteCurrentFile();
+					UpdatesHelper.deleteCurrentFile(this.taskActivity);
 				}
 			}
 			catch (IOException ex) { Log.w(AppBlade.LogTag, "IO error when handling update response", ex); }
