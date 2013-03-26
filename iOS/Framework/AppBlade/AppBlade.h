@@ -113,10 +113,11 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 + (void)startSession;
 + (void)endSession;
 
+
+
 //Geolocation Logging
 - (void)updateSessionLocations;
 - (void)allowLocationLogging;
 - (void)allowLocationLoggingForDistance:(int)meters andOrTime:(int)seconds;
-
 
 @end
