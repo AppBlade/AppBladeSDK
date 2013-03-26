@@ -72,7 +72,7 @@ public class FeedbackHelper {
 			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
 			String url = WebServiceHelper.getUrl(urlPath);
 
-			Log.d(AppBlade.LogTag, (paramData == null ? "no paramData" : "Param Data " + paramData.toString()));
+			Log.v(AppBlade.LogTag, (paramData == null ? "no paramData" : "Param Data " + paramData.toString()));
 
 			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, paramData, sharedBoundary);
 
@@ -99,20 +99,19 @@ public class FeedbackHelper {
 				int statusCode = response.getStatusLine().getStatusCode();
 				int statusCategory = statusCode / 100;
 
-				Log.d(AppBlade.LogTag, "Feedback returned: " + statusCode);
+				Log.v(AppBlade.LogTag, "Feedback returned: " + statusCode);
 
 				
 				if(statusCategory == 2)
 					success = true;
 			}else{
-				Log.d(AppBlade.LogTag, "Feedback returned null response ");
+				Log.v(AppBlade.LogTag, "Feedback returned null response ");
 			}
 
 		}
 		catch(Exception ex)
 		{
-			Log.d(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
-			ex.printStackTrace();
+			Log.w(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()), ex);
 		}
 
 		IOUtils.safeClose(client);
@@ -166,7 +165,7 @@ public class FeedbackHelper {
 		dialog.setView(wrapperView);
 		
 		final FeedbackData fData = data;
-		Log.d(AppBlade.LogTag, "feedback data : "+ fData.FileName + " is " + (fData.Screenshot != null ? "here" : "not here") );
+		Log.v(AppBlade.LogTag, "feedback data : "+ fData.FileName + " is " + (fData.Screenshot != null ? "here" : "not here") );
 
 		dialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -215,7 +214,7 @@ public class FeedbackHelper {
 			}
 		} 
 		catch (IOException e) {
-			Log.d(AppBlade.LogTag, e.toString());
+			Log.v(AppBlade.LogTag, e.toString());
 		}
 		
 		return entity;
@@ -248,7 +247,7 @@ public class FeedbackHelper {
 	public static String formatNewScreenshotFileLocation() {
 		String toRet = "";
 		toRet = AppBlade.rootDir + "/" + formatNewScreenshotFileName();
-		Log.d(AppBlade.LogTag, toRet);
+		Log.v(AppBlade.LogTag, toRet);
 		return toRet ;
 	}
 

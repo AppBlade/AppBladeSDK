@@ -72,14 +72,14 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 			postParams.add(new BasicNameValuePair("client_id", AppBlade.appInfo.Token));
 			postParams.add(new BasicNameValuePair("client_secret", AppBlade.appInfo.Secret));
 			request.setEntity(new UrlEncodedFormEntity(postParams));
-			
+
 			HttpResponse response = client.execute(request);
 			handleResponse(response);
 		}
-		catch (URISyntaxException e) { }
-		catch (UnsupportedEncodingException e) { }
-		catch (ClientProtocolException e) { }
-		catch (IOException e) { }
+		catch (URISyntaxException e) { e.printStackTrace(); }
+		catch (UnsupportedEncodingException e) { e.printStackTrace(); }
+		catch (ClientProtocolException e) { e.printStackTrace(); }
+		catch (IOException e) { e.printStackTrace(); }
 		finally {
 			IOUtils.safeClose(client);
 		}
@@ -89,10 +89,13 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 	}
 
 	private void handleResponse(HttpResponse response) {
+		Log.v(AppBlade.LogTag, "authData response " + response.getStatusLine());
+
+		
 		if(HttpUtils.isOK(response)) {
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.d(AppBlade.LogTag, "authData recieved " + data);
+				Log.v(AppBlade.LogTag, "authData recieved " + data);
 				JSONObject json = new JSONObject(data);
 				
 				String accessToken = json.getString("access_token");
@@ -104,8 +107,8 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 				
 				RemoteAuthHelper.store(context, token_type, accessToken, refresh_token, expires);
 			}
-			catch (IOException ex) { }
-			catch (JSONException ex) { }
+			catch (IOException ex) { Log.w(AppBlade.LogTag, "handleResponse(HttpResponse) Error storing AuthToken ", ex); }
+			catch (JSONException ex) { Log.w(AppBlade.LogTag, "handleResponse(HttpResponse) Error parsing JSON ", ex); }
 		}
 	}
 

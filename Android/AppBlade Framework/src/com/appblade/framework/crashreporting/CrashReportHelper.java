@@ -79,20 +79,20 @@ public class CrashReportHelper {
 			{
 				String newFilename = newCrashFileName();
 				File file = new File(newFilename);
-				Log.d(AppBlade.LogTag,"writing to " + newFilename);
+				Log.v(AppBlade.LogTag,"writing to " + newFilename);
 				if(file.createNewFile())
 				{
 					BufferedWriter writer = new BufferedWriter(new FileWriter(newFilename));
 					writer.write(systemInfo);
 					writer.write(stackTrace);
 					writer.close();
-					Log.d(AppBlade.LogTag,"wrote to " + file.getName());
+					Log.v(AppBlade.LogTag,"wrote to " + file.getName());
 				}
 			}
 		}
 		catch(Exception ex)
 		{
-			Log.d(AppBlade.LogTag, String.format("Ex: %s, %s", ex.getClass().getCanonicalName(), ex.getMessage()));
+			Log.v(AppBlade.LogTag, String.format("Ex: %s, %s", ex.getClass().getCanonicalName(), ex.getMessage()));
 		}
 	}
 
@@ -104,7 +104,7 @@ public class CrashReportHelper {
 	private static synchronized boolean sendExceptionData(File f) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
-		Log.d(AppBlade.LogTag, "sending exception in file " + f.getName());
+		Log.v(AppBlade.LogTag, "sending exception in file " + f.getName());
 
 		try
 		{
@@ -146,7 +146,7 @@ public class CrashReportHelper {
 		}
 		catch(Exception ex)
 		{
-			Log.d(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+			Log.v(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
 
 		IOUtils.safeClose(client);
@@ -174,7 +174,7 @@ public class CrashReportHelper {
 			}
 		} 
 		catch (IOException e) {
-			Log.d(AppBlade.LogTag, e.toString());
+			Log.v(AppBlade.LogTag, e.toString());
 		}
 		
 		return entity;

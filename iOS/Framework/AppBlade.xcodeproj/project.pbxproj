@@ -75,11 +75,11 @@
 /* Begin PBXFileReference section */
 		31B29E7713FC1BFC00AF9D5D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		31BD74C113FF2AEA00C3B6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		620217251404450900A14BA7 /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReporter.h; path = AppBlade/CrashReporter/Source/CrashReporter.h; sourceTree = SOURCE_ROOT; };
-		620217261404450900A14BA7 /* CrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashReporter.m; path = AppBlade/CrashReporter/Source/CrashReporter.m; sourceTree = SOURCE_ROOT; };
+		620217251404450900A14BA7 /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = CrashReporter.h; path = AppBlade/CrashReporter/Source/CrashReporter.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		620217261404450900A14BA7 /* CrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CrashReporter.m; path = AppBlade/CrashReporter/Source/CrashReporter.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		620217271404450900A14BA7 /* PLCrashAsync.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashAsync.c; path = AppBlade/CrashReporter/Source/PLCrashAsync.c; sourceTree = SOURCE_ROOT; };
 		620217281404450900A14BA7 /* PLCrashAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashAsync.h; path = AppBlade/CrashReporter/Source/PLCrashAsync.h; sourceTree = SOURCE_ROOT; };
-		620217291404450900A14BA7 /* PLCrashAsyncImage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashAsyncImage.c; path = AppBlade/CrashReporter/Source/PLCrashAsyncImage.c; sourceTree = SOURCE_ROOT; };
+		620217291404450900A14BA7 /* PLCrashAsyncImage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = PLCrashAsyncImage.c; path = AppBlade/CrashReporter/Source/PLCrashAsyncImage.c; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		6202172A1404450900A14BA7 /* PLCrashAsyncImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashAsyncImage.h; path = AppBlade/CrashReporter/Source/PLCrashAsyncImage.h; sourceTree = SOURCE_ROOT; };
 		6202172B1404450900A14BA7 /* PLCrashAsyncSignalInfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashAsyncSignalInfo.c; path = AppBlade/CrashReporter/Source/PLCrashAsyncSignalInfo.c; sourceTree = SOURCE_ROOT; };
 		6202172C1404450900A14BA7 /* PLCrashAsyncSignalInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashAsyncSignalInfo.h; path = AppBlade/CrashReporter/Source/PLCrashAsyncSignalInfo.h; sourceTree = SOURCE_ROOT; };
@@ -94,7 +94,7 @@
 		620217351404450900A14BA7 /* PLCrashFrameWalker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker.c; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker.c; sourceTree = SOURCE_ROOT; };
 		620217361404450900A14BA7 /* PLCrashFrameWalker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker.h; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker.h; sourceTree = SOURCE_ROOT; };
 		620217371404450900A14BA7 /* PLCrashLogWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashLogWriter.h; path = AppBlade/CrashReporter/Source/PLCrashLogWriter.h; sourceTree = SOURCE_ROOT; };
-		620217381404450900A14BA7 /* PLCrashLogWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashLogWriter.m; path = AppBlade/CrashReporter/Source/PLCrashLogWriter.m; sourceTree = SOURCE_ROOT; };
+		620217381404450900A14BA7 /* PLCrashLogWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PLCrashLogWriter.m; path = AppBlade/CrashReporter/Source/PLCrashLogWriter.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		620217391404450900A14BA7 /* PLCrashLogWriterEncoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashLogWriterEncoding.c; path = AppBlade/CrashReporter/Source/PLCrashLogWriterEncoding.c; sourceTree = SOURCE_ROOT; };
 		6202173A1404450900A14BA7 /* PLCrashLogWriterEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashLogWriterEncoding.h; path = AppBlade/CrashReporter/Source/PLCrashLogWriterEncoding.h; sourceTree = SOURCE_ROOT; };
 		6202173B1404450900A14BA7 /* PLCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReport.h; path = AppBlade/CrashReporter/Source/PLCrashReport.h; sourceTree = SOURCE_ROOT; };
@@ -144,7 +144,7 @@
 		CBF479FB13969C2B00949297 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CBF479FF13969C2B00949297 /* AppBlade-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppBlade-Prefix.pch"; sourceTree = "<group>"; };
 		CBF47A0E13969C8B00949297 /* AppBlade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
-		CBF47A0F13969C8B00949297 /* AppBlade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBlade.m; sourceTree = "<group>"; };
+		CBF47A0F13969C8B00949297 /* AppBlade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppBlade.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		CBF47A191396BC9600949297 /* AppBladeSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSimpleKeychain.h; sourceTree = "<group>"; };
 		CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeSimpleKeychain.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -515,7 +515,7 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos6.0;
+				SDKROOT = iphoneos6.1;
 				SKIP_INSTALL = YES;
 			};
 			name = Release_Production;
@@ -561,7 +561,7 @@
 				OTHER_CFLAGS = "-DSTAGING=1";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos6.0;
+				SDKROOT = iphoneos6.1;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug_Staging;
@@ -604,7 +604,7 @@
 				OTHER_CFLAGS = "-DSTAGING=1";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos6.0;
+				SDKROOT = iphoneos6.1;
 				SKIP_INSTALL = YES;
 			};
 			name = Release_Staging;
@@ -753,7 +753,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos6.0;
+				SDKROOT = iphoneos6.1;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug_Production;

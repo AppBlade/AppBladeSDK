@@ -1,6 +1,7 @@
 package com.appblade.framework.authenticate;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -33,8 +34,8 @@ public class RemoteAuthHelper {
 		String filename = StringUtils.md5(basename);
 		
 		return filename;
-	}
-	
+	}	
+
 	
 	/**
 	 * store the auth token variables securely 
@@ -46,19 +47,23 @@ public class RemoteAuthHelper {
 	 * @return
 	 */
 	public static void store(Context context, String tokenType, String accessToken, String refreshToken, int expiresIn) {
+		Log.v(AppBlade.LogTag, "RemoteAuthHelper.store(Context context, String tokenType, String accessToken, String refreshToken, int expiresIn)");
+
 		try
 		{
-			String filename = getAccessTokenFilename(context);
+			String filename = getAccessTokenFilename(context.getApplicationContext());
+			Log.v(AppBlade.LogTag, "RemoteAuthHelper.store writing " + accessToken + " to " + filename);
+
 			FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
 			fos.write(accessToken.getBytes());
 			IOUtils.safeClose(fos);
 
-			Log.d(AppBlade.LogTag, String.format("RemoteAuthHelper.store token:%s", accessToken));
-			Log.d(AppBlade.LogTag, String.format("RemoteAuthHelper.store path:%s", filename));
+			Log.v(AppBlade.LogTag, String.format("RemoteAuthHelper.store token:%s", accessToken));
+			Log.v(AppBlade.LogTag, String.format("RemoteAuthHelper.store path:%s", filename));
 			
 			AppBlade.setDeviceId(accessToken);
 		}
-		catch (Exception ex) { ex.printStackTrace(); }
+		catch (Exception ex) { Log.w(AppBlade.LogTag, "RemoteAuthHelper store ", ex); }
 	}
 	
 	/**
@@ -68,14 +73,14 @@ public class RemoteAuthHelper {
 	public static void clear(Context context) {
 		try
 		{
-			String filename = getAccessTokenFilename(context);
+			String filename = getAccessTokenFilename(context.getApplicationContext());
 			context.deleteFile(filename);
 
-			Log.d(AppBlade.LogTag, String.format("RemoteAuthHelper.clear (delete file) path:%s", filename));
+			Log.v(AppBlade.LogTag, String.format("RemoteAuthHelper.clear (delete file) path:%s", filename));
 			
 			AppBlade.setDeviceId(null);
 		}
-		catch (Exception ex) { ex.printStackTrace(); }
+		catch (Exception ex) {  Log.w(AppBlade.LogTag, "RemoteAuthHelper clear ", ex); }
 	}
 	
 	/**
@@ -85,18 +90,28 @@ public class RemoteAuthHelper {
 	 */	
 	public static String getAccessToken(Context context) {
 		String accessToken = "";
-		String filename = getAccessTokenFilename(context);
-		
+		String filename = getAccessTokenFilename(context.getApplicationContext());
+		File authFile = context.getDir(filename, Context.MODE_PRIVATE);
 		try
 		{
+			if(!authFile.exists()){
+				Log.e(AppBlade.LogTag, "Trying to create Authfile location : " + authFile.getAbsolutePath());
+				authFile.mkdirs();
+				authFile.createNewFile();
+			}
 			FileInputStream fis = context.openFileInput(filename);
 		    InputStreamReader inputStreamReader = new InputStreamReader(fis);
 		    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 		    accessToken = bufferedReader.readLine();
 		}
-		catch (Exception ex) { ex.printStackTrace(); }
+		catch (Exception ex) { 
+			Log.w(AppBlade.LogTag, "Error creating Access Token ", ex); 
+		}
+		if(!authFile.exists()){
+			Log.e(AppBlade.LogTag, "Did not create Authfile location : " + authFile);
+		}
 		
-		Log.d(AppBlade.LogTag, String.format("getAccessToken File:%s, token:%s", filename, accessToken));
+		Log.v(AppBlade.LogTag, String.format("getAccessToken File:%s, token:%s", filename, accessToken));
 		return accessToken;
 	}
 

@@ -55,7 +55,7 @@ public class CustomParamDataHelper {
 	/**
 	 * Parses a file at the given location, returns a JSONObject. Assumes valid read/write permissions.
 	 * @param customParamsResourceLocation String URL of the file in json format to read.
-	 * @return a new JSONObject with all stored values.
+	 * @return a new JSONObject with all stored values. Or an empty JSONObject
 	 */
 	public static synchronized JSONObject getCustomParamsAsJSON(String customParamsResourceLocation ){
         JSONObject json = new JSONObject();
@@ -87,7 +87,7 @@ public class CustomParamDataHelper {
 			}
 		}
 
-		Log.d(AppBlade.LogTag, "Text in customparams.json: "+ jsonTxt);
+		Log.v(AppBlade.LogTag, "Text in "+customParamsFileName+": "+ jsonTxt);
         
         if(jsonTxt != null){
 			try {
@@ -98,7 +98,7 @@ public class CustomParamDataHelper {
         }
         else
         {
-        	Log.d(AppBlade.LogTag, "Custom Parameters have not yet been inititalized.");
+        	Log.v(AppBlade.LogTag, "Custom Parameters have not yet been inititalized.");
         }
         return json;
 	}
@@ -134,27 +134,26 @@ public class CustomParamDataHelper {
 	    	}
 	    	final File someFile = new File(AppBlade.customParamsDir, customParamsFileName);
 	    	if(!someFile.exists()){
-	        	Log.d(AppBlade.LogTag, "customParams file does not exist yet. creating Sessions file.");
+	        	Log.v(AppBlade.LogTag, "customParams file does not exist yet. creating Sessions file.");
 	    		someFile.createNewFile();
 	    	}
 	    }catch (IOException ex) {
-	    	Log.d(AppBlade.LogTag, "Error making customParams file");
-	    	ex.printStackTrace();
+	    	Log.w(AppBlade.LogTag, "Error making customParams file", ex);
 	    }
 	    
         try {
             //open the buffered writer
-	    	Log.d(AppBlade.LogTag, "open the buffered writer to "+ jsonFileURI());
+	    	Log.v(AppBlade.LogTag, "open the buffered writer to "+ jsonFileURI());
         	BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(jsonFileURI()));
-    		Log.d(AppBlade.LogTag, "writing customParams "+stringJSON);
+    		Log.v(AppBlade.LogTag, "writing customParams "+stringJSON);
             bufferedWriter.write(stringJSON);
 	        //Close the BufferedWriter
 			bufferedWriter.flush();
 			bufferedWriter.close();
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
+	    	Log.w(AppBlade.LogTag, "Error finding customParams file", ex);
         } catch (IOException ex) {
-            ex.printStackTrace();
+	    	Log.w(AppBlade.LogTag, "IO Error making customParams file", ex);
         }
 	}
 }

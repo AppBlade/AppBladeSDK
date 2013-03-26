@@ -1,7 +1,25 @@
+2013-03-14 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
+	UPDATED CUSTOM PARAM CALL
+	* Was -(void)setCustomParam:(id)newObject withValue:(NSString*)key; 
+	* Now -(void)setCustomParam:(NSString *)key withValue:(id)value;
+
+2013-03-13 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
+	Added Anonymous Update call. This call sends anonymous information on the current build to AppBlade and checks if there is a newer version available. See documentation/wiki for a walkthrough. 
+	* AppBlade.checkForUpdates(Activity activity); in Android
+	* [[AppBlade sharedManager] checkForUpdates]; in iOS
+
+	Additional headers added to both Android and iOS sdks.
+	* Android now sends a hash of AndroidManifest.xml to better identify it among uploaded versions for anonymous updating.  
+	* iOS sends a hash of its info.plist for version identification. 
+
+	Added alternate (i.e. better) session logging implementation for Android. You can now attach session logging as a Service, which tracks the opening and closing of an app more intuitively. It's a bit harder to set up, so it's not the officially suggested method to track sessions. See com.appblade.framework.stats.AppBladeSessionLoggingService in the source code. 
+
 2012-12-03 	Andrew Tremblay  <andrew.tremblay@raizlabs.com>
 	Updated iOS Source to be compatible with objective-C++ compilers (app delegates with the .mm suffix were throwing errors when importing AppBlade.h)
 	* Appblade.h : UIKIT_EXTERN replaces static in the offensive variables so the compiler knows how to handle them.
 	* Appblade.m : removed `static` in the declarations.
+
+
 
 2012-11-29 	Andrew Tremblay  <andrew.tremblay@raizlabs.com>
 	Began a Changelog. Any large changes that require explanation can be placed here.   
