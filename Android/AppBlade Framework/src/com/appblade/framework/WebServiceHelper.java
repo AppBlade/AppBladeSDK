@@ -35,6 +35,7 @@ public class WebServiceHelper {
 	public static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
 	public static final String ServicePathSessionFormat =  "/api/user_sessions";
 	public static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
+	public static final String ServicePathUpdateFormat = "/api/2/projects/%s/updates";  
 	public static final String ServicePathOauthTokens = "/oauth/tokens";
 	
 	/**
@@ -64,7 +65,7 @@ public class WebServiceHelper {
 		String nonce = String.format(Locale.US, "%d:%s", seconds, getRandomNonceString(WebServiceHelper.NonceRandomStringLength));
 		
 		String methodName = method.toString();
-		Log.d(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
+		Log.v(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
 		
 		String normalizedRequestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
 				nonce, methodName, requestBodyRaw, appInfo.CurrentEndpointNoPort, WebServiceHelper.getCurrentPortAsString(), requestBodyHash, appInfo.Ext);
@@ -73,11 +74,11 @@ public class WebServiceHelper {
 		byte[] normalizedRequestBodySha256 = StringUtils.sha256(normalizedRequestBody);
 		String normalizedRequestBodyHash = Base64.encodeToString(normalizedRequestBodySha256, 0);
 
-		Log.d(AppBlade.LogTag, String.format("normalizedRequestBody: %s", normalizedRequestBody));
-		Log.d(AppBlade.LogTag, String.format("normalizedRequestBody length: %d", normalizedRequestBody.length()));
-		Log.d(AppBlade.LogTag, String.format("normalizedRequestBody Hash sha256+base64: %s", normalizedRequestBody));
-		Log.d(AppBlade.LogTag, String.format("normalizedRequestBody Hash sha256+base64 length: %d", normalizedRequestBodyHash.length()));
-		Log.d(AppBlade.LogTag, String.format("mac: %s", mac));
+		Log.v(AppBlade.LogTag, String.format("normalizedRequestBody: %s", normalizedRequestBody));
+		Log.v(AppBlade.LogTag, String.format("normalizedRequestBody length: %d", normalizedRequestBody.length()));
+		Log.v(AppBlade.LogTag, String.format("normalizedRequestBody Hash sha256+base64: %s", normalizedRequestBody));
+		Log.v(AppBlade.LogTag, String.format("normalizedRequestBody Hash sha256+base64 length: %d", normalizedRequestBodyHash.length()));
+		Log.v(AppBlade.LogTag, String.format("mac: %s", mac));
 		
 		StringBuilder builder = new StringBuilder();
 		builder.append("HMAC ");
@@ -115,22 +116,15 @@ public class WebServiceHelper {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
 			request.addHeader("bundle_version", pi.versionName);
-			
-			String executable_uuid = SystemUtils.hashedExecutableUuid(pi);
-			if(executable_uuid != null){
-				request.addHeader("executable_uuid",  executable_uuid);			
-				Log.d(AppBlade.LogTag, "executable_uuid " + request.getFirstHeader("executable_uuid"));
-			}
-			String static_resource_uuid = SystemUtils.hashedStaticResourcesUuid(pi);
-			if(static_resource_uuid != null){
-				request.addHeader("static_resource_uuid", static_resource_uuid );			
-				Log.d(AppBlade.LogTag, "static_resource_uuid " + request.getFirstHeader("static_resource_uuid"));
-			}
-			String certificate_uuid = SystemUtils.hashedCertificateUuid(pi);
-			if(certificate_uuid != null){
+				request.addHeader("executable_uuid",  SystemUtils.hashedExecutableUuid(pi));			
+				request.addHeader("static_resource_uuid", SystemUtils.hashedStaticResourcesUuid(pi) );			
 				request.addHeader("certificate_uuid", SystemUtils.hashedCertificateUuid(pi) );			
-				Log.d(AppBlade.LogTag, "certificate_uuid " + request.getFirstHeader("certificate_uuid"));
-			}
+				request.addHeader("manifest_uuid", SystemUtils.hashedManifestFileUuid(pi) );			
+
+				Log.v(AppBlade.LogTag, " " + request.getFirstHeader("executable_uuid"));
+				Log.v(AppBlade.LogTag, " " + request.getFirstHeader("static_resource_uuid"));
+				Log.v(AppBlade.LogTag, " " + request.getFirstHeader("certificate_uuid"));
+				Log.v(AppBlade.LogTag, " " + request.getFirstHeader("manifest_uuid"));
 		}
 		
 		request.addHeader("android_release", Build.VERSION.RELEASE);
@@ -139,7 +133,10 @@ public class WebServiceHelper {
 		request.addHeader("device_model", Build.MODEL);
 		request.addHeader("device_id", Build.ID);
 		request.addHeader("device_brand", Build.BRAND);
-		request.addHeader("device_fingerprint", Build.FINGERPRINT);
+		request.addHeader("device_fingerprint", SystemUtils.getReadableFINGERPRINT());
+		request.addHeader("android_id", AppBlade.appInfo.storedANDROID_ID);
+
+		
 	}
 
 	/**
@@ -182,8 +179,8 @@ public class WebServiceHelper {
 	 * @return integer representing the port to user when communicating with the end point. Usually 443.
 	 */
 	public static int getCurrentPort() {
-		Log.d(AppBlade.LogTag, "Current endpoint " + AppBlade.appInfo.CurrentEndpoint);
-		Log.d(AppBlade.LogTag, "Current service scheme " + AppBlade.appInfo.CurrentServiceScheme);
+		Log.v(AppBlade.LogTag, "Current endpoint " + AppBlade.appInfo.CurrentEndpoint);
+		Log.v(AppBlade.LogTag, "Current service scheme " + AppBlade.appInfo.CurrentServiceScheme);
 		int portToReturn = 443; //assume secure until otherwise said so
 		
 		if(AppBlade.appInfo.CurrentEndpoint != null && AppBlade.appInfo.CurrentEndpoint.equals(AppInfo.DefaultAppBladeHost)){
@@ -198,7 +195,7 @@ public class WebServiceHelper {
 				URL aURL = new URL(String.format("%s%s", AppBlade.appInfo.CurrentServiceScheme, AppBlade.appInfo.CurrentEndpoint));
 				if(aURL.getPort() > 0)
 				{
-					Log.d(AppBlade.LogTag, "Port! " + aURL.getPort());
+					Log.v(AppBlade.LogTag, "Port! " + aURL.getPort());
 					portToReturn = aURL.getPort();
 				}
 				else

@@ -10,19 +10,25 @@ import java.util.Locale;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appblade.framework.utils.StringUtils;
+
 /**
  * object representing a single Session.
  * Contains date a session ended and date a session began. All other data about the app and the device is included in the headers.
  * Note that the custom parameters ({@link com.appblade.framework.customparams.CustomParamData}) are not included in Session calls. 
+ * API support will be added for them in the near future.
  * @author andrew.tremblay@raizlabs
  */
 public class SessionData implements Comparator<Object> {
 	public static String sessionBeganKey = "started_at";
 	public static String sessionEndedKey = "ended_at";
+	public static String sessionCustomParamsKey = "custom_params";
+	
 	public static String storageDividerKey = ", ";
 	
 	public Date began;
 	public Date ended;
+	public JSONObject customParams;
 	
 	
 	public SessionData(){
@@ -30,14 +36,16 @@ public class SessionData implements Comparator<Object> {
 		this.ended = null;
 	}
 	
-	public SessionData(Date _began, Date _ended){
+	public SessionData(Date _began, Date _ended, JSONObject _customParams){
 		this.began = _began;
 		this.ended = _ended;
+		this.customParams = _customParams;
 	}
+
 	
-	//*****************storage input
+	//*****************   Constructor for storage handling
 	/**
-	 * @param storedString String formatted as "[startTime in (yyyy-MM-dd HH:mm:ss.SSS)], [endTime in (yyyy-MM-dd HH:mm:ss.SSS)]"
+	 * @param storedString String formatted as "[startTime in (yyyy-MM-dd HH:mm:ss.SSS)], [endTime in (yyyy-MM-dd HH:mm:ss.SSS)], [latitude], [longitude] (optional but paired)
 	 */
 	public SessionData(String storedString){
 		//storedString should match the output of sessionAsStoredString
@@ -45,9 +53,14 @@ public class SessionData implements Comparator<Object> {
         String[] tokens = storedString.split(storageDividerKey);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
 		try {
-			if(tokens.length == 2){
+			if(tokens.length > 2){
 				this.began = format.parse(tokens[0]);
 				this.ended = format.parse(tokens[1]);
+				this.customParams = StringUtils.parseStringToJSONObject(tokens[2]);
+			}else if(tokens.length == 2){
+				this.began = format.parse(tokens[0]);
+				this.ended = format.parse(tokens[1]);
+		    	this.customParams = new JSONObject();
 			}else{
 				this.began = new Date();
 				this.ended = new Date();
@@ -61,7 +74,7 @@ public class SessionData implements Comparator<Object> {
 	}
 
 	
-	//*****************FILE I/O
+	//*****************FILE I/O RELATED
 	/**
 	 * Gets the current object as a formatted string for storage. (start and end time stored as timestamps)
 	 * @return String formatted as "[startTime as (yyyy-MM-dd HH:mm:ss.SSS)], [endTime as (yyyy-MM-dd HH:mm:ss.SSS)]"
@@ -72,30 +85,22 @@ public class SessionData implements Comparator<Object> {
 	    		 Timestamp(this.began.getTime());
 	    java.sql.Timestamp timeStampEnded = new 
 	    		 Timestamp(this.ended.getTime());
-	    
+	    if(this.customParams == null)
+	    {
+	    	this.customParams = new JSONObject();
+	    }
 
-
-		return timeStampBegan.toString() + storageDividerKey + timeStampEnded.toString();
+	    StringBuilder sb = new StringBuilder();
+	    sb.append(timeStampBegan.toString()).append(storageDividerKey)
+	    .append(timeStampEnded.toString()).append(storageDividerKey)
+	    .append(this.customParams.toString());
+	    	    
+		return sb.toString();
 	}
 		
-	/**
-	 * Compare method so we can confirm another object is essentially the same.
-	 * internally compares both start and end times, if they are both the same, theobjects are equal.
-	 */
-	public int compare(Object o1, Object o2)
-	{
-		SessionData session1 = (SessionData)o1;
-		SessionData session2 = (SessionData)o2;
-		if( session1 != null && session2 != null 
-				&& session1.began.equals(session2.began) && session1.ended.equals(session2.ended) )
-		{
-			return 0;
-		}
-		return 1;
-	}	
 	
 	
-	//*****************API REALATED
+	//*****************API RELATED
 	/*
 	 * 	{	
 	 * 		"device_id": "8989ffBB", 
@@ -104,8 +109,10 @@ public class SessionData implements Comparator<Object> {
 	 * 		"sessions" : [
 	 * ************************** THIS PART >>>
 	 * 		{
-	 * 			"started_at": "2007-03-01T13:00:00Z", 
-	 * 			"ended_at": "2007-03-01T13:04:30Z"
+	 * 			<sessionBeganKey>: 	"2007-03-01T13:00:00Z", 
+	 * 			<sessionEndedKey>: 	"2007-03-01T13:04:30Z",
+	 * 			<sessionLocationKey>: [	[ [latitude]"12.3123412", [longitude]"-55.4354234", [time location read]"112333330300" ] ... ]
+	 * 			<sessionCustomParamsKey>: {  whatever custom_params we had when this session was ended  }
 	 * 		}
 	 * **************************  << THAT PART
 	 * **************************  POSSIBLY MULTIPLE ONES
@@ -125,8 +132,9 @@ public class SessionData implements Comparator<Object> {
 	    		 Timestamp(this.ended.getTime());
 		
 		try {
-			json.put("started_at",timeStampBegan);
-			json.put("ended_at", timeStampEnded); 
+			json.put(sessionBeganKey,timeStampBegan);
+			json.put(sessionEndedKey, timeStampEnded); 
+			json.put(sessionCustomParamsKey, this.customParams); 		    	
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} 
@@ -134,6 +142,28 @@ public class SessionData implements Comparator<Object> {
 	}
 
 	
-
-
+	/**
+	 * Compare method so we can confirm another object is essentially the same. <br>
+	 * Internally compares both start and end times, if they are both the same, the objects are considered equal.<br>
+	 * If not the same, the one with the earlier [began] is first.<br>
+	 * If both begans are equal, the one with the earlier [ended] is first.
+	 * Does not check for optional variables. (For efficiency)
+	 */
+	public int compare(Object o1, Object o2)
+	{
+		int compareValue;
+		SessionData session1 = (SessionData)o1;
+		SessionData session2 = (SessionData)o2;
+		if( session1 != null && session2 != null)
+		{
+			if(session1.began.equals(session2.began)){
+				compareValue = session1.ended.compareTo(session2.ended);
+			}else{
+				compareValue = session1.began.compareTo(session2.began);
+			}
+		}else{
+			compareValue = 0; //nulls equal each other
+		}
+		return compareValue;
+	}	
 }

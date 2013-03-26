@@ -8,6 +8,7 @@
 
 #import "AppBlade.h"
 #import "AppBladeSimpleKeychain.h"
+
 #import "PLCrashReporter.h"
 #import "PLCrashReport.h"
 #import "AppBladeWebClient.h"
@@ -34,7 +35,6 @@ static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
-
 
 
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
@@ -171,9 +171,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
 {
-    NSString *exceptionMessageFormat = [NSString stringWithFormat:@"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.", name];
-    NSLog(@"%@", exceptionMessageFormat);
-    [NSException raise:@"AppBladeException" format:exceptionMessageFormat];
+    NSString* const exceptionMessageFormat = @"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.";
+    [NSException raise:@"AppBladeException" format:exceptionMessageFormat, name];
     abort();
 }
 
@@ -202,12 +201,29 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)checkApproval
 {
-    [self validateProjectConfiguration];
+    [self checkApprovalWithUpdatePrompt:YES];
+}
 
+- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt
+{
+    [self validateProjectConfiguration];
+    
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
-    [client checkPermissions];    
+    [client checkPermissions:shouldPrompt];
 }
+
+
+
+- (void)checkForUpdates
+{
+    [self validateProjectConfiguration];
+    NSLog(@"Checking for updates");
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
+    [client checkForUpdates];
+}
+
 
 - (void)catchAndReportCrashes
 {
@@ -376,6 +392,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     {
         NSLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
     }
+    else if(client.api == AppBladeWebClientAPI_UpdateCheck)
+    {
+        NSLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
+    }
     else
     {
         NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
@@ -384,7 +404,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self.activeClients removeObject:client];
 }
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions andShowUpdate:(BOOL)showUpdatePrompt
 {
     NSString *errorString = [permissions objectForKey:@"error"];
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
@@ -418,7 +438,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         
         // determine if there is an update available
         NSDictionary* update = [permissions objectForKey:@"update"];
-        if(update)
+        if(update && showUpdatePrompt)
         {
             NSString* updateMessage = [update objectForKey:@"message"];
             NSString* updateURL = [update objectForKey:@"url"];
@@ -432,6 +452,23 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self.activeClients removeObject:client];
     
     
+}
+
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)updateData
+{
+    // determine if there is an update available
+    NSDictionary* update = [updateData objectForKey:@"update"];
+    if(update)
+    {
+        NSString* updateMessage = [update objectForKey:@"message"];
+        NSString* updateURL = [update objectForKey:@"url"];
+        
+        if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
+            [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
+        }
+    }
+    
+    [self.activeClients removeObject:client];
 }
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
@@ -965,11 +1002,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return sessionClients > 0;
 }
 
+
 + (void)startSession
 {
     NSLog(@"Starting Session Logging");
     [[AppBlade sharedManager] logSessionStart];
 }
+
 
 + (void)endSession
 {
@@ -1002,7 +1041,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)logSessionEnd
 {
-    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", nil];
+    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
     
     NSMutableArray* pastSessions = nil;
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
@@ -1059,16 +1098,37 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
 }
 
--(void)setCustomParam:(id)key withValue:(id)value
+-(void)setCustomParam:(id)newObject withValue:(NSString*)key{
+    NSDictionary* currentFields = [self getCustomParams];
+    if (currentFields == nil) {
+        currentFields = [NSDictionary dictionary];
+    }
+    NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
+    if(key && newObject){
+        [mutableFields setObject:newObject forKey:key];
+    }else if(key && !newObject){
+        [mutableFields removeObjectForKey:key];
+    }
+    else
+    {
+        NSLog(@"invalid nil key");
+    }
+    NSLog(@"setting to %@", mutableFields);
+    currentFields = (NSDictionary *)mutableFields;
+    [self setCustomParams:currentFields];
+}
+
+
+-(void)setCustomParam:(id)object forKey:(NSString*)key;
 {
     NSDictionary* currentFields = [self getCustomParams];
     if (currentFields == nil) {
         currentFields = [NSDictionary dictionary];
     }
     NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
-    if(key && value){
-        [mutableFields setObject:value forKey:key];
-    }else if(key && !value){
+    if(key && object){
+        [mutableFields setObject:object forKey:key];
+    }else if(key && !object){
         [mutableFields removeObjectForKey:key];
     }
     else

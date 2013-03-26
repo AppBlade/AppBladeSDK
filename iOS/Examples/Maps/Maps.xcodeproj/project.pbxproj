@@ -363,6 +363,7 @@
 		31817C15161202EB00392343 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Maps/Maps-Prefix.pch";
 				INFOPLIST_FILE = "Maps/Maps-Info.plist";
@@ -371,6 +372,7 @@
 					"\"$(SRCROOT)/Maps/AppBladeSDK\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -378,6 +380,7 @@
 		31817C16161202EB00392343 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Maps/Maps-Prefix.pch";
 				INFOPLIST_FILE = "Maps/Maps-Info.plist";
@@ -386,6 +389,7 @@
 					"\"$(SRCROOT)/Maps/AppBladeSDK\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

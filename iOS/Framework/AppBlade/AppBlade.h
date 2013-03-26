@@ -20,6 +20,11 @@ UIKIT_EXTERN int const kAppBladeParsingError;
 UIKIT_EXTERN int const kAppBladePermissionError;
 UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
+#define DEFAULT_APPBLADE_LOCATION_LOGGING_DISTANCE 10 //every ten meters
+#define DEFAULT_APPBLADE_LOCATION_LOGGING_TIME 900 //or every fifteen minutes
+
+
+
 @class AppBlade;
 
 @protocol AppBladeDelegate <NSObject>
@@ -76,7 +81,8 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 //Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
--(void)setCustomParam:(id)newObject withValue:(NSString*)key;
+-(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated)); 
+-(void)setCustomParam:(id)object forKey:(NSString*)key; //use this instead of the deprecated -(void)setCustomParam:(id)newObject withValue:(NSString*)key
 -(void)clearAllCustomParams;
 
 
@@ -85,9 +91,18 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
  *    store with a call to |-checkApproval|, for example, could result in app termination or rejection.
  */
 
-// Checks with AppBlade to see if the app is allowed to run on this device.
+// Checks with AppBlade to see if the app is allowed to run on this device. Will also notify of updates.
 - (void)checkApproval;
 
+// Approval check with ability to disable the check/notification for updates.
+- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt;
+
+
+// Checks with AppBlade anonymously to see if the app can be updated with a new build.
+- (void)checkForUpdates;
+
+
+//Path to the AppBlade cache directory. Useful for direct modificaion of stored requests.
 + (NSString*)cachesDirectoryPath;
 
 // Sets up a 3-finger double tap for reporting feedback
@@ -103,7 +118,6 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
 // Shows a feedback dialogue and handles screenshot
 - (void)showFeedbackDialogue;
-
 
 + (void)startSession;
 + (void)endSession;

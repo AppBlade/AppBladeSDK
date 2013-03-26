@@ -15,6 +15,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
@@ -31,6 +32,8 @@ import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
 import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
+import com.appblade.framework.stats.AppBladeSessionLoggingService;
+import com.appblade.framework.updates.UpdatesHelper;
 import com.appblade.framework.utils.StringUtils;
 
 /**
@@ -63,7 +66,9 @@ public class AppBlade {
 	public static String customParamsDir = null;
 
 	public static SessionData currentSession;
-
+	public static AppBladeSessionLoggingService sessionLoggingService;
+	
+	
 	//keeping folders all in one place (the rootDir)
 	public static final String AppBladeExceptionsFolder = "app_blade_exceptions";
 	public static final String AppBladeFeedbackFolder = "app_blade_feedback";
@@ -116,12 +121,15 @@ public class AppBlade {
 			throw new IllegalArgumentException("Invalid application info registered with AppBlade");
 		}
 
+		
 		// Initialize App Info
 		appInfo = new AppInfo();
 		appInfo.AppId = uuid;
 		appInfo.Token = token;
 		appInfo.Secret = secret;
 		appInfo.Issuance = issuance;
+		appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		
 
 		if(customHost != null)
 		{
@@ -149,7 +157,7 @@ public class AppBlade {
 				appInfo.CurrentServiceScheme = AppInfo.DefaultServiceScheme;
 			}
 		}
-		Log.d(LogTag, String.format("Using a endpoint URL, %s %s", appInfo.CurrentServiceScheme, appInfo.CurrentEndpoint));
+		Log.d(LogTag, String.format("Using a endpoint URL, %s%s", appInfo.CurrentServiceScheme, appInfo.CurrentEndpoint));
 
 		
 		// Set the device ID for exception reporting requests
@@ -171,6 +179,7 @@ public class AppBlade {
 		customParamsDir  = makeDirFromRoot(AppBladeCustomParamsFolder, context);
 		File exceptionsDirectory = new File(exceptionsDir);
 		canWriteToDisk = exceptionsDirectory.exists();
+		
 	}
 
 	/**
@@ -197,7 +206,7 @@ public class AppBlade {
 			}
 			else
 			{
-			throw new IllegalArgumentException("You failed to register AppBlade before calling "+methodName+", please read the documentation.");
+				throw new IllegalArgumentException("You failed to register AppBlade before calling "+methodName+", please read the documentation.");
 			}
 		}
 	}
@@ -218,7 +227,7 @@ public class AppBlade {
 	 */
 	public static void authorize(Activity activity) {
 		hardCheckIsRegistered();
-		authorize(activity, false);
+		authorize(activity, false, true);
 	}
 
 	/**
@@ -229,6 +238,17 @@ public class AppBlade {
 	 * @param fromLoopBack whether the authorize call is from the authorization window or not, (defaults to false)
 	 */
 	public static void authorize(final Activity activity, boolean fromLoopBack) {
+		AppBlade.authorize(activity, fromLoopBack, false);
+	}
+	
+	/**
+	 * Static entry point for authorization logic and navigation
+	 * Prompts an Authorization view with a sign-in to AppBlade, fetches a token on successful login. 
+	 * If a valid token already exists, will not prompt anything.
+	 * @param activity
+	 * @param fromLoopBack whether the authorize call is from the authorization window or not, (defaults to false)
+	 */
+	public static void authorize(final Activity activity, boolean fromLoopBack, final boolean updateIfAvailable) {
 		hardCheckIsRegistered();
 
 		// If we don't have enough stored information to authorize the current user,
@@ -243,7 +263,7 @@ public class AppBlade {
 				builder.setMessage("Authorization Required");
 				builder.setPositiveButton("OK", new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						AuthHelper.checkAuthorization(activity, false);
+						AuthHelper.checkAuthorization(activity, false, updateIfAvailable);
 					}
 				});
 				builder.setNegativeButton("No, thanks", new OnClickListener() {
@@ -262,7 +282,7 @@ public class AppBlade {
 			// without bothering the user
 			else
 			{
-				AuthHelper.checkAuthorization(activity, false);
+				AuthHelper.checkAuthorization(activity, false, updateIfAvailable);
 			}
 		}
 
@@ -270,9 +290,8 @@ public class AppBlade {
 		// close the activity context
 		else if (fromLoopBack)
 		{
-			Log.d(AppBlade.LogTag,
-					String.format("AppBlade.authorize: user is authorized, closing activity: %s",
-							activity.getLocalClassName()));
+			Log.v(AppBlade.LogTag,
+			String.format("AppBlade.authorize: user is authorized, closing activity: %s", activity.getLocalClassName()));
 			activity.finish();
 		}
 	}
@@ -311,7 +330,47 @@ public class AppBlade {
 		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
 	}
 
+	/********************************************************
+	 ********************************************************
+	 * APP Updating 
+	 * AppBlade testers and developers benefit from app-updating during development, but calls to it should be removed before Play Store release.
+	 */
+	
+	/**
+	 * Checks with AppBlade if an update is available. Will try to find the best method available <br>
+	 * User will not be prompted before downloading the apk, see {@link #checkForUpdates(Activity, boolean)} to enable a prompt and not download silently.
+	 * @param activity Activity to handle the download and prompt (should not be null)
+	 */
+	public static void checkForUpdates(Activity activity)
+	{
+		hardCheckIsRegistered();
+		checkForUpdates(activity, false);
+	}
 
+	/**
+	 * Checks with AppBlade if an update is available. Will try to find the best method available <br>
+	 * @param activity Activity to handle the download and prompt (should not be null)
+	 * @param promptForDownload flag to display a prompt to the user that a download is available. The prompt gives user the option to cancel the update download process. false will load the update in the background.
+	 */
+	public static void checkForUpdates(Activity activity, boolean promptForDownload)
+	{
+		hardCheckIsRegistered();
+		UpdatesHelper.checkForUpdateWithTimeout(activity, promptForDownload);
+	}
+	
+
+	/**
+	 * Checks with AppBlade if an update is available regardless of whether we've already checked recently. Will try to find the best method available <br>
+	 * @param activity Activity to handle the download and prompt (should not be null)
+	 * @param promptForDownload flag to display a prompt to the user that a download is available. The prompt gives user the option to cancel the update download process. false will load the update in the background.
+	 */
+	public static void checkForUpdatesIgnoreTimeout(Activity activity, boolean promptForDownload)
+	{
+		hardCheckIsRegistered();
+		UpdatesHelper.checkForUpdate(activity, promptForDownload);
+	}
+	
+	
 	
 	/********************************************************
 	 ********************************************************
@@ -320,12 +379,43 @@ public class AppBlade {
 	 */
 	
 	/**
+	 * Allows us to initialize our session logging service at the application level.  As well as any other variables we need relative to sessions.
+	 * @param context Usually {@code getApplicationContext()}, the context we want the sessionLogging service to keep track of and use for session storage/reporting. 
+	 */
+	public static void useSessionLoggingService(Context context)
+	{
+		if(AppBlade.sessionLoggingService == null){
+			AppBlade.sessionLoggingService = new AppBladeSessionLoggingService(context);
+		}
+		AppBlade.sessionLoggingService.mContext = context;
+	}
+	
+	/**
+	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
+	 * @param activity
+	 */
+	public static boolean bindToSessionService(Activity activity)
+	{
+		return SessionHelper.bindToSessionService(activity);
+	}
+
+	/**
+	 * Helper function to bind to session service. Better for tracking sessions across the life of the application.
+	 * @param activity
+	 */
+	public static boolean unbindFromSessionService(Activity activity)
+	{
+		return SessionHelper.unbindFromSessionService(activity);
+	}
+
+	
+	/**
 	 * Static point for beginning a session (posts any existing sessions by default) 
 	 * @param context Context to use to control the posting of the session.
 	 */
-	public static void startSession(Context context)
+	public static boolean startSession(Context context)
 	{
-		startSession(context, false);
+		return startSession(context, false);
 	}
 	
 	/**
@@ -333,36 +423,29 @@ public class AppBlade {
 	 * @param context Context to use to control the posting of the session.
 	 * @param onlyAuthorized boolean to determine manually if you only want to log authorized sessions or not.
 	 */
-	public static void startSession(Context context, boolean onlyAuthorized)
+	public static boolean startSession(Context context, boolean onlyAuthorized)
 	{
 		hardCheckIsRegistered();
-
-		if(onlyAuthorized){
-			if(isAuthorized(context)) {
-				//check for existing sessions, post them.
-				SessionHelper.startSession(context);
-			}
-			else
-			{
-				Log.d(LogTag, "Client is not yet authorized, cannot start session");
-			}
+		SessionHelper.postExistingSessions(context); //post any pending sessions 
+		
+		if(onlyAuthorized && !isAuthorized(context)){
+			Log.d(LogTag, "Client is not yet authorized, cannot start session");
+			return false; 
 		}
 		else
 		{
-			//we don't care about authorization
-			SessionHelper.startSession(context);
+			//either we're authorized or we don't care about authorization
+			return SessionHelper.startSession(context);
 		}
-
-
 	}
 
 	/**
 	 * Static point for ending a session
 	 * @param context Context to use to control the posting of the session.
 	 */
-	public static void endSession(Context context)
+	public static boolean endSession(Context context)
 	{
-		endSession(context, false);		
+		return endSession(context, false);		
 	}
 		
 	/**
@@ -370,27 +453,21 @@ public class AppBlade {
 	 * @param context Context to use to control the posting of the session.
 	 * @param onlyAuthorized boolean to determine manually if you only want to log authorized sessions or not.
 	 */
-	public static void endSession(Context context, boolean onlyAuthorized)
+	public static boolean endSession(Context context, boolean onlyAuthorized)
 	{
 		hardCheckIsRegistered();
-
-		if(onlyAuthorized){
-			if(isAuthorized(context)) {
-				SessionHelper.endSession(context);
-			}
-			else
-			{
-				Log.d(LogTag, "Client is not yet authorized, cannot end session");			
-			}
+		boolean succeeded = false;
+		if(onlyAuthorized && !isAuthorized(context)) {
+			Log.d(LogTag, "Client is not yet authorized, cannot end session");			
 		}
 		else
 		{
 			//we don't care about authorization
-			SessionHelper.endSession(context);
+			succeeded = SessionHelper.endSession(context);
 		}
-		SessionHelper.postExistingSessions(context);
+		SessionHelper.postExistingSessions(context); //we have at least one complete session, post it. 
+		return succeeded;
 	}
-
 	
 	/********************************************************
 	 ********************************************************
@@ -547,7 +624,7 @@ public class AppBlade {
 		if(e != null && canWriteToDisk)
 		{
 			if(e.getLocalizedMessage() != null){
-				Log.d(AppBlade.LogTag, e.getLocalizedMessage());
+				Log.v(AppBlade.LogTag, e.getLocalizedMessage());
 			}
 			CrashReportData data = new CrashReportData(e);
 			new PostCrashReportTask(null).execute(data);
@@ -642,7 +719,7 @@ public class AppBlade {
 	public static void setDeviceId(String accessToken) {
 		hardCheckIsRegistered();
 
-		Log.d(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
+		Log.v(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
 
 		if(!StringUtils.isNullOrEmpty(accessToken))
 			AppBlade.appInfo.Ext = accessToken;

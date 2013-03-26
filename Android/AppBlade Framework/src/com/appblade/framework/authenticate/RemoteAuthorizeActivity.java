@@ -5,10 +5,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
@@ -45,6 +47,7 @@ public class RemoteAuthorizeActivity extends Activity {
 	private void initControls() {
         String path = String.format(EndpointAuthNew, AppBlade.appInfo.Token);
         final String authUrl = WebServiceHelper.getUrl(path);
+        Log.v(AppBlade.LogTag, "Loading URL in WebView "  + authUrl);
         jsInterface = new AuthJavascriptInterface(RemoteAuthorizeActivity.this);
 
         webview.getSettings().setJavaScriptEnabled(true);

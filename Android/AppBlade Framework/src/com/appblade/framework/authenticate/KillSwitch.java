@@ -21,9 +21,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.appblade.framework.AppBlade;
-import com.appblade.framework.UpdatesHelper;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
+import com.appblade.framework.updates.UpdatesHelper;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.StringUtils;
@@ -31,9 +31,7 @@ import com.appblade.framework.utils.SystemUtils;
 
 /**
  * Class used for asynchronously authenticating an app and closing the app if unauthorized.
- * Will also handle kicking off the update behavior, since the API authenticate response will also notify us of an update. 
  * @see KillSwitchTask
- * @see UpdatesHelper.processUpdate(Activity, JSONObject)
  * @author rich.stern@raizlabs
  * @author andrew.tremblay@raizlabs 
  */
@@ -97,8 +95,8 @@ public class KillSwitch {
 		else if((ttlLastUpdated + ttl) > now)
 			shouldUpdate = false;
 
-		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
-		Log.d(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate? %b", shouldUpdate));
+		Log.v(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
+		Log.v(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate? %b", shouldUpdate));
 		
 		return shouldUpdate;
 	}
@@ -136,7 +134,7 @@ public class KillSwitch {
 		}
 		catch(Exception ex)
 		{
-			Log.d(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+			Log.v(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
 		
 		return response;
@@ -146,7 +144,7 @@ public class KillSwitch {
 	 * Refreshes local varables ttl and ttlLAstUpdated from their stored location. 
 	 * @param activity Activity from which to load preferences. 
 	 */
-	private static void reloadSharedPrefs(Activity activity) {
+	public static void reloadSharedPrefs(Activity activity) {
 		SharedPreferences prefs = activity.getSharedPreferences(PrefsKey, Context.MODE_PRIVATE);
 		ttl = prefs.getInt(PrefsKeyTTL, ttl);
 		ttlLastUpdated = prefs.getLong(PrefsKeyTTLUpdated, ttlLastUpdated);
@@ -174,7 +172,7 @@ public class KillSwitch {
 		protected Void doInBackground(Void... params) {
 			HttpResponse response = getKillSwitchResponse();
 			if(response != null){
-				Log.d(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+				Log.v(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
 			}
 			handleResponse(response);
 			return null;
@@ -204,18 +202,12 @@ public class KillSwitch {
 			if(HttpUtils.isOK(response)) {
 				try {
 					String data = StringUtils.readStream(response.getEntity().getContent());
-					Log.d(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
+					Log.v(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
 					JSONObject json = new JSONObject(data);
 					int timeToLive = json.getInt("ttl");
-					if(json.has("update")) {
-						JSONObject update = json.getJSONObject("update");
-						if(update != null)
-							UpdatesHelper.processUpdate(context, update);
-					}
-					else
-						kill(context);
-						
 					save(timeToLive);
+
+					kill(context);
 				}
 				catch (IOException ex) { }
 				catch (JSONException ex) { }
@@ -238,10 +230,10 @@ public class KillSwitch {
 			String message = null;
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.d(AppBlade.LogTag, String.format("KillSwitch response unauthorized %s", data));
+				Log.v(AppBlade.LogTag, String.format("KillSwitch response unauthorized %s", data));
 				JSONObject json = new JSONObject(data);
 				message = json.getString("error");
-				Log.d(AppBlade.LogTag, json.toString());
+				Log.v(AppBlade.LogTag, json.toString());
 			}
 			catch (IOException ex) { }
 			catch (JSONException ex) { }

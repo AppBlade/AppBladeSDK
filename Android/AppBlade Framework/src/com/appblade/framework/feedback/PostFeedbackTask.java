@@ -36,7 +36,7 @@ public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Boolean>{
 		if(params.length == 1){
 			FeedbackData data = params[0];
 			CustomParamData paramData = CustomParamDataHelper.getCurrentCustomParams();
-			Log.d(AppBlade.LogTag, "customParams " + paramData.toString());
+			Log.v(AppBlade.LogTag, "customParams " + paramData.toString());
 			success = FeedbackHelper.postFeedbackWithCustomParams(data, paramData);
 			
 			if(success){
