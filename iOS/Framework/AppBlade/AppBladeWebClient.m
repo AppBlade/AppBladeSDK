@@ -234,7 +234,7 @@ static BOOL is_encrypted () {
         [self.delegate appBladeWebClient:self receivedPermissions:fairplayPermissions andShowUpdate:NO];
     }else{    
         // Create the request.
-        NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID]];
+        NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID], [self udid]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
