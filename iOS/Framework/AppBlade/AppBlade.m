@@ -726,8 +726,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
 }
 
-
 - (void)showFeedbackDialogue
+{
+    [self showFeedbackDialogue:YES];
+}
+
+- (void)showFeedbackDialogue:(BOOL)withScreenshot
 {
     if(!self.showingFeedbackDialogue){
         self.showingFeedbackDialogue = YES;
@@ -736,8 +740,14 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         }
 
         //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
-        NSString* screenshotPath = [self captureScreen];
-        [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
+        if(withScreenshot){
+            NSString* screenshotPath = [self captureScreen];
+            [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
+        }
+        else
+        {
+        
+        }
         //other setup methods (like the reintroduction of the console log) will go here
         [self promptFeedbackDialogue];
     }
