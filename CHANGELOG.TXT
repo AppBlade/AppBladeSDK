@@ -1,7 +1,23 @@
+2013-04-01 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
+	Android
+	 * Anonymous update call improved. The apk to replace is stored externally and is linked to DownloadManager if available. The externally stored apk is removed on first launch after successful installation.   
+		AppBlade.checkForUpdates(Activity activity)
+	 	AppBlade.checkForUpdates(Activity activity, boolean promptForDownload)
+	 	AppBlade.checkForUpdatesIgnoreTimeout(Activity activity, boolean promptForDownload)
+
+	iOS 
+	 * Added an optional flag for excluding screenshot in the case where one is not desired.
+		- (void)showFeedbackDialogue:(BOOL)withScreenshot;
+		- (void)showFeedbackDialogue is now treated as - (void)showFeedbackDialogue:YES
+	 * Added an optional flag for excluding the built in update check with the authentication call
+		- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt;
+
+
 2013-03-14 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
 	UPDATED CUSTOM PARAM CALL
 	* Was -(void)setCustomParam:(id)newObject withValue:(NSString*)key; 
 	* Now -(void)setCustomParam:(NSString *)key withValue:(id)value;
+
 
 2013-03-13 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
 	Added Anonymous Update call. This call sends anonymous information on the current build to AppBlade and checks if there is a newer version available. See documentation/wiki for a walkthrough. 
@@ -13,6 +29,7 @@
 	* iOS sends a hash of its info.plist for version identification. 
 
 	Added alternate (i.e. better) session logging implementation for Android. You can now attach session logging as a Service, which tracks the opening and closing of an app more intuitively. It's a bit harder to set up, so it's not the officially suggested method to track sessions. See com.appblade.framework.stats.AppBladeSessionLoggingService in the source code. 
+
 
 2012-12-03 	Andrew Tremblay  <andrew.tremblay@raizlabs.com>
 	Updated iOS Source to be compatible with objective-C++ compilers (app delegates with the .mm suffix were throwing errors when importing AppBlade.h)
