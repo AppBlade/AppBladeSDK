@@ -154,7 +154,16 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return self;
 }
 
-- (void)validateProjectConfiguration
+- (void)validateAppBladeControlledProjectConfiguration
+{
+    if (!self.appBladeProjectSecret || self.appBladeProjectSecret.length == 0) {
+        [self raiseConfigurationExceptionWithFieldName:@"Project Secret"];
+    } else if (!self.appBladeHost || self.appBladeHost.length == 0) {
+        [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
+    }
+}
+
+- (void)validateDeprecatedProjectConfiguration
 {
     // Validate AppBlade project settings. This should be executed by every public method before proceding.
     if(!self.appBladeHost || self.appBladeHost.length == 0) {
@@ -172,6 +181,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     } else if (!self.appBladeProjectIssuedTimestamp || self.appBladeProjectIssuedTimestamp.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
     }
+}
+
+- (void)validateProjectConfiguration
+{
+    
+    [self validateDeprecatedProjectConfiguration];
 }
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
@@ -302,6 +317,21 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"No crashes to report");
     }
 }
+
+- (void)registerWithAppBladePlist
+{
+    NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:@"AppBladeKeys.plist"];
+    if(appbladeVariables != nil)
+    {
+        NSDictionary* keys = (NSDictionary*)[appbladeVariables objectForKey:@"keys"];
+        self.appBladeHost =  [AppBladeWebClient buildHostURL:[keys objectForKey:@"host"]];
+        self.appBladeProjectSecret = [keys objectForKey:@"project_secret"];
+        self.appBladeDeviceSecret = [keys objectForKey:@"device_secret"];
+    }
+    
+    [self validateAppBladeControlledProjectConfiguration];
+}
+
 
 - (void)loadSDKKeysFromPlist:(NSString *)plist
 {
