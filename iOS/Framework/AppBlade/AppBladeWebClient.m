@@ -45,6 +45,7 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 // Request helper methods.
 
 - (NSString *)udid;
+- (NSString *)ios_version_sanitized;
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url;
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request;
 
@@ -448,6 +449,18 @@ static BOOL is_encrypted () {
     return [[UIDevice currentDevice] uniqueIdentifier];
 #endif
 }
+
+- (NSString *)ios_version_sanitized
+{
+    NSMutableString *asciiCharacters = [NSMutableString string];
+    for (NSInteger i = 32; i < 127; i++)  {
+        [asciiCharacters appendFormat:@"%c", i];
+    }
+    NSCharacterSet *nonAsciiCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:asciiCharacters] invertedSet];
+    NSString *rawVersionString = [self osVersionBuild];
+    return [[rawVersionString componentsSeparatedByCharactersInSet:nonAsciiCharacterSet] componentsJoinedByString:@""];
+}
+
 
 // Creates a preformatted request with appblade headers.
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url
