@@ -45,10 +45,12 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 // Request helper methods.
 
 - (NSString *)udid;
+- (NSString *)executable_uuid;
 - (NSString *)ios_version_sanitized;
+
+
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url;
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request;
-
 
 // Crypto helper methods.
 
@@ -237,7 +239,7 @@ static BOOL is_encrypted () {
         [self.delegate appBladeWebClient:self receivedPermissions:fairplayPermissions andShowUpdate:NO];
     }else{    
         // Create the request.
-        NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID], [self udid]];
+        NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [self.delegate appBladeHost]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
@@ -262,7 +264,7 @@ static BOOL is_encrypted () {
     }else{
         // Create the request.
         _api = AppBladeWebClientAPI_UpdateCheck;
-        NSString* urlString = [NSString stringWithFormat:updateURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID]];
+        NSString* urlString = [NSString stringWithFormat:updateURLFormat, [self.delegate appBladeHost]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
@@ -278,11 +280,8 @@ static BOOL is_encrypted () {
     _api = AppBladeWebClientAPI_ReportCrash;
     @synchronized (self)
     {
-    // Retrieve UDID, used in URL.
-    NSString* udid = [self udid];
-        NSLog(@"udid %@", udid);
     // Build report URL.
-    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID], udid];
+    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [self.delegate appBladeHost]];
     NSURL* urlCrashReport = [NSURL URLWithString:urlCrashReportString];    
         
         NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
@@ -332,11 +331,10 @@ static BOOL is_encrypted () {
     
     @synchronized (self)
     {
-        NSString* udid = [self udid];
         NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
         
         // Build report URL.
-        NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [self.delegate appBladeHost], [self.delegate appBladeProjectID], udid];
+        NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [self.delegate appBladeHost]];
         NSURL* reportURL = [NSURL URLWithString:reportString];
     
         NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
@@ -405,12 +403,12 @@ static BOOL is_encrypted () {
         [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
         
         NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Disposition: form-data; name=\"device_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[[UIDevice currentDevice] uniqueIdentifier] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"device_secret\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[[AppBlade sharedManager] appBladeDeviceSecret] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Disposition: form-data; name=\"project_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[[AppBlade sharedManager] appBladeProjectID] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"project_secret\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[[AppBlade sharedManager] appBladeProjectSecret] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -446,7 +444,16 @@ static BOOL is_encrypted () {
 #if TARGET_IPHONE_SIMULATOR
     return @"0000000000000000000000000000000000000000";
 #else
-    return [[UIDevice currentDevice] uniqueIdentifier];
+    return [[AppBlade sharedManager] appBladeDeviceSecret];
+#endif
+}
+
+- (NSString *)executable_uuid
+{
+#if TARGET_IPHONE_SIMULATOR
+    return @"00000-0000-0000-0000-00000000";
+#else
+    return [self genExecutableUUID];
 #endif
 }
 
@@ -472,28 +479,19 @@ static BOOL is_encrypted () {
     [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"bundle_identifier"];
     [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
     
-    NSMutableString *asciiCharacters = [NSMutableString string];
-    for (NSInteger i = 32; i < 127; i++)  {
-        [asciiCharacters appendFormat:@"%c", i];
-    }
-    NSCharacterSet *nonAsciiCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:asciiCharacters] invertedSet];
-    NSString *rawVersionString = [self osVersionBuild];
-    NSString *safeVersionString = [[rawVersionString componentsSeparatedByCharactersInSet:nonAsciiCharacterSet] componentsJoinedByString:@""];
-    [apiRequest addValue:safeVersionString forHTTPHeaderField:@"IOS_RELEASE"];
-    NSString* udid = [self udid];
-    [apiRequest addValue:udid forHTTPHeaderField:@"DEVICE_FINGERPRINT"];
+    [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"IOS_RELEASE"];
+
+    [apiRequest addValue:[self udid] forHTTPHeaderField:@"device_secret"];
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
     [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
-    #if TARGET_IPHONE_SIMULATOR
-        [apiRequest addValue:@"00000-0000-0000-0000-00000000" forHTTPHeaderField:@"executable_UUID"];
-    #else
-        [apiRequest addValue:[self genExecutableUUID] forHTTPHeaderField:@"executable_UUID"];
-    #endif
-    NSString* bundleHash = [self hashExecutable];
-    NSString* plistHash = [self hashInfoPlist];
-    [apiRequest addValue:bundleHash forHTTPHeaderField:@"bundleexecutable_hash"];
-    [apiRequest addValue:plistHash forHTTPHeaderField:@"infoplist_hash"];
+
+    [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"project_secret"];
+    [apiRequest addValue:[self udid] forHTTPHeaderField:@"device_secret"];
+    
+    [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"executable_UUID"];
+    [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"bundleexecutable_hash"];
+    [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"infoplist_hash"];
     
     BOOL hasFairplay = is_encrypted();
     [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"fairplay_encrypted"];
@@ -539,7 +537,7 @@ static BOOL is_encrypted () {
     // Construct the nonce (salt). First part of the salt is the delta of the current time and the stored time the
     // version was issued at, then a colon, then a random string of a certain length.
     NSString* randomString = [self genRandStringLength:kNonceRandomStringLength];
-    NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectIssuedTimestamp], randomString];
+    NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectSecret], randomString];
         
     NSString* ext = [self udid];
     
@@ -562,7 +560,7 @@ static BOOL is_encrypted () {
     NSString* mac = [self HMAC_SHA256_Base64:request_body with_key:[self.delegate appBladeProjectSecret]];
     
     NSMutableString *authHeader = [NSMutableString stringWithString:@"HMAC "];
-    [authHeader appendFormat:@"id=\"%@\"", [self.delegate appBladeProjectToken]];
+    [authHeader appendFormat:@"id=\"%@\"", [self.delegate appBladeProjectSecret]];
     [authHeader appendFormat:@", nonce=\"%@\"", nonce];
     [authHeader appendFormat:@", body-hash=\"%@\"", requestBodyHash];
     [authHeader appendFormat:@", ext=\"%@\"", ext];
