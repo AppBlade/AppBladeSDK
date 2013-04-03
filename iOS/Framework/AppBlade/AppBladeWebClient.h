@@ -33,10 +33,10 @@ extern NSString *sessionURLFormat;
 @required
 
 - (NSString *)appBladeHost;
-- (NSString *)appBladeProjectID;
-- (NSString *)appBladeProjectToken;
+- (NSString *)appBladeProjectID __attribute__((deprecated("No longer used in API v3")));
+- (NSString *)appBladeProjectToken __attribute__((deprecated("No longer used in API v3")));
 - (NSString *)appBladeProjectSecret;
-- (NSString *)appBladeProjectIssuedTimestamp;
+- (NSString *)appBladeProjectIssuedTimestamp __attribute__((deprecated("No longer used in API v3")));
 
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString;
