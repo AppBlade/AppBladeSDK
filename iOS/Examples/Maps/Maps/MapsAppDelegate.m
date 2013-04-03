@@ -20,17 +20,7 @@
 {
 
     AppBlade *blade = [AppBlade sharedManager];
-    blade.appBladeProjectID = @"ca460dcb-b7c2-43c1-ba50-8b6cda63f369";
-    blade.appBladeProjectToken = @"8f1792db8a39108c14fa8c89663eec98";
     blade.appBladeProjectSecret = @"c8536a333fb292ba46fc98719c1cfdf6";
-    blade.appBladeProjectIssuedTimestamp = @"1316609918";
-    
-    
-    blade.appBladeProjectID = @"4e00b9c7-f80b-43ee-98ef-6144b9162c04";
-    blade.appBladeProjectToken = @"412ceb21adf6214270a19854bd375ee7";
-    blade.appBladeProjectSecret = @"8ddbfe87a73e55e2a4c13c0df0c4eae9";
-    blade.appBladeProjectIssuedTimestamp = @"1359040311";
-
     
 //    blade.appBladeHost = @"http://10.1.10.42:3000";
     
