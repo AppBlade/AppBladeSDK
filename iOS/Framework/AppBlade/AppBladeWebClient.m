@@ -19,13 +19,15 @@
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
+
 NSString *defaultURLScheme           = @"https";
 NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
-NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
-NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
-NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
-NSString *sessionURLFormat           = @"%@/api/user_sessions";
-NSString *updateURLFormat            = @"%@/api/2/projects/%@/updates";
+NSString *approvalURLFormat          = @"%@/api/3/authorize/new";
+NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize";
+NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
+NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
+NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
+NSString *updateURLFormat            = @"%@/api/3/updates";
 
 
 @interface AppBladeWebClient ()
