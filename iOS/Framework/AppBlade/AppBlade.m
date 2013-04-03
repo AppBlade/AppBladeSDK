@@ -78,6 +78,10 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 
 - (BOOL)hasPendingSessions;
 
+- (void)validateAppBladeControlledProjectConfiguration;
+- (void)validateDeprecatedProjectConfiguration  __attribute__((deprecated("No longer used in API v3")));
+- (void)validateProjectConfiguration;
+
 
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
@@ -91,6 +95,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @synthesize appBladeProjectToken = _appBladeProjectToken;
 @synthesize appBladeProjectSecret = _appBladeProjectSecret;
 @synthesize appBladeProjectIssuedTimestamp = _appBladeProjectIssuedTimestamp;
+@synthesize appBladeDeviceSecret = _appBladeDeviceSecret;
 @synthesize delegate = _delegate;
 @synthesize upgradeLink = _upgradeLink;
 @synthesize feedbackDictionary = _feedbackDictionary;

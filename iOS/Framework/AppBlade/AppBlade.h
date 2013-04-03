@@ -43,16 +43,20 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 @property (nonatomic, retain) NSString* appBladeHost;
 
 // UUID of the project on AppBlade.
-@property (nonatomic, retain) NSString* appBladeProjectID;
+@property (nonatomic, retain) NSString* appBladeProjectID __attribute__((deprecated("No longer used in API v3")));
 
 // AppBlade API token for the project.
-@property (nonatomic, retain) NSString* appBladeProjectToken;
+@property (nonatomic, retain) NSString* appBladeProjectToken __attribute__((deprecated("No longer used in API v3")));
 
 // AppBlade API secret for the project. 
-@property (nonatomic, retain) NSString* appBladeProjectIssuedTimestamp;
+@property (nonatomic, retain) NSString* appBladeProjectIssuedTimestamp __attribute__((deprecated("No longer used in API v3")));
 
-// AppBlade API project issued time.
+// AppBlade API project issued secret.
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
+
+// AppBlade API project issued device secret. Optional
+@property (nonatomic, retain) NSString* appBladeDeviceSecret;
+
 
 // The AppBlade delegate receives messages regarding device authentication and other events.
 // See protocol declaration, above.
@@ -67,8 +71,11 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // AppBlade manager singleton.
 + (AppBlade *)sharedManager;
 
+// Use the plist that AppBlade embeds for the iOS settings
+- (void)registerWithAppBladePlist;
+
 // Pass in the full path to the plist
-- (void)loadSDKKeysFromPlist:(NSString*)plist;
+- (void)loadSDKKeysFromPlist:(NSString*)plist __attribute__((deprecated("No longer used in API v3")));
 
 // Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
 - (void)catchAndReportCrashes;
@@ -81,8 +88,8 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 //Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
--(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated)); 
--(void)setCustomParam:(id)object forKey:(NSString*)key; //use this instead of the deprecated -(void)setCustomParam:(id)newObject withValue:(NSString*)key
+-(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated("use method -(void)setCustomParam:(id)newObject withValue:(NSString*)key")));
+-(void)setCustomParam:(id)object forKey:(NSString*)key;
 -(void)clearAllCustomParams;
 
 
