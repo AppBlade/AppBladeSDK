@@ -78,8 +78,6 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 
 - (BOOL)hasPendingSessions;
 
-- (void)validateAppBladeControlledProjectConfiguration;
-- (void)validateDeprecatedProjectConfiguration  __attribute__((deprecated("No longer used in API v3")));
 - (void)validateProjectConfiguration;
 
 
@@ -91,10 +89,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @implementation AppBlade
 
 @synthesize appBladeHost = _appBladeHost;
-@synthesize appBladeProjectID = _appBladeProjectID;
-@synthesize appBladeProjectToken = _appBladeProjectToken;
 @synthesize appBladeProjectSecret = _appBladeProjectSecret;
-@synthesize appBladeProjectIssuedTimestamp = _appBladeProjectIssuedTimestamp;
 @synthesize appBladeDeviceSecret = _appBladeDeviceSecret;
 @synthesize delegate = _delegate;
 @synthesize upgradeLink = _upgradeLink;
@@ -154,39 +149,15 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return self;
 }
 
-- (void)validateAppBladeControlledProjectConfiguration
+- (void)validateProjectConfiguration
 {
+    //
+    
     if (!self.appBladeProjectSecret || self.appBladeProjectSecret.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Secret"];
     } else if (!self.appBladeHost || self.appBladeHost.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
     }
-}
-
-- (void)validateDeprecatedProjectConfiguration
-{
-    // Validate AppBlade project settings. This should be executed by every public method before proceding.
-    if(!self.appBladeHost || self.appBladeHost.length == 0) {
-        //could be redundant now that we are handling host building from the webclient
-        NSLog(@"Host not being ovewritten, falling back to default host (%@)", kAppBladeDefaultHost);
-        self.appBladeHost = kAppBladeDefaultHost;
-    }
-    
-    if (!self.appBladeProjectID || self.appBladeProjectID.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project ID"];
-    } else if (!self.appBladeProjectToken || self.appBladeProjectToken.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project Token"];
-    } else if (!self.appBladeProjectSecret || self.appBladeProjectSecret.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project Secret"];
-    } else if (!self.appBladeProjectIssuedTimestamp || self.appBladeProjectIssuedTimestamp.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
-    }
-}
-
-- (void)validateProjectConfiguration
-{
-    
-    [self validateDeprecatedProjectConfiguration];
 }
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
@@ -201,10 +172,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [_upgradeLink release];
     [_feedbackDictionary release];
     [_appBladeHost release];
-    [_appBladeProjectID release];
-    [_appBladeProjectToken release];
     [_appBladeProjectSecret release];
-    [_appBladeProjectIssuedTimestamp release];
+    [_appBladeDeviceSecret release];
     [_delegate release];
     [_upgradeLink release];
     [_feedbackDictionary release];
@@ -329,20 +298,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         self.appBladeDeviceSecret = [keys objectForKey:@"device_secret"];
     }
     
-    [self validateAppBladeControlledProjectConfiguration];
+    [self validateProjectConfiguration];
 }
-
-
-- (void)loadSDKKeysFromPlist:(NSString *)plist
-{
-    NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
-    self.appBladeHost =  [AppBladeWebClient buildHostURL:[keys objectForKey:@"host"]];
-    self.appBladeProjectID = [keys objectForKey:@"projectID"];
-    self.appBladeProjectToken = [keys objectForKey:@"token"];
-    self.appBladeProjectSecret = [keys objectForKey:@"secret"];
-    self.appBladeProjectIssuedTimestamp = [keys objectForKey:@"timestamp"];
-}
-
 
 
 #pragma mark - AppBladeWebClient

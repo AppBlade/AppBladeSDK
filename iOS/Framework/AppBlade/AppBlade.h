@@ -42,15 +42,6 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // AppBlade host name //Include neither http:// nor https://, we'll handle that.
 @property (nonatomic, retain) NSString* appBladeHost;
 
-// UUID of the project on AppBlade.
-@property (nonatomic, retain) NSString* appBladeProjectID __attribute__((deprecated("No longer used in API v3")));
-
-// AppBlade API token for the project.
-@property (nonatomic, retain) NSString* appBladeProjectToken __attribute__((deprecated("No longer used in API v3")));
-
-// AppBlade API secret for the project. 
-@property (nonatomic, retain) NSString* appBladeProjectIssuedTimestamp __attribute__((deprecated("No longer used in API v3")));
-
 // AppBlade API project issued secret.
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
 
@@ -73,9 +64,6 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
 // Use the plist that AppBlade embeds for the iOS settings
 - (void)registerWithAppBladePlist;
-
-// Pass in the full path to the plist
-- (void)loadSDKKeysFromPlist:(NSString*)plist __attribute__((deprecated("No longer used in API v3")));
 
 // Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
 - (void)catchAndReportCrashes;
