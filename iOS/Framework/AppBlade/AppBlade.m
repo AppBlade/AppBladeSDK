@@ -1218,12 +1218,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 
-- (void)clearStoredDeviceSecret
+- (void)clearEveryStoredDeviceSecret
 {
     [AppBladeSimpleKeychain delete:kAppBladeKeychainDeviceSecretKey];
 }
 
-- (void)clearLastStoredDeviceSecret
+- (void)clearStoredDeviceSecrets
 {
     NSDictionary* appBlade_deviceSecret = [self appBladeDeviceSecrets];
     NSString* device_secret_newest = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyNew];

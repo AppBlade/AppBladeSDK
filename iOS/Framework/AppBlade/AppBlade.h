@@ -65,6 +65,12 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // Use the plist that AppBlade embeds for the iOS settings
 - (void)registerWithAppBladePlist;
 
+//Device secret calls
+- (NSDictionary *) appBladeDeviceSecrets;
+- (NSString *) getDeviceSecret;
+- (void) updateDeviceSecret:(NSString *)newSecret
+
+
 // Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
 - (void)catchAndReportCrashes;
 
