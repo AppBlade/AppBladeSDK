@@ -41,6 +41,11 @@ static NSString* const kAppBladeDefaultHost             = @"https://appblade.com
 
 static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
 
+static NSString* const kAppBladeKeychainTtlKey          = @"appBlade_ttl";
+static NSString* const kAppBladeKeychainDeviceSecretKey = @"appBlade_device_secret";
+static NSString* const kAppBladeKeychainDeviceSecretKeyOld = @"old_secret";
+static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
+
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
@@ -310,7 +315,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString
 {
-    if (client.api == AppBladeWebClientAPI_Permissions)  {
+    if (client.api == AppBladeWebClientAPI_GenerateToken)  {
+
+    }
+    else if (client.api == AppBladeWebClientAPI_ConfirmToken)  {
+        
+    }
+    else if (client.api == AppBladeWebClientAPI_Permissions)  {
         
         // check only once if the delegate responds to this selector
         BOOL signalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
@@ -392,6 +403,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     {
         NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
     }
+    
+    [self.activeClients removeObject:client];
+}
+
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response
+{
+    NSString *deviceSecretString = [response objectForKey:@"device_secret"];
     
     [self.activeClients removeObject:client];
 }
@@ -1152,22 +1170,22 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)closeTTLWindow
 {
-    [AppBladeSimpleKeychain delete:@"appBlade"];
+    [AppBladeSimpleKeychain delete:kAppBladeKeychainTtlKey];
 }
 
 - (void)updateTTL:(NSNumber*)ttl
 {
     NSDate* ttlDate = [NSDate date];
     NSDictionary* appBlade = [NSDictionary dictionaryWithObjectsAndKeys:ttlDate, @"ttlDate",ttl, @"ttlInterval", nil];
-    [AppBladeSimpleKeychain save:@"appBlade" data:appBlade];
+    [AppBladeSimpleKeychain save:kAppBladeKeychainTtlKey data:appBlade];
 }
 
 // determine if we are within the range of the stored TTL for this application
 - (BOOL)withinStoredTTL
 {
-    NSDictionary* appBlade = [AppBladeSimpleKeychain load:@"appBlade"];
-    NSDate* ttlDate = [appBlade objectForKey:@"ttlDate"];
-    NSNumber* ttlInterval = [appBlade objectForKey:@"ttlInterval"];
+    NSDictionary* appBlade_ttl = [AppBladeSimpleKeychain load:kAppBladeKeychainTtlKey];
+    NSDate* ttlDate = [appBlade_ttl objectForKey:@"ttlDate"];
+    NSNumber* ttlInterval = [appBlade_ttl objectForKey:@"ttlInterval"];
     
     // if we don't have either value, we're definitely not within a stored TTL
     if(nil == ttlInterval || nil == ttlDate)
@@ -1188,6 +1206,70 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return YES;
 }
 
+#pragma mark - Device Secret Methods
+-(NSDictionary*) appBladeDeviceSecrets
+{
+    NSDictionary* appBlade_deviceSecret = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
+    if(nil == appBlade_deviceSecret)
+    {
+        appBlade_deviceSecret = [NSDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, nil];
+    }
+    return appBlade_deviceSecret;
+}
+
+
+- (void)clearStoredDeviceSecret
+{
+    [AppBladeSimpleKeychain delete:kAppBladeKeychainDeviceSecretKey];
+}
+
+- (void)clearLastStoredDeviceSecret
+{
+    NSDictionary* appBlade_deviceSecret = [self appBladeDeviceSecrets];
+    NSString* device_secret_newest = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyNew];
+    NSString* device_secret_oldest = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyOld];
+    if(nil != device_secret_newest && ![device_secret_newest isEqualToString:@""])
+    {
+        [appBlade_deviceSecret setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyNew];
+    }
+    else if(nil != device_secret_oldest && ![device_secret_oldest isEqualToString:@""])
+    {
+        [appBlade_deviceSecret setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyOld];
+    }
+    //else we have no stored keys, do nothing
+    //"update" stored keychain
+    [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret];
+}
+
+
+- (void)updateDeviceSecret:(NSString *)newSecret
+{
+    //always store the last two device secrets
+    NSDictionary* appBlade_deviceSecret = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
+    NSString* device_secret_newest = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyNew];
+    if(nil != device_secret_newest && ![device_secret_newest isEqualToString:@""])
+    {
+        [appBlade_deviceSecret setValue:device_secret_newest forKey:kAppBladeKeychainDeviceSecretKeyOld];
+    }
+    [appBlade_deviceSecret setValue:newSecret forKey:kAppBladeKeychainDeviceSecretKeyNew];
+    
+    //update stored keychain
+    [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret];
+}
+
+
+- (NSString *)getDeviceSecret
+{
+    //get the last available device secret
+    NSDictionary* appBlade_deviceSecret = [self appBladeDeviceSecrets];
+    NSString* deviceSecret = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //assume we have the newest
+    if(nil != deviceSecret && ![deviceSecret isEqualToString:@""])
+    {
+        deviceSecret = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyOld];
+    }
+    //if we have no stored keys, returns default empty string
+    return deviceSecret;
+}
 
 
 #pragma mark - Helper Methods
