@@ -235,8 +235,7 @@ static BOOL is_encrypted () {
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
         NSLog(@"Binary signed by Apple, skipping token generation");
-
-//        [self.delegate appBladeWebClient:self receivedPermissions: andShowUpdate:NO];
+ //        [self.delegate appBladeWebClient:self receivedPermissions: andShowUpdate:NO];
     }
     else
     {
@@ -245,7 +244,6 @@ static BOOL is_encrypted () {
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
-        
         [self addSecurityToRequest:apiRequest];
         
         // Issue the request.
@@ -265,17 +263,21 @@ static BOOL is_encrypted () {
     }
     else
     {
-        
-        // Create the request.
-        NSString* urlString = [NSString stringWithFormat:tokenGenerateURLFormat, [self.delegate appBladeHost]];
-        NSURL* projectUrl = [NSURL URLWithString:urlString];
-        NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
-        [apiRequest setHTTPMethod:@"POST"];
-        
-        [self addSecurityToRequest:apiRequest];
-        
-        // Issue the request.
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+        NSString *storedSecret = [[AppBlade sharedManager] getDeviceSecret];
+        if(nil != storedSecret && ![storedSecret isEqualToString:@""]){
+            // Create the request.
+            NSString* urlString = [NSString stringWithFormat:tokenConfirmURLFormat, [self.delegate appBladeHost]];
+            NSURL* projectUrl = [NSURL URLWithString:urlString];
+            NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
+            [apiRequest setHTTPMethod:@"POST"];
+            [self addSecurityToRequest:apiRequest];
+            // Issue the request.
+            self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+        }
+        else
+        {
+            
+        }
     }
 }
 
