@@ -22,8 +22,9 @@
 
 NSString *defaultURLScheme           = @"https";
 NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
-NSString *approvalURLFormat          = @"%@/api/3/authorize/new";
-NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize";
+NSString *tokenGenerateURLFormat     = @"%@/api/3/authorize/new";
+NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these separate for readiblilty and possible editing later
+NSString *authorizeURLFormat         = @"%@/api/3/authorize";
 NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
 NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
@@ -227,6 +228,57 @@ static BOOL is_encrypted () {
 
 
 #pragma mark - AppBlade API
+- (void)refreshToken
+{
+    _api = AppBladeWebClientAPI_GenerateToken;
+    BOOL hasFairplay = is_encrypted();
+    if(hasFairplay){
+        //we're signed by apple, skip authentication. Go straight to delegate.
+        NSLog(@"Binary signed by Apple, skipping token generation");
+
+//        [self.delegate appBladeWebClient:self receivedPermissions: andShowUpdate:NO];
+    }
+    else
+    {
+        // Create the request.
+        NSString* urlString = [NSString stringWithFormat:tokenGenerateURLFormat, [self.delegate appBladeHost]];
+        NSURL* projectUrl = [NSURL URLWithString:urlString];
+        NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
+        [apiRequest setHTTPMethod:@"GET"];
+        
+        [self addSecurityToRequest:apiRequest];
+        
+        // Issue the request.
+        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+    }
+}
+
+- (void)confirmToken
+{
+    _api = AppBladeWebClientAPI_ConfirmToken;
+    BOOL hasFairplay = is_encrypted();
+    if(hasFairplay){
+        //we're signed by apple, skip authentication. Go straight to delegate.
+        NSLog(@"Binary signed by Apple, skipping token confirmation");
+        
+//        [self.delegate appBladeWebClient:self receivedPermissions: andShowUpdate:NO];
+    }
+    else
+    {
+        
+        // Create the request.
+        NSString* urlString = [NSString stringWithFormat:tokenGenerateURLFormat, [self.delegate appBladeHost]];
+        NSURL* projectUrl = [NSURL URLWithString:urlString];
+        NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
+        [apiRequest setHTTPMethod:@"POST"];
+        
+        [self addSecurityToRequest:apiRequest];
+        
+        // Issue the request.
+        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+    }
+}
+
 
 - (void)checkPermissions:(BOOL)andForUpdates
 {
@@ -234,7 +286,7 @@ static BOOL is_encrypted () {
     BOOL hasFairplay = is_encrypted();
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
-        NSLog(@"Binary signed by Apple, skipping permissions check");
+        NSLog(@"Binary signed by Apple, skipping permissions check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
         [self.delegate appBladeWebClient:self receivedPermissions:fairplayPermissions andShowUpdate:NO];
     }else{    
@@ -258,7 +310,7 @@ static BOOL is_encrypted () {
     BOOL hasFairplay = is_encrypted();
     if(hasFairplay){
         //we're signed by apple, skip updating. Go straight to delegate.
-        NSLog(@"Binary signed by Apple, skipping permissions check");
+        NSLog(@"Binary signed by Apple, skipping update check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
         [self.delegate appBladeWebClient:self receivedUpdate:fairplayPermissions];
     }else{

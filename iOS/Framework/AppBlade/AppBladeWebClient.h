@@ -12,6 +12,8 @@
 @class AppBladeWebClient;
 
 typedef enum {
+    AppBladeWebClientAPI_GenerateToken,
+    AppBladeWebClientAPI_ConfirmToken,
 	AppBladeWebClientAPI_Permissions,
     AppBladeWebClientAPI_ReportCrash,
     AppBladeWebClientAPI_Feedback,
@@ -39,12 +41,12 @@ extern NSString *sessionURLFormat;
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString;
 
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response;
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions andShowUpdate:(BOOL)showUpdatePrompt;
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success;
 - (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success;
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)permissions;
-
 
 @end
 
