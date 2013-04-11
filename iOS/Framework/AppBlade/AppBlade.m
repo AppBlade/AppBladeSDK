@@ -316,10 +316,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString
 {
     if (client.api == AppBladeWebClientAPI_GenerateToken)  {
-
+        NSLog(@"ERROR generating token");
+        //wait for a retry or deactivate the SDK for the duration of the current install
     }
     else if (client.api == AppBladeWebClientAPI_ConfirmToken)  {
-        
+        NSLog(@"ERROR confirming token");
+        //schedule a token retry or deactivtae 
     }
     else if (client.api == AppBladeWebClientAPI_Permissions)  {
         
@@ -1242,7 +1244,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 
-- (void)updateDeviceSecret:(NSString *)newSecret
+- (void)setAppBladeDeviceSecret:(NSString *)newSecret
 {
     //always store the last two device secrets
     NSDictionary* appBlade_deviceSecret = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
@@ -1255,10 +1257,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     //update stored keychain
     [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret];
+    //update reference to new value
+    _appBladeDeviceSecret = newSecret;
 }
 
 
-- (NSString *)getDeviceSecret
+- (NSString *)getAppBladeDeviceSecret
 {
     //get the last available device secret
     NSDictionary* appBlade_deviceSecret = [self appBladeDeviceSecrets];
@@ -1268,7 +1272,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         deviceSecret = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyOld];
     }
     //if we have no stored keys, returns default empty string
-    return deviceSecret;
+    _appBladeDeviceSecret = deviceSecret;
+    return _appBladeDeviceSecret;
 }
 
 
