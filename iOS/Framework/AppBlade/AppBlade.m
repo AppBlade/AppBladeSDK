@@ -156,12 +156,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)validateProjectConfiguration
 {
-    //
-    
+    //All the necessary plist vairables must be included
     if (!self.appBladeProjectSecret || self.appBladeProjectSecret.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Secret"];
+    } else if (!self.appBladeDeviceSecret || self.appBladeDeviceSecret.length == 0) {
+        [self raiseConfigurationExceptionWithFieldName:@"Device Secret"];
     } else if (!self.appBladeHost || self.appBladeHost.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
+        [self raiseConfigurationExceptionWithFieldName:@"Project Host"];
     }
 }
 
