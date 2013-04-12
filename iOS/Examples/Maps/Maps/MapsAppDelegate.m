@@ -20,18 +20,7 @@
 {
 
     AppBlade *blade = [AppBlade sharedManager];
-    blade.appBladeProjectSecret = @"c8536a333fb292ba46fc98719c1cfdf6";
-    
-//    blade.appBladeHost = @"http://10.1.10.42:3000";
-    
-    // Check the app blade status of this application.
-    
-    // See AppBladeKeys.plist for the format in which to send your keys.
-    // This is optional, but you should not set the keys yourself AND use the plist.
-    // [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]]
-    // Fill AppBladeKeys.plist with your own credentials to test
-    [blade setCustomParam:@"CustomKey1" forKey:@"FirstSend"];
-    
+    [blade registerWithAppBladePlist];
     [blade catchAndReportCrashes];
     
     self.window.rootViewController = self.mainViewController;
