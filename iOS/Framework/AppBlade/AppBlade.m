@@ -294,16 +294,24 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)registerWithAppBladePlist
 {
-    NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:@"AppBladeKeys.plist"];
+    NSString * plistPath = [[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"];
+    NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     if(appbladeVariables != nil)
     {
-        NSDictionary* keys = (NSDictionary*)[appbladeVariables objectForKey:@"keys"];
-        self.appBladeHost =  [AppBladeWebClient buildHostURL:[keys objectForKey:@"host"]];
-        self.appBladeProjectSecret = [keys objectForKey:@"project_secret"];
-        self.appBladeDeviceSecret = [keys objectForKey:@"device_secret"];
+        NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:@"api_keys"];
+        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:@"host"]];
+        self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:@"project_secret"];
+        if(self.appBladeDeviceSecret == nil || self.appBladeDeviceSecret.length == 0)
+        {
+            self.appBladeDeviceSecret = [appBladeStoredKeys objectForKey:@"device_secret"];
+        }
+        [self validateProjectConfiguration];
+    }
+    else
+    {
+        [self raiseConfigurationExceptionWithFieldName:@"AppBladeKeys.plist"];
     }
     
-    [self validateProjectConfiguration];
 }
 
 
