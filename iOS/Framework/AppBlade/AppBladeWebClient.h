@@ -24,9 +24,9 @@ typedef enum {
 
 extern NSString *defaultURLScheme;
 extern NSString *defaultAppBladeHostURL;
-extern NSString *approvalURLFormat    ;
-extern NSString *reportCrashURLFormat  ;
-extern NSString *reportFeedbackURLFormat ;
+extern NSString *approvalURLFormat;
+extern NSString *reportCrashURLFormat;
+extern NSString *reportFeedbackURLFormat;
 extern NSString *sessionURLFormat;
 
 

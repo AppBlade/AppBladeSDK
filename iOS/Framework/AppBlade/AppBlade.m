@@ -327,6 +327,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     if (client.api == AppBladeWebClientAPI_GenerateToken)  {
         NSLog(@"ERROR generating token");
         //wait for a retry or deactivate the SDK for the duration of the current install
+        
     }
     else if (client.api == AppBladeWebClientAPI_ConfirmToken)  {
         NSLog(@"ERROR confirming token");
@@ -420,7 +421,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response
 {
+    
     NSString *deviceSecretString = [response objectForKey:@"device_secret"];
+    
+    
     
     [self.activeClients removeObject:client];
 }
