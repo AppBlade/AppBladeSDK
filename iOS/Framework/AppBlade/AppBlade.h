@@ -68,7 +68,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 //Device secret calls
 - (NSDictionary *) appBladeDeviceSecrets;
 - (NSString *) getDeviceSecret;
-- (void) updateDeviceSecret:(NSString *)newSecret
+- (void) updateDeviceSecret:(NSString *)newSecret;
 
 
 // Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
