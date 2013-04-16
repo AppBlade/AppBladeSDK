@@ -263,7 +263,7 @@ static BOOL is_encrypted () {
     }
     else
     {
-        NSString *storedSecret = [[AppBlade sharedManager] getDeviceSecret];
+        NSString *storedSecret = [[AppBlade sharedManager] getAppBladeDeviceSecret];
         if(nil != storedSecret && ![storedSecret isEqualToString:@""]){
             // Create the request.
             NSString* urlString = [NSString stringWithFormat:tokenConfirmURLFormat, [self.delegate appBladeHost]];
@@ -322,8 +322,9 @@ static BOOL is_encrypted () {
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
-        [self addSecurityToRequest:apiRequest]; //don't need security, but we could do better with it.
         [apiRequest addValue:@"true" forHTTPHeaderField:@"USE_ANONYMOUS"];
+        [self addSecurityToRequest:apiRequest]; //don't need security, but we could do better with it.
+        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
         NSLog(@"Update call %@", urlString);
         // Issue the request.
         self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
