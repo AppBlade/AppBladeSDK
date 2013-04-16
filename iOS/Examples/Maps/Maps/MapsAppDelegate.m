@@ -66,7 +66,7 @@
    
     [[AppBlade sharedManager] checkForUpdates];
 
-    [AppBlade startSession];
+   // [AppBlade startSession];
     [[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)
     [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
 
@@ -79,7 +79,7 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
-    [AppBlade endSession];
+  //  [AppBlade endSession];
 
 }
 
