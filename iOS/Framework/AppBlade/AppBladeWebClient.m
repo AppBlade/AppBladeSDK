@@ -537,7 +537,6 @@ static BOOL is_encrypted () {
     
     [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"IOS_RELEASE"];
 
-    [apiRequest addValue:[self udid] forHTTPHeaderField:@"device_secret"];
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
     [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
