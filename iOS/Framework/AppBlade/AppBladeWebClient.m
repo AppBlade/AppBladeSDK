@@ -245,7 +245,7 @@ static BOOL is_encrypted () {
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
         [self addSecurityToRequest:apiRequest];
-        
+        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
         // Issue the request.
         self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
     }
@@ -271,6 +271,7 @@ static BOOL is_encrypted () {
             NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
             [apiRequest setHTTPMethod:@"POST"];
             [self addSecurityToRequest:apiRequest];
+            [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
             // Issue the request.
             self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
         }
