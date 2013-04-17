@@ -322,10 +322,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:@"api_keys"];
         self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:@"host"]];
         self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:@"project_secret"];
-        if(self.appBladeDeviceSecret == nil || self.appBladeDeviceSecret.length == 0)
-        {
-            self.appBladeDeviceSecret = [appBladeStoredKeys objectForKey:@"device_secret"];
-        }
+        self.appBladeDeviceSecret = [appBladeStoredKeys objectForKey:@"device_secret"];
         [self validateProjectConfiguration];
     }
     else
@@ -450,10 +447,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
     
     NSString *deviceSecretString = [response objectForKey:@"device_secret"];
-    
-    NSLog(@"String returned %@", deviceSecretString);
-    
-    
+    if(deviceSecretString != nil){
+        [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
+    }
+    else
+    {
+        NSLog(@"ERROR parsing response, keeping last valid token %@", self.appBladeDeviceSecret);
+    }
     [self.activeClients removeObject:client];
 }
 
