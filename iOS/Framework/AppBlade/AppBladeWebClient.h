@@ -78,10 +78,12 @@ extern NSString *sessionURLFormat;
 + (NSString *)buildHostURL:(NSString *)customURLString;
 
 // AppBlade API.
+- (void)refreshToken;
+- (void)confirmToken;
+
 - (void)checkPermissions:(BOOL)andForUpdates;
 - (void)checkForUpdates;
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params;
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsData;
 - (void)postSessions:(NSArray *)sessions;
-
 @end
