@@ -126,4 +126,9 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 + (void)endSession;
 
 
+- (void)refreshToken;
+- (void)confirmToken;
+
+
+
 @end

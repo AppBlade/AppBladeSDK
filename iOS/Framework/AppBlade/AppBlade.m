@@ -27,6 +27,9 @@ NSString* const kAppBladeCacheDirectory                 = @"AppBladeCache";
 
 const int kUpdateAlertTag                               = 316;
 
+const int kTokenRefreshStatusCode                       = 401; //if this is ever returned, that means the token is expired and needs renewing before the api can be called
+const int kTokenInvalidStatusCode                       = 403; //if this is ever returned, that means the app is being used illegally
+
 static NSString *s_letters                              = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 static NSString* const kAppBladeBacklogFileName         = @"AppBladeBacklog.plist";
 static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
@@ -84,7 +87,8 @@ static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
 - (BOOL)hasPendingSessions;
 
 - (void)validateProjectConfiguration;
-
+//- (void)refreshToken;
+//- (void)confirmToken;
 
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
@@ -192,7 +196,23 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [super dealloc];
 }
 
-#pragma mark
+#pragma mark API CALLS
+
+- (void)refreshToken
+{
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
+    [client refreshToken];
+}
+
+- (void)confirmToken
+{
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
+    [client confirmToken];
+}
+
+
 
 - (void)checkApproval
 {
@@ -333,89 +353,96 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"ERROR confirming token");
         //schedule a token retry or deactivtae 
     }
-    else if (client.api == AppBladeWebClientAPI_Permissions)  {
-        
-        // check only once if the delegate responds to this selector
-        BOOL signalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
-        
-        // if the connection failed, see if the application is still within the previous TTL window.
-        // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
-        // prevent the app from running until the request completes successfully. This will prevent
-        // users from unlocking an app by simply changing their clock.
-        if ([self withinStoredTTL]) {
-            if(signalDelegate) {
-                [self.delegate appBlade:self applicationApproved:YES error:nil];
-            }
-            
+    else {
+        //non-token related api failures all attempt a token refresh on the refresh status code
+        int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+        if(status == kTokenRefreshStatusCode)
+        {
+            [[AppBlade  sharedManager] refreshToken];
         }
-        else {
-            [self closeTTLWindow];
-            if(signalDelegate) {
-                NSDictionary* errorDictionary = nil;
-                NSError* error = nil;
-                if(errorString){
-                    errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                       NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                       NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-                    error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
-
-                }else{
-                    errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                       NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
-                                       NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
-                    error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
-                }
-                [self.delegate appBlade:self applicationApproved:NO error:error];
-            }
+        
+        if (client.api == AppBladeWebClientAPI_Permissions)  {
+            // check only once if the delegate responds to this selector
+            BOOL signalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
             
-        }
-    }
-    else if (client.api == AppBladeWebClientAPI_Feedback) {
-        @synchronized (self){
-            NSLog(@"ERROR sending feedback");
-            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-            NSString *fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
-            BOOL isBacklog = ([[backupFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@",fileName]] count] > 0);
-            if (!isBacklog) {
-                NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-                NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-                NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-                [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
-                
-                if (!backupFiles) {
-                    backupFiles = [NSMutableArray array];
+            // if the connection failed, see if the application is still within the previous TTL window.
+            // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
+            // prevent the app from running until the request completes successfully. This will prevent
+            // users from unlocking an app by simply changing their clock.
+            if ([self withinStoredTTL]) {
+                if(signalDelegate) {
+                    [self.delegate appBlade:self applicationApproved:YES error:nil];
                 }
                 
-                [backupFiles addObject:newFeedbackName];
-                
-                BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-                if(!success){
-                    NSLog(@"Error writing backup file to %@", backupFilePath);
-                }
-                self.feedbackDictionary = nil;
             }
             else {
-                [self.activeClients removeObject:client];
+                [self closeTTLWindow];
+                if(signalDelegate) {
+                    NSDictionary* errorDictionary = nil;
+                    NSError* error = nil;
+                    if(errorString){
+                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                           NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+
+                    }else{
+                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
+                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
+                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
+                    }
+                    [self.delegate appBlade:self applicationApproved:NO error:error];
+                }
+                
             }
         }
+        else if (client.api == AppBladeWebClientAPI_Feedback) {
+            @synchronized (self){
+                NSLog(@"ERROR sending feedback");
+                NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+                NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+                NSString *fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
+                BOOL isBacklog = ([[backupFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@",fileName]] count] > 0);
+                if (!isBacklog) {
+                    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+                    NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+                    NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+                    [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+                    
+                    if (!backupFiles) {
+                        backupFiles = [NSMutableArray array];
+                    }
+                    
+                    [backupFiles addObject:newFeedbackName];
+                    
+                    BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+                    if(!success){
+                        NSLog(@"Error writing backup file to %@", backupFilePath);
+                    }
+                    self.feedbackDictionary = nil;
+                }
+                else {
+                    [self.activeClients removeObject:client];
+                }
+            }
+        }
+        else if(client.api == AppBladeWebClientAPI_Sessions){
+            NSLog(@"ERROR sending sessions");
+        }
+        else if(client.api == AppBladeWebClientAPI_ReportCrash)
+        {
+            NSLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
+        }
+        else if(client.api == AppBladeWebClientAPI_UpdateCheck)
+        {
+            NSLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
+        }
+        else
+        {
+            NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
+        }
     }
-    else if(client.api == AppBladeWebClientAPI_Sessions){
-        NSLog(@"ERROR sending sessions");
-    }
-    else if(client.api == AppBladeWebClientAPI_ReportCrash)
-    {
-        NSLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
-    }
-    else if(client.api == AppBladeWebClientAPI_UpdateCheck)
-    {
-        NSLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
-    }
-    else
-    {
-        NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
-    }
-    
     [self.activeClients removeObject:client];
 }
 
@@ -424,6 +451,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     NSString *deviceSecretString = [response objectForKey:@"device_secret"];
     
+    NSLog(@"String returned %@", deviceSecretString);
     
     
     [self.activeClients removeObject:client];
