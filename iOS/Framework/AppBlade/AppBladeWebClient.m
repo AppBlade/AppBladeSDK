@@ -298,6 +298,8 @@ static BOOL is_encrypted () {
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
+        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
+
         [apiRequest addValue:andForUpdates ? @"YES" : @"NO" forHTTPHeaderField:@"CHECK_UPDATES"];
 
         [self addSecurityToRequest:apiRequest];
@@ -700,12 +702,9 @@ static BOOL is_encrypted () {
         [self.delegate appBladeWebClient:self receivedTokenResponse:json];
     }else if(_api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
-        NSPropertyListFormat format = 0;
-        
         NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSLog(@"Received Security Response from AppBlade: %@", string);
-                
-        NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:_receivedData options:NSPropertyListImmutable format:&format error:&error];
+        NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:_receivedData options:nil error:&error];
         BOOL showUpdatePrompt = [_request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
 
         [_receivedData release];
@@ -716,7 +715,7 @@ static BOOL is_encrypted () {
         }
         else
         {
-            NSLog(@"Error parsing permisions plist: %@", [error debugDescription]);
+            NSLog(@"Error parsing permisions json: %@", [error debugDescription]);
             [self.delegate appBladeWebClientFailed:self withErrorString:@"An invalid response was received from AppBlade; please contact support"];
         }
         
