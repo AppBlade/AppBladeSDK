@@ -64,7 +64,7 @@
     
     // Check the app blade update status of this application.
    
-    [[AppBlade sharedManager] checkForUpdates];
+    [[AppBlade sharedManager] refreshToken];
 
    // [AppBlade startSession];
     [[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)
