@@ -277,7 +277,7 @@ static BOOL is_encrypted () {
         }
         else
         {
-            
+            NSLog(@"We have no stored secret");
         }
     }
 }
@@ -541,9 +541,10 @@ static BOOL is_encrypted () {
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
     [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
+    
 
     [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"project_secret"];
-    [apiRequest addValue:[self udid] forHTTPHeaderField:@"device_secret"];
+    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"device_secret"];
     
     [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"executable_UUID"];
     [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"bundleexecutable_hash"];
