@@ -69,8 +69,8 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 			
 			List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 			postParams.add(new BasicNameValuePair("code", code));
-			postParams.add(new BasicNameValuePair("client_id", AppBlade.appInfo.Token));
-			postParams.add(new BasicNameValuePair("client_secret", AppBlade.appInfo.Secret));
+			postParams.add(new BasicNameValuePair("client_id", AppBlade.appInfo.ProjectSecret));
+			postParams.add(new BasicNameValuePair("client_secret", AppBlade.appInfo.DeviceSecret));
 			request.setEntity(new UrlEncodedFormEntity(postParams));
 
 			HttpResponse response = client.execute(request);

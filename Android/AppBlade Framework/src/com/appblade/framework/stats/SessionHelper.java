@@ -228,10 +228,10 @@ public class SessionHelper {
 		
 		try
 		{
-			ContentBody deviceIdBody  = new StringBody(AppBlade.appInfo.AppId);
-			entity.addPart("device_id", deviceIdBody);			
-			ContentBody projectIdBody  = new StringBody(AppBlade.appInfo.AppId);
-			entity.addPart("project_id", projectIdBody);			
+			ContentBody deviceIdBody  = new StringBody(AppBlade.appInfo.DeviceSecret);
+			entity.addPart("device_secret", deviceIdBody);			
+			ContentBody projectIdBody  = new StringBody(AppBlade.appInfo.ProjectSecret);
+			entity.addPart("project_secret", projectIdBody);			
 			ContentBody sessionsBody = new StringBody(formattedSessionsBodyFromList(sessions));
 			entity.addPart("sessions", sessionsBody);			
 		} 

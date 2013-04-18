@@ -66,15 +66,15 @@ public class WebServiceHelper {
 		byte[] requestBodyRawSha256 = StringUtils.sha256(requestBodyRaw);
 		String requestBodyHash = Base64.encodeToString(requestBodyRawSha256, 0).trim();
 
-		int seconds = (int) ((System.currentTimeMillis() / 1000) - StringUtils.safeParse(appInfo.Issuance, 0));
+		int seconds = (int) 100000;//((System.currentTimeMillis() / 1000) - StringUtils.safeParse(appInfo.Issuance, 0));
 		String nonce = String.format(Locale.US, "%d:%s", seconds, getRandomNonceString(WebServiceHelper.NonceRandomStringLength));
 		
 		String methodName = method.toString();
 		Log.v(AppBlade.LogTag, String.format("getHMACAuthHeader:methodName: %s", methodName));
 		
 		String normalizedRequestBody = String.format("%s%n%s%n%s%n%s%n%s%n%s%n%s%n",
-				nonce, methodName, requestBodyRaw, appInfo.CurrentEndpointNoPort, WebServiceHelper.getCurrentPortAsString(), requestBodyHash, appInfo.Ext);
-		String mac = StringUtils.hmacSha256(appInfo.Secret, normalizedRequestBody).trim();
+				nonce, methodName, requestBodyRaw, appInfo.CurrentEndpointNoPort, WebServiceHelper.getCurrentPortAsString(), requestBodyHash, appInfo.DeviceSecret);
+		String mac = "deprecated"; //StringUtils.hmacSha256(appInfo.Secret, normalizedRequestBody).trim();
 		
 		byte[] normalizedRequestBodySha256 = StringUtils.sha256(normalizedRequestBody);
 		String normalizedRequestBodyHash = Base64.encodeToString(normalizedRequestBodySha256, 0);
@@ -87,10 +87,10 @@ public class WebServiceHelper {
 		
 		StringBuilder builder = new StringBuilder();
 		builder.append("HMAC ");
-		StringUtils.append(builder, "id=\"%s\", ", appInfo.Token);
+		StringUtils.append(builder, "id=\"%s\", ", appInfo.ProjectSecret);
 		StringUtils.append(builder, "nonce=\"%s\", ", nonce);
 		StringUtils.append(builder, "body-hash=\"%s\", ", requestBodyHash);
-		StringUtils.append(builder, "ext=\"%s\", ", appInfo.Ext);
+		StringUtils.append(builder, "ext=\"%s\", ", appInfo.DeviceSecret);
 		StringUtils.append(builder, "mac=\"%s\"", mac);
 		
 		
