@@ -1,11 +1,18 @@
 package com.appblade.framework;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URL;
 import java.util.Random;
 
 import org.json.JSONException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,6 +24,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.Xml;
 import android.view.View;
 
 import com.appblade.framework.authenticate.AuthHelper;
@@ -97,6 +105,55 @@ public class AppBlade {
 	public static void register(Context context, String token, String secret, String uuid, String issuance)
 	{
 		register(context, token, secret, uuid, issuance, null);		
+	}
+	
+	public static void registerWithAssetFile(Context context)
+	{
+		// Check parameters
+		if(context == null)
+		{
+			throw new IllegalArgumentException("Invalid context passed when trying to register with AppBlade");
+		}
+
+		String host = "";
+		String project_secret = "";			 
+		String version_secret = "";			 
+		String device_secret = "";
+
+		try {
+			final InputStream is = context.getResources().getAssets().open("AppBladeKeys.xml");
+            XmlPullParser parser = Xml.newPullParser();
+			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+			parser.setInput(is, null);
+			parser.nextTag();
+			parser.require(XmlPullParser.START_TAG, null, "api_keys");
+			while (parser.next() != XmlPullParser.END_TAG) {
+               if (parser.getEventType() != XmlPullParser.START_TAG) {
+                   continue;
+               }
+               String name = parser.getName();
+               // Starts by looking for the entry tag
+               if (name.equals("host")) {
+               	host = parser.getText();
+               }
+               else if (name.equals("project_secret")) {
+               	project_secret = parser.getText();
+               }
+               else if (name.equals("version_secret")) {
+               	project_secret = parser.getText();
+               }
+               else if (name.equals("device_secret")) {
+               	device_secret = parser.getText();
+               }else
+               {
+            	   Log.d(AppBlade.LogTag, "Unknown Name passed: "+name);
+               }
+            }  
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		register(context, device_secret, project_secret, version_secret, "unused", host);
 	}
 	
 	/**
