@@ -31,11 +31,16 @@ public class WebServiceHelper {
 	}
 	
 	static final int NonceRandomStringLength = 74;
-	public static final String ServicePathCrashReportsFormat = "/api/2/projects/%s/devices/%s/crash_reports";
-	public static final String ServicePathFeedbackFormat = "/api/projects/%s/devices/%s/feedback";
-	public static final String ServicePathSessionFormat =  "/api/user_sessions";
-	public static final String ServicePathKillSwitchFormat = "/api/2/projects/%s/devices/%s";
-	public static final String ServicePathUpdateFormat = "/api/2/projects/%s/updates";  
+	public static final String ServicePathTokenRefreshFormat = "/api/3/authorize/new";  
+	public static final String ServicePathTokenConfirmFormat = "/api/3/authorize";  
+
+	public static final String ServicePathCrashReportsFormat = "/api/3/crash_reports";
+	public static final String ServicePathFeedbackFormat = "/api/3/feedback";
+	public static final String ServicePathSessionFormat =  "/api/3/user_sessions";
+	public static final String ServicePathKillSwitchFormat = "/api/3/authorize";
+	public static final String ServicePathUpdateFormat = "/api/3/updates";  
+	
+
 	public static final String ServicePathOauthTokens = "/oauth/tokens";
 	
 	/**

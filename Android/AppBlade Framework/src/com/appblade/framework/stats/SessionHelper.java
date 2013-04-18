@@ -173,7 +173,7 @@ public class SessionHelper {
 		String sharedBoundary = AppBlade.genDynamicBoundary();
 		try
 		{
-			String urlPath = String.format(WebServiceHelper.ServicePathSessionFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+			String urlPath = String.format(WebServiceHelper.ServicePathSessionFormat);
 			String url = WebServiceHelper.getUrl(urlPath);
 
 			final MultipartEntity content = SessionHelper.getPostSessionBody(sessionsList, sharedBoundary);

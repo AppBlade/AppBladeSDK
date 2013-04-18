@@ -122,7 +122,7 @@ public class KillSwitch {
 	public static synchronized HttpResponse getKillSwitchResponse() {
 		HttpResponse response = null;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
-		String urlPath = String.format(WebServiceHelper.ServicePathKillSwitchFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+		String urlPath = String.format(WebServiceHelper.ServicePathKillSwitchFormat);
 		String url = WebServiceHelper.getUrl(urlPath);
 		String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, null, HttpMethod.GET);
 		try {

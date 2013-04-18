@@ -253,7 +253,7 @@ public class UpdatesHelper {
 public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
 	HttpResponse response = null;
 	HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
-	String urlPath = String.format(WebServiceHelper.ServicePathUpdateFormat, AppBlade.appInfo.AppId);
+	String urlPath = String.format(WebServiceHelper.ServicePathUpdateFormat);
 	String url = WebServiceHelper.getUrl(urlPath);
 	String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, null, HttpMethod.GET);
 	try {

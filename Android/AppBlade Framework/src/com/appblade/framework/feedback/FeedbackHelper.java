@@ -69,7 +69,7 @@ public class FeedbackHelper {
 
 		try
 		{
-			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat);
 			String url = WebServiceHelper.getUrl(urlPath);
 
 			Log.v(AppBlade.LogTag, (paramData == null ? "no paramData" : "Param Data " + paramData.toString()));

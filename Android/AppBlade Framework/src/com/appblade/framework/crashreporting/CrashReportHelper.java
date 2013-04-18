@@ -115,7 +115,7 @@ public class CrashReportHelper {
 			final MultipartEntity crashContent = CrashReportHelper.getPostCrashReportBody(content, CustomParamDataHelper.getCustomParamsAsJSON(), sharedBoundary);
 			if(!StringUtils.isNullOrEmpty(content))
 			{
-				String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+				String urlPath = String.format(WebServiceHelper.ServicePathCrashReportsFormat);
 				String url = WebServiceHelper.getUrl(urlPath);
 
 				HttpPost request = new HttpPost();
