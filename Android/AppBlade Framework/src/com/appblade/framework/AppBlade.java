@@ -1,18 +1,13 @@
 package com.appblade.framework;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URL;
 import java.util.Random;
 
 import org.json.JSONException;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -93,20 +88,6 @@ public class AppBlade {
 	 * Methods to help assign the app with the necessary information to communicate with AppBlade. A register call should be made before all other calls, and only once. 
 	 */
 	
-	/**
-	 * Static entry point for registering with AppBlade (must be called before anything else).
-	 * Find your API keys on your project page at http://www.appblade.com
-	 * @param context Context to use to control storage.
-	 * @param token String value of the token.
-	 * @param secret String value of the shared secret.
-	 * @param uuid String value of the project uuid.
-	 * @param issuance String value of the timestamp value.
-	 */	
-	public static void register(Context context, String token, String secret, String uuid, String issuance)
-	{
-		register(context, token, secret, uuid, issuance, null);		
-	}
-	
 	public static void registerWithAssetFile(Context context)
 	{
 		// Check parameters
@@ -126,35 +107,62 @@ public class AppBlade {
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			parser.setInput(is, null);
 			parser.nextTag();
-			parser.require(XmlPullParser.START_TAG, null, "api_keys");
-			while (parser.next() != XmlPullParser.END_TAG) {
-               if (parser.getEventType() != XmlPullParser.START_TAG) {
-                   continue;
+			parser.require(XmlPullParser.START_TAG, null, "root");
+			String lastNameSeen  = "";
+			while (parser.next() != XmlPullParser.END_DOCUMENT) {
+
+			  int eventType = parser.getEventType();
+			   if(eventType != XmlPullParser.TEXT){
+		              String name = parser.getName();
+					   if(name != null){
+						   lastNameSeen = name;
+					   }
+				   continue;
+			   }
+			   String text = parser.getText();
+			   if(text.trim().length() == 0)
+			   {
+				   continue;
+			   }
+			   
+               if (lastNameSeen.equals("host")) {
+            	   host = text;
                }
-               String name = parser.getName();
-               // Starts by looking for the entry tag
-               if (name.equals("host")) {
-               	host = parser.getText();
+               else if (lastNameSeen.equals("project_secret")) {
+            	   project_secret = text;
                }
-               else if (name.equals("project_secret")) {
-               	project_secret = parser.getText();
+               else if (lastNameSeen.equals("version_secret")) {
+            	   version_secret = text;
                }
-               else if (name.equals("version_secret")) {
-               	project_secret = parser.getText();
-               }
-               else if (name.equals("device_secret")) {
-               	device_secret = parser.getText();
-               }else
-               {
-            	   Log.d(AppBlade.LogTag, "Unknown Name passed: "+name);
+               else if (lastNameSeen.equals("device_secret")) {
+               	device_secret = text;
+         	   }
+               else {
+            	   Log.d(AppBlade.LogTag, "Unknown/unused Name passed: "+lastNameSeen);
                }
             }  
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		
-		register(context, device_secret, project_secret, version_secret, "unused", host);
+		register(context, device_secret, project_secret, host);
 	}
+
+	
+	/**
+	 * Static entry point for registering with AppBlade (must be called before anything else).
+	 * Find your API keys on your project page at http://www.appblade.com
+	 * @param context Context to use to control storage.
+	 * @param token String value of the token.
+	 * @param secret String value of the shared secret.
+	 * @param uuid String value of the project uuid.
+	 * @param issuance String value of the timestamp value.
+	 */	
+	public static void register(Context context, String device_secret, String project_secret)
+	{
+		register(context, device_secret, project_secret, null);		
+	}
+	
 	
 	/**
 	 * Static entry point for registering with AppBlade (must be called before anything else)
@@ -165,7 +173,7 @@ public class AppBlade {
 	 * @param issuance String value of the timestamp value.
 	 * @param customHost String value of the custom endpoint to use. Will determine port automatically if not defined from the given protocol (http/https), falls back to default values of protocol and port if neither included.
 	 */	
-	public static void register(Context context, String token, String secret, String uuid, String issuance, String customHost)
+	public static void register(Context context, String device_secret, String project_secret, String customHost)
 	{
 		// Check parameters
 		if(context == null)
@@ -173,7 +181,7 @@ public class AppBlade {
 			throw new IllegalArgumentException("Invalid context registered with AppBlade");
 		}
 
-		if(StringUtils.isNullOrEmpty(token) || StringUtils.isNullOrEmpty(secret) || StringUtils.isNullOrEmpty(uuid) || StringUtils.isNullOrEmpty(issuance))
+		if(StringUtils.isNullOrEmpty(device_secret) || StringUtils.isNullOrEmpty(project_secret) || StringUtils.isNullOrEmpty(customHost))
 		{
 			throw new IllegalArgumentException("Invalid application info registered with AppBlade");
 		}
@@ -181,10 +189,8 @@ public class AppBlade {
 		
 		// Initialize App Info
 		appInfo = new AppInfo();
-		appInfo.AppId = uuid;
-		appInfo.Token = token;
-		appInfo.Secret = secret;
-		appInfo.Issuance = issuance;
+		appInfo.DeviceSecret = project_secret;
+		appInfo.ProjectSecret = project_secret;
 		appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 		
 
@@ -779,9 +785,9 @@ public class AppBlade {
 		Log.v(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
 
 		if(!StringUtils.isNullOrEmpty(accessToken))
-			AppBlade.appInfo.Ext = accessToken;
+			AppBlade.appInfo.DeviceSecret = accessToken;
 		else
-			AppBlade.appInfo.Ext = AppInfo.DefaultUDID;
+			AppBlade.appInfo.DeviceSecret = AppInfo.DefaultUDID;
 	}
 	
 	/**

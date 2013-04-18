@@ -25,11 +25,8 @@ public class AppInfo {
 	public static String DefaultAppBladeHost = "AppBlade.com";
 	public static String DefaultServiceScheme = "https://";
 
-	public String Token;
-	public String Secret;
-	public String AppId;
-	public String Issuance;
-	public String Ext = DefaultUDID;
+	public String DeviceSecret;
+	public String ProjectSecret;
 	public String CurrentEndpoint = DefaultAppBladeHost;
 	public String CurrentEndpointNoPort = DefaultAppBladeHost;
 	public String CurrentServiceScheme = DefaultServiceScheme;
@@ -133,10 +130,8 @@ public class AppInfo {
 	 */
 	public boolean isValid() {
 		return
-				!StringUtils.isNullOrEmpty(AppId) &&
-				!StringUtils.isNullOrEmpty(Token) &&
-				!StringUtils.isNullOrEmpty(Secret) &&
-				!StringUtils.isNullOrEmpty(Issuance);
+				!StringUtils.isNullOrEmpty(DeviceSecret) &&
+				!StringUtils.isNullOrEmpty(ProjectSecret);
 	}
 
 }
