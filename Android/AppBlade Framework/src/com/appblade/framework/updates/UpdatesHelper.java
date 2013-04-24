@@ -21,9 +21,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
-import android.app.Notification;
+//import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
+//import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -39,7 +39,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.appblade.framework.AppBlade;
-import com.appblade.framework.R;
+//import com.appblade.framework.R;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.authenticate.AuthHelper;
@@ -60,7 +60,7 @@ public class UpdatesHelper {
 	private static UpdateTask updateTask = null;//for checking download process
 	private static Thread downloadThread = null; //for checking download process
 	
-	private static final int NotificationNewVersion = 0;
+//	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;	
 	private static final String APK_MIMETYPE = "application/vnd.android.package-archive";
 
@@ -651,40 +651,39 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	}
 	
 	//Notifiers
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	private static void notifyDownloading(Context context) {
-		Intent blank = new Intent();
-		PendingIntent contentIntent = PendingIntent.getBroadcast(context, 0, blank, 0);
-		
-		String message = "Downloading update...";
-		NotificationManager notificationManager =
-				(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
-		notification.setLatestEventInfo(context.getApplicationContext(), "Update", message, contentIntent);
-		notificationManager.notify(NotificationNewVersionDownloading, notification);
+//			Intent blank = new Intent();
+//			PendingIntent contentIntent = PendingIntent.getBroadcast(context, 0, blank, 0);
+//			String message = "Downloading update...";
+//			NotificationManager notificationManager =
+//					(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+//			Notification notification = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
+//			notification.setLatestEventInfo(context.getApplicationContext(), "Update", message, contentIntent);
+//			notificationManager.notify(NotificationNewVersionDownloading, notification);
 	}
 
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	private static void notifyUpdate(Context context, JSONObject update) {
-		Log.v(AppBlade.LogTag, "UpdatesHelper.notifyUpdate");
-		try
-		{
-			String url = update.getString("url");
-			String message = update.getString("message");
-			
-			if(context != null) {
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-				PendingIntent contentIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-				
-				NotificationManager notificationManager =
-						(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-				Notification notification = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
-				notification.setLatestEventInfo(context.getApplicationContext(), "Update", message, contentIntent);
-				notificationManager.notify(NotificationNewVersion, notification);
-			}
-				
-		}
-		catch(JSONException ex) { Log.w(AppBlade.LogTag, "JSON error when notifying of update ", ex); }
+//		Log.v(AppBlade.LogTag, "UpdatesHelper.notifyUpdate");
+//		try
+//		{
+//			String url = update.getString("url");
+//			String message = update.getString("message");
+//			
+//			if(context != null) {
+////				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+////				PendingIntent contentIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+////				
+////				NotificationManager notificationManager =
+////						(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+////				Notification notification = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
+////				notification.setLatestEventInfo(context.getApplicationContext(), "Update", message, contentIntent);
+////				notificationManager.notify(NotificationNewVersion, notification);
+//			}
+//				
+//		}
+//		catch(JSONException ex) { Log.w(AppBlade.LogTag, "JSON error when notifying of update ", ex); }
 	}
 
 	//TTL handling 
