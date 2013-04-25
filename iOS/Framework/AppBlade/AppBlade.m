@@ -1289,8 +1289,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 
-- (void)setAppBladeDeviceSecret:(NSString *)newSecret
+- (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret
 {
+    NSLog(@"setAppBladeDeviceSecret");
     //always store the last two device secrets
     NSDictionary* appBlade_deviceSecret = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
     NSString* device_secret_newest = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyNew];
