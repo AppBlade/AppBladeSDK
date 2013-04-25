@@ -448,7 +448,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     NSString *deviceSecretString = [response objectForKey:@"device_secret"];
     if(deviceSecretString != nil){
+        NSLog(@"Updating token ");
         [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
+        //immediately confirm we have a new token stored
+        NSLog(@"confirming new token %@", [self getAppBladeDeviceSecret]);
+        [self confirmToken];
     }
     else
     {
