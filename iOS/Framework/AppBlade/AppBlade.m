@@ -1299,12 +1299,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     {
         [appBlade_deviceSecret setValue:device_secret_newest forKey:kAppBladeKeychainDeviceSecretKeyOld];
     }
-    [appBlade_deviceSecret setValue:newSecret forKey:kAppBladeKeychainDeviceSecretKeyNew];
+    [appBlade_deviceSecret setValue:[appBladeDeviceSecret copy] forKey:kAppBladeKeychainDeviceSecretKeyNew];
     
     //update stored keychain
     [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret];
     //update reference to new value
-    _appBladeDeviceSecret = [newSecret copy];
+    _appBladeDeviceSecret = [appBladeDeviceSecret copy];
 }
 
 
@@ -1319,6 +1319,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         deviceSecret = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyOld];
     }
     //if we have no stored keys, returns default empty string
+    NSLog(@"getting secret %@", deviceSecret);
     _appBladeDeviceSecret = [deviceSecret copy];
     return _appBladeDeviceSecret;
 }
