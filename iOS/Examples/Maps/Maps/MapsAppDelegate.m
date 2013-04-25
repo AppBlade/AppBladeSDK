@@ -22,6 +22,7 @@
     AppBlade *blade = [AppBlade sharedManager];
     [blade registerWithAppBladePlist];
     [blade catchAndReportCrashes];
+    [blade allowFeedbackReporting];
     
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
