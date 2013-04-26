@@ -1328,6 +1328,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (NSString *)appBladeDeviceSecret
 {
+    #if TARGET_IPHONE_SIMULATOR
+       // return @"0000000000000000000000000000000000000000";
+    #else
+    #endif
     //NSLog(@"appBladeDeviceSecret");
     //get the last available device secret
     NSDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
