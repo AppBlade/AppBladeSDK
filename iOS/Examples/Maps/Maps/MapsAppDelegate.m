@@ -61,13 +61,11 @@
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
-    
     // Check the app blade update status of this application.
-   
-    [[AppBlade sharedManager] refreshToken];
-
    // [AppBlade startSession];
-    [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
+   // [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
+    [[AppBlade sharedManager] refreshToken]; //if you want to refresh the token every time you open the app (don't), pending reports will be sent on rereshed token confirmation.
+    
 
 }
 
@@ -79,7 +77,6 @@
      See also applicationDidEnterBackground:.
      */
   //  [AppBlade endSession];
-
 }
 
 
