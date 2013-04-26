@@ -22,12 +22,11 @@
     AppBlade *blade = [AppBlade sharedManager];
     [blade registerWithAppBladePlist];
     [blade catchAndReportCrashes];
-    [blade allowFeedbackReporting];
     
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
     
-
+    [blade allowFeedbackReporting];
     return YES;
 }
 
@@ -68,7 +67,6 @@
     [[AppBlade sharedManager] refreshToken];
 
    // [AppBlade startSession];
-    [[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)
     [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
 
 }
