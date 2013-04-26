@@ -45,7 +45,7 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 
 // Request helper methods.
 
-- (NSString *)udid;
+//
 - (NSString *)executable_uuid;
 - (NSString *)ios_version_sanitized;
 
@@ -495,15 +495,6 @@ static BOOL is_encrypted () {
 
 #pragma mark - Request helper methods.
 
-- (NSString *)udid
-{
-#if TARGET_IPHONE_SIMULATOR
-    return @"0000000000000000000000000000000000000000";
-#else
-    return [[AppBlade sharedManager] appBladeDeviceSecret];
-#endif
-}
-
 - (NSString *)executable_uuid
 {
 #if TARGET_IPHONE_SIMULATOR
@@ -594,7 +585,7 @@ static BOOL is_encrypted () {
     // version was issued at, then a colon, then a random string of a certain length.
     NSString* randomString = [self genRandStringLength:kNonceRandomStringLength];
     NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectSecret], randomString];
-    NSString* ext = [self udid];
+    NSString* ext = [self.delegate appBladeDeviceSecret];
     
     NSString *requestBodyHash = [self SHA_Base64:requestBodyRaw];
     NSLog(@"%d", [requestBodyRaw length]);
