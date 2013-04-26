@@ -322,7 +322,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:@"api_keys"];
         self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:@"host"]];
         self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:@"project_secret"];
-        [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:@"device_secret"]];
+        if([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0){
+            [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:@"device_secret"]];
+        }
         [self validateProjectConfiguration];
     }
     else
