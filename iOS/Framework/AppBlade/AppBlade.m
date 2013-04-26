@@ -447,15 +447,18 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
     
     NSString *deviceSecretString = [response objectForKey:@"device_secret"];
-    if(deviceSecretString != nil){
+    NSString *deviceSecretTimeout = [response objectForKey:@"ttl"];
+    if(deviceSecretString != nil) {
         NSLog(@"Updating token ");
         [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
         //immediately confirm we have a new token stored
-        NSLog(@"confirming new token %@", [self getAppBladeDeviceSecret]);
+        NSLog(@"confirming new token %@", [self appBladeDeviceSecret]);
         [self confirmToken];
     }
-    else
-    {
+    else if(deviceSecretTimeout != nil) {
+        NSLog(@"Token confirmed. Business as usual.");
+    }
+    else {
         NSLog(@"ERROR parsing response, keeping last valid token %@", self.appBladeDeviceSecret);
     }
     [self.activeClients removeObject:client];
@@ -477,7 +480,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         }
     }
     else {
-        
         NSNumber *ttl = [permissions objectForKey:@"ttl"];
         if (ttl) {
             [self updateTTL:ttl];
