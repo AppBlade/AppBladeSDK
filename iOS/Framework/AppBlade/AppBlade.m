@@ -213,7 +213,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 
-
 - (void)checkApproval
 {
     [self validateProjectConfiguration];
@@ -223,7 +222,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [client checkPermissions];
 }
 
-- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt
+- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt  //deprecated, do not use
 {
     [self checkApproval];
 }
@@ -343,18 +342,48 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString
 {
+    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];  
+
     if (client.api == AppBladeWebClientAPI_GenerateToken)  {
         NSLog(@"ERROR generating token");
         //wait for a retry or deactivate the SDK for the duration of the current install
-        
+        if(status == kTokenInvalidStatusCode)
+        {  //the token we used to generate a new token is no longer valid
+            NSLog(@"Token refresh failed because current token had its access revoked.");
+        }else
+        {  //likely a 500 or some other timeout
+            NSLog(@"Token refresh failed due to an error from the server.");
+            //try to confirm the token that we have.
+            [[AppBlade  sharedManager] confirmToken];
+        }
     }
     else if (client.api == AppBladeWebClientAPI_ConfirmToken)  {
         NSLog(@"ERROR confirming token");
-        //schedule a token retry or deactivtae 
+        //schedule a token refresh or deactivate based on status
+        if(status == kTokenRefreshStatusCode)
+        {
+            [[AppBlade  sharedManager] refreshToken];
+        }
+        else if(status == kTokenInvalidStatusCode)
+        {
+            NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                               NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                               NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+            NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+            [self.delegate appBlade:self applicationApproved:NO error:error];
+        }else
+        {  //likely a 500 or some other timeout
+            //if we can't confirm the token then we can't use it.
+            //Try again later.
+            double delayInSeconds = 30.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [[AppBlade  sharedManager] confirmToken];
+            });
+        }
     }
     else {
-        //non-token related api failures all attempt a token refresh on the refresh status code
-        int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+        //non-token related api failures all attempt a token refresh when given a refresh status code, 
         if(status == kTokenRefreshStatusCode)
         {
             [[AppBlade  sharedManager] refreshToken];
