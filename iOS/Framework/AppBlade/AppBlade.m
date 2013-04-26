@@ -1289,8 +1289,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 
-- (NSString *)getAppBladeDeviceSecret
 
+- (NSString *)appBladeDeviceSecret
 {
     //get the last available device secret
     NSDictionary* appBlade_deviceSecret = [self appBladeDeviceSecrets];
