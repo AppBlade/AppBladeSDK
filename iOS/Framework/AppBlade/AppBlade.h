@@ -82,7 +82,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 //Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
--(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated("use method -(void)setCustomParam:(id)newObject withValue:(NSString*)key")));
+-(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated("use method -(void)setCustomParam:(id)object forKey:(NSString*)keyme")));
 -(void)setCustomParam:(id)object forKey:(NSString*)key;
 -(void)clearAllCustomParams;
 
@@ -95,7 +95,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // Checks with AppBlade to see if the app is allowed to run on this device. Will also notify of updates.
 - (void)checkApproval;
 
-// Approval check with ability to disable the check/notification for updates.
+// Approval check with ability to disable the check/notification for updates. DEPRECATED
 - (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt __attribute__((deprecated("use method - (void)checkForUpdates for update checks from now on")));
 
 // Checks with AppBlade anonymously to see if the app can be updated with a new build.
