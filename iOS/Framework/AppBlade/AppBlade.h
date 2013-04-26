@@ -45,7 +45,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // AppBlade API project issued secret.
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
 
-// AppBlade API project issued device secret. Optional
+// AppBlade API project issued device secret. 
 @property (nonatomic, retain) NSString* appBladeDeviceSecret;
 
 
