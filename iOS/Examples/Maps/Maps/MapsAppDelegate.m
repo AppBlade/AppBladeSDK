@@ -62,7 +62,7 @@
      */
     
     // Check the app blade update status of this application.
-   // [AppBlade startSession];
+    [AppBlade startSession];
    // [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
     [[AppBlade sharedManager] refreshToken]; //if you want to refresh the token every time you open the app (don't), pending reports will be sent on rereshed token confirmation.
     
