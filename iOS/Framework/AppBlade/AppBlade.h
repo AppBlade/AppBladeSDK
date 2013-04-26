@@ -96,8 +96,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 - (void)checkApproval;
 
 // Approval check with ability to disable the check/notification for updates.
-- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt;
-
+- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt __attribute__((deprecated("use method - (void)checkForUpdates for update checks from now on")));
 
 // Checks with AppBlade anonymously to see if the app can be updated with a new build.
 - (void)checkForUpdates;

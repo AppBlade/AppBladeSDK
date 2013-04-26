@@ -216,16 +216,16 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)checkApproval
 {
-    [self checkApprovalWithUpdatePrompt:YES];
-}
-
-- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt
-{
     [self validateProjectConfiguration];
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
-    [client checkPermissions:shouldPrompt];
+    [client checkPermissions];
+}
+
+- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt
+{
+    [self checkApproval];
 }
 
 

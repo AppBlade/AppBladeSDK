@@ -285,7 +285,7 @@ static BOOL is_encrypted () {
 }
 
 
-- (void)checkPermissions:(BOOL)andForUpdates
+- (void)checkPermissions
 {
     _api = AppBladeWebClientAPI_Permissions;
     BOOL hasFairplay = is_encrypted();
