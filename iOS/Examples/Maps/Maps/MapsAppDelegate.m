@@ -21,12 +21,12 @@
 
     AppBlade *blade = [AppBlade sharedManager];
     [blade registerWithAppBladePlist];
-    [blade catchAndReportCrashes];
+    [blade catchAndReportCrashes];  
     
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
     
-    [blade allowFeedbackReporting];
+    [blade allowFeedbackReporting]; //must be called after window is keyed and visible
     return YES;
 }
 

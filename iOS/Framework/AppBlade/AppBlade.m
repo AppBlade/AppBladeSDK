@@ -488,6 +488,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
     else if(deviceSecretTimeout != nil) {
         NSLog(@"Token confirmed. Business as usual.");
+        [self checkForExistingCrashReports];
+        [self handleBackloggedFeedback];
     }
     else {
         NSLog(@"ERROR parsing response, keeping last valid token %@", self.appBladeDeviceSecret);
