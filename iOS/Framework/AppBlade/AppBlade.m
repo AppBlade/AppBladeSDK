@@ -461,24 +461,20 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self.activeClients removeObject:client];
 }
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions andShowUpdate:(BOOL)showUpdatePrompt
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
 {
     NSString *errorString = [permissions objectForKey:@"error"];
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
     
     if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
         [self closeTTLWindow];
-        
-        
         NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
                                          NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-        
         NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
         
-        if (signalApproval)
+        if (signalApproval) {
             [self.delegate appBlade:self applicationApproved:NO error:error];
-        
-        
+        }
     }
     else {
         
@@ -491,24 +487,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if (signalApproval) {
             [self.delegate appBlade:self applicationApproved:YES error:nil];
         }
-        
-        
-        // determine if there is an update available
-        NSDictionary* update = [permissions objectForKey:@"update"];
-        if(update && showUpdatePrompt)
-        {
-            NSString* updateMessage = [update objectForKey:@"message"];
-            NSString* updateURL = [update objectForKey:@"url"];
-            
-            if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
-                [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
-            }
-        }
     }
     
     [self.activeClients removeObject:client];
-    
-    
 }
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)updateData

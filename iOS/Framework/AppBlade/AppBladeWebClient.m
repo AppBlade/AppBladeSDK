@@ -235,7 +235,7 @@ static BOOL is_encrypted () {
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
         NSLog(@"Binary signed by Apple, skipping token generation");
- //        [self.delegate appBladeWebClient:self receivedPermissions: andShowUpdate:NO];
+ //        [self.delegate appBladeWebClient:self receivedPermissions: ];
     }
     else
     {
@@ -253,13 +253,13 @@ static BOOL is_encrypted () {
 
 - (void)confirmToken
 {
+    NSLog(@"confirming token (client)");
     _api = AppBladeWebClientAPI_ConfirmToken;
     BOOL hasFairplay = is_encrypted();
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
         NSLog(@"Binary signed by Apple, skipping token confirmation");
-        
-//        [self.delegate appBladeWebClient:self receivedPermissions: andShowUpdate:NO];
+//        [self.delegate appBladeWebClient:self receivedPermissions: ];
     }
     else
     {
@@ -291,7 +291,7 @@ static BOOL is_encrypted () {
         //we're signed by apple, skip authentication. Go straight to delegate.
         NSLog(@"Binary signed by Apple, skipping permissions check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
-        [self.delegate appBladeWebClient:self receivedPermissions:fairplayPermissions andShowUpdate:NO];
+        [self.delegate appBladeWebClient:self receivedPermissions:fairplayPermissions];
     }else{    
         // Create the request.
         NSString* urlString = [NSString stringWithFormat:authorizeURLFormat, [self.delegate appBladeHost]];
@@ -711,7 +711,7 @@ static BOOL is_encrypted () {
         _receivedData = nil;
         
         if (plist && error == NULL) {
-            [self.delegate appBladeWebClient:self receivedPermissions:plist andShowUpdate:showUpdatePrompt];
+            [self.delegate appBladeWebClient:self receivedPermissions:plist];
         }
         else
         {
