@@ -301,11 +301,7 @@ static BOOL is_encrypted () {
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
-
-        [apiRequest addValue:andForUpdates ? @"YES" : @"NO" forHTTPHeaderField:@"CHECK_UPDATES"];
-
         [self addSecurityToRequest:apiRequest];
-
         // Issue the request.
         self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
     }
@@ -598,7 +594,6 @@ static BOOL is_encrypted () {
     // version was issued at, then a colon, then a random string of a certain length.
     NSString* randomString = [self genRandStringLength:kNonceRandomStringLength];
     NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectSecret], randomString];
-        
     NSString* ext = [self udid];
     
     NSString *requestBodyHash = [self SHA_Base64:requestBodyRaw];
