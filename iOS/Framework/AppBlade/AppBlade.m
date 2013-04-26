@@ -353,8 +353,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         }else
         {  //likely a 500 or some other timeout
             NSLog(@"Token refresh failed due to an error from the server.");
-            //try to confirm the token that we have.
-            [[AppBlade  sharedManager] confirmToken];
+            //try to confirm the token that we have. If it works, we can go with that.
+            [[AppBlade  sharedManager] confirmToken]; //this call will retry itself on another server failure, and will also handle the refresh prompt once server connection is established.
         }
     }
     else if (client.api == AppBladeWebClientAPI_ConfirmToken)  {
