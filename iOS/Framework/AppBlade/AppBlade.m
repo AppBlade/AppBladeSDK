@@ -1309,7 +1309,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
    // NSLog(@"setAppBladeDeviceSecret %@", appBladeDeviceSecret);
         //always store the last two device secrets
-        NSMutableDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];    
+        NSMutableDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
+        if(nil == appBlade_deviceSecret_dict)
+        {
+            appBlade_deviceSecret_dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, nil];
+        }
+    
         NSString* device_secret_newest = [appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //get the newest key (to our knowledge)
         if(![device_secret_newest isEqualToString:appBladeDeviceSecret]) //if we already have the "new" token as the newest token
         {
@@ -1320,7 +1325,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         //save the stored keychain
         [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret_dict];
     
-    //NSLog(@"to storage AppBladeDeviceSecret dictionary %@", appBlade_deviceSecret_dict);
+   // NSLog(@"to storage AppBladeDeviceSecret dictionary %@", appBlade_deviceSecret_dict);
 
         //update reference to new value
         _appBladeDeviceSecret = [[appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew] copy];
