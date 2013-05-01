@@ -536,20 +536,6 @@ static BOOL is_encrypted () {
     [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"project_secret"];
     [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"device_secret"];
     
-    
-    #ifdef DEBUG
-        #if TARGET_IPHONE_SIMULATOR
-            [apiRequest addValue:@"0000000000000000000000000000000000000000" forHTTPHeaderField:@"device_uuid"];
-        #else
-            [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"device_uuid"];
-        #endif
-    #else
-        //RELEASE BUILD
-    
-    #endif
-    
-
-    
     [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"executable_UUID"];
     [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"bundleexecutable_hash"];
     [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"infoplist_hash"];
