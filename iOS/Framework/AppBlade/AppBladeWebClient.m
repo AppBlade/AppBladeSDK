@@ -294,7 +294,9 @@ static BOOL is_encrypted () {
         NSLog(@"Binary signed by Apple, skipping permissions check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
         [self.delegate appBladeWebClient:self receivedPermissions:fairplayPermissions];
-    }else{    
+    }
+    else
+    {
         // Create the request.
         NSString* urlString = [NSString stringWithFormat:authorizeURLFormat, [self.delegate appBladeHost]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
@@ -316,7 +318,9 @@ static BOOL is_encrypted () {
         NSLog(@"Binary signed by Apple, skipping update check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
         [self.delegate appBladeWebClient:self receivedUpdate:fairplayPermissions];
-    }else{
+    }
+    else
+    {
         // Create the request.
         _api = AppBladeWebClientAPI_UpdateCheck;
         NSString* urlString = [NSString stringWithFormat:updateURLFormat, [self.delegate appBladeHost]];
@@ -679,7 +683,8 @@ static BOOL is_encrypted () {
         _receivedData = nil;
         
         [self.delegate appBladeWebClient:self receivedTokenResponse:json];
-    }else if (_api == AppBladeWebClientAPI_ConfirmToken) {
+    }
+    else if (_api == AppBladeWebClientAPI_ConfirmToken) {
         NSError *error = nil;
         //NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
         //NSLog(@"Received Device Secret Confirm Response from AppBlade: %@", string);
@@ -688,7 +693,8 @@ static BOOL is_encrypted () {
         _receivedData = nil;
         
         [self.delegate appBladeWebClient:self receivedTokenResponse:json];
-    }else if(_api == AppBladeWebClientAPI_Permissions) {
+    }
+    else if(_api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
         //NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
         //NSLog(@"Received Security Response from AppBlade: %@", string);
@@ -707,22 +713,26 @@ static BOOL is_encrypted () {
             [self.delegate appBladeWebClientFailed:self withErrorString:@"An invalid response was received from AppBlade; please contact support"];
         }
         
-    } else if (_api == AppBladeWebClientAPI_ReportCrash) {    
+    }
+    else if (_api == AppBladeWebClientAPI_ReportCrash) {
         [self.delegate appBladeWebClientCrashReported:self];
     
-    }else if (_api == AppBladeWebClientAPI_Feedback) {
+    }
+    else if (_api == AppBladeWebClientAPI_Feedback) {
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
         [self.delegate appBladeWebClientSentFeedback:self withSuccess:success];
 
-    }else if (_api == AppBladeWebClientAPI_Sessions) {
+    }
+    else if (_api == AppBladeWebClientAPI_Sessions) {
         NSString* receivedDataString = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSLog(@"Received Response from AppBlade Sessions %@", receivedDataString);
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
         [self.delegate appBladeWebClientSentSessions:self withSuccess:success];
 
-    }else if(_api == AppBladeWebClientAPI_UpdateCheck) {
+    }
+    else if(_api == AppBladeWebClientAPI_UpdateCheck) {
         NSError *error = nil;
         NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSLog(@"Received Update Response from AppBlade: %@", string);
@@ -738,7 +748,8 @@ static BOOL is_encrypted () {
             NSLog(@"Error parsing update plist: %@", [error debugDescription]);
             [self.delegate appBladeWebClientFailed:self withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
         }
-    }else
+    }
+    else
     {
         NSLog(@"Unhandled connection with AppBladeWebClientAPI value %d", _api);
     }

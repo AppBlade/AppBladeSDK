@@ -166,9 +166,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     //All the necessary plist vairables must be included
     if (!self.appBladeProjectSecret || self.appBladeProjectSecret.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Secret"];
-    } else if (!self.appBladeDeviceSecret || self.appBladeDeviceSecret.length == 0) {
+    }
+    else if (!self.appBladeDeviceSecret || self.appBladeDeviceSecret.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Device Secret"];
-    } else if (!self.appBladeHost || self.appBladeHost.length == 0) {
+    }
+    else if (!self.appBladeHost || self.appBladeHost.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Host"];
     }
 }
@@ -311,7 +313,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
             if(queuedFilePath == nil){
                 NSLog(@"error saving crash report");
-            }else{
+            }
+            else
+            {
                 NSLog(@"moved crash report to %@", queuedFilePath);
             }
         }
@@ -337,7 +341,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         [self.activeClients addObject:client];
         client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:queuedFilePath,  kAppBladeCrashReportKeyFilePath, nil];
         [client reportCrash:reportString withParams:[self getCustomParams]];
-    }else{
+    }
+    else
+    {
         NSLog(@"No crashes to report");
     }
 }
@@ -384,7 +390,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if(status == kTokenInvalidStatusCode)
         {  //the token we used to generate a new token is no longer valid
             NSLog(@"Token refresh failed because current token had its access revoked.");
-        }else
+        }
+        else
         {  //likely a 500 or some other timeout
             NSLog(@"Token refresh failed due to an error from the server.");
             //try to confirm the token that we have. If it works, we can go with that.
@@ -405,7 +412,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                                NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
             NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
             [self.delegate appBlade:self applicationApproved:NO error:error];
-        }else
+        }
+        else
         {  //likely a 500 or some other timeout
             //if we can't confirm the token then we can't use it.
             //Try again later.
@@ -448,7 +456,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                                            NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
                         error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
 
-                    }else{
+                    }
+                    else
+                    {
                         errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                                            NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
                                            NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
@@ -593,7 +603,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
             NSLog(@"Appblade: PLCrashReporter has more crash reports");
             [self handleCrashReport];
-        }else{
+        }
+        else
+        {
             NSLog(@"Appblade: PLCrashReporter has no more crash reports");
         }
     }
@@ -637,7 +649,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             if ([self hasPendingFeedbackReports]) {
                 NSLog(@"more pending feedback");
                 [self handleBackloggedFeedback];
-            }else{
+            }
+            else
+            {
                 NSLog(@"no more pending feedback");
             }
         }
@@ -759,11 +773,15 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             if (backupFiles.count > 0) {
                 NSLog(@"found %d files at feedbackBacklogFilePath", backupFiles.count);
                 toRet = YES;
-            }else {
+            }
+            else
+            {
                 NSLog(@"found NO files at feedbackBacklogFilePath");
                 toRet = NO;
             }
-        }else{
+        }
+        else
+        {
             NSLog(@"found nothing at %@", feedbackBacklogFilePath);
             toRet = NO;
         }
@@ -1018,7 +1036,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                     }
                     
                     [self.activeClients addObject:client];
-                }else{
+                }
+                else
+                {
                     //clean up files if one doesn't exist
                     [self removeIntermediateFeedbackFiles:feedbackPath];
                     NSLog(@"invalid feedback at %@, removing File and intermediate files", feedbackPath);
@@ -1027,7 +1047,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                     [backupFiles writeToFile:backupFilePath atomically:YES];
 
                 }
-            }else{
+            }
+            else
+            {
                 NSLog(@"No Feedback found at %@, invalid feedback, removing File", feedbackPath);
                 [backupFiles removeObject:fileName];
                 NSLog(@"writing valid pending feedback objects back to file");
@@ -1209,7 +1231,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
         NSDictionary* currentFields = [NSDictionary dictionaryWithContentsOfFile:customFieldsPath];
         toRet = currentFields;
-    }else {
+    }
+    else
+    {
         NSLog(@"no file found, reinitializing");
         toRet = [NSDictionary dictionary];
         [self setCustomParams:toRet];
@@ -1231,10 +1255,14 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:newFieldValues format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
         if(!error){
             [paramsData writeToFile:customFieldsPath atomically:YES];
-        }else{
+        }
+        else
+        {
             NSLog(@"Error parsing custom params %@", newFieldValues);
         }
-    }else{
+    }
+    else
+    {
         NSLog(@"clearing custom params, removing file");
         [[NSFileManager defaultManager] removeItemAtPath:customFieldsPath error:nil];
     }
@@ -1248,7 +1276,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
     if(key && newObject){
         [mutableFields setObject:newObject forKey:key];
-    }else if(key && !newObject){
+    }
+    else if(key && !newObject){
         [mutableFields removeObjectForKey:key];
     }
     else
@@ -1270,7 +1299,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
     if(key && object){
         [mutableFields setObject:object forKey:key];
-    }else if(key && !object){
+    }
+    else if(key && !object){
         [mutableFields removeObjectForKey:key];
     }
     else
