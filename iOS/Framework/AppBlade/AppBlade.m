@@ -195,7 +195,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
     NSString* disabledVal = [AppBladeSimpleKeychain load:kAppBladeKeychainDisabledKey];
     if(nil == disabledVal) {
-        disabledVal = kAppBladeKeychainDisabledKeyFalse;
+        disabledVal = kAppBladeKeychainDisabledKeyFalse; //Not Disabled by default 
         [self setAppBladeDisabled:disabledVal];
     }
     return [kAppBladeKeychainDisabledKeyTrue isEqualToString:disabledVal];
@@ -379,11 +379,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     if(appbladeVariables != nil)
     {
-        NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:@"api_keys"];
-        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:@"host"]];
-        self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:@"project_secret"];
+        NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
+        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:kAppBladePlistEndpointKey]];
+        self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
         if([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0){
-            [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:@"device_secret"]];
+            [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:kAppBladePlistDeviceSecretKey]];
         }
         [self validateProjectConfiguration];
     }
@@ -392,7 +392,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         [self raiseConfigurationExceptionWithFieldName:plistName];
     }
     
-    if([kAppBladeKeychainDefaultDeviceSecret isEqualToString:self.appBladeDeviceSecret])
+    if([kAppBladePlistDefaultDeviceSecretValue isEqualToString:self.appBladeDeviceSecret] || [kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret])
     {
         NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
         [self setAppBladeDisabled:YES];
@@ -551,8 +551,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response
 {
     
-    NSString *deviceSecretString = [response objectForKey:@"device_secret"];
-    NSString *deviceSecretTimeout = [response objectForKey:@"ttl"];
+    NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
+    NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
     if(deviceSecretString != nil) {
         NSLog(@"Updating token ");
         [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
@@ -587,7 +587,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         }
     }
     else {
-        NSNumber *ttl = [permissions objectForKey:@"ttl"];
+        NSNumber *ttl = [permissions objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
         if (ttl) {
             [self updateTTL:ttl];
         }
