@@ -48,6 +48,9 @@ static NSString* const kAppBladeKeychainTtlKey          = @"appBlade_ttl";
 static NSString* const kAppBladeKeychainDeviceSecretKey = @"appBlade_device_secret";
 static NSString* const kAppBladeKeychainDeviceSecretKeyOld = @"old_secret";
 static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
+static NSString* const kAppBladeKeychainDisabledKey        = @"appBlade_disabled";
+static NSString* const kAppBladeKeychainDisabledKeyTrue    = @"riydwfudfhijkfsy7rew78toryiwehj";
+static NSString* const kAppBladeKeychainDisabledKeyFalse   = @"riydwfudfhijkfsz7rew78toryiwehj";
 
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
@@ -172,8 +175,15 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (BOOL)appBladeDisabled
 {
-    return false;
+    NSString* disabledVal = [AppBladeSimpleKeychain load:kAppBladeKeychainDisabledKey];
+    return [kAppBladeKeychainDisabledKeyTrue isEqualToString:disabledVal];
 }
+
+- (void)setAppBladeDisabled:(BOOL)disabled
+{
+    [AppBladeSimpleKeychain save:kAppBladeKeychainDisabledKey data:( disabled ? kAppBladeKeychainDisabledKeyTrue : kAppBladeKeychainDisabledKeyFalse )];
+}
+
 
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
@@ -204,7 +214,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 #pragma mark API CALLS
 
-
+//Not that these aren't blocked by the appBladeDisabled check. It gives us the ability to redeem the device.
 - (void)refreshToken
 {
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
