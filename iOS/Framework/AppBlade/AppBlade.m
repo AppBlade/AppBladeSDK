@@ -380,6 +380,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     if([kAppBladeKeychainDefaultDeviceSecret isEqualToString:self.appBladeDeviceSecret])
     {
+        NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
         [self setAppBladeDisabled:YES];
     }
 }
