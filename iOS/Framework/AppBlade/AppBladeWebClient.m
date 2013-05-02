@@ -69,7 +69,6 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 //other device info methods
 - (NSString *)genExecutableUUID;
 
-
 @end
 
 @implementation AppBladeWebClient
@@ -230,7 +229,7 @@ static BOOL is_encrypted () {
 #pragma mark - AppBlade API
 - (void)refreshToken
 {
-    _api = AppBladeWebClientAPI_GenerateToken;
+    [self setApi:  AppBladeWebClientAPI_GenerateToken];
     BOOL hasFairplay = is_encrypted();
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
@@ -254,7 +253,7 @@ static BOOL is_encrypted () {
 - (void)confirmToken
 {
     NSLog(@"confirming token (client)");
-    _api = AppBladeWebClientAPI_ConfirmToken;
+    [self setApi: AppBladeWebClientAPI_ConfirmToken];
     BOOL hasFairplay = is_encrypted();
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
@@ -287,7 +286,7 @@ static BOOL is_encrypted () {
 
 - (void)checkPermissions
 {
-    _api = AppBladeWebClientAPI_Permissions;
+    [self setApi: AppBladeWebClientAPI_Permissions];
     BOOL hasFairplay = is_encrypted();
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
@@ -322,7 +321,7 @@ static BOOL is_encrypted () {
     else
     {
         // Create the request.
-        _api = AppBladeWebClientAPI_UpdateCheck;
+        [self setApi: AppBladeWebClientAPI_UpdateCheck];
         NSString* urlString = [NSString stringWithFormat:updateURLFormat, [self.delegate appBladeHost]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
@@ -337,7 +336,7 @@ static BOOL is_encrypted () {
 }
 
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)paramsDict {
-    _api = AppBladeWebClientAPI_ReportCrash;
+    [self setApi: AppBladeWebClientAPI_ReportCrash];
     @synchronized (self)
     {
     // Build report URL.
@@ -387,7 +386,7 @@ static BOOL is_encrypted () {
 
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console params:(NSDictionary*)paramsDict
 {
-    _api = AppBladeWebClientAPI_Feedback;
+    [self setApi: AppBladeWebClientAPI_Feedback];
     
     @synchronized (self)
     {
@@ -447,7 +446,7 @@ static BOOL is_encrypted () {
 
 - (void)postSessions:(NSArray *)sessions
 {
-    _api = AppBladeWebClientAPI_Sessions;
+    [self setApi: AppBladeWebClientAPI_Sessions];
     
     NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [self.delegate appBladeHost]];
     NSURL* sessionURL = [NSURL URLWithString:sessionString];
