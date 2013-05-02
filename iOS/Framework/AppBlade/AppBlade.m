@@ -390,6 +390,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if(status == kTokenInvalidStatusCode)
         {  //the token we used to generate a new token is no longer valid
             NSLog(@"Token refresh failed because current token had its access revoked.");
+            [self setAppBladeDisabled:YES];
         }
         else
         {  //likely a 500 or some other timeout
@@ -403,10 +404,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         //schedule a token refresh or deactivate based on status
         if(status == kTokenRefreshStatusCode)
         {
+            [self setAppBladeDisabled:NO];
             [[AppBlade  sharedManager] refreshToken];
         }
         else if(status == kTokenInvalidStatusCode)
         {
+            [self setAppBladeDisabled:YES];
             NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                                NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
                                NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
@@ -417,6 +420,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         {  //likely a 500 or some other timeout
             //if we can't confirm the token then we can't use it.
             //Try again later.
+            [self setAppBladeDisabled:NO];
             double delayInSeconds = 30.0;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
