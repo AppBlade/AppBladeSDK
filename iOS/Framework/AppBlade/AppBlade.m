@@ -178,6 +178,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (BOOL)appBladeDisabled
 {
     NSString* disabledVal = [AppBladeSimpleKeychain load:kAppBladeKeychainDisabledKey];
+    if(nil == disabledVal) {
+        disabledVal = kAppBladeKeychainDisabledKeyFalse;
+        [self setAppBladeDisabled:disabledVal];
+    }
     return [kAppBladeKeychainDisabledKeyTrue isEqualToString:disabledVal];
 }
 
