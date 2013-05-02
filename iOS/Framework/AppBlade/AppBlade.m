@@ -83,6 +83,7 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 @property (nonatomic, retain) NSMutableSet* activeClients;
 
+- (void)setAppBladeDisabled:(BOOL)disabled;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;

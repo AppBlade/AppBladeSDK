@@ -59,6 +59,9 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // Log SDK Version
 + (void)logSDKVersion;
 
+//SDK availability check
+- (BOOL)appBladeDisabled;
+
 // AppBlade manager singleton.
 + (AppBlade *)sharedManager;
 
