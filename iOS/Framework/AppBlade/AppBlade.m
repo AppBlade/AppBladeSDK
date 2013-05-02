@@ -44,15 +44,28 @@ static NSString* const kAppBladeDefaultHost             = @"https://appblade.com
 
 static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
 
+//Keychain Values
 static NSString* const kAppBladeKeychainTtlKey          = @"appBlade_ttl";
 static NSString* const kAppBladeKeychainDeviceSecretKey = @"appBlade_device_secret";
-static NSString* const kAppBladeKeychainDeviceSecretKeyOld = @"old_secret";
-static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
-static NSString* const kAppBladeKeychainDefaultDeviceSecret = @"DEFAULT";
+    static NSString* const kAppBladeKeychainDeviceSecretKeyOld = @"old_secret";
+    static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
 
 static NSString* const kAppBladeKeychainDisabledKey        = @"appBlade_disabled";
 static NSString* const kAppBladeKeychainDisabledKeyTrue    = @"riydwfudfhijkfsy7rew78toryiwehj";
 static NSString* const kAppBladeKeychainDisabledKeyFalse   = @"riydwfudfhijkfsz7rew78toryiwehj";
+
+//Plist Key Values
+static NSString* const kAppBladePlistApiDictionaryKey     = @"api_keys";
+    static NSString* const kAppBladePlistDeviceSecretKey     = @"device_secret";
+    static NSString* const kAppBladePlistProjectSecretKey    = @"project_secret";
+    static NSString* const kAppBladePlistEndpointKey         = @"host";
+static NSString* const kAppBladePlistDefaultDeviceSecretValue    = @"DEFAULT";
+static NSString* const kAppBladePlistDefaultProjectSecretValue   = @"DEFAULT";
+
+
+//API Response Values
+static NSString* const kAppBladeApiTokenResponseDeviceSecretKey     = @"device_secret";
+static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
