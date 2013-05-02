@@ -72,6 +72,9 @@ extern NSString *sessionURLFormat;
 @property (nonatomic, readonly) AppBladeWebClientAPI api;
 @property (nonatomic, retain) NSDictionary* userInfo;
 @property (nonatomic, retain) NSDictionary* responseHeaders;
+@property (nonatomic, retain) NSMutableData* receivedData;
+
+
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
 

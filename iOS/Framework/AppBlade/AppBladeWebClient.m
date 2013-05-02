@@ -81,6 +81,7 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 @synthesize responseHeaders = _responseHeaders;
 @synthesize userInfo = _userInfo;
 @synthesize executableUUID = _executableUUID;
+@synthesize receivedData = _receivedData;
 
 
 @synthesize activeConnection = _activeConnection;
@@ -631,8 +632,7 @@ static BOOL is_encrypted () {
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {    
 	// Reset the data object.
-	[_receivedData release];
-    _receivedData = [[NSMutableData alloc] init];
+    self.receivedData = [[NSMutableData alloc] init];
     NSMutableDictionary* headers = [NSMutableDictionary dictionaryWithDictionary:[(NSHTTPURLResponse *)response allHeaderFields]];
     [headers setObject:[NSNumber numberWithInteger:[(NSHTTPURLResponse *)response statusCode]] forKey:@"statusCode"];
      self.responseHeaders = headers;
@@ -656,13 +656,12 @@ static BOOL is_encrypted () {
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
 
-	[_receivedData appendData:data];
+	[self.receivedData appendData:data];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    [_receivedData release];
-    _receivedData = nil;
+    self.receivedData = nil;
     
     NSLog(@"AppBlade failed with error: %@", error.localizedDescription);
     [self.delegate appBladeWebClientFailed:self];
@@ -675,33 +674,27 @@ static BOOL is_encrypted () {
 {
     if (_api == AppBladeWebClientAPI_GenerateToken) {
         NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
+        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         //NSLog(@"Received Device Secret Refresh Response from AppBlade: %@", string);
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:_receivedData options:nil error:&error];
-        [_receivedData release];
-        _receivedData = nil;
-        
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         [self.delegate appBladeWebClient:self receivedTokenResponse:json];
     }
     else if (_api == AppBladeWebClientAPI_ConfirmToken) {
         NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
+        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         //NSLog(@"Received Device Secret Confirm Response from AppBlade: %@", string);
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:_receivedData options:nil error:&error];
-        [_receivedData release];
-        _receivedData = nil;
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
+        self.receivedData = nil;
         
         [self.delegate appBladeWebClient:self receivedTokenResponse:json];
     }
     else if(_api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
+        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         //NSLog(@"Received Security Response from AppBlade: %@", string);
-        NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:_receivedData options:nil error:&error];
+        NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         //BOOL showUpdatePrompt = [_request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
 
-        [_receivedData release];
-        _receivedData = nil;
         
         if (plist && error == NULL) {
             [self.delegate appBladeWebClient:self receivedPermissions:plist];
@@ -724,7 +717,7 @@ static BOOL is_encrypted () {
 
     }
     else if (_api == AppBladeWebClientAPI_Sessions) {
-        NSString* receivedDataString = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
+        NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSLog(@"Received Response from AppBlade Sessions %@", receivedDataString);
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
@@ -733,11 +726,10 @@ static BOOL is_encrypted () {
     }
     else if(_api == AppBladeWebClientAPI_UpdateCheck) {
         NSError *error = nil;
-        NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
+        NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSLog(@"Received Update Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:_receivedData options:nil error:&error];
-        [_receivedData release];
-        _receivedData = nil;
+        self.receivedData = nil;
         
         if (json && error == NULL) {
             [self.delegate appBladeWebClient:self receivedUpdate:json];
