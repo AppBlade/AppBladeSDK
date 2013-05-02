@@ -170,6 +170,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
 }
 
+- (BOOL)appBladeDisabled
+{
+    return false;
+}
+
+
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
 {
     NSString* const exceptionMessageFormat = @"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.";
@@ -197,6 +203,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 #pragma mark API CALLS
+
 
 - (void)refreshToken
 {
@@ -231,6 +238,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)checkForUpdates
 {
+    if([self appBladeDisabled])
+    {
+        return;
+    }
     [self validateProjectConfiguration];
     NSLog(@"Checking for updates");
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
@@ -241,6 +252,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)catchAndReportCrashes
 {
+    if([self appBladeDisabled])
+    {
+        return;
+    }
+
     NSLog(@"Catch and report crashes");
     [self validateProjectConfiguration];
 
@@ -256,6 +272,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)checkForExistingCrashReports
 {
+    if([self appBladeDisabled])
+    {
+        return;
+    }
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     // Check if we previously crashed
     if ([crashReporter hasPendingCrashReport]){
@@ -754,6 +774,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window
 {
+    if([self appBladeDisabled])
+    {
+        return;
+    }
+
     self.window = window;
     self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] autorelease];
     self.tapRecognizer.numberOfTapsRequired = 2;
@@ -784,6 +809,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window
 {
+    if([self appBladeDisabled])
+    {
+        return;
+    }
+
     if (window) {
         NSLog(@"Allowing custom feedback for window %@", window);
         self.window = window;
@@ -806,6 +836,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)showFeedbackDialogue:(BOOL)withScreenshot
 {
+    if([self appBladeDisabled])
+    {
+        return;
+    }
+
     if(!self.showingFeedbackDialogue){
         self.showingFeedbackDialogue = YES;
         if(self.feedbackDictionary == nil){
@@ -1101,6 +1136,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)logSessionStart
 {
+    if([self appBladeDisabled])
+    {
+        return;
+    }
+
     if(self.activeClients == nil){
         self.activeClients = [NSMutableSet set];
     }
@@ -1124,6 +1164,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)logSessionEnd
 {
+    if([self appBladeDisabled])
+    {
+        return;
+    }
+
     NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
     
     NSMutableArray* pastSessions = nil;
