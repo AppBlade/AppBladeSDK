@@ -195,7 +195,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 {
     NSString* disabledVal = [AppBladeSimpleKeychain load:kAppBladeKeychainDisabledKey];
     if(nil == disabledVal) {
-        disabledVal = kAppBladeKeychainDisabledKeyFalse; //Not Disabled by default 
+        disabledVal = kAppBladeKeychainDisabledKeyFalse; //Not Disabled by default
         [self setAppBladeDisabled:disabledVal];
     }
     return [kAppBladeKeychainDisabledKeyTrue isEqualToString:disabledVal];
