@@ -48,6 +48,8 @@ static NSString* const kAppBladeKeychainTtlKey          = @"appBlade_ttl";
 static NSString* const kAppBladeKeychainDeviceSecretKey = @"appBlade_device_secret";
 static NSString* const kAppBladeKeychainDeviceSecretKeyOld = @"old_secret";
 static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
+static NSString* const kAppBladeKeychainDefaultDeviceSecret = @"DEFAULT";
+
 static NSString* const kAppBladeKeychainDisabledKey        = @"appBlade_disabled";
 static NSString* const kAppBladeKeychainDisabledKeyTrue    = @"riydwfudfhijkfsy7rew78toryiwehj";
 static NSString* const kAppBladeKeychainDisabledKeyFalse   = @"riydwfudfhijkfsz7rew78toryiwehj";
@@ -374,6 +376,11 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     else
     {
         [self raiseConfigurationExceptionWithFieldName:plistName];
+    }
+    
+    if([kAppBladeKeychainDefaultDeviceSecret isEqualToString:self.appBladeDeviceSecret])
+    {
+        [self setAppBladeDisabled:YES];
     }
 }
 
