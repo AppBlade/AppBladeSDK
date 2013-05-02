@@ -344,7 +344,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)registerWithAppBladePlist
 {
-    NSString * plistPath = [[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"];
+    [self registerWithAppBladePlist:@"AppBladeKeys"];
+}
+
+- (void)registerWithAppBladePlist:(NSString*)plistName
+{
+    NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
     NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     if(appbladeVariables != nil)
     {
@@ -358,9 +363,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
     else
     {
-        [self raiseConfigurationExceptionWithFieldName:@"AppBladeKeys.plist"];
+        [self raiseConfigurationExceptionWithFieldName:plistName];
     }
-    
 }
 
 

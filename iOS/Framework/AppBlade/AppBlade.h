@@ -64,6 +64,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
 // Use the plist that AppBlade embeds for the iOS settings
 - (void)registerWithAppBladePlist;
+- (void)registerWithAppBladePlist:(NSString*)plistName;
 
 //Device secret calls
 - (NSDictionary *) appBladeDeviceSecrets;
