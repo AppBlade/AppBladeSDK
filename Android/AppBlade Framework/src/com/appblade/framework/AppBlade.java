@@ -98,7 +98,6 @@ public class AppBlade {
 
 		String host = "";
 		String project_secret = "";			 
-		String version_secret = "";			 
 		String device_secret = "";
 
 		try {
@@ -130,9 +129,6 @@ public class AppBlade {
                }
                else if (lastNameSeen.equals("project_secret")) {
             	   project_secret = text;
-               }
-               else if (lastNameSeen.equals("version_secret")) {
-            	   version_secret = text;
                }
                else if (lastNameSeen.equals("device_secret")) {
                	device_secret = text;
