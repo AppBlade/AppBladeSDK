@@ -185,7 +185,16 @@ public class AppBlade {
 		
 		// Initialize App Info
 		appInfo = new AppInfo();
-		appInfo.DeviceSecret = project_secret;
+		String existingAccessToken = RemoteAuthHelper.getAccessToken(context);
+		if(StringUtils.isNullOrEmpty(existingAccessToken)){
+			
+			appInfo.DeviceSecret = device_secret;
+			RemoteAuthHelper.setAccessToken(context, device_secret);
+		}
+		else
+		{
+			appInfo.DeviceSecret = existingAccessToken;
+		}
 		appInfo.ProjectSecret = project_secret;
 		appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 		
