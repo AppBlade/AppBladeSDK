@@ -19,7 +19,7 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
-import android.util.Log;
+
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
@@ -79,20 +79,20 @@ public class CrashReportHelper {
 			{
 				String newFilename = newCrashFileName();
 				File file = new File(newFilename);
-				Log.v(AppBlade.LogTag,"writing to " + newFilename);
+				AppBlade.Log("writing to " + newFilename);
 				if(file.createNewFile())
 				{
 					BufferedWriter writer = new BufferedWriter(new FileWriter(newFilename));
 					writer.write(systemInfo);
 					writer.write(stackTrace);
 					writer.close();
-					Log.v(AppBlade.LogTag,"wrote to " + file.getName());
+					AppBlade.Log("wrote to " + file.getName());
 				}
 			}
 		}
 		catch(Exception ex)
 		{
-			Log.v(AppBlade.LogTag, String.format("Ex: %s, %s", ex.getClass().getCanonicalName(), ex.getMessage()));
+			AppBlade.Log( String.format("Ex: %s, %s", ex.getClass().getCanonicalName(), ex.getMessage()));
 		}
 	}
 
@@ -104,7 +104,7 @@ public class CrashReportHelper {
 	private static synchronized boolean sendExceptionData(File f) {
 		boolean success = false;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
-		Log.v(AppBlade.LogTag, "sending exception in file " + f.getName());
+		AppBlade.Log( "sending exception in file " + f.getName());
 
 		try
 		{
@@ -146,7 +146,7 @@ public class CrashReportHelper {
 		}
 		catch(Exception ex)
 		{
-			Log.v(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+			AppBlade.Log( String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
 
 		IOUtils.safeClose(client);
@@ -174,7 +174,7 @@ public class CrashReportHelper {
 			}
 		} 
 		catch (IOException e) {
-			Log.v(AppBlade.LogTag, e.toString());
+			AppBlade.Log( e.toString());
 		}
 		
 		return entity;

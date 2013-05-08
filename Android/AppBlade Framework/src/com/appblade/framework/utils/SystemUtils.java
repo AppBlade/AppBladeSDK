@@ -13,7 +13,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
+
 
 /**
  * A class to help check for permissions and generate hashes for files in the apk. Used mostly for identifiers for AppBlade.
@@ -104,7 +104,7 @@ public class SystemUtils {
 				toRet = StringUtils.sha256FromInputStream(streamToHash);
 			}
 		} catch (IOException e) {
-			Log.v(AppBlade.LogTag, "Error reading "+filename);
+			AppBlade.Log( "Error reading "+filename);
 			e.printStackTrace();
 		}
 		

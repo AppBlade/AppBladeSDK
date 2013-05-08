@@ -28,7 +28,7 @@ import com.appblade.framework.utils.SystemUtils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+
 
 /**
  * AsyncTask to help download and store a valid auth token after singing in with RemoteAuthorizeActivity.
@@ -89,13 +89,13 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 	}
 
 	private void handleResponse(HttpResponse response) {
-		Log.v(AppBlade.LogTag, "authData response " + response.getStatusLine());
+		AppBlade.Log( "authData response " + response.getStatusLine());
 
 		
 		if(HttpUtils.isOK(response)) {
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.v(AppBlade.LogTag, "authData recieved " + data);
+				AppBlade.Log( "authData recieved " + data);
 				JSONObject json = new JSONObject(data);
 				
 				String accessToken = json.getString("access_token");
@@ -107,8 +107,8 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 				
 				RemoteAuthHelper.store(context, token_type, accessToken, refresh_token, expires);
 			}
-			catch (IOException ex) { Log.w(AppBlade.LogTag, "handleResponse(HttpResponse) Error storing AuthToken ", ex); }
-			catch (JSONException ex) { Log.w(AppBlade.LogTag, "handleResponse(HttpResponse) Error parsing JSON ", ex); }
+			catch (IOException ex) { AppBlade.Log_w("handleResponse(HttpResponse) Error storing AuthToken ", ex); }
+			catch (JSONException ex) { AppBlade.Log_w("handleResponse(HttpResponse) Error parsing JSON ", ex); }
 		}
 	}
 

@@ -131,15 +131,8 @@ public class MainActivity extends Activity {
 				AppBlade.checkForUpdates(MainActivity.this, false);
 			}
 		});
-		
-
 	}
 
-	
-	
-	
-	
-	
 	
 	
 	@Override

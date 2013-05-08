@@ -54,7 +54,7 @@ import com.appblade.framework.utils.StringUtils;
  * @author andrew.tremblay@raizlabs 
  */
 public class AppBlade {
-	public static String LogTag = "AppBlade";
+	private static String LogTag = "AppBlade";
 	public static boolean makeToast = false;  //for toast display in the device, not desired by default
 
 	/**

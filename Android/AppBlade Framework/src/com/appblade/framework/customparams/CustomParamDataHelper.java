@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import com.appblade.framework.AppBlade;
 
 import android.content.Context;
-import android.util.Log;
+
 
 /**
  * Helper functions for storing and loading custom parameters and adding them to HttpRequests.
@@ -87,7 +87,7 @@ public class CustomParamDataHelper {
 			}
 		}
 
-		Log.v(AppBlade.LogTag, "Text in "+customParamsFileName+": "+ jsonTxt);
+		AppBlade.Log( "Text in "+customParamsFileName+": "+ jsonTxt);
         
         if(jsonTxt != null){
 			try {
@@ -98,7 +98,7 @@ public class CustomParamDataHelper {
         }
         else
         {
-        	Log.v(AppBlade.LogTag, "Custom Parameters have not yet been inititalized.");
+        	AppBlade.Log( "Custom Parameters have not yet been inititalized.");
         }
         return json;
 	}
@@ -134,26 +134,26 @@ public class CustomParamDataHelper {
 	    	}
 	    	final File someFile = new File(AppBlade.customParamsDir, customParamsFileName);
 	    	if(!someFile.exists()){
-	        	Log.v(AppBlade.LogTag, "customParams file does not exist yet. creating Sessions file.");
+	        	AppBlade.Log( "customParams file does not exist yet. creating Sessions file.");
 	    		someFile.createNewFile();
 	    	}
 	    }catch (IOException ex) {
-	    	Log.w(AppBlade.LogTag, "Error making customParams file", ex);
+	    	AppBlade.Log_w( "Error making customParams file", ex);
 	    }
 	    
         try {
             //open the buffered writer
-	    	Log.v(AppBlade.LogTag, "open the buffered writer to "+ jsonFileURI());
+	    	AppBlade.Log( "open the buffered writer to "+ jsonFileURI());
         	BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(jsonFileURI()));
-    		Log.v(AppBlade.LogTag, "writing customParams "+stringJSON);
+    		AppBlade.Log( "writing customParams "+stringJSON);
             bufferedWriter.write(stringJSON);
 	        //Close the BufferedWriter
 			bufferedWriter.flush();
 			bufferedWriter.close();
         } catch (FileNotFoundException ex) {
-	    	Log.w(AppBlade.LogTag, "Error finding customParams file", ex);
+	    	AppBlade.Log_w( "Error finding customParams file", ex);
         } catch (IOException ex) {
-	    	Log.w(AppBlade.LogTag, "IO Error making customParams file", ex);
+	    	AppBlade.Log_w( "IO Error making customParams file", ex);
         }
 	}
 }

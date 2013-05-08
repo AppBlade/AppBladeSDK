@@ -22,7 +22,7 @@ import org.json.JSONObject;
 
 import com.appblade.framework.AppBlade;
 
-import android.util.Log;
+
 
 
 /**
@@ -216,15 +216,15 @@ public class StringUtils {
 		//open the file as an input string
 			try {
 				InputStream is = new FileInputStream(file);
-				Log.v(AppBlade.LogTag, "opened " + file.getAbsolutePath());
+				AppBlade.Log( "opened " + file.getAbsolutePath());
 				try {
-					Log.v(AppBlade.LogTag, is.available() +  " bytes available");
+					AppBlade.Log( is.available() +  " bytes available");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				
 				toRet = StringUtils.md5FromInputStream(is);
-				Log.v(AppBlade.LogTag, "closed" + file.getAbsolutePath());
+				AppBlade.Log( "closed" + file.getAbsolutePath());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}

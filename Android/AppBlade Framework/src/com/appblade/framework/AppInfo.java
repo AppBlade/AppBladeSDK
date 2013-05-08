@@ -12,7 +12,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+
 
 /**
  * AppInfo
@@ -113,7 +113,7 @@ public class AppInfo {
 		boolean toRet = false;
 		TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		String networkOperator = tm.getNetworkOperatorName();
-		Log.v(AppBlade.LogTag, "networkOperator "+networkOperator);
+		AppBlade.Log( "networkOperator "+networkOperator);
 		if("Android".equals(networkOperator)) {
 		    // Emulator
 			toRet = true;

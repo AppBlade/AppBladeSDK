@@ -1,7 +1,7 @@
 package com.appblade.framework.authenticate;
 
 import android.app.Activity;
-import android.util.Log;
+
 import android.webkit.JavascriptInterface;
 
 import com.appblade.framework.AppBlade;
@@ -23,17 +23,17 @@ public class AuthJavascriptInterface {
 	@JavascriptInterface
 	public void notifyAuthCode(final String code) {
 			final String message = String.format("AuthJavascriptInterface.notifyAuthCode code: %s", code);
-			Log.v(AppBlade.LogTag, message);
+			AppBlade.Log( message);
 			
 			if(mActivity != null){
-				Log.v(AppBlade.LogTag, String.format("storing token"));
+				AppBlade.Log( String.format("storing token"));
 
 				mActivity.runOnUiThread(new Runnable() {
 					public void run() {
 						AuthTokensDownloadTask task = new AuthTokensDownloadTask(mActivity);
 						task.setOnPostExecuteListener(new OnPostExecuteListener() {
 							public void onPostExecute() {
-								Log.v(AppBlade.LogTag, String.format("reauthorizing"));
+								AppBlade.Log( String.format("reauthorizing"));
 
 								AppBlade.authorize(mActivity, true);
 							}
@@ -44,7 +44,7 @@ public class AuthJavascriptInterface {
 			}
 			else
 			{
-				Log.v(AppBlade.LogTag, "mActivity null, no token");
+				AppBlade.Log( "mActivity null, no token");
 			}
 		}
 }
