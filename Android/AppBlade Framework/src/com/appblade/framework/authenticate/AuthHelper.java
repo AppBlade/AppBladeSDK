@@ -95,17 +95,15 @@ public class AuthHelper {
 	 * 
 	 * @param activity
 	 *            Activity to check for an accessToken and/or call a
-	 *            RemoteAuthorizeActivity Intent.
+	 *            AuthorizeTask.
 	 */
 	public static void authorize(Activity activity) {
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
-
 		if (!StringUtils.isNullOrEmpty(accessToken)) {
 			KillSwitch.authorize(activity);
 		} else {
-			Intent intent = new Intent(activity, RemoteAuthorizeActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			activity.startActivity(intent);
+			AuthorizeTask task = new AuthorizeTask(activity);
+			task.execute();
 		}
 	}
 }
