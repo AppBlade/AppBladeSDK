@@ -1,6 +1,7 @@
 package com.appblade.example;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -11,12 +12,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.appblade.framework.stats.AppBladeSessionActivity;
+//import com.appblade.framework.stats.AppBladeSessionActivity;
 import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
 import com.appblade.framework.AppBlade;
 
-public class MainActivity extends AppBladeSessionActivity {
+public class MainActivity extends Activity {
 	
 	/** Called when the activity is first created. */
 	@Override
