@@ -18,8 +18,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.provider.Settings;
-import android.util.Log;
+
 import android.util.Xml;
+import android.util.Log;
+
 import android.view.View;
 
 import com.appblade.framework.authenticate.AuthHelper;
@@ -355,7 +357,7 @@ public class AppBlade {
 		// close the activity context
 		else if (fromLoopBack)
 		{
-			Log.v(AppBlade.LogTag,
+			AppBlade.Log(
 			String.format("AppBlade.authorize: user is authorized, closing activity: %s", activity.getLocalClassName()));
 			activity.finish();
 		}
@@ -371,7 +373,7 @@ public class AppBlade {
 		hardCheckIsRegistered();
 
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
-		setDeviceId(accessToken);
+		AppBlade.appInfo.DeviceSecret = accessToken;
 
 		Log.v("AppBlade MDM",  !StringUtils.isNullOrEmpty(accessToken) ? "Access Token exists" : "Access Token does not exist"); 
 
@@ -689,7 +691,7 @@ public class AppBlade {
 		if(e != null && canWriteToDisk)
 		{
 			if(e.getLocalizedMessage() != null){
-				Log.v(AppBlade.LogTag, e.getLocalizedMessage());
+				AppBlade.Log( e.getLocalizedMessage());
 			}
 			CrashReportData data = new CrashReportData(e);
 			new PostCrashReportTask(null).execute(data);
@@ -807,5 +809,19 @@ public class AppBlade {
 		fileDirectory.mkdirs();
 		return toRet;
 	}
+	
+	
+	public static void Log(String message)
+	{
+		Log.d(LogTag, message);
+	}
+	public static void Log_w(String message, Exception ex)
+	{
+		Log.w(LogTag, message, ex);
+	}
 
+
+	public static void Log_e(String message) {
+		Log.e(LogTag, message);		
+	}
 }
