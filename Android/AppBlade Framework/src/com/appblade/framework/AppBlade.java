@@ -228,9 +228,6 @@ public class AppBlade {
 		Log.d(LogTag, String.format("Using a endpoint URL, %s%s", appInfo.CurrentServiceScheme, appInfo.CurrentEndpoint));
 
 		
-		// Set the device ID for exception reporting requests
-		String accessToken = RemoteAuthHelper.getAccessToken(context);
-		setDeviceId(accessToken);
 
 		try
 		{
@@ -392,7 +389,7 @@ public class AppBlade {
 		hardCheckIsRegistered();
 
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
-		setDeviceId(accessToken);
+		AppBlade.appInfo.DeviceSecret = accessToken;
 
 		boolean isTtlValid = !KillSwitch.shouldUpdate(); 
 		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
@@ -779,21 +776,6 @@ public class AppBlade {
 		return null;	
 	}
 
-
-	/**
-	 * Static helper call to set the device ID (ext) for the device running this app.
-	 * @param accessToken the access token to that will be the new deviceID, defaults to AppInfo.DefaultUDID if null or an empty string
-	 */
-	public static void setDeviceId(String accessToken) {
-		hardCheckIsRegistered();
-
-		Log.v(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
-
-		if(!StringUtils.isNullOrEmpty(accessToken))
-			AppBlade.appInfo.DeviceSecret = accessToken;
-		else
-			AppBlade.appInfo.DeviceSecret = AppInfo.DefaultUDID;
-	}
 	
 	/**
 	 * Static helper call to generate a dynamic boundary for webservice calls.
