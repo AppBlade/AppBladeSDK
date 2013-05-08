@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<api_keys>
+	  <host>https://appblade.com</host>
+	  <project_secret>EXPUNGED</project_secret> 
+	  <device_secret>REDACTED</device_secret>
+	</api_keys>
+</root>
