@@ -17,7 +17,7 @@
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
 
-static NSString* const s_sdkVersion                     = @"0.3.0";
+static NSString* const s_sdkVersion                     = @"0.4.0";
 
 NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
 const int kAppBladeOfflineError                         = 1200;
@@ -26,6 +26,9 @@ const int kAppBladePermissionError                      = 1216;
 NSString* const kAppBladeCacheDirectory                 = @"AppBladeCache";
 
 const int kUpdateAlertTag                               = 316;
+
+const int kTokenRefreshStatusCode                       = 401; //if this is ever returned, that means the token is expired and needs renewing before the api can be called
+const int kTokenInvalidStatusCode                       = 403; //if this is ever returned, that means the app is being used illegally
 
 static NSString *s_letters                              = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 static NSString* const kAppBladeBacklogFileName         = @"AppBladeBacklog.plist";
@@ -40,6 +43,29 @@ static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
 
 static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
+
+//Keychain Values
+static NSString* const kAppBladeKeychainTtlKey          = @"appBlade_ttl";
+static NSString* const kAppBladeKeychainDeviceSecretKey = @"appBlade_device_secret";
+    static NSString* const kAppBladeKeychainDeviceSecretKeyOld = @"old_secret";
+    static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
+
+static NSString* const kAppBladeKeychainDisabledKey        = @"appBlade_disabled";
+static NSString* const kAppBladeKeychainDisabledKeyTrue    = @"riydwfudfhijkfsy7rew78toryiwehj";
+static NSString* const kAppBladeKeychainDisabledKeyFalse   = @"riydwfudfhijkfsz7rew78toryiwehj";
+
+//Plist Key Values
+static NSString* const kAppBladePlistApiDictionaryKey     = @"api_keys";
+    static NSString* const kAppBladePlistDeviceSecretKey     = @"device_secret";
+    static NSString* const kAppBladePlistProjectSecretKey    = @"project_secret";
+    static NSString* const kAppBladePlistEndpointKey         = @"host";
+static NSString* const kAppBladePlistDefaultDeviceSecretValue    = @"DEFAULT";
+static NSString* const kAppBladePlistDefaultProjectSecretValue   = @"DEFAULT";
+
+
+//API Response Values
+static NSString* const kAppBladeApiTokenResponseDeviceSecretKey     = @"device_secret";
+static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
@@ -78,6 +104,9 @@ static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt
 
 - (BOOL)hasPendingSessions;
 
+- (void)validateProjectConfiguration;
+//- (void)refreshToken;
+//- (void)confirmToken;
 
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
@@ -87,10 +116,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @implementation AppBlade
 
 @synthesize appBladeHost = _appBladeHost;
-@synthesize appBladeProjectID = _appBladeProjectID;
-@synthesize appBladeProjectToken = _appBladeProjectToken;
 @synthesize appBladeProjectSecret = _appBladeProjectSecret;
-@synthesize appBladeProjectIssuedTimestamp = _appBladeProjectIssuedTimestamp;
+@synthesize appBladeDeviceSecret = _appBladeDeviceSecret;
 @synthesize delegate = _delegate;
 @synthesize upgradeLink = _upgradeLink;
 @synthesize feedbackDictionary = _feedbackDictionary;
@@ -140,6 +167,21 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
 }
 
++ (void)clearCacheDirectory
+{
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *directory = [AppBlade cachesDirectoryPath];
+    NSError *error = nil;
+    for (NSString *file in [fm contentsOfDirectoryAtPath:directory error:&error]) {
+        BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
+        if (!success || error) {
+            // it failed.
+            NSLog(@"AppBlade failed to remove the caches directory after receivin invalid credentials");
+        }
+    }
+    [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory]; //reinitialize the folder
+}
+
 - (id)init {
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
@@ -151,23 +193,19 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)validateProjectConfiguration
 {
-    // Validate AppBlade project settings. This should be executed by every public method before proceding.
-    if(!self.appBladeHost || self.appBladeHost.length == 0) {
-        //could be redundant now that we are handling host building from the webclient
-        NSLog(@"Host not being ovewritten, falling back to default host (%@)", kAppBladeDefaultHost);
-        self.appBladeHost = kAppBladeDefaultHost;
-    }
-    
-    if (!self.appBladeProjectID || self.appBladeProjectID.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project ID"];
-    } else if (!self.appBladeProjectToken || self.appBladeProjectToken.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project Token"];
-    } else if (!self.appBladeProjectSecret || self.appBladeProjectSecret.length == 0) {
+    //All the necessary plist vairables must be included
+    if (!self.appBladeProjectSecret || self.appBladeProjectSecret.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Secret"];
-    } else if (!self.appBladeProjectIssuedTimestamp || self.appBladeProjectIssuedTimestamp.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project Issued At Timestamp"];
+    }
+    else if (!self.appBladeDeviceSecret || self.appBladeDeviceSecret.length == 0) {
+        [self raiseConfigurationExceptionWithFieldName:@"Device Secret"];
+    }
+    else if (!self.appBladeHost || self.appBladeHost.length == 0) {
+        [self raiseConfigurationExceptionWithFieldName:@"Project Host"];
     }
 }
+
+
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
 {
@@ -181,10 +219,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [_upgradeLink release];
     [_feedbackDictionary release];
     [_appBladeHost release];
-    [_appBladeProjectID release];
-    [_appBladeProjectToken release];
     [_appBladeProjectSecret release];
-    [_appBladeProjectIssuedTimestamp release];
+    [_appBladeDeviceSecret release];
     [_delegate release];
     [_upgradeLink release];
     [_feedbackDictionary release];
@@ -197,20 +233,36 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [super dealloc];
 }
 
-#pragma mark
+#pragma mark API CALLS
 
-- (void)checkApproval
+//Eventually these will help enable/disable our appBladeDisabled value. It gives us the ability to condemn/redeem the device.
+- (void)refreshToken
 {
-    [self checkApprovalWithUpdatePrompt:YES];
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
+    [client refreshToken];
 }
 
-- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt
+- (void)confirmToken
+{
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [self.activeClients addObject:client];
+    [client confirmToken];
+}
+
+
+- (void)checkApproval
 {
     [self validateProjectConfiguration];
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [self.activeClients addObject:client];
-    [client checkPermissions:shouldPrompt];
+    [client checkPermissions];
+}
+
+- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt  //deprecated, do not use
+{
+    [self checkApproval];
 }
 
 
@@ -267,7 +319,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
             if(queuedFilePath == nil){
                 NSLog(@"error saving crash report");
-            }else{
+            }
+            else
+            {
                 NSLog(@"moved crash report to %@", queuedFilePath);
             }
         }
@@ -293,21 +347,42 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         [self.activeClients addObject:client];
         client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:queuedFilePath,  kAppBladeCrashReportKeyFilePath, nil];
         [client reportCrash:reportString withParams:[self getCustomParams]];
-    }else{
+    }
+    else
+    {
         NSLog(@"No crashes to report");
     }
 }
 
-- (void)loadSDKKeysFromPlist:(NSString *)plist
+- (void)registerWithAppBladePlist
 {
-    NSDictionary* keys = [NSDictionary dictionaryWithContentsOfFile:plist];
-    self.appBladeHost =  [AppBladeWebClient buildHostURL:[keys objectForKey:@"host"]];
-    self.appBladeProjectID = [keys objectForKey:@"projectID"];
-    self.appBladeProjectToken = [keys objectForKey:@"token"];
-    self.appBladeProjectSecret = [keys objectForKey:@"secret"];
-    self.appBladeProjectIssuedTimestamp = [keys objectForKey:@"timestamp"];
+    [self registerWithAppBladePlist:@"AppBladeKeys"];
 }
 
+- (void)registerWithAppBladePlist:(NSString*)plistName
+{
+    NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
+    NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    if(appbladeVariables != nil)
+    {
+        NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
+        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:kAppBladePlistEndpointKey]];
+        self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
+        if([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0){
+            [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:kAppBladePlistDeviceSecretKey]];
+        }
+        [self validateProjectConfiguration];
+    }
+    else
+    {
+        [self raiseConfigurationExceptionWithFieldName:plistName];
+    }
+    
+    if([kAppBladePlistDefaultDeviceSecretValue isEqualToString:self.appBladeDeviceSecret] || [kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret])
+    {
+        NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
+    }
+}
 
 
 #pragma mark - AppBladeWebClient
@@ -318,114 +393,182 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString
 {
-    if (client.api == AppBladeWebClientAPI_Permissions)  {
-        
-        // check only once if the delegate responds to this selector
-        BOOL signalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
-        
-        // if the connection failed, see if the application is still within the previous TTL window.
-        // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
-        // prevent the app from running until the request completes successfully. This will prevent
-        // users from unlocking an app by simply changing their clock.
-        if ([self withinStoredTTL]) {
-            if(signalDelegate) {
-                [self.delegate appBlade:self applicationApproved:YES error:nil];
-            }
-            
-        }
-        else {
-            [self closeTTLWindow];
-            if(signalDelegate) {
-                NSDictionary* errorDictionary = nil;
-                NSError* error = nil;
-                if(errorString){
-                    errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                       NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                       NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-                    error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];  
 
-                }else{
-                    errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                       NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
-                                       NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
-                    error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
-                }
-                [self.delegate appBlade:self applicationApproved:NO error:error];
-            }
-            
+    if (client.api == AppBladeWebClientAPI_GenerateToken)  {
+        NSLog(@"ERROR generating token");
+        //wait for a retry or deactivate the SDK for the duration of the current install
+        if(status == kTokenInvalidStatusCode)
+        {  //the token we used to generate a new token is no longer valid
+            NSLog(@"Token refresh failed because current token had its access revoked.");
+            [AppBlade clearCacheDirectory];//all of the pending data is to be considered invlid, don't let it clutter the app.
+        }
+        else
+        {  //likely a 500 or some other timeout
+            NSLog(@"Token refresh failed due to an error from the server.");
+            //try to confirm the token that we have. If it works, we can go with that.
+            [[AppBlade  sharedManager] confirmToken]; //this call will retry itself on another server failure, and will also handle the refresh prompt once server connection is established.
         }
     }
-    else if (client.api == AppBladeWebClientAPI_Feedback) {
-        @synchronized (self){
-            NSLog(@"ERROR sending feedback");
-            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-            NSString *fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
-            BOOL isBacklog = ([[backupFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@",fileName]] count] > 0);
-            if (!isBacklog) {
-                NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-                NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-                NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-                [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
-                
-                if (!backupFiles) {
-                    backupFiles = [NSMutableArray array];
+    else if (client.api == AppBladeWebClientAPI_ConfirmToken)  {
+        NSLog(@"ERROR confirming token");
+        //schedule a token refresh or deactivate based on status
+        if(status == kTokenRefreshStatusCode)
+        {
+            [[AppBlade  sharedManager] refreshToken];
+        }
+        else if(status == kTokenInvalidStatusCode)
+        {
+            NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                               NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                               NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+            NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+            [self.delegate appBlade:self applicationApproved:NO error:error];
+        }
+        else
+        {  //likely a 500 or some other timeout
+            //if we can't confirm the token then we can't use it.
+            //Try again later.
+            double delayInSeconds = 30.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [[AppBlade  sharedManager] confirmToken];
+            });
+        }
+    }
+    else {
+        //non-token related api failures all attempt a token refresh when given a refresh status code, 
+        if(status == kTokenRefreshStatusCode)
+        {
+            [[AppBlade  sharedManager] refreshToken];
+        }
+        
+        if (client.api == AppBladeWebClientAPI_Permissions)  {
+            // check only once if the delegate responds to this selector
+            BOOL signalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
+            
+            // if the connection failed, see if the application is still within the previous TTL window.
+            // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
+            // prevent the app from running until the request completes successfully. This will prevent
+            // users from unlocking an app by simply changing their clock.
+            if ([self withinStoredTTL]) {
+                if(signalDelegate) {
+                    [self.delegate appBlade:self applicationApproved:YES error:nil];
                 }
                 
-                [backupFiles addObject:newFeedbackName];
-                
-                BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-                if(!success){
-                    NSLog(@"Error writing backup file to %@", backupFilePath);
-                }
-                self.feedbackDictionary = nil;
             }
             else {
-                [self.activeClients removeObject:client];
+                [self closeTTLWindow];
+                if(signalDelegate) {
+                    NSDictionary* errorDictionary = nil;
+                    NSError* error = nil;
+                    if(errorString){
+                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                           NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+
+                    }
+                    else
+                    {
+                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
+                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
+                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
+                    }
+                    [self.delegate appBlade:self applicationApproved:NO error:error];
+                }
+                
             }
         }
+        else if (client.api == AppBladeWebClientAPI_Feedback) {
+            @synchronized (self){
+                NSLog(@"ERROR sending feedback");
+                NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+                NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+                NSString *fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
+                BOOL isBacklog = ([[backupFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@",fileName]] count] > 0);
+                if (!isBacklog) {
+                    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+                    NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+                    NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+                    [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+                    
+                    if (!backupFiles) {
+                        backupFiles = [NSMutableArray array];
+                    }
+                    
+                    [backupFiles addObject:newFeedbackName];
+                    
+                    BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+                    if(!success){
+                        NSLog(@"Error writing backup file to %@", backupFilePath);
+                    }
+                    self.feedbackDictionary = nil;
+                }
+                else {
+                    [self.activeClients removeObject:client];
+                }
+            }
+        }
+        else if(client.api == AppBladeWebClientAPI_Sessions){
+            NSLog(@"ERROR sending sessions");
+        }
+        else if(client.api == AppBladeWebClientAPI_ReportCrash)
+        {
+            NSLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
+        }
+        else if(client.api == AppBladeWebClientAPI_UpdateCheck)
+        {
+            NSLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
+        }
+        else
+        {
+            NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
+        }
     }
-    else if(client.api == AppBladeWebClientAPI_Sessions){
-        NSLog(@"ERROR sending sessions");
-    }
-    else if(client.api == AppBladeWebClientAPI_ReportCrash)
-    {
-        NSLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
-    }
-    else if(client.api == AppBladeWebClientAPI_UpdateCheck)
-    {
-        NSLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
-    }
-    else
-    {
-        NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
-    }
-    
     [self.activeClients removeObject:client];
 }
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions andShowUpdate:(BOOL)showUpdatePrompt
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response
+{    
+    NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
+    NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
+    if(deviceSecretString != nil) {
+        NSLog(@"Updating token ");
+        [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
+        //immediately confirm we have a new token stored
+        NSLog(@"confirming new token %@", [self appBladeDeviceSecret]);
+        [self confirmToken];
+    }
+    else if(deviceSecretTimeout != nil) {
+        NSLog(@"Token confirmed. Business as usual.");
+        [self checkForExistingCrashReports];
+        [self handleBackloggedFeedback];
+    }
+    else {
+        NSLog(@"ERROR parsing response, keeping last valid token %@", self.appBladeDeviceSecret);
+    }
+    [self.activeClients removeObject:client];
+}
+
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
 {
     NSString *errorString = [permissions objectForKey:@"error"];
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
     
     if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
         [self closeTTLWindow];
-        
-        
         NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
                                          NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-        
         NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
         
-        if (signalApproval)
+        if (signalApproval) {
             [self.delegate appBlade:self applicationApproved:NO error:error];
-        
-        
+        }
     }
     else {
-        
-        NSNumber *ttl = [permissions objectForKey:@"ttl"];
+        NSNumber *ttl = [permissions objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
         if (ttl) {
             [self updateTTL:ttl];
         }
@@ -434,24 +577,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if (signalApproval) {
             [self.delegate appBlade:self applicationApproved:YES error:nil];
         }
-        
-        
-        // determine if there is an update available
-        NSDictionary* update = [permissions objectForKey:@"update"];
-        if(update && showUpdatePrompt)
-        {
-            NSString* updateMessage = [update objectForKey:@"message"];
-            NSString* updateURL = [update objectForKey:@"url"];
-            
-            if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
-                [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
-            }
-        }
     }
     
     [self.activeClients removeObject:client];
-    
-    
 }
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)updateData
@@ -486,7 +614,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
             NSLog(@"Appblade: PLCrashReporter has more crash reports");
             [self handleCrashReport];
-        }else{
+        }
+        else
+        {
             NSLog(@"Appblade: PLCrashReporter has no more crash reports");
         }
     }
@@ -530,7 +660,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             if ([self hasPendingFeedbackReports]) {
                 NSLog(@"more pending feedback");
                 [self handleBackloggedFeedback];
-            }else{
+            }
+            else
+            {
                 NSLog(@"no more pending feedback");
             }
         }
@@ -652,11 +784,15 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             if (backupFiles.count > 0) {
                 NSLog(@"found %d files at feedbackBacklogFilePath", backupFiles.count);
                 toRet = YES;
-            }else {
+            }
+            else
+            {
                 NSLog(@"found NO files at feedbackBacklogFilePath");
                 toRet = NO;
             }
-        }else{
+        }
+        else
+        {
             NSLog(@"found nothing at %@", feedbackBacklogFilePath);
             toRet = NO;
         }
@@ -896,7 +1032,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                     }
                     
                     [self.activeClients addObject:client];
-                }else{
+                }
+                else
+                {
                     //clean up files if one doesn't exist
                     [self removeIntermediateFeedbackFiles:feedbackPath];
                     NSLog(@"invalid feedback at %@, removing File and intermediate files", feedbackPath);
@@ -905,7 +1043,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                     [backupFiles writeToFile:backupFilePath atomically:YES];
 
                 }
-            }else{
+            }
+            else
+            {
                 NSLog(@"No Feedback found at %@, invalid feedback, removing File", feedbackPath);
                 [backupFiles removeObject:fileName];
                 NSLog(@"writing valid pending feedback objects back to file");
@@ -1077,7 +1217,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
         NSDictionary* currentFields = [NSDictionary dictionaryWithContentsOfFile:customFieldsPath];
         toRet = currentFields;
-    }else {
+    }
+    else
+    {
         NSLog(@"no file found, reinitializing");
         toRet = [NSDictionary dictionary];
         [self setCustomParams:toRet];
@@ -1099,10 +1241,14 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:newFieldValues format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
         if(!error){
             [paramsData writeToFile:customFieldsPath atomically:YES];
-        }else{
+        }
+        else
+        {
             NSLog(@"Error parsing custom params %@", newFieldValues);
         }
-    }else{
+    }
+    else
+    {
         NSLog(@"clearing custom params, removing file");
         [[NSFileManager defaultManager] removeItemAtPath:customFieldsPath error:nil];
     }
@@ -1116,7 +1262,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
     if(key && newObject){
         [mutableFields setObject:newObject forKey:key];
-    }else if(key && !newObject){
+    }
+    else if(key && !newObject){
         [mutableFields removeObjectForKey:key];
     }
     else
@@ -1138,7 +1285,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
     if(key && object){
         [mutableFields setObject:object forKey:key];
-    }else if(key && !object){
+    }
+    else if(key && !object){
         [mutableFields removeObjectForKey:key];
     }
     else
@@ -1160,22 +1308,22 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)closeTTLWindow
 {
-    [AppBladeSimpleKeychain delete:@"appBlade"];
+    [AppBladeSimpleKeychain delete:kAppBladeKeychainTtlKey];
 }
 
 - (void)updateTTL:(NSNumber*)ttl
 {
     NSDate* ttlDate = [NSDate date];
     NSDictionary* appBlade = [NSDictionary dictionaryWithObjectsAndKeys:ttlDate, @"ttlDate",ttl, @"ttlInterval", nil];
-    [AppBladeSimpleKeychain save:@"appBlade" data:appBlade];
+    [AppBladeSimpleKeychain save:kAppBladeKeychainTtlKey data:appBlade];
 }
 
 // determine if we are within the range of the stored TTL for this application
 - (BOOL)withinStoredTTL
 {
-    NSDictionary* appBlade = [AppBladeSimpleKeychain load:@"appBlade"];
-    NSDate* ttlDate = [appBlade objectForKey:@"ttlDate"];
-    NSNumber* ttlInterval = [appBlade objectForKey:@"ttlInterval"];
+    NSDictionary* appBlade_ttl = [AppBladeSimpleKeychain load:kAppBladeKeychainTtlKey];
+    NSDate* ttlDate = [appBlade_ttl objectForKey:@"ttlDate"];
+    NSNumber* ttlInterval = [appBlade_ttl objectForKey:@"ttlInterval"];
     
     // if we don't have either value, we're definitely not within a stored TTL
     if(nil == ttlInterval || nil == ttlDate)
@@ -1196,6 +1344,89 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return YES;
 }
 
+#pragma mark - Device Secret Methods
+-(NSDictionary*) appBladeDeviceSecrets
+{
+    NSDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
+    if(nil == appBlade_deviceSecret_dict)
+    {
+        appBlade_deviceSecret_dict = [NSDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, nil];
+    }
+    return appBlade_deviceSecret_dict;
+}
+
+
+- (void)clearEveryStoredDeviceSecret
+{
+    [AppBladeSimpleKeychain delete:kAppBladeKeychainDeviceSecretKey];
+}
+
+- (void)clearStoredDeviceSecrets
+{
+    NSDictionary* appBlade_deviceSecret = [self appBladeDeviceSecrets];
+    NSString* device_secret_newest = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyNew];
+    NSString* device_secret_oldest = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyOld];
+    if(nil != device_secret_newest && ![device_secret_newest isEqualToString:@""])
+    {
+        [appBlade_deviceSecret setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyNew];
+    }
+    else if(nil != device_secret_oldest && ![device_secret_oldest isEqualToString:@""])
+    {
+        [appBlade_deviceSecret setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyOld];
+    }
+    //else we have no stored keys, do nothing
+    //"update" stored keychain
+    [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret];
+}
+
+
+- (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret
+{
+   // NSLog(@"setAppBladeDeviceSecret %@", appBladeDeviceSecret);
+        //always store the last two device secrets
+        NSMutableDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
+        if(nil == appBlade_deviceSecret_dict)
+        {
+            appBlade_deviceSecret_dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, nil];
+        }
+    
+        NSString* device_secret_newest = [appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //get the newest key (to our knowledge)
+        if(![device_secret_newest isEqualToString:appBladeDeviceSecret]) //if we already have the "new" token as the newest token
+        {
+            [appBlade_deviceSecret_dict setObject:[device_secret_newest copy] forKey:kAppBladeKeychainDeviceSecretKeyOld]; //we don't care where the old key goes
+            [appBlade_deviceSecret_dict setObject:[appBladeDeviceSecret copy] forKey:kAppBladeKeychainDeviceSecretKeyNew];
+            //update the newest key
+        }
+        //save the stored keychain
+        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret_dict];
+    
+   // NSLog(@"to storage AppBladeDeviceSecret dictionary %@", appBlade_deviceSecret_dict);
+
+        //update reference to new value
+        _appBladeDeviceSecret = [[appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew] copy];
+   // NSLog(@"new AppBladeDeviceSecret %@", _appBladeDeviceSecret);
+}
+
+
+- (NSString *)appBladeDeviceSecret
+{
+    //NSLog(@"appBladeDeviceSecret");
+    //get the last available device secret
+    NSDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
+    NSString* device_secret_stored = [appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //assume we have the newest in new_secret key
+    //NSLog(@"from storage AppBladeDeviceSecret dictionary %@", appBlade_deviceSecret_dict);
+    //NSLog(@"newest from dictionary %@", device_secret_stored);
+
+    if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
+    {
+        device_secret_stored = [appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyOld];
+        NSLog(@"from storage invalid, falling back to %@", device_secret_stored);
+    }
+    //if we have no stored keys, returns default empty string
+   // NSLog(@"getting secret %@", device_secret_stored);
+    _appBladeDeviceSecret = device_secret_stored ;
+    return _appBladeDeviceSecret;
+}
 
 
 #pragma mark - Helper Methods
