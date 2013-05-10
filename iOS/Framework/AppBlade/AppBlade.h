@@ -106,6 +106,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
 //Path to the AppBlade cache directory. Useful for direct modificaion of stored requests.
 + (NSString*)cachesDirectoryPath;
++ (void)clearCacheDirectory;
 
 // Sets up a 3-finger double tap for reporting feedback
 - (void)allowFeedbackReporting;

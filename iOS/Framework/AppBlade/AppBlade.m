@@ -167,6 +167,21 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
 }
 
++ (void)clearCacheDirectory
+{
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *directory = [AppBlade cachesDirectoryPath];
+    NSError *error = nil;
+    for (NSString *file in [fm contentsOfDirectoryAtPath:directory error:&error]) {
+        BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
+        if (!success || error) {
+            // it failed.
+            NSLog(@"AppBlade failed to remove the caches directory after receivin invalid credentials");
+        }
+    }
+    [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory]; //reinitialize the folder
+}
+
 - (id)init {
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
@@ -386,6 +401,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if(status == kTokenInvalidStatusCode)
         {  //the token we used to generate a new token is no longer valid
             NSLog(@"Token refresh failed because current token had its access revoked.");
+            [AppBlade clearCacheDirectory];//all of the pending data is to be considered invlid, don't let it clutter the app.
         }
         else
         {  //likely a 500 or some other timeout
