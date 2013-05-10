@@ -12,6 +12,8 @@
 @class AppBladeWebClient;
 
 typedef enum {
+    AppBladeWebClientAPI_GenerateToken,
+    AppBladeWebClientAPI_ConfirmToken,
 	AppBladeWebClientAPI_Permissions,
     AppBladeWebClientAPI_ReportCrash,
     AppBladeWebClientAPI_Feedback,
@@ -22,9 +24,9 @@ typedef enum {
 
 extern NSString *defaultURLScheme;
 extern NSString *defaultAppBladeHostURL;
-extern NSString *approvalURLFormat    ;
-extern NSString *reportCrashURLFormat  ;
-extern NSString *reportFeedbackURLFormat ;
+extern NSString *approvalURLFormat;
+extern NSString *reportCrashURLFormat;
+extern NSString *reportFeedbackURLFormat;
 extern NSString *sessionURLFormat;
 
 
@@ -33,20 +35,18 @@ extern NSString *sessionURLFormat;
 @required
 
 - (NSString *)appBladeHost;
-- (NSString *)appBladeProjectID;
-- (NSString *)appBladeProjectToken;
 - (NSString *)appBladeProjectSecret;
-- (NSString *)appBladeProjectIssuedTimestamp;
+- (NSString *)appBladeDeviceSecret;
 
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString;
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions andShowUpdate:(BOOL)showUpdatePrompt;
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response;
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions;
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success;
 - (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success;
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)permissions;
-
 
 @end
 
@@ -72,16 +72,21 @@ extern NSString *sessionURLFormat;
 @property (nonatomic, readonly) AppBladeWebClientAPI api;
 @property (nonatomic, retain) NSDictionary* userInfo;
 @property (nonatomic, retain) NSDictionary* responseHeaders;
+@property (nonatomic, retain) NSMutableData* receivedData;
+
+
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
 
 + (NSString *)buildHostURL:(NSString *)customURLString;
 
 // AppBlade API.
-- (void)checkPermissions:(BOOL)andForUpdates;
+- (void)refreshToken;
+- (void)confirmToken;
+
+- (void)checkPermissions;
 - (void)checkForUpdates;
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params;
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsData;
 - (void)postSessions:(NSArray *)sessions;
-
 @end
