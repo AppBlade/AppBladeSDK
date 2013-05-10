@@ -15,7 +15,6 @@ typedef enum {
     AppBladeWebClientAPI_GenerateToken,
     AppBladeWebClientAPI_ConfirmToken,
 	AppBladeWebClientAPI_Permissions,
-    AppBladeWebClientAPI_ReportCrash,
     AppBladeWebClientAPI_Feedback,
     AppBladeWebClientAPI_Sessions,
     AppBladeWebClientAPI_UpdateCheck,
@@ -25,7 +24,6 @@ typedef enum {
 extern NSString *defaultURLScheme;
 extern NSString *defaultAppBladeHostURL;
 extern NSString *approvalURLFormat;
-extern NSString *reportCrashURLFormat;
 extern NSString *reportFeedbackURLFormat;
 extern NSString *sessionURLFormat;
 
@@ -43,7 +41,6 @@ extern NSString *sessionURLFormat;
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response;
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions;
-- (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success;
 - (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success;
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)permissions;
@@ -86,7 +83,6 @@ extern NSString *sessionURLFormat;
 
 - (void)checkPermissions;
 - (void)checkForUpdates;
-- (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params;
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsData;
 - (void)postSessions:(NSArray *)sessions;
 @end

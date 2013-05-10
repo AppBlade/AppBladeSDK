@@ -73,15 +73,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 
 
-// Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
-- (void)catchAndReportCrashes;
-
-//method to call if you want to attempt to send crash reports more often than ususal 
-- (void)checkForExistingCrashReports;
-
-
-
-//Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
+//Define special custom fields to be sent back to Appblade in your Feedback reports 
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
 -(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated("use method -(void)setCustomParam:(id)object forKey:(NSString*)keyme")));

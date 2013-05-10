@@ -9,10 +9,7 @@
 #import "AppBlade.h"
 #import "AppBladeSimpleKeychain.h"
 
-#import "PLCrashReporter.h"
-#import "PLCrashReport.h"
 #import "AppBladeWebClient.h"
-#import "PLCrashReportTextFormatter.h"
 #import "FeedbackDialogue.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
@@ -36,7 +33,6 @@ static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
 static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
-static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
 
 
@@ -85,7 +81,6 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
-- (void)handleCrashReport;
 - (void)showFeedbackDialogue;
 
 - (void)promptFeedbackDialogue;
@@ -277,83 +272,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 
-- (void)catchAndReportCrashes
-{
-    NSLog(@"Catch and report crashes");
-    [self validateProjectConfiguration];
-
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    NSError *error;
-    
-    [self checkForExistingCrashReports];
-    
-    // Enable the Crash Reporter
-    if (![crashReporter enableCrashReporterAndReturnError: &error])
-        NSLog(@"Warning: Could not enable crash reporter: %@", error);
-}
-
-- (void)checkForExistingCrashReports
-{
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    // Check if we previously crashed
-    if ([crashReporter hasPendingCrashReport]){
-        [self handleCrashReport];
-    }
-}
-
-- (void)handleCrashReport
-{
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    NSData *crashData;
-    NSError *error;
-    NSString* reportString = nil;
-    NSString *queuedFilePath = nil;
-    // Try loading the crash report from the live file
-    crashData = [crashReporter loadPendingCrashReportDataAndReturnError: &error];
-    if (crashData != nil) {
-        PLCrashReport *report = [[[PLCrashReport alloc] initWithData: crashData error: &error] autorelease];
-        if (report != nil) {
-            reportString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat: PLCrashReportTextFormatiOS];
-//            NSLog(@"Formatting crash report with PLCrashReportTextFormatter %@", reportString);
-            //send pending crash report to a unique file name in the the queue
-            queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
-            if(queuedFilePath == nil){
-                NSLog(@"error saving crash report");
-            }
-            else
-            {
-                NSLog(@"moved crash report to %@", queuedFilePath);
-            }
-        }
-        else
-        {
-            NSLog(@"Could not parse crash report");
-        }
-    }
-    else
-    {
-        NSLog(@"Could not load a crash report from live file");
-    }
-    [crashReporter purgePendingCrashReport]; //remove crash report from immediate file, we have it in the queue now
-
-    if(queuedFilePath == nil){
-        //we had no immediate crash, or an invalid save, grab any stored crash report
-        queuedFilePath = [crashReporter getNextCrashReportPath];
-        reportString = [NSString stringWithContentsOfFile:queuedFilePath encoding:NSUTF8StringEncoding error:&error];
-    }
-    
-    if(queuedFilePath != nil){
-        AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-        [self.activeClients addObject:client];
-        client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:queuedFilePath,  kAppBladeCrashReportKeyFilePath, nil];
-        [client reportCrash:reportString withParams:[self getCustomParams]];
-    }
-    else
-    {
-        NSLog(@"No crashes to report");
-    }
-}
-
 - (void)registerWithAppBladePlist
 {
     [self registerWithAppBladePlist:@"AppBladeKeys"];
@@ -514,10 +432,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         else if(client.api == AppBladeWebClientAPI_Sessions){
             NSLog(@"ERROR sending sessions");
         }
-        else if(client.api == AppBladeWebClientAPI_ReportCrash)
-        {
-            NSLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
-        }
         else if(client.api == AppBladeWebClientAPI_UpdateCheck)
         {
             NSLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
@@ -543,7 +457,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
     else if(deviceSecretTimeout != nil) {
         NSLog(@"Token confirmed. Business as usual.");
-        [self checkForExistingCrashReports];
         [self handleBackloggedFeedback];
     }
     else {
@@ -599,34 +512,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self.activeClients removeObject:client];
 }
 
-- (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
-{
-    // purge the crash report that was just reported.
-    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
-    BOOL success = (status == 201 || status == 200);
-    if(success){ //we don't need to hold onto this crash.
-        NSLog(@"Appblade: success sending crash report, response status code: %d", status);
-        [[PLCrashReporter sharedReporter] purgePendingCrashReport];
-        NSString *pathOfCrashReport = [client.userInfo valueForKey:kAppBladeCrashReportKeyFilePath];
-        [[NSFileManager defaultManager] removeItemAtPath:pathOfCrashReport error:nil];
-        NSLog(@"Appblade: removed crash report, %@", pathOfCrashReport);
-
-        if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
-            NSLog(@"Appblade: PLCrashReporter has more crash reports");
-            [self handleCrashReport];
-        }
-        else
-        {
-            NSLog(@"Appblade: PLCrashReporter has no more crash reports");
-        }
-    }
-    else
-    {
-        NSLog(@"Appblade: error sending crash report, response status code: %d", status);
-        //No more crash reports for now. We might have bad internet access.
-    }
-    [self.activeClients removeObject:client];
-}
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success
 {
