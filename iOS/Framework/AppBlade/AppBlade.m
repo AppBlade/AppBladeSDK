@@ -83,7 +83,6 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 @property (nonatomic, retain) NSMutableSet* activeClients;
 
-- (void)setAppBladeDisabled:(BOOL)disabled;
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)handleCrashReport;
@@ -191,21 +190,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
 }
 
-- (BOOL)appBladeDisabled
-{
-    NSString* disabledVal = [AppBladeSimpleKeychain load:kAppBladeKeychainDisabledKey];
-    if(nil == disabledVal) {
-        disabledVal = kAppBladeKeychainDisabledKeyFalse; //Not Disabled by default
-        [self setAppBladeDisabled:disabledVal];
-    }
-    return [kAppBladeKeychainDisabledKeyTrue isEqualToString:disabledVal];
-}
-
-- (void)setAppBladeDisabled:(BOOL)disabled
-{
-    [AppBladeSimpleKeychain save:kAppBladeKeychainDisabledKey data:( disabled ? kAppBladeKeychainDisabledKeyTrue : kAppBladeKeychainDisabledKeyFalse )];
-}
-
 
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
@@ -236,7 +220,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 #pragma mark API CALLS
 
-//Not that these aren't blocked by the appBladeDisabled check. It gives us the ability to redeem the device.
+//Eventually these will help enable/disable our appBladeDisabled value. It gives us the ability to condemn/redeem the device.
 - (void)refreshToken
 {
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
@@ -270,10 +254,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)checkForUpdates
 {
-    if([self appBladeDisabled])
-    {
-        return;
-    }
     [self validateProjectConfiguration];
     NSLog(@"Checking for updates");
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
@@ -284,11 +264,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)catchAndReportCrashes
 {
-    if([self appBladeDisabled])
-    {
-        return;
-    }
-
     NSLog(@"Catch and report crashes");
     [self validateProjectConfiguration];
 
@@ -304,10 +279,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)checkForExistingCrashReports
 {
-    if([self appBladeDisabled])
-    {
-        return;
-    }
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     // Check if we previously crashed
     if ([crashReporter hasPendingCrashReport]){
@@ -395,7 +366,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     if([kAppBladePlistDefaultDeviceSecretValue isEqualToString:self.appBladeDeviceSecret] || [kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret])
     {
         NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
-        [self setAppBladeDisabled:YES];
     }
 }
 
@@ -416,7 +386,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if(status == kTokenInvalidStatusCode)
         {  //the token we used to generate a new token is no longer valid
             NSLog(@"Token refresh failed because current token had its access revoked.");
-            [self setAppBladeDisabled:YES];
         }
         else
         {  //likely a 500 or some other timeout
@@ -430,12 +399,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         //schedule a token refresh or deactivate based on status
         if(status == kTokenRefreshStatusCode)
         {
-            [self setAppBladeDisabled:NO];
             [[AppBlade  sharedManager] refreshToken];
         }
         else if(status == kTokenInvalidStatusCode)
         {
-            [self setAppBladeDisabled:YES];
             NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                                NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
                                NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
@@ -446,7 +413,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         {  //likely a 500 or some other timeout
             //if we can't confirm the token then we can't use it.
             //Try again later.
-            [self setAppBladeDisabled:NO];
             double delayInSeconds = 30.0;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -549,8 +515,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response
-{
-    
+{    
     NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
     NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
     if(deviceSecretString != nil) {
@@ -836,11 +801,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window
 {
-    if([self appBladeDisabled])
-    {
-        return;
-    }
-
     self.window = window;
     self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] autorelease];
     self.tapRecognizer.numberOfTapsRequired = 2;
@@ -871,11 +831,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window
 {
-    if([self appBladeDisabled])
-    {
-        return;
-    }
-
     if (window) {
         NSLog(@"Allowing custom feedback for window %@", window);
         self.window = window;
@@ -898,11 +853,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)showFeedbackDialogue:(BOOL)withScreenshot
 {
-    if([self appBladeDisabled])
-    {
-        return;
-    }
-
     if(!self.showingFeedbackDialogue){
         self.showingFeedbackDialogue = YES;
         if(self.feedbackDictionary == nil){
@@ -1202,11 +1152,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)logSessionStart
 {
-    if([self appBladeDisabled])
-    {
-        return;
-    }
-
     if(self.activeClients == nil){
         self.activeClients = [NSMutableSet set];
     }
@@ -1230,11 +1175,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)logSessionEnd
 {
-    if([self appBladeDisabled])
-    {
-        return;
-    }
-
     NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
     
     NSMutableArray* pastSessions = nil;
