@@ -17,6 +17,8 @@
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
 
+#include "FileMD5Hash.h"
+
 static NSString* const s_sdkVersion                     = @"0.4.0";
 
 NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
@@ -49,6 +51,8 @@ static NSString* const kAppBladeKeychainTtlKey          = @"appBlade_ttl";
 static NSString* const kAppBladeKeychainDeviceSecretKey = @"appBlade_device_secret";
     static NSString* const kAppBladeKeychainDeviceSecretKeyOld = @"old_secret";
     static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
+    static NSString* const kAppBladeKeychainPlistHash = @"plist_hash";
+
 
 static NSString* const kAppBladeKeychainDisabledKey        = @"appBlade_disabled";
 static NSString* const kAppBladeKeychainDisabledKeyTrue    = @"riydwfudfhijkfsy7rew78toryiwehj";
@@ -366,10 +370,20 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     if(appbladeVariables != nil)
     {
         NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
+        
+        NSString * md5 = [self hashFileOfPlist:plistPath];
+        NSDictionary* appBlade_deviceSecret_dict = [self appBladeDeviceSecrets];
+        NSString* appBlade_plist_hash = (NSString *)[appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainPlistHash];
+        if(![appBlade_plist_hash isEqualToString:md5]){ //our hashes don't match!
+            [self clearStoredDeviceSecrets]; //we have to check our device secrets, it's the only way
+        }
+        
         self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:kAppBladePlistEndpointKey]];
         self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
         if([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0){
             [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:kAppBladePlistDeviceSecretKey]];
+            [appBlade_deviceSecret_dict setValue:md5 forKey:kAppBladeKeychainPlistHash];
+            [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret_dict]; //update our md5 as well. We JUST updated.
         }
         [self validateProjectConfiguration];
     }
@@ -378,10 +392,24 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         [self raiseConfigurationExceptionWithFieldName:plistName];
     }
     
-    if([kAppBladePlistDefaultDeviceSecretValue isEqualToString:self.appBladeDeviceSecret] || [kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret])
+    if([kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret])
     {
         NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
     }
+}
+
+
+- (NSString*)hashFileOfPlist:(NSString *)filePath
+{
+    NSString* returnString = nil;
+    CFStringRef executableFileMD5Hash =
+    FileMD5HashCreateWithPath((CFStringRef)filePath, FileHashDefaultChunkSizeForReadingData);
+    if (executableFileMD5Hash) {
+        returnString = [(NSString *)executableFileMD5Hash retain];
+        CFRelease(executableFileMD5Hash);
+    }
+    
+    return [returnString autorelease];
 }
 
 
@@ -1350,7 +1378,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
     if(nil == appBlade_deviceSecret_dict)
     {
-        appBlade_deviceSecret_dict = [NSDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, nil];
+        appBlade_deviceSecret_dict = [NSDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHash, nil];
     }
     return appBlade_deviceSecret_dict;
 }
