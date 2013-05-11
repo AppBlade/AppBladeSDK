@@ -21,10 +21,7 @@
 {
 		// Populate with values from the project SDK settings
 		// see README for details
-    [[AppBlade sharedManager] setAppBladeProjectID:@""];  //UUID
-    [[AppBlade sharedManager] setAppBladeProjectToken:@""]; //Token
-    [[AppBlade sharedManager] setAppBladeProjectSecret:@""]; //Secret
-    [[AppBlade sharedManager] setAppBladeProjectIssuedTimestamp:@""]; //Issued at
+    [[AppBlade sharedManager] registerWithAppBladePlist]; //Secret
 
     
     // See AppBladeKeys.plist for the format in which to send your keys.
