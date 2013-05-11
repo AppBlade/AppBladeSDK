@@ -1406,16 +1406,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (NSString *)appBladeDeviceSecret
 {
     //get the last available device secret
-
     NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
- //   NSLog(@"reloaded thorugh the getter %@.", appBlade_keychain_dict);
     NSString* device_secret_stored = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyNew]; //assume we have the newest in new_secret key
     NSString* device_secret_stored_old = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyOld];
-//    NSLog(@"device_secret_stored %@.", device_secret_stored);
-//    NSLog(@"device_secret_stored_old %@.", device_secret_stored_old);
     if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
     {
-//        NSLog(@"Device Secret from storage:%@, falling back to old value:%@.", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
+        NSLog(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
         _appBladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
     }else
     {
@@ -1433,23 +1429,14 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         //always store the last two device secrets
         NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
         NSString* device_secret_latest_stored = [appBlade_keychain_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //get the newest key (to our knowledge)
- //   NSLog(@"setAppBladeDeviceSecret %@.", appBladeDeviceSecret);
- //   NSLog(@"device_secret_latest_stored %@.", device_secret_latest_stored);
-    
         if(![device_secret_latest_stored isEqualToString:appBladeDeviceSecret]) //if we don't already have the "new" token as the newest token
         {
-//            NSLog(@"updating %@.", appBlade_keychain_dict);
-
             [appBlade_keychain_dict setObject:[device_secret_latest_stored copy] forKey:kAppBladeKeychainDeviceSecretKeyOld]; //we don't care where the old key goes
             [appBlade_keychain_dict setObject:[appBladeDeviceSecret copy] forKey:kAppBladeKeychainDeviceSecretKeyNew];
-            
-  //          NSLog(@"updated %@.", appBlade_keychain_dict);
                 //update the newest key
         }
         //save the stored keychain
         [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
-    NSLog(@"reloaded from the the stored dict %@. length %d", [[self appBladeDeviceSecrets] objectForKey:kAppBladeKeychainDeviceSecretKeyNew], [[[self appBladeDeviceSecrets] objectForKey:kAppBladeKeychainDeviceSecretKeyNew] length] );
-    NSLog(@"reloaded from the the getter %@. length %d", [self appBladeDeviceSecret], [[self appBladeDeviceSecret] length] );
 
 }
 
@@ -1458,7 +1445,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 - (void)clearAppBladeKeychain
 {
     NSMutableDictionary* appBlade_keychain_dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];
-    NSLog(@"Saved over our keychain with blank values : %@", appBlade_keychain_dict);
     [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
 }
 
