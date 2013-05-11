@@ -14,6 +14,8 @@
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
 
+#include "FileMD5Hash.h"
+
 static NSString* const s_sdkVersion                     = @"0.4.0";
 
 NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
@@ -45,6 +47,8 @@ static NSString* const kAppBladeKeychainTtlKey          = @"appBlade_ttl";
 static NSString* const kAppBladeKeychainDeviceSecretKey = @"appBlade_device_secret";
     static NSString* const kAppBladeKeychainDeviceSecretKeyOld = @"old_secret";
     static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
+    static NSString* const kAppBladeKeychainPlistHashKey = @"plist_hash";
+
 
 static NSString* const kAppBladeKeychainDisabledKey        = @"appBlade_disabled";
 static NSString* const kAppBladeKeychainDisabledKeyTrue    = @"riydwfudfhijkfsy7rew78toryiwehj";
@@ -102,6 +106,9 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 - (void)validateProjectConfiguration;
 //- (void)refreshToken;
 //- (void)confirmToken;
+
+- (NSString*)hashFileOfPlist:(NSString *)filePath;
+
 
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
@@ -171,7 +178,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
         if (!success || error) {
             // it failed.
-            NSLog(@"AppBlade failed to remove the caches directory after receivin invalid credentials");
+            NSLog(@"AppBlade failed to remove the caches directory after receiving invalid credentials");
         }
     }
     [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory]; //reinitialize the folder
@@ -188,12 +195,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)validateProjectConfiguration
 {
+    NSLog(@"validateProjectConfiguration %@ " , [self appBladeDeviceSecret]);
     //All the necessary plist vairables must be included
-    if (!self.appBladeProjectSecret || self.appBladeProjectSecret.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project Secret"];
-    }
-    else if (!self.appBladeDeviceSecret || self.appBladeDeviceSecret.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Device Secret"];
+    if ([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0) {
+        if (self.appBladeProjectSecret == nil || self.appBladeProjectSecret.length == 0) {
+            [self raiseConfigurationExceptionWithFieldName:@"Project Secret OR Device Secret"];
+        }
     }
     else if (!self.appBladeHost || self.appBladeHost.length == 0) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Host"];
@@ -283,11 +290,35 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     if(appbladeVariables != nil)
     {
-        NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
-        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:kAppBladePlistEndpointKey]];
-        self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
-        if([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0){
-            [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:kAppBladePlistDeviceSecretKey]];
+        NSDictionary* appBladePlistStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
+        NSMutableDictionary* appBladeKeychainKeys = [self appBladeDeviceSecrets]; //keychain persists across updates, we need to be careful
+        
+        NSString * md5 = [self hashFileOfPlist:plistPath];
+        NSString* appBlade_plist_hash = (NSString *)[appBladeKeychainKeys objectForKey:kAppBladeKeychainPlistHashKey];
+        if(![appBlade_plist_hash isEqualToString:md5]){ //our hashes don't match!
+            NSLog(@"Our hashes don't match!");
+            [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
+        }
+//        NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
+//        NSLog(@"AppBlade Plist Hash in Bundle %@",appBlade_plist_hash);
+//        NSLog(@"AppBlade Hash stored in keychain (if any) %@", md5);
+        
+        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
+        self.appBladeProjectSecret = [appBladePlistStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
+        if(self.appBladeProjectSecret == nil)
+        {
+            self.appBladeProjectSecret = @"";
+        }
+        
+        NSString *storedDeviceSecret = [self appBladeDeviceSecret];
+        if(storedDeviceSecret == nil || [storedDeviceSecret length] == 0){
+            NSString * storedDeviceSecret = (NSString *)[appBladePlistStoredKeys objectForKey:kAppBladePlistDeviceSecretKey];
+            NSLog(@"Our device secret being set from plist:%@.", storedDeviceSecret);
+            [self setAppBladeDeviceSecret:storedDeviceSecret];
+            appBladeKeychainKeys = [self appBladeDeviceSecrets];
+            [appBladeKeychainKeys setValue:md5 forKey:kAppBladeKeychainPlistHashKey];
+            [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBladeKeychainKeys]; //update our md5 as well. We JUST updated.
+            NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
         }
         [self validateProjectConfiguration];
     }
@@ -296,10 +327,24 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         [self raiseConfigurationExceptionWithFieldName:plistName];
     }
     
-    if([kAppBladePlistDefaultDeviceSecretValue isEqualToString:self.appBladeDeviceSecret] || [kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret])
+    if([kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret] || self.appBladeProjectSecret == nil || [self.appBladeProjectSecret  length] == 0)
     {
         NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
     }
+}
+
+
+- (NSString*)hashFileOfPlist:(NSString *)filePath
+{
+    NSString* returnString = nil;
+    CFStringRef executableFileMD5Hash =
+    FileMD5HashCreateWithPath((CFStringRef)filePath, FileHashDefaultChunkSizeForReadingData);
+    if (executableFileMD5Hash) {
+        returnString = [(NSString *)executableFileMD5Hash retain];
+        CFRelease(executableFileMD5Hash);
+    }
+    
+    return [returnString autorelease];
 }
 
 
@@ -1230,87 +1275,74 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 #pragma mark - Device Secret Methods
--(NSDictionary*) appBladeDeviceSecrets
+-(NSMutableDictionary*) appBladeDeviceSecrets
 {
-    NSDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
+    NSMutableDictionary* appBlade_deviceSecret_dict = (NSMutableDictionary* )[AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
     if(nil == appBlade_deviceSecret_dict)
     {
-        appBlade_deviceSecret_dict = [NSDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, nil];
+        appBlade_deviceSecret_dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];
+        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret_dict];
+        NSLog(@"Device Secrets were nil. Reinitialized.");
     }
     return appBlade_deviceSecret_dict;
 }
 
 
-- (void)clearEveryStoredDeviceSecret
+- (NSString *)appBladeDeviceSecret
 {
-    [AppBladeSimpleKeychain delete:kAppBladeKeychainDeviceSecretKey];
+    //get the last available device secret
+    NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
+    NSString* device_secret_stored = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyNew]; //assume we have the newest in new_secret key
+    NSString* device_secret_stored_old = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyOld];
+    if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
+    {
+        NSLog(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
+        _appBladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
+    }else
+    {
+        _appBladeDeviceSecret = (NSString*)[device_secret_stored copy];
+    }
+    
+    return _appBladeDeviceSecret;
 }
 
-- (void)clearStoredDeviceSecrets
-{
-    NSDictionary* appBlade_deviceSecret = [self appBladeDeviceSecrets];
-    NSString* device_secret_newest = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyNew];
-    NSString* device_secret_oldest = [appBlade_deviceSecret objectForKey:kAppBladeKeychainDeviceSecretKeyOld];
-    if(nil != device_secret_newest && ![device_secret_newest isEqualToString:@""])
-    {
-        [appBlade_deviceSecret setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyNew];
-    }
-    else if(nil != device_secret_oldest && ![device_secret_oldest isEqualToString:@""])
-    {
-        [appBlade_deviceSecret setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyOld];
-    }
-    //else we have no stored keys, do nothing
-    //"update" stored keychain
-    [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret];
-}
+
 
 
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret
 {
-   // NSLog(@"setAppBladeDeviceSecret %@", appBladeDeviceSecret);
         //always store the last two device secrets
-        NSMutableDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
-        if(nil == appBlade_deviceSecret_dict)
+        NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
+        NSString* device_secret_latest_stored = [appBlade_keychain_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //get the newest key (to our knowledge)
+        if(![device_secret_latest_stored isEqualToString:appBladeDeviceSecret]) //if we don't already have the "new" token as the newest token
         {
-            appBlade_deviceSecret_dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, nil];
-        }
-    
-        NSString* device_secret_newest = [appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //get the newest key (to our knowledge)
-        if(![device_secret_newest isEqualToString:appBladeDeviceSecret]) //if we already have the "new" token as the newest token
-        {
-            [appBlade_deviceSecret_dict setObject:[device_secret_newest copy] forKey:kAppBladeKeychainDeviceSecretKeyOld]; //we don't care where the old key goes
-            [appBlade_deviceSecret_dict setObject:[appBladeDeviceSecret copy] forKey:kAppBladeKeychainDeviceSecretKeyNew];
-            //update the newest key
+            [appBlade_keychain_dict setObject:[device_secret_latest_stored copy] forKey:kAppBladeKeychainDeviceSecretKeyOld]; //we don't care where the old key goes
+            [appBlade_keychain_dict setObject:[appBladeDeviceSecret copy] forKey:kAppBladeKeychainDeviceSecretKeyNew];
+                //update the newest key
         }
         //save the stored keychain
-        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret_dict];
-    
-   // NSLog(@"to storage AppBladeDeviceSecret dictionary %@", appBlade_deviceSecret_dict);
+        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
 
-        //update reference to new value
-        _appBladeDeviceSecret = [[appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew] copy];
-   // NSLog(@"new AppBladeDeviceSecret %@", _appBladeDeviceSecret);
 }
 
 
-- (NSString *)appBladeDeviceSecret
-{
-    //NSLog(@"appBladeDeviceSecret");
-    //get the last available device secret
-    NSDictionary* appBlade_deviceSecret_dict = [AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
-    NSString* device_secret_stored = [appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //assume we have the newest in new_secret key
-    //NSLog(@"from storage AppBladeDeviceSecret dictionary %@", appBlade_deviceSecret_dict);
-    //NSLog(@"newest from dictionary %@", device_secret_stored);
 
-    if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
+- (void)clearAppBladeKeychain
+{
+    NSMutableDictionary* appBlade_keychain_dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];
+    [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
+}
+
+- (void)clearStoredDeviceSecrets
+{
+    NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
+    if(nil != appBlade_keychain_dict)
     {
-        device_secret_stored = [appBlade_deviceSecret_dict objectForKey:kAppBladeKeychainDeviceSecretKeyOld];
-        NSLog(@"from storage invalid, falling back to %@", device_secret_stored);
+        [appBlade_keychain_dict setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyNew];
+        [appBlade_keychain_dict setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyOld];
+        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
+        NSLog(@"Cleared device secrets.");
     }
-    //if we have no stored keys, returns default empty string
-   // NSLog(@"getting secret %@", device_secret_stored);
-    _appBladeDeviceSecret = device_secret_stored ;
-    return _appBladeDeviceSecret;
 }
 
 
