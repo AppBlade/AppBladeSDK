@@ -1317,7 +1317,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if(![device_secret_latest_stored isEqualToString:appBladeDeviceSecret]) //if we don't already have the "new" token as the newest token
         {
             [appBlade_keychain_dict setObject:[device_secret_latest_stored copy] forKey:kAppBladeKeychainDeviceSecretKeyOld]; //we don't care where the old key goes
-            [appBlade_keychain_dict setObject:[appBladeDeviceSecret copy] forKey:kAppBladeKeychainDeviceSecretKeyNew];
+            [appBlade_keychain_dict setObject:appBladeDeviceSecret forKey:kAppBladeKeychainDeviceSecretKeyNew];
                 //update the newest key
         }
         //save the stored keychain
