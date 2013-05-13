@@ -529,27 +529,25 @@ static BOOL is_encrypted () {
     // set up various headers on the request.
     [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"X-bundle-identifier"];
     [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"X-bundle-version"];
-    
-    [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"X-IOS-RELEASE"];
+    [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"X-ios-release"];
 
-    [apiRequest addValue:[self platform] forHTTPHeaderField:@"X-DEVICE-MODEL"];
-    [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"X-MONIKER"];
+    [apiRequest addValue:[self platform] forHTTPHeaderField:@"X-device-model"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"X-sdk-version"];
-    
-
     [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"X-project-secret"];
     [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"X-device-secret"];
 
-    if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
-        [apiRequest addValue:[[[UIDevice currentDevice] identifierForVendor] UUIDString] forHTTPHeaderField:@"X-device-fingerprint"];
-    }
-    
     [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"X-executable-UUID"];
-    [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"X-bundleexecutable-hash"];
-    [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"X-infoplist-hash"];
+    [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"X-bundle-executable-hash"];
+    [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"X-info-plist-hash"];
     
     BOOL hasFairplay = is_encrypted();
     [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"X-fairplay-encrypted"];
+    if(!hasFairplay){
+        [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"X-moniker"];
+    }
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
+        [apiRequest addValue:[[[UIDevice currentDevice] identifierForVendor] UUIDString] forHTTPHeaderField:@"X-device-vendor-udid"];
+    }
     
     [_request release];
     _request = [apiRequest retain];
