@@ -527,25 +527,26 @@ static BOOL is_encrypted () {
     NSMutableURLRequest* apiRequest = [[[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10] autorelease];
     
     // set up various headers on the request.
-    [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"bundle_identifier"];
-    [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
+    [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"X-bundle-identifier"];
+    [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"X-bundle-version"];
     
-    [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"IOS_RELEASE"];
+    [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"X-IOS-RELEASE"];
 
-    [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
-    [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
-    [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
+    [apiRequest addValue:[self platform] forHTTPHeaderField:@"X-DEVICE-MODEL"];
+    [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"X-MONIKER"];
+    [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"X-sdk-version"];
     
 
-    [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"project_secret"];
-    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"device_secret"];
+    [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"X-project-secret"];
+    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"X-device-secret"];
+
     
-    [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"executable_UUID"];
-    [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"bundleexecutable_hash"];
-    [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"infoplist_hash"];
+    [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"X-executable-UUID"];
+    [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"X-bundleexecutable-hash"];
+    [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"X-infoplist-hash"];
     
     BOOL hasFairplay = is_encrypted();
-    [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"fairplay_encrypted"];
+    [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"X-fairplay-encrypted"];
     
     [_request release];
     _request = [apiRequest retain];
