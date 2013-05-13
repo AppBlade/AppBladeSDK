@@ -76,7 +76,7 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
-  //  [AppBlade endSession];
+    [AppBlade endSession];
 }
 
 
