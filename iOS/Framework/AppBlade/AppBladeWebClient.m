@@ -540,6 +540,9 @@ static BOOL is_encrypted () {
     [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"X-project-secret"];
     [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"X-device-secret"];
 
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
+        [apiRequest addValue:[[[UIDevice currentDevice] identifierForVendor] UUIDString] forHTTPHeaderField:@"X-device-fingerprint"];
+    }
     
     [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"X-executable-UUID"];
     [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"X-bundleexecutable-hash"];
