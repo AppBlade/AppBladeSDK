@@ -83,7 +83,7 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 @property (nonatomic, retain) NSMutableSet* activeClients;
 
-
+- (void)validateProjectConfiguration;
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)checkAndCreateAppBladeCacheDirectory;
 
@@ -94,6 +94,7 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 - (void)reportFeedback:(NSString*)feedback;
 - (NSString*)captureScreen;
 - (UIImage*)getContentBelowView;
+- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 
 - (NSString*)randomString:(int)length;
 
@@ -102,17 +103,15 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 //hasPendingCrashReport in PLCrashReporter
 - (BOOL)hasPendingFeedbackReports;
 - (void)handleBackloggedFeedback;
+- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
 
 - (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType;
 - (BOOL)isRefreshProcessHappening;
+- (BOOL)isCurrentToken:(NSString *)token;
 
-- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
-
-- (void)validateProjectConfiguration;
 //- (void)refreshToken;
 //- (void)confirmToken;
 
-- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @end
 
@@ -1496,8 +1495,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return amtToReturn;
 }
 
-- (BOOL)isRefreshProcessHappening{
+- (BOOL)isRefreshProcessHappening {
     return ([self activeClientsOfType:AppBladeWebClientAPI_GenerateToken] + [self activeClientsOfType:AppBladeWebClientAPI_ConfirmToken]) != 0;
+}
+
+- (BOOL)isCurrentToken:(NSString *)token {
+    return (nil != token) && (token.length != 0) && [[self appBladeDeviceSecret] isEqualToString:token];
 }
 
 
