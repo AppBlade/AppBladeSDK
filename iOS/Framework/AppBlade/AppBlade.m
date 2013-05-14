@@ -39,7 +39,6 @@ static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
 
-
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
 
 static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
@@ -110,9 +109,6 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 - (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType;
 - (BOOL)isRefreshProcessHappening;
 - (BOOL)isCurrentToken:(NSString *)token;
-
-//- (void)refreshToken;
-//- (void)confirmToken;
 
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @end
@@ -275,18 +271,49 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 #pragma mark API CALLS
 
+
 //Eventually these will help enable/disable our appBladeDisabled value. It gives us the ability to condemn/redeem the device.
-- (void)refreshToken
+
+- (void)refreshToken:(NSString *)tokenIsCurrent
 {
+    //ensure no other requests or confirms are already running.
+    if([self isRefreshProcessHappening]) {
+        NSLog(@"Refresh already in queue. Ignoring.");
+        return;
+    }else if (tokenIsCurrent != nil && ![self isCurrentToken:tokenIsCurrent]){
+        NSLog(@"Token not current, refresh token request is out of sync. Ignoring.");
+        return;
+    }
+    
+    //HOLD EVERYTHING. bubble the request to the top.
+    [self pauseCurrentPendingRequests];
+    self.pendingRequests.maxConcurrentOperationCount = 1;
+    
+    
+    self.pendingRequests.maxConcurrentOperationCount = 1;
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [self.activeClients addObject:client];
+    [self syncAddClient:client];
     [client refreshToken];
 }
 
-- (void)confirmToken
+- (void)confirmToken:(NSString *)tokenIsCurrent
 {
+    //ensure no other requests or confirms are already running.
+    if([self isRefreshProcessHappening]) {
+        NSLog(@"Confirm already in queue. Ignoring.");
+        return;
+    }else if (tokenIsCurrent != nil && ![self isCurrentToken:tokenIsCurrent]){
+        NSLog(@"Token not current, confirm token request is out of sync. Ignoring.");
+        return;
+    }
+    
+    //HOLD EVERYTHING. bubble the request to the top.
+    [self pauseCurrentPendingRequests];
+    self.pendingRequests.maxConcurrentOperationCount = 1;
+    
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [self.activeClients addObject:client];
+    [self syncAddClient:client];
+    [self.pendingRequests addOperation:client];
     [client confirmToken];
 }
 
