@@ -194,6 +194,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     return self;
 }
 
+
 - (void)validateProjectConfiguration
 {
     //All the necessary plist vairables must be included
@@ -207,8 +208,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         [self raiseConfigurationExceptionWithFieldName:@"Project Host"];
     }
 }
-
-
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
 {
@@ -233,6 +232,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [_sessionStartDate release];
 
     [_activeClients release];
+    [_pendingRequests release];
+    
     [super dealloc];
 }
 
@@ -266,6 +267,42 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     {
         NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
     }
+}
+
+
+#pragma mark Pending Requests Queue 
+
+-(NSOperationQueue *) pendingRequests {
+    if(!_pendingRequests){
+        _pendingRequests = [[NSOperationQueue alloc] init];
+        _pendingRequests.name = @"AppBlade API Queue";
+        _pendingRequests.maxConcurrentOperationCount = 1;
+    }
+    return _pendingRequests;
+}
+
+-(void) pauseCurrentPendingRequests {
+    [[self pendingRequests] setSuspended:YES];
+}
+
+-(void) resumeCurrentPendingRequests {
+    [[self pendingRequests] setSuspended:NO];
+}
+
+-(void) cancelCurrentPendingRequests {
+    [[self pendingRequests] cancelAllOperations];
+}
+
+
+-(void)syncAddClient:(NSOperation *)client
+{
+    [self.activeClients addObject:client];
+    [self.pendingRequests addOperation:client];
+}
+
+-(void)syncRemoveClient:(NSOperation *)client
+{
+    [self.activeClients removeObject:client];
 }
 
 

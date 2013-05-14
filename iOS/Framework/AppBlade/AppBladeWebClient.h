@@ -29,6 +29,8 @@ extern NSString *reportCrashURLFormat;
 extern NSString *reportFeedbackURLFormat;
 extern NSString *sessionURLFormat;
 
+extern NSString *deviceSecretHeaderField;
+
 
 @protocol AppBladeWebClientDelegate <NSObject>
 
@@ -50,7 +52,7 @@ extern NSString *sessionURLFormat;
 
 @end
 
-@interface AppBladeWebClient : NSObject {    
+@interface AppBladeWebClient : NSOperation {
 
 @private
 
@@ -74,7 +76,7 @@ extern NSString *sessionURLFormat;
 @property (nonatomic, retain) NSDictionary* responseHeaders;
 @property (nonatomic, retain) NSMutableData* receivedData;
 
-
+@property (nonatomic, retain) NSString* sentDeviceSecret;
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
 

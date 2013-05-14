@@ -30,6 +30,9 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
 NSString *updateURLFormat            = @"%@/api/3/updates";
 
+NSString *deviceSecretHeaderField    = @"device_secret";
+
+
 
 @interface AppBladeWebClient ()
 
@@ -83,6 +86,7 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 @synthesize executableUUID = _executableUUID;
 @synthesize receivedData = _receivedData;
 
+@synthesize sentDeviceSecret = _sentDeviceSecret;
 
 @synthesize activeConnection = _activeConnection;
 
@@ -175,6 +179,13 @@ static BOOL is_encrypted () {
     return _platform;
 }
 
+-(NSString *)sentDeviceSecret {
+    if(_request){
+        _sentDeviceSecret = [_request valueForHTTPHeaderField:deviceSecretHeaderField];
+    }
+    return _sentDeviceSecret;
+}
+
 #pragma mark - Lifecycle
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate
@@ -188,6 +199,7 @@ static BOOL is_encrypted () {
 
 - (void)dealloc
 {
+    [_sentDeviceSecret release];
     [_request release];
     [_receivedData release];
     [_responseHeaders release];
@@ -251,7 +263,7 @@ static BOOL is_encrypted () {
     }
 }
 
-- (void)confirmToken
+- (void)confirmToken:(NSString *)tokenToConfirm
 {
     NSLog(@"confirming token (client)");
     [self setApi: AppBladeWebClientAPI_ConfirmToken];
@@ -265,8 +277,10 @@ static BOOL is_encrypted () {
     {
         NSString *storedSecret = [[AppBlade sharedManager] appBladeDeviceSecret];
         NSLog(@"storedSecret %@", storedSecret);
+        NSLog(@"tokenToConfirm %@", tokenToConfirm);
+        
 
-        if(nil != storedSecret && ![storedSecret isEqualToString:@""]){
+        if(nil != tokenToConfirm && ![tokenToConfirm isEqualToString:@""]){
             // Create the request.
             NSString* urlString = [NSString stringWithFormat:tokenConfirmURLFormat, [self.delegate appBladeHost]];
             NSURL* projectUrl = [NSURL URLWithString:urlString];
@@ -538,7 +552,7 @@ static BOOL is_encrypted () {
     
 
     [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"project_secret"];
-    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"device_secret"];
+    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:deviceSecretHeaderField]; //@"device_secret"
     
     [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"executable_UUID"];
     [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"bundleexecutable_hash"];
