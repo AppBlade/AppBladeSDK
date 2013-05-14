@@ -82,6 +82,8 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 @property (nonatomic, retain) NSDate *sessionStartDate;
 
 @property (nonatomic, retain) NSMutableSet* activeClients;
+@property (nonatomic, retain) NSOperationQueue* pendingRequests;
+
 
 - (void)validateProjectConfiguration;
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
@@ -132,6 +134,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @synthesize window = _window;
 
 @synthesize activeClients = _activeClients;
+@synthesize pendingRequests = _pendingRequests;
+
 
 
 
