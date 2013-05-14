@@ -85,24 +85,28 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
+- (void)checkAndCreateAppBladeCacheDirectory;
+
 - (void)handleCrashReport;
 - (void)showFeedbackDialogue;
 
 - (void)promptFeedbackDialogue;
 - (void)reportFeedback:(NSString*)feedback;
-
-- (void)checkAndCreateAppBladeCacheDirectory;
 - (NSString*)captureScreen;
 - (UIImage*)getContentBelowView;
+
 - (NSString*)randomString:(int)length;
 
+
+- (BOOL)hasPendingSessions;
+//hasPendingCrashReport in PLCrashReporter
 - (BOOL)hasPendingFeedbackReports;
 - (void)handleBackloggedFeedback;
 
 - (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType;
-- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
+- (BOOL)isRefreshProcessHappening;
 
-- (BOOL)hasPendingSessions;
+- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
 
 - (void)validateProjectConfiguration;
 //- (void)refreshToken;
@@ -1490,6 +1494,10 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         amtToReturn = clientsOfType.count;
     }
     return amtToReturn;
+}
+
+- (BOOL)isRefreshProcessHappening{
+    return ([self activeClientsOfType:AppBladeWebClientAPI_GenerateToken] + [self activeClientsOfType:AppBladeWebClientAPI_ConfirmToken]) != 0;
 }
 
 
