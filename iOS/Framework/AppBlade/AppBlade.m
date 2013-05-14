@@ -575,10 +575,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self.activeClients removeObject:client];
 }
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedGenerateTokenResponse:(NSDictionary *)response
 {    
     NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
-    NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
     if(deviceSecretString != nil) {
         NSLog(@"Updating token ");
         [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
@@ -586,16 +585,26 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"confirming new token %@", [self appBladeDeviceSecret]);
         [self confirmToken];
     }
-    else if(deviceSecretTimeout != nil) {
+    else {
+        NSLog(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
+    }
+    [self.activeClients removeObject:client];
+}
+
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedConfirmTokenResponse:(NSDictionary *)response
+{
+    NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
+    if(deviceSecretTimeout != nil) {
         NSLog(@"Token confirmed. Business as usual.");
         [self checkForExistingCrashReports];
         [self handleBackloggedFeedback];
     }
     else {
-        NSLog(@"ERROR parsing response, keeping last valid token %@", self.appBladeDeviceSecret);
+        NSLog(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
     }
     [self.activeClients removeObject:client];
 }
+
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
 {
