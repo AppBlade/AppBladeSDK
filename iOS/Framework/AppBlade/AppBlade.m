@@ -240,6 +240,39 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [super dealloc];
 }
 
+#pragma mark SDK setup
+
+- (void)registerWithAppBladePlist
+{
+    [self registerWithAppBladePlist:@"AppBladeKeys"];
+}
+
+- (void)registerWithAppBladePlist:(NSString*)plistName
+{
+    NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
+    NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    if(appbladeVariables != nil)
+    {
+        NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
+        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:kAppBladePlistEndpointKey]];
+        self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
+        if([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0){
+            [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:kAppBladePlistDeviceSecretKey]];
+        }
+        [self validateProjectConfiguration];
+    }
+    else
+    {
+        [self raiseConfigurationExceptionWithFieldName:plistName];
+    }
+    
+    if([kAppBladePlistDefaultDeviceSecretValue isEqualToString:self.appBladeDeviceSecret] || [kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret])
+    {
+        NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
+    }
+}
+
+
 #pragma mark API CALLS
 
 //Eventually these will help enable/disable our appBladeDisabled value. It gives us the ability to condemn/redeem the device.
@@ -358,36 +391,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     else
     {
         NSLog(@"No crashes to report");
-    }
-}
-
-- (void)registerWithAppBladePlist
-{
-    [self registerWithAppBladePlist:@"AppBladeKeys"];
-}
-
-- (void)registerWithAppBladePlist:(NSString*)plistName
-{
-    NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
-    NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-    if(appbladeVariables != nil)
-    {
-        NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
-        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:kAppBladePlistEndpointKey]];
-        self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
-        if([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0){
-            [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:kAppBladePlistDeviceSecretKey]];
-        }
-        [self validateProjectConfiguration];
-    }
-    else
-    {
-        [self raiseConfigurationExceptionWithFieldName:plistName];
-    }
-    
-    if([kAppBladePlistDefaultDeviceSecretValue isEqualToString:self.appBladeDeviceSecret] || [kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret])
-    {
-        NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
     }
 }
 
