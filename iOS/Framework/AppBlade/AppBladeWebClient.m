@@ -197,6 +197,17 @@ static BOOL is_encrypted () {
     return self;
 }
 
+- (void) main
+{
+    // Issue the request. That's all
+    if(_request){
+        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+    }else{
+        NSLog(@"No API request was initialized. Did not perform an API call.");
+    }
+}
+
+
 - (void)dealloc
 {
     [_sentDeviceSecret release];
@@ -258,8 +269,7 @@ static BOOL is_encrypted () {
         [apiRequest setHTTPMethod:@"GET"];
         [self addSecurityToRequest:apiRequest];
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
-        // Issue the request.
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+        //apiRequest is a retained reference to the _request ivar.
     }
 }
 
@@ -288,8 +298,7 @@ static BOOL is_encrypted () {
             [apiRequest setHTTPMethod:@"POST"];
             [self addSecurityToRequest:apiRequest];
             [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
-            // Issue the request.
-            self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+            //apiRequest is a retained reference to the _request ivar.
         }
         else
         {
@@ -318,8 +327,7 @@ static BOOL is_encrypted () {
         [apiRequest setHTTPMethod:@"GET"];
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
         [self addSecurityToRequest:apiRequest];
-        // Issue the request.
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+        //apiRequest is a retained reference to the _request ivar.
     }
 }
 
@@ -345,8 +353,7 @@ static BOOL is_encrypted () {
         [self addSecurityToRequest:apiRequest]; //don't need security, but we could do better with it.
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
         NSLog(@"Update call %@", urlString);
-        // Issue the request.
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+        //apiRequest is a retained reference to the _request ivar.
     }
 }
 
@@ -394,8 +401,7 @@ static BOOL is_encrypted () {
 
     [self addSecurityToRequest:apiRequest];
 
-    // Issue the request.
-   self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+        //apiRequest is a retained reference to the _request ivar.
     }
 }
 
@@ -454,8 +460,7 @@ static BOOL is_encrypted () {
         
         [self addSecurityToRequest:apiRequest];
         
-        // Issue the request.
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+        //apiRequest is a retained reference to the _request ivar.
     }
 }
 
@@ -495,7 +500,7 @@ static BOOL is_encrypted () {
         [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
 
         [self addSecurityToRequest:request];
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+        //request is a retained reference to the _request ivar.
     }
     else {
         NSLog(@"Error parsing session data");
