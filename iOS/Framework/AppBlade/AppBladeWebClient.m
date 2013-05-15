@@ -47,6 +47,7 @@ NSString *deviceSecretHeaderField    = @"X-device-secret";
 @property (nonatomic, retain) NSURLConnection *activeConnection;
 
 // Request helper methods.
+-(void)issueRequest;
 
 //
 - (NSString *)executable_uuid;
@@ -138,24 +139,36 @@ const int kNonceRandomStringLength = 74;
 
 
 #pragma mark - NSOperation functions
--(void)start
+- (void)start
 {
-    NSLog(@"starting operation");
+    if (![NSThread isMainThread]) { 
+        [self performSelectorOnMainThread:@selector(start) withObject:nil waitUntilDone:NO];
+        return;
+    }
+    NSLog(@"starting operation (on main thread)");
+    [self issueRequest];
 }
 
 - (void) main
 {
-    NSLog(@"main operation (not being called)");
+    NSLog(@"main operation (not called)");
+    [self issueRequest];
+}
 
+- (void) issueRequest
+{
     // Issue the request. That's all
-    if(_request){
+    if(!_request){
+        NSLog(@"Error_IssueRequest: No API request was initialized. Did not perform an API call.");
+    } else if(nil != self.activeConnection){
+        NSLog(@"Error_IssueRequest: NSURL connection already started. Did not perform an API call again.");
+    } else{
         if (self.isCancelled) {
-            NSLog(@"API Call cancelled. Ignoring API call.");
+            NSLog(@"Error_IssueRequest: API Call cancelled. Ignoring API call.");
         }else{
+            NSLog(@"Success_IssueRequest: Starting API call.");
             self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
         }
-    }else{
-        NSLog(@"No API request was initialized. Did not perform an API call.");
     }
 }
 
