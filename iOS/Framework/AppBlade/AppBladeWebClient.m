@@ -201,7 +201,11 @@ static BOOL is_encrypted () {
 {
     // Issue the request. That's all
     if(_request){
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+        if (self.isCancelled) {
+            NSLog(@"API Call cancelled. Ignoring API call.");
+        }else{
+            self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+        }
     }else{
         NSLog(@"No API request was initialized. Did not perform an API call.");
     }
@@ -651,7 +655,10 @@ static BOOL is_encrypted () {
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{    
+{
+    if (self.isCancelled) {
+        NSLog(@"API Call cancelled. didReceiveResponse, but can't ignore yet.");
+    }
 	// Reset the data object.
     self.receivedData = [[NSMutableData alloc] init];
     NSMutableDictionary* headers = [NSMutableDictionary dictionaryWithDictionary:[(NSHTTPURLResponse *)response allHeaderFields]];
@@ -662,6 +669,10 @@ static BOOL is_encrypted () {
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)aRequest redirectResponse:(NSURLResponse *)redirectResponse;
 {
+    if (self.isCancelled) {
+        NSLog(@"API Call cancelled. willSendRequest, but can't ignore yet.");
+    }
+
     if (redirectResponse) {
 		// Clone and retarget request to new URL.
         NSMutableURLRequest *r = [[_request mutableCopy] autorelease];
@@ -676,13 +687,17 @@ static BOOL is_encrypted () {
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-
 	[self.receivedData appendData:data];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     self.receivedData = nil;
+    
+    if (self.isCancelled) {
+        NSLog(@"API Call cancelled. didFailWithError, but Ignoring.");
+    }
+
     
     NSLog(@"AppBlade failed with error: %@", error.localizedDescription);
     [self.delegate appBladeWebClientFailed:self];
@@ -693,6 +708,10 @@ static BOOL is_encrypted () {
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    if (self.isCancelled) {
+        NSLog(@"API Call cancelled. connectionDidFinishLoading, but Ignoring.");
+    }
+
     if (_api == AppBladeWebClientAPI_GenerateToken) {
         NSError *error = nil;
         //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
