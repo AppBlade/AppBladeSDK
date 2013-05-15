@@ -1555,7 +1555,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 }
 
 - (BOOL)isRefreshProcessHappening {
-    return ([[self refreshRequests] operationCount]) != 0;
+    return ([[self tokenRequests] operationCount]) != 0;
 }
 
 - (BOOL)isCurrentToken:(NSString *)token {
