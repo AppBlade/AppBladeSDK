@@ -546,25 +546,36 @@ static BOOL is_encrypted () {
     NSMutableURLRequest* apiRequest = [[[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10] autorelease];
     
     // set up various headers on the request.
-    [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"bundle_identifier"];
-    [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
-    
-    [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"IOS_RELEASE"];
+    [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"X-bundle-identifier"];
+    [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"X-bundle-version"];
+    [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"X-ios-release"];
 
-    [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
-    [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
-    [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
-    
+    [apiRequest addValue:[self platform] forHTTPHeaderField:@"X-device-model"];
+    [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"X-sdk-version"];
+    [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"X-project-secret"];
+    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"X-device-secret"];
 
+<<<<<<< HEAD
     [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"project_secret"];
     [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:deviceSecretHeaderField]; //@"device_secret"
     
     [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"executable_UUID"];
     [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"bundleexecutable_hash"];
     [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"infoplist_hash"];
+=======
+    [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"X-executable-UUID"];
+    [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"X-bundle-executable-hash"];
+    [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"X-info-plist-hash"];
+>>>>>>> refs/heads/master
     
     BOOL hasFairplay = is_encrypted();
-    [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"fairplay_encrypted"];
+    [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"X-fairplay-encrypted"];
+    if(!hasFairplay){
+        [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"X-moniker"];
+    }
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
+        [apiRequest addValue:[[[UIDevice currentDevice] identifierForVendor] UUIDString] forHTTPHeaderField:@"X-device-vendor-udid"];
+    }
     
     [_request release];
     _request = [apiRequest retain];
@@ -696,7 +707,7 @@ static BOOL is_encrypted () {
         //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         //NSLog(@"Received Device Secret Refresh Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
-        [self.delegate appBladeWebClient:self receivedTokenResponse:json];
+        [self.delegate appBladeWebClient:self receivedGenerateTokenResponse:json];
     }
     else if (_api == AppBladeWebClientAPI_ConfirmToken) {
         NSError *error = nil;
@@ -704,8 +715,7 @@ static BOOL is_encrypted () {
         //NSLog(@"Received Device Secret Confirm Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         self.receivedData = nil;
-        
-        [self.delegate appBladeWebClient:self receivedTokenResponse:json];
+        [self.delegate appBladeWebClient:self receivedConfirmTokenResponse:json];
     }
     else if(_api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
