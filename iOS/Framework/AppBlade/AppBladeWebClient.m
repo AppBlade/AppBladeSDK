@@ -30,7 +30,7 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
 NSString *updateURLFormat            = @"%@/api/3/updates";
 
-NSString *deviceSecretHeaderField    = @"device_secret";
+NSString *deviceSecretHeaderField    = @"X-device-secret";
 
 
 
@@ -553,20 +553,11 @@ static BOOL is_encrypted () {
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"X-device-model"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"X-sdk-version"];
     [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"X-project-secret"];
-    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:@"X-device-secret"];
-
-<<<<<<< HEAD
-    [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"project_secret"];
-    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:deviceSecretHeaderField]; //@"device_secret"
+    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:deviceSecretHeaderField]; //@"X-device-secret"
     
-    [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"executable_UUID"];
-    [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"bundleexecutable_hash"];
-    [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"infoplist_hash"];
-=======
     [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"X-executable-UUID"];
     [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"X-bundle-executable-hash"];
     [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"X-info-plist-hash"];
->>>>>>> refs/heads/master
     
     BOOL hasFairplay = is_encrypted();
     [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"X-fairplay-encrypted"];
