@@ -129,6 +129,6 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 - (void)refreshToken:(NSString *)tokenToConfirm;
 - (void)confirmToken:(NSString *)tokenToConfirm;
 
-
+-(BOOL)isAppStoreBuild;
 
 @end
