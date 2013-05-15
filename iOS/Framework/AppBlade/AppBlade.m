@@ -80,8 +80,8 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 @property (nonatomic, retain) NSDate *sessionStartDate;
 
-@property (nonatomic, retain) NSMutableSet* activeClients;
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
+@property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
 
 - (void)validateProjectConfiguration;
@@ -106,7 +106,7 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 - (void)handleBackloggedFeedback;
 - (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
 
-- (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType;
+- (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
 - (BOOL)isRefreshProcessHappening;
 - (BOOL)isCurrentToken:(NSString *)token;
 
@@ -129,8 +129,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 
 @synthesize window = _window;
 
-@synthesize activeClients = _activeClients;
 @synthesize pendingRequests = _pendingRequests;
+@synthesize tokenRequests = _tokenRequests;
 
 
 
@@ -189,7 +189,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         _delegate = self;
-        _activeClients = [[NSMutableSet alloc] init];
     }
     return self;
 }
@@ -231,8 +230,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     [_sessionStartDate release];
 
-    [_activeClients release];
     [_pendingRequests release];
+    [_refreshRequests release];
     
     [super dealloc];
 }
@@ -294,20 +293,23 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [[self pendingRequests] cancelAllOperations];
 }
 
-
--(void)syncAddClient:(NSOperation *)client
-{
-    [self.activeClients addObject:client];
-    [self.pendingRequests addOperation:client];
+-(NSOperationQueue *) tokenRequests {
+    if(!_tokenRequests){
+        _tokenRequests = [[NSOperationQueue alloc] init];
+        _tokenRequests.name = @"AppBlade Token Queue";
+        _tokenRequests.maxConcurrentOperationCount = 1;
+    }
+    return _tokenRequests;
 }
 
--(void)syncRemoveClient:(NSOperation *)client
-{
-    [self.activeClients removeObject:client];
-}
+//two queues
+
+//current functions now just sets up values
+//main thread runs the nsurlconnection
 
 
-#pragma mark API CALLS
+
+#pragma mark API Token Calls
 
 
 //Eventually these will help enable/disable our appBladeDisabled value. It gives us the ability to condemn/redeem the device.
@@ -330,7 +332,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     self.pendingRequests.maxConcurrentOperationCount = 1;
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [self syncAddClient:client];
+    [self.tokenRequests addOperation:client];
     [client refreshToken];
 }
 
@@ -350,34 +352,34 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     self.pendingRequests.maxConcurrentOperationCount = 1;
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [self syncAddClient:client];
-    [self.pendingRequests addOperation:client];
     [client confirmToken];
+    [self.tokenRequests addOperation:client];
 }
 
+#pragma mark API Blockable Calls
 
-- (void)checkApproval
-{
-    [self validateProjectConfiguration];
-    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [self syncAddClient:client];
-    [client checkPermissions];
-}
 
 - (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt  //deprecated, do not use
 {
     [self checkApproval];
 }
 
-
+- (void)checkApproval
+{
+    [self validateProjectConfiguration];
+    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [client checkPermissions];
+    [self.pendingRequests addOperation:client];
+}
 
 - (void)checkForUpdates
 {
     [self validateProjectConfiguration];
     NSLog(@"Checking for updates");
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [self syncAddClient:client];
     [client checkForUpdates];
+    [self.pendingRequests addOperation:client];
+
 }
 
 
@@ -448,9 +450,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     if(queuedFilePath != nil){
         AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-        [self syncAddClient:client];
         client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:queuedFilePath,  kAppBladeCrashReportKeyFilePath, nil];
         [client reportCrash:reportString withParams:[self getCustomParams]];
+        [self.pendingRequests addOperation:client];
     }
     else
     {
@@ -582,7 +584,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                     self.feedbackDictionary = nil;
                 }
                 else {
-                    [self syncRemoveClient:client];
+
                 }
             }
         }
@@ -602,7 +604,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
             NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
         }
     }
-    [self syncRemoveClient:client];
 }
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response
@@ -613,8 +614,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"Updating token ");
         [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
         //immediately confirm we have a new token stored
+        NSLog(@"token from request %@", [client sentDeviceSecret]);
         NSLog(@"confirming new token %@", [self appBladeDeviceSecret]);
-        [self confirmToken];
+        [self confirmToken:[self appBladeDeviceSecret]];
     }
     else if(deviceSecretTimeout != nil) {
         NSLog(@"Token confirmed. Business as usual.");
@@ -626,7 +628,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"ERROR parsing response, keeping last valid token %@", self.appBladeDeviceSecret);
         self.pendingRequests.maxConcurrentOperationCount = 1;
     }
-    [self syncRemoveClient:client];
 }
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
@@ -656,7 +657,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         }
     }
     
-    [self syncRemoveClient:client];
 }
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)updateData
@@ -673,7 +673,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         }
     }
     
-    [self syncRemoveClient:client];
 }
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
@@ -702,13 +701,12 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"Appblade: error sending crash report, response status code: %d", status);
         //No more crash reports for now. We might have bad internet access.
     }
-    [self syncRemoveClient:client];
 }
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success
 {
     @synchronized (self){
-        BOOL isBacklog = [self.activeClients containsObject:client];
+        BOOL isBacklog = [[self.pendingRequests operations] containsObject:client];
         if (success) {
             NSLog(@"feedback Successful");
             
@@ -772,8 +770,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         if (!isBacklog) {
             self.feedbackDictionary = nil;
         }
-        
-        [self syncRemoveClient:client];
     }
 }
 
@@ -795,7 +791,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     {
         NSLog(@"Error sending Session log");
     }
-    [self syncRemoveClient:client];
 }
 
 
@@ -1074,9 +1069,9 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     }
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [self syncAddClient:client];
     NSLog(@"Sending screenshot");
     [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
+    [self.pendingRequests addOperation:client];
 }
 
 
@@ -1101,14 +1096,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
                 if(screenShotFileExists){
                     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
                     client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
-                    [self syncAddClient:client];
                     [client sendFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[self getCustomParams]];
-                    
-                    if (!self.activeClients) {
-                        self.activeClients = [NSMutableSet set];
-                    }
-                    
-                    [self syncAddClient:client];
+                    [self.pendingRequests addOperation:client];
                 }
                 else
                 {
@@ -1225,7 +1214,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 #pragma mark - Analytics
 - (BOOL)hasPendingSessions
 {   //check active clients for API_Sessions
-    NSInteger sessionClients = [self activeClientsOfType:AppBladeWebClientAPI_Sessions];
+    NSInteger sessionClients = [self pendingRequestsOfType:AppBladeWebClientAPI_Sessions];
     return sessionClients > 0;
 }
 
@@ -1245,10 +1234,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 - (void)logSessionStart
 {
-    if(self.activeClients == nil){
-        self.activeClients = [NSMutableSet set];
-    }
-    
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     NSLog(@"Checking Session Path: %@", sessionFilePath);
 
@@ -1258,8 +1243,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         
         if(![self hasPendingSessions]){
             AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-            [self syncAddClient:client];
             [client postSessions:sessions];
+            [self.pendingRequests addOperation:client];
         }
     }
     
@@ -1555,22 +1540,22 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 }
 
-- (NSInteger)activeClientsOfType:(AppBladeWebClientAPI)clientType {
+- (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType {
     NSInteger amtToReturn = 0;
     
     if(clientType == AppBladeWebClientAPI_AllTypes){
-        amtToReturn = [self.activeClients count];
+        amtToReturn = [self.pendingRequests operationCount];
     }
     else
     {
-        NSSet* clientsOfType = [self.activeClients filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", clientType ]];
+        NSArray* clientsOfType = [[self.pendingRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", clientType ]];
         amtToReturn = clientsOfType.count;
     }
     return amtToReturn;
 }
 
 - (BOOL)isRefreshProcessHappening {
-    return ([self activeClientsOfType:AppBladeWebClientAPI_GenerateToken] + [self activeClientsOfType:AppBladeWebClientAPI_ConfirmToken]) != 0;
+    return ([[self refreshRequests] operationCount]) != 0;
 }
 
 - (BOOL)isCurrentToken:(NSString *)token {
