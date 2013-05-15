@@ -114,13 +114,8 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 - (BOOL)isRefreshProcessHappening;
 - (BOOL)isCurrentToken:(NSString *)token;
 
-<<<<<<< HEAD
-=======
 - (NSString*)hashFileOfPlist:(NSString *)filePath;
 
-
-- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
->>>>>>> refs/heads/master
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @end
 
@@ -260,11 +255,35 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     if(appbladeVariables != nil)
     {
-        NSDictionary* appBladeStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
-        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladeStoredKeys valueForKey:kAppBladePlistEndpointKey]];
-        self.appBladeProjectSecret = [appBladeStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
-        if([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0){
-            [self setAppBladeDeviceSecret: [appBladeStoredKeys objectForKey:kAppBladePlistDeviceSecretKey]];
+        NSDictionary* appBladePlistStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
+        NSMutableDictionary* appBladeKeychainKeys = [self appBladeDeviceSecrets]; //keychain persists across updates, we need to be careful
+        
+        NSString * md5 = [self hashFileOfPlist:plistPath];
+        NSString* appBlade_plist_hash = (NSString *)[appBladeKeychainKeys objectForKey:kAppBladeKeychainPlistHashKey];
+        if(![appBlade_plist_hash isEqualToString:md5]){ //our hashes don't match!
+            NSLog(@"Our hashes don't match!");
+            [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
+        }
+        //        NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
+        //        NSLog(@"AppBlade Plist Hash in Bundle %@",appBlade_plist_hash);
+        //        NSLog(@"AppBlade Hash stored in keychain (if any) %@", md5);
+        
+        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
+        self.appBladeProjectSecret = [appBladePlistStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
+        if(self.appBladeProjectSecret == nil)
+        {
+            self.appBladeProjectSecret = @"";
+        }
+        
+        NSString *storedDeviceSecret = [self appBladeDeviceSecret];
+        if(storedDeviceSecret == nil || [storedDeviceSecret length] == 0){
+            NSString * storedDeviceSecret = (NSString *)[appBladePlistStoredKeys objectForKey:kAppBladePlistDeviceSecretKey];
+            NSLog(@"Our device secret being set from plist:%@.", storedDeviceSecret);
+            [self setAppBladeDeviceSecret:storedDeviceSecret];
+            appBladeKeychainKeys = [self appBladeDeviceSecrets];
+            [appBladeKeychainKeys setValue:md5 forKey:kAppBladeKeychainPlistHashKey];
+            [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBladeKeychainKeys]; //update our md5 as well. We JUST updated.
+            NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
         }
         [self validateProjectConfiguration];
         [[AppBlade  sharedManager] confirmToken:[self appBladeDeviceSecret]]; //confirm our existing secret
@@ -274,7 +293,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         [self raiseConfigurationExceptionWithFieldName:plistName];
     }
     
-    if([kAppBladePlistDefaultDeviceSecretValue isEqualToString:self.appBladeDeviceSecret] || [kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret])
+    if([kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret] || self.appBladeProjectSecret == nil || [self.appBladeProjectSecret  length] == 0)
     {
         NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
     }
@@ -287,7 +306,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     if(!_pendingRequests){
         _pendingRequests = [[NSOperationQueue alloc] init];
         _pendingRequests.name = @"AppBlade API Queue";
-        _pendingRequests.maxConcurrentOperationCount = 1;
+        _pendingRequests.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
     }
     return _pendingRequests;
 }
@@ -338,10 +357,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     //HOLD EVERYTHING. bubble the request to the top.
     [self pauseCurrentPendingRequests];
-    self.pendingRequests.maxConcurrentOperationCount = 1;
-    
-    
-    self.pendingRequests.maxConcurrentOperationCount = 1;
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [client refreshToken:[self appBladeDeviceSecret]];
     [self.tokenRequests addOperation:client];
@@ -470,64 +485,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         NSLog(@"No crashes to report");
     }
 }
-
-<<<<<<< HEAD
-=======
-- (void)registerWithAppBladePlist
-{
-    [self registerWithAppBladePlist:@"AppBladeKeys"];
-}
-
-- (void)registerWithAppBladePlist:(NSString*)plistName
-{
-    NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
-    NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-    if(appbladeVariables != nil)
-    {
-        NSDictionary* appBladePlistStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
-        NSMutableDictionary* appBladeKeychainKeys = [self appBladeDeviceSecrets]; //keychain persists across updates, we need to be careful
-        
-        NSString * md5 = [self hashFileOfPlist:plistPath];
-        NSString* appBlade_plist_hash = (NSString *)[appBladeKeychainKeys objectForKey:kAppBladeKeychainPlistHashKey];
-        if(![appBlade_plist_hash isEqualToString:md5]){ //our hashes don't match!
-            NSLog(@"Our hashes don't match!");
-            [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
-        }
-//        NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
-//        NSLog(@"AppBlade Plist Hash in Bundle %@",appBlade_plist_hash);
-//        NSLog(@"AppBlade Hash stored in keychain (if any) %@", md5);
-        
-        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
-        self.appBladeProjectSecret = [appBladePlistStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
-        if(self.appBladeProjectSecret == nil)
-        {
-            self.appBladeProjectSecret = @"";
-        }
-        
-        NSString *storedDeviceSecret = [self appBladeDeviceSecret];
-        if(storedDeviceSecret == nil || [storedDeviceSecret length] == 0){
-            NSString * storedDeviceSecret = (NSString *)[appBladePlistStoredKeys objectForKey:kAppBladePlistDeviceSecretKey];
-            NSLog(@"Our device secret being set from plist:%@.", storedDeviceSecret);
-            [self setAppBladeDeviceSecret:storedDeviceSecret];
-            appBladeKeychainKeys = [self appBladeDeviceSecrets];
-            [appBladeKeychainKeys setValue:md5 forKey:kAppBladeKeychainPlistHashKey];
-            [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBladeKeychainKeys]; //update our md5 as well. We JUST updated.
-            NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
-        }
-        [self validateProjectConfiguration];
-    }
-    else
-    {
-        [self raiseConfigurationExceptionWithFieldName:plistName];
-    }
-    
-    if([kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret] || self.appBladeProjectSecret == nil || [self.appBladeProjectSecret  length] == 0)
-    {
-        NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
-    }
-}
-
->>>>>>> refs/heads/master
 
 - (NSString*)hashFileOfPlist:(NSString *)filePath
 {
@@ -702,7 +659,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     else {
         NSLog(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
     }
-    [self.activeClients removeObject:client];
 }
 
 - (void)appBladeWebClient:(AppBladeWebClient *)client receivedConfirmTokenResponse:(NSDictionary *)response
@@ -715,12 +671,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         [self handleBackloggedFeedback];
     }
     else {
-<<<<<<< HEAD
-        NSLog(@"ERROR parsing response, keeping last valid token %@", self.appBladeDeviceSecret);
-        self.pendingRequests.maxConcurrentOperationCount = 1;
-=======
         NSLog(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
->>>>>>> refs/heads/master
     }
 }
 
