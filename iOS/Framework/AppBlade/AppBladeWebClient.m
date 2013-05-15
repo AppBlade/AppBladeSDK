@@ -106,7 +106,6 @@ uint32_t cryptsize;
 uint32_t cryptid;
 };
 #endif
-
 int main (int argc, char *argv[]);
 
 static BOOL is_encrypted () {
@@ -186,19 +185,17 @@ static BOOL is_encrypted () {
     return _sentDeviceSecret;
 }
 
-#pragma mark - Lifecycle
 
-- (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate
+#pragma mark - NSOperation functions
+-(void)start
 {
-    if((self = [super init])) {
-        _delegate = delegate;
-    }
-    
-    return self;
+    NSLog(@"starting operation");
 }
 
 - (void) main
 {
+    NSLog(@"main operation (not being called)");
+
     // Issue the request. That's all
     if(_request){
         if (self.isCancelled) {
@@ -211,6 +208,18 @@ static BOOL is_encrypted () {
     }
 }
 
+
+
+#pragma mark - Lifecycle
+
+- (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate
+{
+    if((self = [super init])) {
+        _delegate = delegate;
+    }
+    
+    return self;
+}
 
 - (void)dealloc
 {
