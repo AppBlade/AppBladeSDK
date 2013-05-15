@@ -231,7 +231,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [_sessionStartDate release];
 
     [_pendingRequests release];
-    [_refreshRequests release];
+    [_tokenRequests release];
     
     [super dealloc];
 }
