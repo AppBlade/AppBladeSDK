@@ -302,6 +302,17 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 #pragma mark Pending Requests Queue 
 
+-(NSOperationQueue *) tokenRequests {
+    if(!_tokenRequests){
+        _tokenRequests = [[NSOperationQueue alloc] init];
+        _tokenRequests.name = @"AppBlade Token Queue";
+        _tokenRequests.maxConcurrentOperationCount = 1;
+    }
+    return _tokenRequests;
+}
+
+//token requests are never pause or cancelled
+
 -(NSOperationQueue *) pendingRequests {
     if(!_pendingRequests){
         _pendingRequests = [[NSOperationQueue alloc] init];
@@ -321,21 +332,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 -(void) cancelCurrentPendingRequests {
     [[self pendingRequests] cancelAllOperations];
+    [[self pendingRequests] setSuspended:NO];
 }
-
--(NSOperationQueue *) tokenRequests {
-    if(!_tokenRequests){
-        _tokenRequests = [[NSOperationQueue alloc] init];
-        _tokenRequests.name = @"AppBlade Token Queue";
-        _tokenRequests.maxConcurrentOperationCount = 1;
-    }
-    return _tokenRequests;
-}
-
-//two queues
-
-//current functions now just sets up values
-//main thread runs the nsurlconnection
 
 
 
@@ -543,6 +541,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
         {  //likely a 500 or some other timeout
             //if we can't confirm the token then we can't use it.
             //Try again later.
+            [self resumeCurrentPendingRequests];
             double delayInSeconds = 30.0;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -666,7 +665,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
     if(deviceSecretTimeout != nil) {
         NSLog(@"Token confirmed. Business as usual.");
-        self.pendingRequests.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+        [self cancelCurrentPendingRequests]; //clear all requests that we could have had pending. Rebuild them.
         [self checkForExistingCrashReports];
         [self handleBackloggedFeedback];
     }
