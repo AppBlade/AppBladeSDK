@@ -83,8 +83,8 @@ extern NSString *deviceSecretHeaderField;
 + (NSString *)buildHostURL:(NSString *)customURLString;
 
 // AppBlade API.
-- (void)refreshToken;
-- (void)confirmToken;
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
 
 - (void)checkPermissions;
 - (void)checkForUpdates;

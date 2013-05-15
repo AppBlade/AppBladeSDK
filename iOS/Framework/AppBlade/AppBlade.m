@@ -332,8 +332,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     
     self.pendingRequests.maxConcurrentOperationCount = 1;
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    [client refreshToken:[self appBladeDeviceSecret]];
     [self.tokenRequests addOperation:client];
-    [client refreshToken];
 }
 
 - (void)confirmToken:(NSString *)tokenIsCurrent
@@ -352,7 +352,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     self.pendingRequests.maxConcurrentOperationCount = 1;
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    [client confirmToken];
+    [client confirmToken:[self appBladeDeviceSecret]];
     [self.tokenRequests addOperation:client];
 }
 

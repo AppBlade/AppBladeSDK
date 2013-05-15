@@ -240,7 +240,7 @@ static BOOL is_encrypted () {
 
 
 #pragma mark - AppBlade API
-- (void)refreshToken
+- (void)refreshToken:(NSString *)tokenToConfirm
 {
     [self setApi:  AppBladeWebClientAPI_GenerateToken];
     BOOL hasFairplay = is_encrypted();
