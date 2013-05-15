@@ -128,8 +128,8 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 + (void)endSession;
 
 
-- (void)refreshToken:(NSString *)tokenIsCurrent;
-- (void)confirmToken:(NSString *)tokenIsCurrent;
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
 
 
 

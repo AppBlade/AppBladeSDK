@@ -314,13 +314,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 
 //Eventually these will help enable/disable our appBladeDisabled value. It gives us the ability to condemn/redeem the device.
 
-- (void)refreshToken:(NSString *)tokenIsCurrent
+- (void)refreshToken:(NSString *)tokenToConfirm
 {
     //ensure no other requests or confirms are already running.
     if([self isRefreshProcessHappening]) {
         NSLog(@"Refresh already in queue. Ignoring.");
         return;
-    }else if (tokenIsCurrent != nil && ![self isCurrentToken:tokenIsCurrent]){
+    }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
         NSLog(@"Token not current, refresh token request is out of sync. Ignoring.");
         return;
     }
@@ -336,13 +336,13 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [self.tokenRequests addOperation:client];
 }
 
-- (void)confirmToken:(NSString *)tokenIsCurrent
+- (void)confirmToken:(NSString *)tokenToConfirm
 {
     //ensure no other requests or confirms are already running.
     if([self isRefreshProcessHappening]) {
         NSLog(@"Confirm already in queue. Ignoring.");
         return;
-    }else if (tokenIsCurrent != nil && ![self isCurrentToken:tokenIsCurrent]){
+    }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
         NSLog(@"Token not current, confirm token request is out of sync. Ignoring.");
         return;
     }
