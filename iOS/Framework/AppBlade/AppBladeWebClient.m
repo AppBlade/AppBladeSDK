@@ -45,7 +45,13 @@ NSString *deviceSecretHeaderField    = @"X-device-secret";
 //NSOperation related
 @property (nonatomic, assign) BOOL finished;
 @property (nonatomic, assign) BOOL executing;
+@property (nonatomic, assign) NSTimeInterval timeoutInterval;
+@property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTaskId;
+@property (nonatomic, assign) NSThread *connectionThread;
 -(void)issueRequest;
+-(void)scheduleTimeout;
+-(void)cancelTimeout;
+
 // Request builder methods.
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url;
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request;
@@ -84,6 +90,9 @@ NSString *deviceSecretHeaderField    = @"X-device-secret";
 
 @synthesize finished = _finished;
 @synthesize executing = _executing;
+@synthesize timeoutInterval = _timeoutInterval;
+@synthesize backgroundTaskId = _backgroundTaskId;
+@synthesize connectionThread = _connectionThread;
 
 const int kNonceRandomStringLength = 74;
 
@@ -132,9 +141,47 @@ const int kNonceRandomStringLength = 74;
 {
     if((nil != _request) && !self.isCancelled){
             NSLog(@"Success_IssueRequest: Starting API call.");
-            self.executing = NO;
+            self.executing = YES;
             [self didChangeValueForKey:@"isExecuting"];
+            [self willChangeValueForKey:@"isFinished"];
+            self.finished = NO;
+            [self didChangeValueForKey:@"isFinished"];
             self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:YES] autorelease];
+        
+        
+        
+        // Keep track of the current thread
+        self.connectionThread = [NSThread currentThread];
+        
+        // setup our timeout callback.
+        if(self.timeoutInterval <= 0)
+            self.timeoutInterval = 60;
+        [self scheduleTimeout];
+        
+        while (!self.finished && !self.isCancelled) {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        }
+        
+        @synchronized(self){
+            
+            // end the background task
+            if (_backgroundTaskId != UIBackgroundTaskInvalid){
+                [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskId];
+                _backgroundTaskId = UIBackgroundTaskInvalid;
+            }
+            
+            self.connectionThread = nil;
+            
+            [self willChangeValueForKey:@"isFinished"];
+            [self willChangeValueForKey:@"isExecuting"];
+            
+            _finished = YES;
+            _executing = NO;
+            
+            [self didChangeValueForKey:@"isExecuting"];
+            [self didChangeValueForKey:@"isFinished"];
+        }
+        
     } else {
         NSLog(@"Error_IssueRequest: API request was cancelled or did not initialize properly. Did not perform an API call.");
         self.executing = NO;
@@ -142,6 +189,25 @@ const int kNonceRandomStringLength = 74;
         [self willChangeValueForKey:@"isFinished"];
         self.finished = YES;
         [self didChangeValueForKey:@"isFinished"];
+    }
+}
+
+-(void) cancel
+{
+    if ([NSThread currentThread] != self.connectionThread && self.connectionThread){
+        [self performSelector:@selector(cancelOperation) onThread:self.connectionThread withObject:nil waitUntilDone:NO];
+    }
+    else{
+        [self cancelOperation];
+    }
+}
+
+-(void) cancelOperation
+{
+    @synchronized(self){
+        if (self.isFinished) return;
+        [super cancel];
+        [self cancelTimeout];
     }
 }
 
@@ -157,6 +223,21 @@ const int kNonceRandomStringLength = 74;
 
 - (BOOL)isFinished {
     return _finished;
+}
+
+-(void) scheduleTimeout
+{
+    @synchronized(self){
+        if (self.isCancelled) return;
+        [self cancelTimeout];
+        [self performSelector:@selector(timeout) withObject:nil afterDelay:self.timeoutInterval];
+    }
+}
+
+-(void)cancelTimeout
+{
+    // if we never assigned the connection thread property, we never will have scheduled a timeout
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
 
 #pragma mark - NSURLConnectionDelegate
@@ -247,8 +328,8 @@ const int kNonceRandomStringLength = 74;
     
     if (_api == AppBladeWebClientAPI_GenerateToken) {
         NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        //NSLog(@"Received Device Secret Refresh Response from AppBlade: %@", string);
+        NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
+        NSLog(@"Received Device Secret Refresh Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         __block AppBladeWebClient *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
@@ -258,8 +339,8 @@ const int kNonceRandomStringLength = 74;
     }
     else if (_api == AppBladeWebClientAPI_ConfirmToken) {
         NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        //NSLog(@"Received Device Secret Confirm Response from AppBlade: %@", string);
+        NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
+        NSLog(@"Received Device Secret Confirm Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         self.receivedData = nil;
         __block AppBladeWebClient *selfReference = self;
