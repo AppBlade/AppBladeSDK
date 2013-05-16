@@ -312,6 +312,7 @@ static BOOL is_encrypted () {
 
 - (void)registerWithAppBladePlist:(NSString*)plistName
 {
+    [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token. 
     NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
     NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     if(appbladeVariables != nil)
@@ -324,11 +325,7 @@ static BOOL is_encrypted () {
         if(![appBlade_plist_hash isEqualToString:md5]){ //our hashes don't match!
             NSLog(@"Our hashes don't match!");
             [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
-        }
-        //        NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
-        //        NSLog(@"AppBlade Plist Hash in Bundle %@",appBlade_plist_hash);
-        //        NSLog(@"AppBlade Hash stored in keychain (if any) %@", md5);
-        
+        }        
         self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
         self.appBladeProjectSecret = [appBladePlistStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
         if(self.appBladeProjectSecret == nil)
@@ -347,7 +344,12 @@ static BOOL is_encrypted () {
             NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
         }
         [self validateProjectConfiguration];
-        [[AppBlade  sharedManager] confirmToken:[self appBladeDeviceSecret]]; //confirm our existing secret immediately
+        
+        if(self.appBladeProjectSecret.length > 0) {
+            [[AppBlade  sharedManager] refreshToken:[self appBladeDeviceSecret]];
+        } else {
+            [[AppBlade  sharedManager] confirmToken:[self appBladeDeviceSecret]]; //confirm our existing device_secret immediately
+        }
     }
     else
     {
@@ -1572,7 +1574,7 @@ static BOOL is_encrypted () {
         //always store the last two device secrets
         NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
         NSString* device_secret_latest_stored = [appBlade_keychain_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //get the newest key (to our knowledge)
-        if(![device_secret_latest_stored isEqualToString:appBladeDeviceSecret]) //if we don't already have the "new" token as the newest token
+        if((nil != appBladeDeviceSecret) && ![device_secret_latest_stored isEqualToString:appBladeDeviceSecret]) //if we don't already have the "new" token as the newest token
         {
             [appBlade_keychain_dict setObject:[device_secret_latest_stored copy] forKey:kAppBladeKeychainDeviceSecretKeyOld]; //we don't care where the old key goes
             [appBlade_keychain_dict setObject:[appBladeDeviceSecret copy] forKey:kAppBladeKeychainDeviceSecretKeyNew];
@@ -1672,7 +1674,7 @@ static BOOL is_encrypted () {
 }
 
 - (BOOL)isCurrentToken:(NSString *)token {
-    return (nil != token) && (token.length != 0) && [[self appBladeDeviceSecret] isEqualToString:token];
+    return (nil != token) && [[self appBladeDeviceSecret] isEqualToString:token];
 }
 
 
