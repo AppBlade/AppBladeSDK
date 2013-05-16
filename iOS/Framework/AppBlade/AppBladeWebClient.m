@@ -203,6 +203,13 @@ const int kNonceRandomStringLength = 74;
     
     if (self.isCancelled) {
         NSLog(@"API Call cancelled. didFailWithError, but Ignoring.");
+        [self willChangeValueForKey:@"isFinished"];
+        self.executing = NO;
+        [self didChangeValueForKey:@"isExecuting"];
+        [self willChangeValueForKey:@"isFinished"];
+        self.finished = YES;
+        [self didChangeValueForKey:@"isFinished"];
+        return;
     }
     
     
@@ -213,6 +220,14 @@ const int kNonceRandomStringLength = 74;
     dispatch_async(dispatch_get_main_queue(), ^{
         [delegateReference appBladeWebClientFailed:selfReference];
     });
+    
+    [self willChangeValueForKey:@"isFinished"];
+    self.executing = NO;
+    [self didChangeValueForKey:@"isExecuting"];
+    [self willChangeValueForKey:@"isFinished"];
+    self.finished = YES;
+    [self didChangeValueForKey:@"isFinished"];
+
     [_request release];
     _request = nil;
 }
@@ -221,6 +236,13 @@ const int kNonceRandomStringLength = 74;
 {
     if (self.isCancelled) {
         NSLog(@"API Call cancelled. connectionDidFinishLoading, but Ignoring.");
+        [self willChangeValueForKey:@"isFinished"];
+        self.executing = NO;
+        [self didChangeValueForKey:@"isExecuting"];
+        [self willChangeValueForKey:@"isFinished"];
+        self.finished = YES;
+        [self didChangeValueForKey:@"isFinished"];
+        return;
     }
     
     if (_api == AppBladeWebClientAPI_GenerateToken) {
@@ -330,6 +352,12 @@ const int kNonceRandomStringLength = 74;
         NSLog(@"Unhandled connection with AppBladeWebClientAPI value %d", _api);
     }
     
+    [self willChangeValueForKey:@"isFinished"];
+    self.executing = NO;
+    [self didChangeValueForKey:@"isExecuting"];
+    [self willChangeValueForKey:@"isFinished"];
+    self.finished = YES;
+    [self didChangeValueForKey:@"isFinished"];
     [_request release];
     _request = nil;
 }
