@@ -347,7 +347,7 @@ static BOOL is_encrypted () {
             NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
         }
         [self validateProjectConfiguration];
-        [[AppBlade  sharedManager] confirmToken:[self appBladeDeviceSecret]]; //confirm our existing secret
+        [[AppBlade  sharedManager] confirmToken:[self appBladeDeviceSecret]]; //confirm our existing secret immediately
     }
     else
     {
@@ -447,7 +447,6 @@ static BOOL is_encrypted () {
 
 #pragma mark API Blockable Calls
 
-
 - (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt  //deprecated, do not use
 {
     [self checkApproval];
@@ -468,7 +467,6 @@ static BOOL is_encrypted () {
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [client checkForUpdates];
     [self.pendingRequests addOperation:client];
-
 }
 
 
@@ -722,6 +720,13 @@ static BOOL is_encrypted () {
     }
     else {
         NSLog(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
+        int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+        NSLog(@"token refresh response status code %d", statusCode);
+        if(statusCode == 403){
+            [self.delegate appBlade:self applicationApproved:NO error:nil];
+        }else if (statusCode == 401){
+            [self refreshToken:[self appBladeDeviceSecret]];
+        }
     }
 }
 
@@ -736,6 +741,13 @@ static BOOL is_encrypted () {
     }
     else {
         NSLog(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
+        int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+        NSLog(@"token confirm response status code %d", statusCode);
+        if(statusCode == 403){
+            [self.delegate appBlade:self applicationApproved:NO error:nil];
+        }else if (statusCode == 401){
+            [self refreshToken:[self appBladeDeviceSecret]];
+        }
     }
 }
 
