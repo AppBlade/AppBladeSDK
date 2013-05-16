@@ -747,7 +747,9 @@ const int kNonceRandomStringLength = 74;
 
     [apiRequest addValue:[self platform] forHTTPHeaderField:@"X-device-model"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"X-sdk-version"];
-    [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"X-project-secret"];
+    if([[[AppBlade sharedManager] appBladeDeviceSecret] length] == 0) {
+        [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"X-project-secret"];
+    }
     [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:deviceSecretHeaderField]; //@"X-device-secret"
     
     [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"X-executable-UUID"];
