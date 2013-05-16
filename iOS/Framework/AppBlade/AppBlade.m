@@ -726,6 +726,8 @@ static BOOL is_encrypted () {
             [self.delegate appBlade:self applicationApproved:NO error:nil];
         }else if (statusCode == 401){
             [self refreshToken:[self appBladeDeviceSecret]];
+        }else{
+            [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
         }
     }
 }
@@ -747,6 +749,8 @@ static BOOL is_encrypted () {
             [self.delegate appBlade:self applicationApproved:NO error:nil];
         }else if (statusCode == 401){
             [self refreshToken:[self appBladeDeviceSecret]];
+        }else{
+            [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
         }
     }
 }
