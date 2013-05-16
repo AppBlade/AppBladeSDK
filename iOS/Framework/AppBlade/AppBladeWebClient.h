@@ -78,6 +78,7 @@ extern NSString *deviceSecretHeaderField;
 @property (nonatomic, retain) NSMutableData* receivedData;
 
 @property (nonatomic, retain) NSString* sentDeviceSecret;
+-(int)getReceivedStatusCode;
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
 

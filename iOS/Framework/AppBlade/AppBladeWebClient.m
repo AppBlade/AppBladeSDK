@@ -878,6 +878,16 @@ const int kNonceRandomStringLength = 74;
 }
 
 
+#pragma mark - receivedStatusCode
+-(int)getReceivedStatusCode
+{
+    int status = 500;
+    if(self.responseHeaders){
+       status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
+    }
+    return status;
+}
+
 #pragma mark - sentDeviceSecret
 
 -(NSString *)sentDeviceSecret {
