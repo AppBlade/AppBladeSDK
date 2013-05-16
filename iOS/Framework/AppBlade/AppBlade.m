@@ -626,7 +626,6 @@ static BOOL is_encrypted () {
         if (client.api == AppBladeWebClientAPI_Permissions)  {
             // check only once if the delegate responds to this selector
             BOOL signalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
-            
             // if the connection failed, see if the application is still within the previous TTL window.
             // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
             // prevent the app from running until the request completes successfully. This will prevent
@@ -635,7 +634,6 @@ static BOOL is_encrypted () {
                 if(signalDelegate) {
                     [self.delegate appBlade:self applicationApproved:YES error:nil];
                 }
-                
             }
             else {
                 [self closeTTLWindow];
@@ -724,9 +722,9 @@ static BOOL is_encrypted () {
         NSLog(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
         int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
         NSLog(@"token refresh response status code %d", statusCode);
-        if(statusCode == 403){
+        if(statusCode == kTokenInvalidStatusCode){
             [self.delegate appBlade:self applicationApproved:NO error:nil];
-        }else if (statusCode == 401){
+        }else if (statusCode == kTokenRefreshStatusCode){
             [self refreshToken:[self appBladeDeviceSecret]];
         }else{
             [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
@@ -747,9 +745,9 @@ static BOOL is_encrypted () {
         NSLog(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
         int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
         NSLog(@"token confirm response status code %d", statusCode);
-        if(statusCode == 403){
+        if(statusCode == kTokenInvalidStatusCode){
             [self.delegate appBlade:self applicationApproved:NO error:nil];
-        }else if (statusCode == 401){
+        }else if (statusCode == kTokenRefreshStatusCode){
             [self refreshToken:[self appBladeDeviceSecret]];
         }else{
             [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
