@@ -623,10 +623,10 @@ static BOOL is_encrypted () {
             [self.delegate appBlade:self applicationApproved:NO error:error];
         }
         else
-        {  //likely a 500 or some other timeout
+        {  //likely a 500 or some other timeout from the server
             //if we can't confirm the token then we can't use it.
+            [self cancelPendingRequestsByToken:[client sentDeviceSecret]];
             //Try again later.
-            [self resumeCurrentPendingRequests];
             double delayInSeconds = 30.0;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -635,12 +635,14 @@ static BOOL is_encrypted () {
         }
     }
     else {
-        //non-token related api failures all attempt a token refresh when given a refresh status code, 
-        if(status == kTokenRefreshStatusCode)
-        {
-            [[AppBlade  sharedManager] refreshToken:[client sentDeviceSecret]]; //refresh the token
-        }else if(status == kTokenInvalidStatusCode) { //we think the response was invlaid?
-            [[AppBlade  sharedManager] confirmToken:[client sentDeviceSecret]]; //one more confirm, just to be safe.
+        //non-token related api failures all attempt a token refresh when given a refresh status code,
+        if([self isCurrentToken:[client sentDeviceSecret]]){
+            if(status == kTokenRefreshStatusCode)
+            {
+                [[AppBlade  sharedManager] refreshToken:[client sentDeviceSecret]]; //refresh the token
+            }else if(status == kTokenInvalidStatusCode) { //we think the response was invlaid?
+                [[AppBlade  sharedManager] confirmToken:[client sentDeviceSecret]]; //one more confirm, just to be safe.
+            }
         }
         
         if (client.api == AppBladeWebClientAPI_Permissions)  {
