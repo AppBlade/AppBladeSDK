@@ -10,7 +10,6 @@
 #import "AppBladeSimpleKeychain.h"
 
 #import "AppBladeWebClient.h"
-#import "PLCrashReportTextFormatter.h"
 #import "FeedbackDialogue.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
