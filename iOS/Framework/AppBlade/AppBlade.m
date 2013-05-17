@@ -452,7 +452,7 @@ static BOOL is_encrypted () {
 {
     //ensure no other requests or confirms are already running.
     if([self isDeviceSecretBeingConfirmed]) {
-        NSLog(@"Confirm already in queue. Ignoring.");
+        NSLog(@"Confirm (or refresh) already in queue. Ignoring.");
         return;
     }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
         NSLog(@"Token not current, confirm token request is out of sync. Ignoring.");
@@ -1683,6 +1683,17 @@ static BOOL is_encrypted () {
         amtToReturn = clientsOfType.count;
     }
     return amtToReturn;
+}
+
+
+- (BOOL)tokenConfirmRequestPending {
+    NSInteger confirmTokenRequests = [[self.tokenRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", AppBladeWebClientAPI_ConfirmToken]];
+    return confirmTokenRequests > 0;
+}
+
+- (BOOL)tokenRefreshRequestPending {
+    NSInteger confirmTokenRequests = [[self.tokenRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", AppBladeWebClientAPI_GenerateToken]];
+    return confirmTokenRequests > 0;
 }
 
 - (BOOL)isDeviceSecretBeingConfirmed {
