@@ -29,6 +29,8 @@ extern NSString *reportCrashURLFormat;
 extern NSString *reportFeedbackURLFormat;
 extern NSString *sessionURLFormat;
 
+extern NSString *deviceSecretHeaderField;
+
 
 @protocol AppBladeWebClientDelegate <NSObject>
 
@@ -51,7 +53,7 @@ extern NSString *sessionURLFormat;
 
 @end
 
-@interface AppBladeWebClient : NSObject {    
+@interface AppBladeWebClient : NSOperation {
 
 @private
 
@@ -75,15 +77,16 @@ extern NSString *sessionURLFormat;
 @property (nonatomic, retain) NSDictionary* responseHeaders;
 @property (nonatomic, retain) NSMutableData* receivedData;
 
-
+@property (nonatomic, retain) NSString* sentDeviceSecret;
+-(int)getReceivedStatusCode;
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
 
 + (NSString *)buildHostURL:(NSString *)customURLString;
 
 // AppBlade API.
-- (void)refreshToken;
-- (void)confirmToken;
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
 
 - (void)checkPermissions;
 - (void)checkForUpdates;
