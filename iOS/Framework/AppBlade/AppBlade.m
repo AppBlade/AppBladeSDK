@@ -592,6 +592,8 @@ static BOOL is_encrypted () {
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString
 {
     int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];  
+    // check only once if the delegate responds to this selector
+    BOOL canSignalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
 
     if (client.api == AppBladeWebClientAPI_GenerateToken)  {
         NSLog(@"ERROR generating token");
@@ -620,7 +622,9 @@ static BOOL is_encrypted () {
                                NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
                                NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
             NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
-            [self.delegate appBlade:self applicationApproved:NO error:error];
+            if(canSignalDelegate) {
+                [self.delegate appBlade:self applicationApproved:NO error:error];
+            }
         }
         else
         {  //likely a 500 or some other timeout from the server
@@ -646,20 +650,18 @@ static BOOL is_encrypted () {
         }
         
         if (client.api == AppBladeWebClientAPI_Permissions)  {
-            // check only once if the delegate responds to this selector
-            BOOL signalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
             // if the connection failed, see if the application is still within the previous TTL window.
             // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
             // prevent the app from running until the request completes successfully. This will prevent
             // users from unlocking an app by simply changing their clock.
             if ([self withinStoredTTL]) {
-                if(signalDelegate) {
+                if(canSignalDelegate) {
                     [self.delegate appBlade:self applicationApproved:YES error:nil];
                 }
             }
             else {
                 [self closeTTLWindow];
-                if(signalDelegate) {
+                if(canSignalDelegate) {
                     NSDictionary* errorDictionary = nil;
                     NSError* error = nil;
                     if(errorString){
