@@ -409,7 +409,18 @@ static BOOL is_encrypted () {
 }
 
 -(void) cancelPendingRequestsByToken:(NSString*) token {
-    [[self pendingRequests] cancelAllOperations];
+    NSString *tokenToCheckAgainst = token;
+    if(nil == tokenToCheckAgainst) {
+        tokenToCheckAgainst = [self appBladeDeviceSecret];
+    }
+    
+    NSArray *currentOperations = [[self pendingRequests] operations];
+    for (int i = 0; i < [currentOperations count]; i++) {
+        AppBladeWebClient *op = (AppBladeWebClient *)[currentOperations objectAtIndex:i];
+        if(nil == op.sentDeviceSecret || ![tokenToCheckAgainst isEqualToString:op.sentDeviceSecret]) {
+            [op cancel];
+        }
+    }
     [[self pendingRequests] setSuspended:NO];
 }
 
@@ -746,9 +757,7 @@ static BOOL is_encrypted () {
     NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
     if(deviceSecretTimeout != nil) {
         NSLog(@"Token confirmed. Business as usual.");
-        [self cancelCurrentPendingRequests]; //clear all requests that we could have had pending. Rebuild them.
-        [self checkForExistingCrashReports];
-        [self handleBackloggedFeedback];
+        [self resumeCurrentPendingRequests]; //continue requests that we could have had pending. they will be ignored if they fail with the old token.
     }
     else {
         NSLog(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
