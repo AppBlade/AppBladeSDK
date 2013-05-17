@@ -21,7 +21,6 @@
 
     AppBlade *blade = [AppBlade sharedManager];
     [blade registerWithAppBladePlist];
-    [blade catchAndReportCrashes];  
     
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
@@ -53,6 +52,8 @@
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    AppBlade *blade = [AppBlade sharedManager];
+    [blade checkForUpdates];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -64,9 +65,6 @@
     // Check the app blade update status of this application.
     [AppBlade startSession];
    // [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
-    [[AppBlade sharedManager] refreshToken]; //if you want to refresh the token every time you open the app (don't), pending reports will be sent on rereshed token confirmation.
-    
-
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -76,7 +74,7 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
-  //  [AppBlade endSession];
+    [AppBlade endSession];
 }
 
 

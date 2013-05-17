@@ -64,9 +64,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 - (void)registerWithAppBladePlist:(NSString*)plistName;
 
 //Device secret calls
--(NSMutableDictionary*) appBladeDeviceSecrets;
 -(void)clearAppBladeKeychain;
-
 - (NSString *) appBladeDeviceSecret;
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 
@@ -118,9 +116,9 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 + (void)endSession;
 
 
-- (void)refreshToken;
-- (void)confirmToken;
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
 
-
+-(BOOL)isAppStoreBuild;
 
 @end
