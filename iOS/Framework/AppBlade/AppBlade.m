@@ -269,7 +269,6 @@ static BOOL is_encrypted () {
 
 - (void)validateProjectConfiguration
 {
-    NSLog(@"validateProjectConfiguration %@ " , [self appBladeDeviceSecret]);
     //All the necessary plist vairables must be included
     if ([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0) {
         if (self.appBladeProjectSecret == nil || self.appBladeProjectSecret.length == 0) {
