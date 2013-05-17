@@ -121,9 +121,14 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 - (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
 
 -(NSMutableDictionary*) appBladeDeviceSecrets;
+- (BOOL)hasDeviceSecret;
+- (BOOL)isDeviceSecretBeingConfirmed;
+
 - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
-- (BOOL)isRefreshProcessHappening;
 - (BOOL)isCurrentToken:(NSString *)token;
+
+- (void) cancelAllPendingRequests;
+- (void) cancelPendingRequestsByToken:(NSString *)token;
 
 - (NSString*)hashFileOfPlist:(NSString *)filePath;
 
@@ -324,7 +329,7 @@ static BOOL is_encrypted () {
         NSString * md5 = [self hashFileOfPlist:plistPath];
         NSString* appBlade_plist_hash = (NSString *)[appBladeKeychainKeys objectForKey:kAppBladeKeychainPlistHashKey];
         if(![appBlade_plist_hash isEqualToString:md5]){ //our hashes don't match!
-            NSLog(@"Our hashes don't match!");
+            NSLog(@"Our hashes don't match! Clearing out current secrets!");
             [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
         }        
         self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
@@ -398,11 +403,15 @@ static BOOL is_encrypted () {
     [[self pendingRequests] setSuspended:NO];
 }
 
--(void) cancelCurrentPendingRequests {
+-(void) cancelAllPendingRequests {
     [[self pendingRequests] cancelAllOperations];
     [[self pendingRequests] setSuspended:NO];
 }
 
+-(void) cancelPendingRequestsByToken:(NSString*) token {
+    [[self pendingRequests] cancelAllOperations];
+    [[self pendingRequests] setSuspended:NO];
+}
 
 
 #pragma mark API Token Calls
@@ -413,7 +422,7 @@ static BOOL is_encrypted () {
 - (void)refreshToken:(NSString *)tokenToConfirm
 {
     //ensure no other requests or confirms are already running.
-    if([self isRefreshProcessHappening]) {
+    if([self isDeviceSecretBeingConfirmed]) {
         NSLog(@"Refresh already in queue. Ignoring.");
         return;
     }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
@@ -431,7 +440,7 @@ static BOOL is_encrypted () {
 - (void)confirmToken:(NSString *)tokenToConfirm
 {
     //ensure no other requests or confirms are already running.
-    if([self isRefreshProcessHappening]) {
+    if([self isDeviceSecretBeingConfirmed]) {
         NSLog(@"Confirm already in queue. Ignoring.");
         return;
     }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
@@ -441,7 +450,6 @@ static BOOL is_encrypted () {
     
     //HOLD EVERYTHING. bubble the request to the top.
     [self pauseCurrentPendingRequests];
-    self.pendingRequests.maxConcurrentOperationCount = 1;
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [client confirmToken:[self appBladeDeviceSecret]];
@@ -1668,7 +1676,7 @@ static BOOL is_encrypted () {
     return amtToReturn;
 }
 
-- (BOOL)isRefreshProcessHappening {
+- (BOOL)isDeviceSecretBeingConfirmed {
     return ([[self tokenRequests] operationCount]) != 0;
 }
 
@@ -1676,6 +1684,10 @@ static BOOL is_encrypted () {
     return (nil != token) && [[self appBladeDeviceSecret] isEqualToString:token];
 }
 
+-(BOOL)hasDeviceSecret
+{
+    return [[self appBladeDeviceSecret] length] == 0;
+}
 
 -(NSString *) randomString: (int) len {
     
