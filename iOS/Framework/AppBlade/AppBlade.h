@@ -64,9 +64,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 - (void)registerWithAppBladePlist:(NSString*)plistName;
 
 //Device secret calls
--(NSMutableDictionary*) appBladeDeviceSecrets;
 -(void)clearAppBladeKeychain;
-
 - (NSString *) appBladeDeviceSecret;
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 

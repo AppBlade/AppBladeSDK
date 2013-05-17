@@ -120,6 +120,7 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 - (void)handleBackloggedFeedback;
 - (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
 
+-(NSMutableDictionary*) appBladeDeviceSecrets;
 - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
 - (BOOL)isRefreshProcessHappening;
 - (BOOL)isCurrentToken:(NSString *)token;
