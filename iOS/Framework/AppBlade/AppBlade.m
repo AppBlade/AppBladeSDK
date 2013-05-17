@@ -1686,7 +1686,13 @@ static BOOL is_encrypted () {
 }
 
 - (BOOL)isDeviceSecretBeingConfirmed {
-    return ([[self tokenRequests] operationCount]) != 0;
+    BOOL tokenRequestInProgress = ([[self tokenRequests] operationCount]) != 0;
+    BOOL processIsNotFinished = tokenRequestInProgress; //if we have a process, assume it's not finished, if we have one then of course it's finished
+    if(tokenRequestInProgress) { //the queue has a maximum concurrent process size of one, that's why we can do what comes next
+        AppBladeWebClient *process = (AppBladeWebClient *)[[[self tokenRequests] operations] objectAtIndex:0];
+        processIsNotFinished = ![process isFinished];
+    }
+    return tokenRequestInProgress && processIsNotFinished;
 }
 
 - (BOOL)isCurrentToken:(NSString *)token {
