@@ -7,9 +7,7 @@
 		<key>host</key>
 		<string>https://appblade.com</string>
 		<key>project_secret</key>
-		<string>DEFAULT</string>
-		<key>device_secret</key>
-		<string>DEFAULT</string>
+		<string>your_project_secret_here</string>
 	</dict>
 </dict>
 </plist>
