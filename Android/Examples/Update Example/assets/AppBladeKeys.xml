@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<api_keys>
+	  <host>https://appblade.com:3001</host>
+	  <project_secret>7b8d05dd90f463736766591ce2654d88</project_secret> 
+	  <version_secret>7b8d05dd90f463736766591ce2654d88</version_secret> 
+	  <device_secret>bb44445a0d021dbbb8086f32675b993806184c89761cfa72f31de5b84f53738e</device_secret>
+	</api_keys>
+</root>
