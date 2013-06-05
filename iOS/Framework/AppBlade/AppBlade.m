@@ -7,6 +7,7 @@
 //
 
 #import "AppBlade.h"
+#import "AppBladeLogging.h"
 #import "AppBladeSimpleKeychain.h"
 
 #import "PLCrashReporter.h"
@@ -26,8 +27,9 @@
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
-
 #include "FileMD5Hash.h"
+
+
 
 static NSString* const s_sdkVersion                     = @"0.4.0";
 
@@ -185,7 +187,7 @@ static BOOL is_encrypted () {
     
     /* Fetch the dlinfo for main() */
     if (dladdr(main, &dlinfo) == 0 || dlinfo.dli_fbase == NULL) {
-        NSLog(@"Could not find main() symbol (very odd)");
+        ABErrorLog(@"Could not find main() symbol (very odd)");
         return NO;
     }
     header = dlinfo.dli_fbase;
@@ -252,7 +254,7 @@ static BOOL is_encrypted () {
         BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
         if (!success || error) {
             // it failed.
-            NSLog(@"AppBlade failed to remove the caches directory after receiving invalid credentials");
+            ABErrorLog(@"AppBlade failed to remove the caches directory after receiving invalid credentials");
         }
     }
     [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory]; //reinitialize the folder
@@ -328,7 +330,7 @@ static BOOL is_encrypted () {
         NSString * md5 = [self hashFileOfPlist:plistPath];
         NSString* appBlade_plist_hash = (NSString *)[appBladeKeychainKeys objectForKey:kAppBladeKeychainPlistHashKey];
         if(![appBlade_plist_hash isEqualToString:md5]){ //our hashes don't match!
-            NSLog(@"Our hashes don't match! Clearing out current secrets!");
+            ABDebugLog_internal(@"Our hashes don't match! Clearing out current secrets!");
             [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
         }        
         self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
@@ -341,12 +343,12 @@ static BOOL is_encrypted () {
         NSString *storedDeviceSecret = [self appBladeDeviceSecret];
         if(storedDeviceSecret == nil || [storedDeviceSecret length] == 0){
             NSString * storedDeviceSecret = (NSString *)[appBladePlistStoredKeys objectForKey:kAppBladePlistDeviceSecretKey];
-            NSLog(@"Our device secret being set from plist:%@.", storedDeviceSecret);
+            ABDebugLog_internal(@"Our device secret being set from plist:%@.", storedDeviceSecret);
             [self setAppBladeDeviceSecret:storedDeviceSecret];
             appBladeKeychainKeys = [self appBladeDeviceSecrets];
             [appBladeKeychainKeys setValue:md5 forKey:kAppBladeKeychainPlistHashKey];
             [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBladeKeychainKeys]; //update our md5 as well. We JUST updated.
-            NSLog(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
+            ABDebugLog_internal(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
         }
         [self validateProjectConfiguration];
         
@@ -363,7 +365,7 @@ static BOOL is_encrypted () {
     
     if([kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret] || self.appBladeProjectSecret == nil || [self.appBladeProjectSecret  length] == 0)
     {
-        NSLog(@"User did not provide proper API credentials for AppBlade to be used in development.");
+        ABDebugLog_internal(@"User did not provide proper API credentials for AppBlade to be used in development.");
     }
 }
 
@@ -433,10 +435,10 @@ static BOOL is_encrypted () {
 {
     //ensure no other requests or confirms are already running.
     if([self isDeviceSecretBeingConfirmed]) {
-        NSLog(@"Refresh already in queue. Ignoring.");
+        ABDebugLog_internal(@"Refresh already in queue. Ignoring.");
         return;
     }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
-        NSLog(@"Token not current, refresh token request is out of sync. Ignoring.");
+        ABDebugLog_internal(@"Token not current, refresh token request is out of sync. Ignoring.");
         return;
     }
     
@@ -451,10 +453,10 @@ static BOOL is_encrypted () {
 {
     //ensure no other requests or confirms are already running.
     if([self isDeviceSecretBeingConfirmed]) {
-        NSLog(@"Confirm (or refresh) already in queue. Ignoring.");
+        ABDebugLog_internal(@"Confirm (or refresh) already in queue. Ignoring.");
         return;
     }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
-        NSLog(@"Token not current, confirm token request is out of sync. Ignoring.");
+        ABDebugLog_internal(@"Token not current, confirm token request is out of sync. Ignoring.");
         return;
     }
     
@@ -484,7 +486,7 @@ static BOOL is_encrypted () {
 - (void)checkForUpdates
 {
     [self validateProjectConfiguration];
-    NSLog(@"Checking for updates");
+    ABDebugLog_internal(@"Checking for updates");
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
     [client checkForUpdates];
     [self.pendingRequests addOperation:client];
@@ -493,7 +495,7 @@ static BOOL is_encrypted () {
 
 - (void)catchAndReportCrashes
 {
-    NSLog(@"Catch and report crashes");
+    ABDebugLog_internal(@"Catch and report crashes");
     [self validateProjectConfiguration];
 
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
@@ -503,7 +505,7 @@ static BOOL is_encrypted () {
     
     // Enable the Crash Reporter
     if (![crashReporter enableCrashReporterAndReturnError: &error])
-        NSLog(@"Warning: Could not enable crash reporter: %@", error);
+        ABErrorLog(@"Warning: Could not enable crash reporter: %@", error);
 }
 
 - (void)checkForExistingCrashReports
@@ -528,25 +530,24 @@ static BOOL is_encrypted () {
         PLCrashReport *report = [[[PLCrashReport alloc] initWithData: crashData error: &error] autorelease];
         if (report != nil) {
             reportString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat: PLCrashReportTextFormatiOS];
-//            NSLog(@"Formatting crash report with PLCrashReportTextFormatter %@", reportString);
             //send pending crash report to a unique file name in the the queue
             queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
             if(queuedFilePath == nil){
-                NSLog(@"error saving crash report");
+                ABErrorLog(@"error saving crash report");
             }
             else
             {
-                NSLog(@"moved crash report to %@", queuedFilePath);
+                ABDebugLog_internal(@"moved crash report to %@", queuedFilePath);
             }
         }
         else
         {
-            NSLog(@"Could not parse crash report");
+            ABErrorLog(@"Could not parse crash report");
         }
     }
     else
     {
-        NSLog(@"Could not load a crash report from live file");
+        ABErrorLog(@"Could not load a crash report from live file");
     }
     [crashReporter purgePendingCrashReport]; //remove crash report from immediate file, we have it in the queue now
 
@@ -564,7 +565,7 @@ static BOOL is_encrypted () {
     }
     else
     {
-        NSLog(@"No crashes to report");
+        ABDebugLog_internal(@"No crashes to report");
     }
 }
 
@@ -595,21 +596,21 @@ static BOOL is_encrypted () {
     BOOL canSignalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
 
     if (client.api == AppBladeWebClientAPI_GenerateToken)  {
-        NSLog(@"ERROR generating token");
+        ABErrorLog(@"ERROR generating token");
         //wait for a retry or deactivate the SDK for the duration of the current install
         if(status == kTokenInvalidStatusCode)
         {  //the token we used to generate a new token is no longer valid
-            NSLog(@"Token refresh failed because current token had its access revoked.");
+            ABErrorLog(@"Token refresh failed because current token had its access revoked.");
             [AppBlade clearCacheDirectory];//all of the pending data is to be considered invlid, don't let it clutter the app.
         }
         else
         {  //likely a 500 or some other timeout
-            NSLog(@"Token refresh failed due to an error from the server.");
+            ABErrorLog(@"Token refresh failed due to an error from the server.");
             //try to confirm the token that we have. If it works, we can go with that.
         }
     }
     else if (client.api == AppBladeWebClientAPI_ConfirmToken)  {
-        NSLog(@"ERROR confirming token");
+        ABErrorLog(@"ERROR confirming token");
         //schedule a token refresh or deactivate based on status
         if(status == kTokenRefreshStatusCode)
         {
@@ -684,7 +685,7 @@ static BOOL is_encrypted () {
         }
         else if (client.api == AppBladeWebClientAPI_Feedback) {
             @synchronized (self){
-                NSLog(@"ERROR sending feedback");
+                ABErrorLog(@"ERROR sending feedback");
                 NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
                 NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
                 NSString *fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
@@ -703,7 +704,7 @@ static BOOL is_encrypted () {
                     
                     BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
                     if(!success){
-                        NSLog(@"Error writing backup file to %@", backupFilePath);
+                        ABErrorLog(@"Error writing backup file to %@", backupFilePath);
                     }
                     self.feedbackDictionary = nil;
                 }
@@ -713,19 +714,19 @@ static BOOL is_encrypted () {
             }
         }
         else if(client.api == AppBladeWebClientAPI_Sessions){
-            NSLog(@"ERROR sending sessions");
+            ABErrorLog(@"ERROR sending sessions");
         }
         else if(client.api == AppBladeWebClientAPI_ReportCrash)
         {
-            NSLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
+            ABErrorLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
         }
         else if(client.api == AppBladeWebClientAPI_UpdateCheck)
         {
-            NSLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
+            ABErrorLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
         }
         else
         {
-            NSLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
+            ABErrorLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
         }
     }
 }
@@ -734,17 +735,17 @@ static BOOL is_encrypted () {
 {    
     NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
     if(deviceSecretString != nil) {
-        NSLog(@"Updating token ");
+        ABDebugLog_internal(@"Updating token ");
         [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
         //immediately confirm we have a new token stored
-        NSLog(@"token from request %@", [client sentDeviceSecret]);
-        NSLog(@"confirming new token %@", [self appBladeDeviceSecret]);
+        ABDebugLog_internal(@"token from request %@", [client sentDeviceSecret]);
+        ABDebugLog_internal(@"confirming new token %@", [self appBladeDeviceSecret]);
         [self confirmToken:[self appBladeDeviceSecret]];
     }
     else {
-        NSLog(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
+        ABDebugLog_internal(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
         int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
-        NSLog(@"token refresh response status code %d", statusCode);
+        ABDebugLog_internal(@"token refresh response status code %d", statusCode);
         if(statusCode == kTokenInvalidStatusCode){
             [self.delegate appBlade:self applicationApproved:NO error:nil];
         }else if (statusCode == kTokenRefreshStatusCode){
@@ -759,13 +760,13 @@ static BOOL is_encrypted () {
 {
     NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
     if(deviceSecretTimeout != nil) {
-        NSLog(@"Token confirmed. Business as usual.");
+        ABDebugLog_internal(@"Token confirmed. Business as usual.");
         [self resumeCurrentPendingRequests]; //continue requests that we could have had pending. they will be ignored if they fail with the old token.
     }
     else {
-        NSLog(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
+        ABDebugLog_internal(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
         int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
-        NSLog(@"token confirm response status code %d", statusCode);
+        ABDebugLog_internal(@"token confirm response status code %d", statusCode);
         if(statusCode == kTokenInvalidStatusCode){
             [self.delegate appBlade:self applicationApproved:NO error:nil];
         }else if (statusCode == kTokenRefreshStatusCode){
@@ -828,24 +829,24 @@ static BOOL is_encrypted () {
     int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
     BOOL success = (status == 201 || status == 200);
     if(success){ //we don't need to hold onto this crash.
-        NSLog(@"Appblade: success sending crash report, response status code: %d", status);
+        ABDebugLog_internal(@"Appblade: success sending crash report, response status code: %d", status);
         [[PLCrashReporter sharedReporter] purgePendingCrashReport];
         NSString *pathOfCrashReport = [client.userInfo valueForKey:kAppBladeCrashReportKeyFilePath];
         [[NSFileManager defaultManager] removeItemAtPath:pathOfCrashReport error:nil];
-        NSLog(@"Appblade: removed crash report, %@", pathOfCrashReport);
+        ABDebugLog_internal(@"Appblade: removed crash report, %@", pathOfCrashReport);
 
         if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
-            NSLog(@"Appblade: PLCrashReporter has more crash reports");
+            ABDebugLog_internal(@"Appblade: PLCrashReporter has more crash reports");
             [self handleCrashReport];
         }
         else
         {
-            NSLog(@"Appblade: PLCrashReporter has no more crash reports");
+            ABDebugLog_internal(@"Appblade: PLCrashReporter has no more crash reports");
         }
     }
     else
     {
-        NSLog(@"Appblade: error sending crash report, response status code: %d", status);
+        ABErrorLog(@"Appblade: error sending crash report, response status code: %d", status);
         //No more crash reports for now. We might have bad internet access.
     }
 }
@@ -855,7 +856,7 @@ static BOOL is_encrypted () {
     @synchronized (self){
         BOOL isBacklog = [[self.pendingRequests operations] containsObject:client];
         if (success) {
-            NSLog(@"feedback Successful");
+            ABDebugLog_internal(@"feedback Successful");
             
             NSDictionary* feedback = [client.userInfo objectForKey:kAppBladeFeedbackKeyFeedback];
             // Clean up
@@ -868,28 +869,28 @@ static BOOL is_encrypted () {
             NSString* fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
 
             NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
-            NSLog(@"Removing supporting feedback files and the feedback file herself");
+            ABDebugLog_internal(@"Removing supporting feedback files and the feedback file herself");
             [self removeIntermediateFeedbackFiles:filePath];
            
-            NSLog(@"Removing Successful feedback object from main feedback list");
+            ABDebugLog_internal(@"Removing Successful feedback object from main feedback list");
             [backups removeObject:fileName];
             if (backups.count > 0) {
-                NSLog(@"writing pending feedback objects back to file");
+                ABDebugLog_internal(@"writing pending feedback objects back to file");
                 [backups writeToFile:backupFilePath atomically:YES];
             }
             
-            NSLog(@"checking for more pending feedback");
+            ABDebugLog_internal(@"checking for more pending feedback");
             if ([self hasPendingFeedbackReports]) {
-                NSLog(@"more pending feedback");
+                ABDebugLog_internal(@"more pending feedback");
                 [self handleBackloggedFeedback];
             }
             else
             {
-                NSLog(@"no more pending feedback");
+                ABDebugLog_internal(@"no more pending feedback");
             }
         }
         else if (!isBacklog) {
-            NSLog(@"Unsuccesful feedback not found in backLog");
+            ABDebugLog_internal(@"Unsuccesful feedback not found in backLog");
             
             // If we fail sending, add to backlog
             // We do not remove backlogged files unless the request is sucessful
@@ -910,7 +911,7 @@ static BOOL is_encrypted () {
             
             BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
             if(!success){
-                NSLog(@"Error writing backup file to %@", backupFilePath);
+                ABErrorLog(@"Error writing backup file to %@", backupFilePath);
             }
         } //It's failed and already in the backlog. Keep it there.
         
@@ -930,13 +931,13 @@ static BOOL is_encrypted () {
             [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
             
             if(deleteError){
-                NSLog(@"Error deleting Session log: %@", deleteError.debugDescription);
+                ABErrorLog(@"Error deleting Session log: %@", deleteError.debugDescription);
             }
         }
     }
     else
     {
-        NSLog(@"Error sending Session log");
+        ABErrorLog(@"Error sending Session log");
     }
 }
 
@@ -998,21 +999,21 @@ static BOOL is_encrypted () {
     @synchronized (self){
         NSString *feedbackBacklogFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
         if([[NSFileManager defaultManager] fileExistsAtPath:feedbackBacklogFilePath]){
-            NSLog(@"found file at %@", feedbackBacklogFilePath);
+            ABDebugLog_internal(@"found file at %@", feedbackBacklogFilePath);
             NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:feedbackBacklogFilePath];
             if (backupFiles.count > 0) {
-                NSLog(@"found %d files at feedbackBacklogFilePath", backupFiles.count);
+                ABDebugLog_internal(@"found %d files at feedbackBacklogFilePath", backupFiles.count);
                 toRet = YES;
             }
             else
             {
-                NSLog(@"found NO files at feedbackBacklogFilePath");
+                ABDebugLog_internal(@"found NO files at feedbackBacklogFilePath");
                 toRet = NO;
             }
         }
         else
         {
-            NSLog(@"found nothing at %@", feedbackBacklogFilePath);
+            ABDebugLog_internal(@"found nothing at %@", feedbackBacklogFilePath);
             toRet = NO;
         }
     }
@@ -1022,15 +1023,15 @@ static BOOL is_encrypted () {
 
 - (void)allowFeedbackReporting
 {
-    NSLog(@"allowFeedbackReporting");
+    ABDebugLog_internal(@"allowFeedbackReporting");
 
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     if (window) {
         [self allowFeedbackReportingForWindow:window];
-        NSLog(@"Allowing feedback.");
+        ABDebugLog_internal(@"Allowing feedback.");
     }
     else {
-        NSLog(@"Cannot setup for feedback. No keyWindow.");
+        ABErrorLog(@"Cannot setup for feedback. No keyWindow.");
     }
 }
 
@@ -1055,11 +1056,11 @@ static BOOL is_encrypted () {
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     if (window) {
         [self setupCustomFeedbackReportingForWindow:window];
-        NSLog(@"Allowing custom feedback.");
+        ABDebugLog_internal(@"Allowing custom feedback.");
         
     }
     else {
-        NSLog(@"Cannot setup for custom feedback. No keyWindow.");
+        ABErrorLog(@"Cannot setup for custom feedback. No keyWindow.");
     }
 
 }
@@ -1067,12 +1068,12 @@ static BOOL is_encrypted () {
 - (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window
 {
     if (window) {
-        NSLog(@"Allowing custom feedback for window %@", window);
+        ABDebugLog_internal(@"Allowing custom feedback for window %@", window);
         self.window = window;
     }
     else
     {
-        NSLog(@"Cannot setup for custom feedback. Not a valid window.");
+        ABErrorLog(@"Cannot setup for custom feedback. Not a valid window.");
         return;
     }
     [self checkAndCreateAppBladeCacheDirectory];
@@ -1108,7 +1109,7 @@ static BOOL is_encrypted () {
     }
     else
     {
-        NSLog(@"Feedback window already presenting, or a screenshot is trying to be captured");
+        ABDebugLog_internal(@"Feedback window already presenting, or a screenshot is trying to be captured");
         return;
     }
 }
@@ -1144,7 +1145,7 @@ static BOOL is_encrypted () {
         screenFrame.origin.y = screenFrame.origin.y -vFrame.origin.y + statusBarFrame.size.height;
     }
     
-    NSLog(@"Displaying feedback dialog in frame X:%.f Y:%.f W:%.f H:%.f",
+    ABDebugLog_internal(@"Displaying feedback dialog in frame X:%.f Y:%.f W:%.f H:%.f",
           screenFrame.origin.x, screenFrame.origin.y,
           screenFrame.size.width, screenFrame.size.height);
     
@@ -1156,7 +1157,7 @@ static BOOL is_encrypted () {
     if (!self.window){
         self.window = [[UIApplication sharedApplication] keyWindow];
         self.showingFeedbackDialogue = YES;
-        NSLog(@"Feedback window not defined, using default (Images might not come through.)");
+        ABDebugLog_internal(@"Feedback window not defined, using default (Images might not come through.)");
     }
     if([[self.window subviews] count] > 0){
         [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
@@ -1165,7 +1166,7 @@ static BOOL is_encrypted () {
     }
     else
     {
-        NSLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
+        ABErrorLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
         feedback.delegate = nil;
         self.showingFeedbackDialogue = NO;
     }
@@ -1174,7 +1175,7 @@ static BOOL is_encrypted () {
 
 -(void)feedbackDidSubmitText:(NSString*)feedbackText{
     
-    NSLog(@"reporting text %@", feedbackText);
+    ABDebugLog_internal(@"reporting text %@", feedbackText);
     [self reportFeedback:feedbackText];
     self.showingFeedbackDialogue = NO;
 
@@ -1195,7 +1196,7 @@ static BOOL is_encrypted () {
     
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     
-    NSLog(@"caching and attempting send of feedback %@", self.feedbackDictionary);
+    ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackDictionary);
     
     //store the feedback in the cache director in the event of a termination
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
@@ -1212,11 +1213,11 @@ static BOOL is_encrypted () {
     
     BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
     if(!success){
-        NSLog(@"Error writing backup file to %@", backupFilePath);
+        ABErrorLog(@"Error writing backup file to %@", backupFilePath);
     }
     
     AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
-    NSLog(@"Sending screenshot");
+    ABDebugLog_internal(@"Sending screenshot");
     [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
     [self.pendingRequests addOperation:client];
 }
@@ -1225,7 +1226,7 @@ static BOOL is_encrypted () {
 - (void)handleBackloggedFeedback
 {
     @synchronized (self){
-        NSLog(@"handleBackloggedFeedback");
+        ABDebugLog_internal(@"handleBackloggedFeedback");
         NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
         NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
         if (backupFiles.count > 0) {
@@ -1234,8 +1235,8 @@ static BOOL is_encrypted () {
             
             NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
             if (feedback) {
-                NSLog(@"Feedback found at %@", feedbackPath);
-                NSLog(@"backlog Feedback dictionary %@", feedback);
+                ABDebugLog_internal(@"Feedback found at %@", feedbackPath);
+                ABDebugLog_internal(@"backlog Feedback dictionary %@", feedback);
                 NSString *screenshotFileName = [feedback objectForKey:kAppBladeFeedbackKeyScreenshot];
                 //validate that additional files exist
                 NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
@@ -1250,18 +1251,18 @@ static BOOL is_encrypted () {
                 {
                     //clean up files if one doesn't exist
                     [self removeIntermediateFeedbackFiles:feedbackPath];
-                    NSLog(@"invalid feedback at %@, removing File and intermediate files", feedbackPath);
+                    ABDebugLog_internal(@"invalid feedback at %@, removing File and intermediate files", feedbackPath);
                     [backupFiles removeObject:fileName];
-                    NSLog(@"writing valid pending feedback objects back to file");
+                    ABDebugLog_internal(@"writing valid pending feedback objects back to file");
                     [backupFiles writeToFile:backupFilePath atomically:YES];
 
                 }
             }
             else
             {
-                NSLog(@"No Feedback found at %@, invalid feedback, removing File", feedbackPath);
+                ABDebugLog_internal(@"No Feedback found at %@, invalid feedback, removing File", feedbackPath);
                 [backupFiles removeObject:fileName];
-                NSLog(@"writing valid pending feedback objects back to file");
+                ABDebugLog_internal(@"writing valid pending feedback objects back to file");
                 [backupFiles writeToFile:backupFilePath atomically:YES];
             }
         }
@@ -1273,13 +1274,13 @@ static BOOL is_encrypted () {
     [self checkAndCreateAppBladeCacheDirectory];
     UIImage *currentImage = [self getContentBelowView];
     if(currentImage == nil){
-        NSLog(@"ERROR, could not capture screenshot, possible invalid keywindow");
+        ABErrorLog(@"ERROR, could not capture screenshot, possible invalid keywindow");
     }
     NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"png"];
 	NSString *pngFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
 	NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(currentImage)];
 	[data1 writeToFile:pngFilePath atomically:YES];
-    NSLog(@"Screen captured in fileName %@", fileName);
+    ABDebugLog_internal(@"Screen captured in fileName %@", fileName);
     return [pngFilePath autorelease];
     
 }
@@ -1368,25 +1369,25 @@ static BOOL is_encrypted () {
 
 + (void)startSession
 {
-    NSLog(@"Starting Session Logging");
+    ABDebugLog_internal(@"Starting Session Logging");
     [[AppBlade sharedManager] logSessionStart];
 }
 
 
 + (void)endSession
 {
-    NSLog(@"Ended Session Logging");
+    ABDebugLog_internal(@"Ended Session Logging");
     [[AppBlade sharedManager] logSessionEnd];
 }
 
 - (void)logSessionStart
 {
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-    NSLog(@"Checking Session Path: %@", sessionFilePath);
+    ABDebugLog_internal(@"Checking Session Path: %@", sessionFilePath);
 
     if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
         NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
-        NSLog(@"%d Sessions Exist, posting them", [sessions count]);
+        ABDebugLog_internal(@"%d Sessions Exist, posting them", [sessions count]);
         
         if(![self hasPendingSessions]){
             AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
@@ -1429,11 +1430,11 @@ static BOOL is_encrypted () {
     }
     else
     {
-        NSLog(@"no file found, reinitializing");
+        ABDebugLog_internal(@"no file found, reinitializing");
         toRet = [NSDictionary dictionary];
         [self setCustomParams:toRet];
     }
-    NSLog(@"getting %@", toRet);
+    ABDebugLog_internal(@"getting %@", toRet);
 
     return toRet;
 }
@@ -1443,7 +1444,7 @@ static BOOL is_encrypted () {
     [self checkAndCreateAppBladeCacheDirectory];
     NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
-        NSLog(@"WARNING: Overwriting all existing user params");
+        ABDebugLog_internal(@"WARNING: Overwriting all existing user params");
     }
     if(newFieldValues){
         NSError *error = nil;
@@ -1453,12 +1454,12 @@ static BOOL is_encrypted () {
         }
         else
         {
-            NSLog(@"Error parsing custom params %@", newFieldValues);
+            ABErrorLog(@"Error parsing custom params %@", newFieldValues);
         }
     }
     else
     {
-        NSLog(@"clearing custom params, removing file");
+        ABDebugLog_internal(@"clearing custom params, removing file");
         [[NSFileManager defaultManager] removeItemAtPath:customFieldsPath error:nil];
     }
 }
@@ -1477,9 +1478,9 @@ static BOOL is_encrypted () {
     }
     else
     {
-        NSLog(@"invalid nil key");
+        ABErrorLog(@"AppBlade: invalid nil key when setting custom parameters");
     }
-    NSLog(@"setting to %@", mutableFields);
+    ABDebugLog_internal(@"setting to %@", mutableFields);
     currentFields = (NSDictionary *)mutableFields;
     [self setCustomParams:currentFields];
 }
@@ -1500,9 +1501,9 @@ static BOOL is_encrypted () {
     }
     else
     {
-        NSLog(@"invalid nil key");
+        ABErrorLog(@"invalid nil key");
     }
-    NSLog(@"setting to %@", mutableFields);
+    ABDebugLog_internal(@"setting to %@", mutableFields);
     currentFields = (NSDictionary *)mutableFields;
     [self setCustomParams:currentFields];
 }
@@ -1561,7 +1562,7 @@ static BOOL is_encrypted () {
     {
         appBlade_deviceSecret_dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];
         [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret_dict];
-        NSLog(@"Device Secrets were nil. Reinitialized.");
+        ABDebugLog_internal(@"Device Secrets were nil. Reinitialized.");
     }
     return appBlade_deviceSecret_dict;
 }
@@ -1575,7 +1576,7 @@ static BOOL is_encrypted () {
     NSString* device_secret_stored_old = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyOld];
     if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
     {
-        NSLog(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
+        ABDebugLog_internal(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
         _appBladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
     }else
     {
@@ -1620,7 +1621,7 @@ static BOOL is_encrypted () {
         [appBlade_keychain_dict setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyNew];
         [appBlade_keychain_dict setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyOld];
         [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
-        NSLog(@"Cleared device secrets.");
+        ABDebugLog_internal(@"Cleared device secrets.");
     }
 }
 
@@ -1633,11 +1634,11 @@ static BOOL is_encrypted () {
     NSFileManager* manager = [NSFileManager defaultManager];
     BOOL isDirectory = YES;
     if (![manager fileExistsAtPath:directory isDirectory:&isDirectory]) {
-        NSLog(@"Appblade creating %@", directory);
+        ABDebugLog_internal(@"Appblade creating %@", directory);
         NSError* error = nil;
         BOOL success = [manager createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:&error];
         if (!success) {
-            NSLog(@"Error creating directory %@", error);
+            ABErrorLog(@"Error creating directory %@", error);
         }
     }
 }
@@ -1652,7 +1653,7 @@ static BOOL is_encrypted () {
     else {
         NSError* error = nil;
         if (![[NSFileManager defaultManager] removeItemAtPath:filePath error:&error]) {
-            NSLog(@"AppBlade cannot remove file %@", [filePath lastPathComponent]);
+            ABErrorLog(@"AppBlade cannot remove file %@", [filePath lastPathComponent]);
         }
     }
     return returnObject;
@@ -1663,7 +1664,7 @@ static BOOL is_encrypted () {
 {
     NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
     if (feedback) {
-        NSLog(@"Cleaning Feedback %@", feedback);
+        ABDebugLog_internal(@"Cleaning Feedback %@", feedback);
         NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
         
         NSError *screenShotError = nil;

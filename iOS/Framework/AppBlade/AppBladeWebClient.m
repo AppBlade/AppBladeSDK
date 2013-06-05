@@ -10,6 +10,8 @@
 #import "PLCrashReporter.h"
 
 #import "AppBlade.h"
+#import "AppBladeLogging.h"
+
 #import <CommonCrypto/CommonHMAC.h>
 #include "FileMD5Hash.h"
 #import <dlfcn.h>
@@ -125,7 +127,6 @@ const int kNonceRandomStringLength = 74;
 #pragma mark - NSOperation functions
 - (void)start
 {
-    NSLog(@"starting operation");
     if (self.isCancelled) {
         // If it's already been cancelled, mark the operation as finished and don't start the connection.
         [self willChangeValueForKey:@"isFinished"];
@@ -140,7 +141,7 @@ const int kNonceRandomStringLength = 74;
 - (void) issueRequest
 {
     if((nil != _request) && !self.isCancelled){
-            NSLog(@"Success_IssueRequest: Starting API call.");
+            ABDebugLog_internal(@"Success_IssueRequest: Starting API call.");
             self.executing = YES;
             [self didChangeValueForKey:@"isExecuting"];
             [self willChangeValueForKey:@"isFinished"];
@@ -183,7 +184,7 @@ const int kNonceRandomStringLength = 74;
         }
         
     } else {
-        NSLog(@"Error_IssueRequest: API request was cancelled or did not initialize properly. Did not perform an API call.");
+        ABErrorLog(@"Error_IssueRequest: API request was cancelled or did not initialize properly. Did not perform an API call.");
         self.executing = NO;
         [self didChangeValueForKey:@"isExecuting"];
         [self willChangeValueForKey:@"isFinished"];
@@ -245,7 +246,7 @@ const int kNonceRandomStringLength = 74;
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     if (self.isCancelled) {
-        NSLog(@"API Call cancelled. didReceiveResponse, but can't ignore yet.");
+        ABDebugLog_internal(@"API Call cancelled. didReceiveResponse, but can't ignore yet.");
     }
 	// Reset the data object.
     self.receivedData = [[NSMutableData alloc] init];
@@ -258,7 +259,7 @@ const int kNonceRandomStringLength = 74;
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)aRequest redirectResponse:(NSURLResponse *)redirectResponse;
 {
     if (self.isCancelled) {
-        NSLog(@"API Call cancelled. willSendRequest, but can't ignore yet.");
+        ABDebugLog_internal(@"API Call cancelled. willSendRequest, but can't ignore yet.");
     }
     
     if (redirectResponse) {
@@ -283,7 +284,7 @@ const int kNonceRandomStringLength = 74;
     self.receivedData = nil;
     
     if (self.isCancelled) {
-        NSLog(@"API Call cancelled. didFailWithError, but Ignoring.");
+        ABDebugLog_internal(@"API Call cancelled. didFailWithError, but Ignoring.");
         [self willChangeValueForKey:@"isFinished"];
         self.executing = NO;
         [self didChangeValueForKey:@"isExecuting"];
@@ -294,7 +295,7 @@ const int kNonceRandomStringLength = 74;
     }
     
     
-    NSLog(@"AppBlade failed with error: %@", error.localizedDescription);
+    ABErrorLog(@"AppBlade failed with error: %@", error.localizedDescription);
     
     __block AppBladeWebClient *selfReference = self;
     id<AppBladeWebClientDelegate> delegateReference = self.delegate;
@@ -316,7 +317,7 @@ const int kNonceRandomStringLength = 74;
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     if (self.isCancelled) {
-        NSLog(@"API Call cancelled. connectionDidFinishLoading, but Ignoring.");
+        ABDebugLog_internal(@"API Call cancelled. connectionDidFinishLoading, but Ignoring.");
         [self willChangeValueForKey:@"isFinished"];
         self.executing = NO;
         [self didChangeValueForKey:@"isExecuting"];
@@ -329,7 +330,7 @@ const int kNonceRandomStringLength = 74;
     if (_api == AppBladeWebClientAPI_GenerateToken) {
         NSError *error = nil;
         NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        NSLog(@"Received Device Secret Refresh Response from AppBlade: %@", string);
+        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         __block AppBladeWebClient *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
@@ -340,7 +341,7 @@ const int kNonceRandomStringLength = 74;
     else if (_api == AppBladeWebClientAPI_ConfirmToken) {
         NSError *error = nil;
         NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        NSLog(@"Received Device Secret Confirm Response from AppBlade: %@", string);
+        ABDebugLog_internal(@"Received Device Secret Confirm Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         self.receivedData = nil;
         __block AppBladeWebClient *selfReference = self;
@@ -352,7 +353,6 @@ const int kNonceRandomStringLength = 74;
     else if(_api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
         //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        //NSLog(@"Received Security Response from AppBlade: %@", string);
         NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         //BOOL showUpdatePrompt = [_request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
         
@@ -367,7 +367,7 @@ const int kNonceRandomStringLength = 74;
         }
         else
         {
-            NSLog(@"Error parsing permisions json: %@", [error debugDescription]);
+            ABErrorLog(@"Error parsing permisions json: %@", [error debugDescription]);
             __block AppBladeWebClient *selfReference = self;
             id<AppBladeWebClientDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -395,7 +395,7 @@ const int kNonceRandomStringLength = 74;
     }
     else if (_api == AppBladeWebClientAPI_Sessions) {
         NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        NSLog(@"Received Response from AppBlade Sessions %@", receivedDataString);
+        ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString);
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
         __block AppBladeWebClient *selfReference = self;
@@ -407,7 +407,7 @@ const int kNonceRandomStringLength = 74;
     else if(_api == AppBladeWebClientAPI_UpdateCheck) {
         NSError *error = nil;
         NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        NSLog(@"Received Update Response from AppBlade: %@", string);
+        ABDebugLog_internal(@"Received Update Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:_receivedData options:nil error:&error];
         self.receivedData = nil;
         
@@ -420,7 +420,7 @@ const int kNonceRandomStringLength = 74;
         }
         else
         {
-            NSLog(@"Error parsing update plist: %@", [error debugDescription]);
+            ABErrorLog(@"Error parsing update plist: %@", [error debugDescription]);
             __block AppBladeWebClient *selfReference = self;
             id<AppBladeWebClientDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -430,7 +430,7 @@ const int kNonceRandomStringLength = 74;
     }
     else
     {
-        NSLog(@"Unhandled connection with AppBladeWebClientAPI value %d", _api);
+        ABErrorLog(@"Unhandled connection with AppBladeWebClientAPI value %d", _api);
     }
     
     [self willChangeValueForKey:@"isFinished"];
@@ -451,7 +451,7 @@ const int kNonceRandomStringLength = 74;
     BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
-        NSLog(@"Binary signed by Apple, skipping token generation");
+        ABDebugLog_internal(@"Binary signed by Apple, skipping token generation");
  //        [self.delegate appBladeWebClient:self receivedPermissions: ];
     }
     else
@@ -469,19 +469,19 @@ const int kNonceRandomStringLength = 74;
 
 - (void)confirmToken:(NSString *)tokenToConfirm
 {
-    NSLog(@"confirming token (client)");
+    ABDebugLog_internal(@"confirming token (client)");
     [self setApi: AppBladeWebClientAPI_ConfirmToken];
     BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
-        NSLog(@"Binary signed by Apple, skipping token confirmation");
+        ABDebugLog_internal(@"Binary signed by Apple, skipping token confirmation");
 //        [self.delegate appBladeWebClient:self receivedPermissions: ];
     }
     else
     {
         NSString *storedSecret = [[AppBlade sharedManager] appBladeDeviceSecret];
-        NSLog(@"storedSecret %@", storedSecret);
-        NSLog(@"tokenToConfirm %@", tokenToConfirm);
+        ABDebugLog_internal(@"storedSecret %@", storedSecret);
+        ABDebugLog_internal(@"tokenToConfirm %@", tokenToConfirm);
         
 
         if(nil != tokenToConfirm && ![tokenToConfirm isEqualToString:@""]){
@@ -496,7 +496,7 @@ const int kNonceRandomStringLength = 74;
         }
         else
         {
-            NSLog(@"We have no stored secret");
+            ABDebugLog_internal(@"We have no stored secret");
         }
     }
 }
@@ -508,7 +508,7 @@ const int kNonceRandomStringLength = 74;
     BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
-        NSLog(@"Binary signed by Apple, skipping permissions check forever");
+        ABDebugLog_internal(@"Binary signed by Apple, skipping permissions check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
         __block AppBladeWebClient *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
@@ -535,7 +535,7 @@ const int kNonceRandomStringLength = 74;
     BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
     if(hasFairplay){
         //we're signed by apple, skip updating. Go straight to delegate.
-        NSLog(@"Binary signed by Apple, skipping update check forever");
+        ABDebugLog_internal(@"Binary signed by Apple, skipping update check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
         __block AppBladeWebClient *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
@@ -554,7 +554,7 @@ const int kNonceRandomStringLength = 74;
         [apiRequest addValue:@"true" forHTTPHeaderField:@"USE_ANONYMOUS"];
         [self addSecurityToRequest:apiRequest]; //don't need security, but we could do better with it.
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
-        NSLog(@"Update call %@", urlString);
+        ABDebugLog_internal(@"Update call %@", urlString);
         //apiRequest is a retained reference to the _request ivar.
     }
 }
@@ -588,11 +588,11 @@ const int kNonceRandomStringLength = 74;
             [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:paramsData];
-            NSLog(@"Parsed params! They were included.");
+            ABDebugLog_internal(@"Parsed params! They were included.");
         }
         else
         {
-            NSLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
+            ABErrorLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
         }
     }
     
@@ -647,11 +647,11 @@ const int kNonceRandomStringLength = 74;
                 [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
                 [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
                 [body appendData:paramsData];
-                NSLog(@"Parsed params! They were included.");
+                ABDebugLog_internal(@"Parsed params! They were included.");
             }
             else
             {
-                NSLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
+                ABErrorLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
             }
         }
         
@@ -705,9 +705,9 @@ const int kNonceRandomStringLength = 74;
         //request is a retained reference to the _request ivar.
     }
     else {
-        NSLog(@"Error parsing session data");
+        ABErrorLog(@"Error parsing session data");
         if(error)
-            NSLog(@"Error %@", [error debugDescription]);
+            ABErrorLog(@"Error %@", [error debugDescription]);
         
         //we may have to remove the sessions file in extreme cases
         __block AppBladeWebClient *selfReference = self;
@@ -810,7 +810,7 @@ const int kNonceRandomStringLength = 74;
     NSString* ext = [self.delegate appBladeDeviceSecret];
     
     NSString *requestBodyHash = [self SHA_Base64:requestBodyRaw];
-    NSLog(@"%d", [requestBodyRaw length]);
+    ABDebugLog_internal(@"%d", [requestBodyRaw length]);
     
     // Compose the normalized request body.
     NSMutableString* request_body = [NSMutableString stringWithFormat:@"%@\n%@\n%@\n%@\n%@\n%@\n%@\n",
@@ -821,8 +821,8 @@ const int kNonceRandomStringLength = 74;
                                      port,
                                      requestBodyHash,
                                      ext];
-    NSLog(@"%@", requestBodyHash);
-    NSLog(@"%@", [requestBodyRaw substringToIndex:MIN([requestBodyRaw length], 1000)]);
+    ABDebugLog_internal(@"%@", requestBodyHash);
+    ABDebugLog_internal(@"%@", [requestBodyRaw substringToIndex:MIN([requestBodyRaw length], 1000)]);
     
     // Digest the normalized request body.
     NSString* mac = [self HMAC_SHA256_Base64:request_body with_key:[self.delegate appBladeProjectSecret]];
@@ -986,7 +986,7 @@ const int kNonceRandomStringLength = 74;
 {
     NSString* preparedHostName = nil;
     if(customURLString == nil){
-        NSLog(@"No custom URL: defaulting to %@", defaultAppBladeHostURL);
+        ABDebugLog_internal(@"No custom URL: defaulting to %@", defaultAppBladeHostURL);
         preparedHostName = defaultAppBladeHostURL;
     }
     else
@@ -995,16 +995,16 @@ const int kNonceRandomStringLength = 74;
         NSURL *requestURL = [[[NSURL alloc] initWithString:customURLString] autorelease];
         if(requestURL == nil)
         {
-            NSLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
+            ABErrorLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
             preparedHostName = defaultAppBladeHostURL;
         }
         else
         {
-            NSLog(@"Found custom URL %@", customURLString);
+            ABDebugLog_internal(@"Found custom URL %@", customURLString);
             preparedHostName = customURLString;
         }
     }
-    NSLog(@"built host URL: %@", preparedHostName);
+    ABDebugLog_internal(@"built host URL: %@", preparedHostName);
     return preparedHostName;
 }
 
