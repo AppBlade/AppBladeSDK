@@ -21,6 +21,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 //import android.app.Notification;
 import android.app.NotificationManager;
 //import android.app.PendingIntent;
@@ -59,6 +60,7 @@ public class UpdatesHelper {
 	private static AlertDialog updateDialog = null;//for checking download process
 	private static UpdateTask updateTask = null;//for checking download process
 	private static Thread downloadThread = null; //for checking download process
+	private static ProgressDialog progressDialog = null;
 	
 //	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;	
@@ -369,6 +371,27 @@ private static boolean appCanDownload() {
 	return hasAllPackagePermissions;
 }
 
+private static void showProgress(final Activity context) {
+	if (context != null) {
+		context.runOnUiThread(new Runnable() {
+			public void run() {
+				progressDialog = ProgressDialog.show(context, "Update in Progress", "Updating...");
+				progressDialog.setProgress(0);
+			}
+		});
+	}
+}
+
+private static void dismissProgress(Activity context) {
+	if ((context != null) && (progressDialog != null)) {
+		context.runOnUiThread(new Runnable() {
+			public void run() {
+				progressDialog.dismiss();
+			}
+		});
+	}
+}
+
 /**
  * Attempts to download the update given the response from the server.
  * @param context Activity to handle the download and notifications
@@ -387,6 +410,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	FileOutputStream fileOutput = null;
 	BufferedOutputStream bufferedOutput = null;
 	
+	showProgress(context);
 	try
 	{
 		fileDownloadLocation = UpdatesHelper.fileFromUpdateJSON(update);
@@ -471,6 +495,7 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	catch(IOException ex) { Log.w(AppBlade.LogTag, "IO error when downloading update ", ex); }
 	finally
 	{
+		dismissProgress(context);
 		NotificationManager notificationManager =
 				(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(NotificationNewVersionDownloading);		
