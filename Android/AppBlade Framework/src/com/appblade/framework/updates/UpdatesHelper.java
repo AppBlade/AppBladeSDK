@@ -80,7 +80,7 @@ public class UpdatesHelper {
 
 	public interface ProgressDelegate {
 		public void showProgress();
-		public void updateProgress(int i);
+		public void updateProgress(int value);
 		public void dismissProgress();
 	}	
 	
