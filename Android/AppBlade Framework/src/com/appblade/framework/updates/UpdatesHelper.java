@@ -78,6 +78,11 @@ public class UpdatesHelper {
 	@SuppressWarnings("unused")
 	private static final int MillisPerDay = MillisPerHour * 24;
 
+	public interface ProgressDelegate {
+		public void showProgress();
+		public void updateProgress(int i);
+		public void dismissProgress();
+	}	
 	
 	/**
 	 * Update check that soft-checks for the best update method available. <br>
@@ -284,8 +289,9 @@ public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
  * Confirm with the user that an update should be downloaded. Kicks off {@link #processUpdate(Activity, JSONObject)} on the go ahead.
  * @param activity
  * @param update
+ * @param delegate ProgressDelegate that handles progress view
  */
-public static void confirmUpdate(final Activity activity, final JSONObject update) {
+public static void confirmUpdate(final Activity activity, final JSONObject update, final ProgressDelegate delegate) {
 	activity.runOnUiThread(new Runnable() {
 		public void run() {
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -297,7 +303,7 @@ public static void confirmUpdate(final Activity activity, final JSONObject updat
 					    @Override
 					    public void run() {
 					        try {
-					        	processUpdate(activity, update);			
+					        	processUpdate(activity, update, delegate);
 					        }                               
 					        catch (Exception e) {
 					            e.printStackTrace();
@@ -327,14 +333,15 @@ public static void confirmUpdate(final Activity activity, final JSONObject updat
  * <br>Used in {@link com.appblade.framework.authenticate.KillSwitch}
  * @param activity Activity to handle the notification or installation.
  * @param update JSONObject containing the necessary update information (like where to install).
+ * @param delegate ProgressDelegate that handles progress view
  */
-public static void processUpdate(Activity activity, JSONObject update) {
+public static void processUpdate(Activity activity, JSONObject update, ProgressDelegate delegate) {
 	if(UpdatesHelper.fileFromJsonNotDownloadedYet(update))
 	{
 		if(UpdatesHelper.appCanDownload()) {
 			notifyDownloading(activity);
 			Log.v(AppBlade.LogTag, "UpdatesHelper.processUpdate - permission to write to sd, processing download");
-			downloadUpdate(activity, update);
+			downloadUpdate(activity, update, delegate);
 		}
 		else {
 			Log.v(AppBlade.LogTag, "UpdatesHelper.processUpdate - download available but there are no permissions to write to sd, notifying...");
@@ -371,33 +378,13 @@ private static boolean appCanDownload() {
 	return hasAllPackagePermissions;
 }
 
-private static void showProgress(final Activity context) {
-	if (context != null) {
-		context.runOnUiThread(new Runnable() {
-			public void run() {
-				progressDialog = ProgressDialog.show(context, "Update in Progress", "Updating...");
-				progressDialog.setProgress(0);
-			}
-		});
-	}
-}
-
-private static void dismissProgress(Activity context) {
-	if ((context != null) && (progressDialog != null)) {
-		context.runOnUiThread(new Runnable() {
-			public void run() {
-				progressDialog.dismiss();
-			}
-		});
-	}
-}
-
 /**
  * Attempts to download the update given the response from the server.
  * @param context Activity to handle the download and notifications
  * @param update the JSONObject that the server returned. 
+ * @param delegate ProgressDelegate that handles progress view
  */
-public static void downloadUpdate(Activity context, JSONObject update) {
+public static void downloadUpdate(Activity context, JSONObject update, ProgressDelegate delegate) {
 	File fileDownloadLocation = null; //filename is determined by the server
 
 	long expectedFileSize = 0;
@@ -410,7 +397,9 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	FileOutputStream fileOutput = null;
 	BufferedOutputStream bufferedOutput = null;
 	
-	showProgress(context);
+	if (delegate != null) {
+		delegate.showProgress();
+	}
 	try
 	{
 		fileDownloadLocation = UpdatesHelper.fileFromUpdateJSON(update);
@@ -451,6 +440,9 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 		    		if(bytesRead > 0) {
 			    		bufferedOutput.write(buffer, 0, bytesRead);
 		    			totalBytesRead += bytesRead;
+		    			if (delegate != null) {
+		    				delegate.updateProgress((int)(100.0*totalBytesRead/expectedFileSize));
+		    			}
 		    		}
 		    		else {
 		    			// end of file...
@@ -495,7 +487,9 @@ public static void downloadUpdate(Activity context, JSONObject update) {
 	catch(IOException ex) { Log.w(AppBlade.LogTag, "IO error when downloading update ", ex); }
 	finally
 	{
-		dismissProgress(context);
+		if (delegate != null) {
+			delegate.dismissProgress();
+		}
 		NotificationManager notificationManager =
 				(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(NotificationNewVersionDownloading);		
