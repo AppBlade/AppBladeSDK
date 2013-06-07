@@ -45,6 +45,7 @@ import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.authenticate.AuthHelper;
+import com.appblade.framework.updates.DownloadProgressDialog.DownloadProgressDelegate;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
@@ -61,7 +62,6 @@ public class UpdatesHelper {
 	private static AlertDialog updateDialog = null;//for checking download process
 	private static UpdateTask updateTask = null;//for checking download process
 	private static Thread downloadThread = null; //for checking download process
-	private static ProgressDialog progressDialog = null;
 	
 //	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;	
@@ -79,13 +79,6 @@ public class UpdatesHelper {
 	@SuppressWarnings("unused")
 	private static final int MillisPerDay = MillisPerHour * 24;
 
-	public interface ProgressDelegate {
-		public void showProgress();
-		public void updateProgress(int value);
-		public void dismissProgress();
-		public void setOnCancelListener(OnCancelListener listener);
-	}	
-	
 	/**
 	 * Update check that soft-checks for the best update method available. <br>
 	 * If not authenticated, we checks with {@link #checkForAnonymousUpdate(Activity)}. <br> 
@@ -293,7 +286,7 @@ public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
  * @param update
  * @param delegate ProgressDelegate that handles progress view
  */
-public static void confirmUpdate(final Activity activity, final JSONObject update, final ProgressDelegate delegate) {
+public static void confirmUpdate(final Activity activity, final JSONObject update, final DownloadProgressDelegate delegate) {
 	activity.runOnUiThread(new Runnable() {
 		public void run() {
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -337,7 +330,7 @@ public static void confirmUpdate(final Activity activity, final JSONObject updat
  * @param update JSONObject containing the necessary update information (like where to install).
  * @param delegate ProgressDelegate that handles progress view
  */
-public static void processUpdate(Activity activity, JSONObject update, ProgressDelegate delegate) {
+public static void processUpdate(Activity activity, JSONObject update, DownloadProgressDelegate delegate) {
 	if(UpdatesHelper.fileFromJsonNotDownloadedYet(update))
 	{
 		if(UpdatesHelper.appCanDownload()) {
@@ -388,7 +381,7 @@ private static boolean isCanceled = false;
  * @param update the JSONObject that the server returned. 
  * @param delegate ProgressDelegate that handles progress view
  */
-public static void downloadUpdate(Activity context, JSONObject update, ProgressDelegate delegate) {
+public static void downloadUpdate(Activity context, JSONObject update, DownloadProgressDelegate delegate) {
 	File fileDownloadLocation = null; //filename is determined by the server
 
 	long expectedFileSize = 0;
