@@ -27,6 +27,7 @@ import android.app.NotificationManager;
 //import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -82,6 +83,7 @@ public class UpdatesHelper {
 		public void showProgress();
 		public void updateProgress(int value);
 		public void dismissProgress();
+		public void setOnCancelListener(OnCancelListener listener);
 	}	
 	
 	/**
@@ -378,6 +380,8 @@ private static boolean appCanDownload() {
 	return hasAllPackagePermissions;
 }
 
+private static boolean isCanceled = false;
+
 /**
  * Attempts to download the update given the response from the server.
  * @param context Activity to handle the download and notifications
@@ -396,9 +400,15 @@ public static void downloadUpdate(Activity context, JSONObject update, ProgressD
 	BufferedInputStream bufferedInputStream = null;
 	FileOutputStream fileOutput = null;
 	BufferedOutputStream bufferedOutput = null;
+	isCanceled = false;
 	
 	if (delegate != null) {
 		delegate.showProgress();
+		delegate.setCancelListener(new OnCancelListener() {
+			public void onCancel(DialogInterface dialog) {
+				isCanceled = true;
+			}
+		});
 	}
 	try
 	{
@@ -432,7 +442,7 @@ public static void downloadUpdate(Activity context, JSONObject update, ProgressD
 	        byte[] buffer = new byte[1024 * 16];
 	        totalBytesRead = 0;
 	    	
-	    	while(true)
+	    	while(!isCanceled)
 	    	{
 	    		synchronized (buffer)
 	    		{
@@ -452,27 +462,30 @@ public static void downloadUpdate(Activity context, JSONObject update, ProgressD
 	    		}
 	    	}
 	    	
-	    	bufferedOutput.flush();
-			IOUtils.safeClose(bufferedInputStream);
-			IOUtils.safeClose(bufferedOutput);
-			IOUtils.safeClose(fileOutput);
-	    	
-			if(expectedFileSize > 0 && expectedFileSize == totalBytesRead)
-				savedSuccessfully = true;
-
-			
-	    	if(savedSuccessfully)
-	    	{
-	    		//check md5 of the local file with the one we expect from the server, don't bother if we already know the bytestream was interrupted
-	    		String md5OnServer = update.getString("md5");
-	    		String md5Local = StringUtils.md5FromFile(fileDownloadLocation);
-	    		Log.v(AppBlade.LogTag, "" + fileDownloadLocation.getAbsolutePath() + " " + (fileDownloadLocation.exists() ? "exists" : "does not exist" ) );
-	    		Log.v(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? " + (md5OnServer.equals(md5Local) ? "equal" : "not equal" ));
-	    		savedSuccessfully = md5OnServer.equals(md5Local);
-	    		if(!savedSuccessfully){
-	    			notifyRetryDownload(context, update);
-	    		}
-	    		UpdatesHelper.addFileAndNotifyDownloadManager(fileDownloadLocation, context, md5OnServer, totalBytesRead);
+	    	if (!isCanceled) {
+		    	
+		    	bufferedOutput.flush();
+				IOUtils.safeClose(bufferedInputStream);
+				IOUtils.safeClose(bufferedOutput);
+				IOUtils.safeClose(fileOutput);
+		    	
+				if(expectedFileSize > 0 && expectedFileSize == totalBytesRead)
+					savedSuccessfully = true;
+	
+				
+		    	if(savedSuccessfully)
+		    	{
+		    		//check md5 of the local file with the one we expect from the server, don't bother if we already know the bytestream was interrupted
+		    		String md5OnServer = update.getString("md5");
+		    		String md5Local = StringUtils.md5FromFile(fileDownloadLocation);
+		    		Log.v(AppBlade.LogTag, "" + fileDownloadLocation.getAbsolutePath() + " " + (fileDownloadLocation.exists() ? "exists" : "does not exist" ) );
+		    		Log.v(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? " + (md5OnServer.equals(md5Local) ? "equal" : "not equal" ));
+		    		savedSuccessfully = md5OnServer.equals(md5Local);
+		    		if(!savedSuccessfully){
+		    			notifyRetryDownload(context, update);
+		    		}
+		    		UpdatesHelper.addFileAndNotifyDownloadManager(fileDownloadLocation, context, md5OnServer, totalBytesRead);
+		    	}
 	    	}
 	    	
 		}

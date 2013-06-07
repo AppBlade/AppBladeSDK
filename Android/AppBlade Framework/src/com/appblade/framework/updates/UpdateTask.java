@@ -13,6 +13,8 @@ import com.appblade.framework.utils.StringUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -57,6 +59,12 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> implements ProgressD
 		}
 	}
 	
+	public void setOnCancelListener(OnCancelListener listener) {
+		if (progressDialog != null) {
+			progressDialog.setOnCancelListener(listener);
+		}
+	}
+	
 	protected void publishProgress(Integer... value) {
 		if (progressDialog != null) {
 			progressDialog.setProgress(value[0].intValue());
@@ -70,7 +78,7 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> implements ProgressD
 		progressDialog.setMessage("Downloading...");
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setProgress(0);
-		progressDialog.setCancelable(false);
+		progressDialog.setCancelable(true);
 	}
 	
 	@Override
