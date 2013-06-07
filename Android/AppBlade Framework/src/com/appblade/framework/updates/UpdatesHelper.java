@@ -404,7 +404,7 @@ public static void downloadUpdate(Activity context, JSONObject update, ProgressD
 	
 	if (delegate != null) {
 		delegate.showProgress();
-		delegate.setCancelListener(new OnCancelListener() {
+		delegate.setOnCancelListener(new OnCancelListener() {
 			public void onCancel(DialogInterface dialog) {
 				isCanceled = true;
 			}
