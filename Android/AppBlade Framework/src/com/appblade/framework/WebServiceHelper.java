@@ -126,10 +126,10 @@ public class WebServiceHelper {
 				request.addHeader("certificate_uuid", SystemUtils.hashedCertificateUuid(pi) );			
 				request.addHeader("manifest_uuid", SystemUtils.hashedManifestFileUuid(pi) );			
 
-				AppBlade.Log( " " + request.getFirstHeader("executable_uuid"));
-				AppBlade.Log( " " + request.getFirstHeader("static_resource_uuid"));
-				AppBlade.Log( " " + request.getFirstHeader("certificate_uuid"));
-				AppBlade.Log( " " + request.getFirstHeader("manifest_uuid"));
+				AppBlade.Log( String.format("%s",  request.getFirstHeader("executable_uuid") ));
+				AppBlade.Log( String.format("%s",  request.getFirstHeader("static_resource_uuid") ));
+				AppBlade.Log( String.format("%s",  request.getFirstHeader("certificate_uuid") ));
+				AppBlade.Log( String.format("%s",  request.getFirstHeader("manifest_uuid") ));
 		}
 		
 		request.addHeader("android_release", Build.VERSION.RELEASE);
