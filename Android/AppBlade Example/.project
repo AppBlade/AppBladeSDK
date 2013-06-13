@@ -3,6 +3,7 @@
 	<name>AppBlade Framework Example</name>
 	<comment></comment>
 	<projects>
+		<project>AppBlade Framework</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

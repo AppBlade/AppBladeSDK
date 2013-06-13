@@ -1,0 +1,203 @@
+com.appblade.example.BuildConfig
+com.appblade.example.R
+com.appblade.example.R$attr
+com.appblade.example.R$drawable
+com.appblade.example.R$id
+com.appblade.example.R$layout
+com.appblade.example.R$string
+com.appblade.framework.AppBlade:
+    public static final java.lang.String AppBladeExceptionsFolder
+    public static final java.lang.String AppBladeFeedbackFolder
+    public static final java.lang.String AppBladeSessionsFolder
+    public static final java.lang.String AppBladeCustomParamsFolder
+    public static final java.lang.String BOUNDARY_FORMAT
+    private static final int dynamicBoundaryLength
+    51:51:public AppBlade()
+    189:189:public boolean isRegistered()
+    229:231:public static void authorize(android.app.Activity)
+    369:371:public static void checkForUpdatesIgnoreTimeout(android.app.Activity,boolean)
+    387:391:public static void useSessionLoggingService(android.content.Context)
+    556:566:public static void sendFeedbackData(android.content.Context,java.lang.String,android.graphics.Bitmap)
+    611:615:public static void unregisterExceptionHandler()
+    683:687:public static void clearCustomParameters(android.content.Context)
+com.appblade.framework.AppInfo:
+    static final java.lang.String DefaultUDID
+    116:127:public static boolean isInEmulator(android.content.Context)
+com.appblade.framework.R
+com.appblade.framework.R$drawable
+com.appblade.framework.R$id
+com.appblade.framework.R$layout
+com.appblade.framework.R$string
+com.appblade.framework.WebServiceHelper:
+    static final int NonceRandomStringLength
+    public static final java.lang.String ServicePathCrashReportsFormat
+    public static final java.lang.String ServicePathFeedbackFormat
+    public static final java.lang.String ServicePathSessionFormat
+    public static final java.lang.String ServicePathKillSwitchFormat
+    public static final java.lang.String ServicePathUpdateFormat
+    public static final java.lang.String ServicePathOauthTokens
+    26:26:public WebServiceHelper()
+com.appblade.framework.authenticate.AuthHelper:
+    20:20:public AuthHelper()
+    30:36:public static boolean isAuthorized(android.app.Activity)
+com.appblade.framework.authenticate.AuthJavascriptInterface:
+    25:49:public void notifyAuthCode(java.lang.String)
+com.appblade.framework.authenticate.AuthJavascriptInterface$1
+com.appblade.framework.authenticate.AuthJavascriptInterface$1$1
+com.appblade.framework.authenticate.AuthTokensDownloadTask
+com.appblade.framework.authenticate.AuthTokensDownloadTask$OnPostExecuteListener
+com.appblade.framework.authenticate.KillSwitch:
+    private static final java.lang.String PrefsKey
+    private static final java.lang.String PrefsKeyTTL
+    private static final java.lang.String PrefsKeyTTLUpdated
+    private static final java.lang.String DefaultAccessRevokedMessage
+    private static final int MillisPerHour
+    private static final int MillisPerDay
+    38:38:public KillSwitch()
+com.appblade.framework.authenticate.RemoteAuthHelper:
+    private static final java.lang.String defaultFileName
+    22:22:public RemoteAuthHelper()
+    50:67:public static void store(android.content.Context,java.lang.String,java.lang.String,java.lang.String,int)
+com.appblade.framework.authenticate.RemoteAuthorizeActivity:
+    private static final java.lang.String EndpointAuthNew
+com.appblade.framework.crashreporting.CrashReportHelper:
+    41:41:public CrashReportHelper()
+com.appblade.framework.crashreporting.PostCrashReportTask:
+    android.app.ProgressDialog progress
+    private static final java.lang.String SUCCESS_MESSAGE
+    private static final java.lang.String FAIL_MESSAGE
+com.appblade.framework.customparams.CustomParamData:
+    24:40:public CustomParamData(org.json.JSONObject)
+    48:50:public CustomParamData(android.content.Context)
+    60:61:public synchronized void storeCurrentData(android.content.Context)
+com.appblade.framework.customparams.CustomParamDataHelper:
+    23:23:public CustomParamDataHelper()
+com.appblade.framework.feedback.FeedbackData:
+    79:97:public android.graphics.Bitmap getScreenshot()
+com.appblade.framework.feedback.FeedbackHelper:
+    47:47:public FeedbackHelper()
+    55:55:public static boolean postFeedback(com.appblade.framework.feedback.FeedbackData)
+    261:275:public static java.lang.String getLogData()
+com.appblade.framework.feedback.PostFeedbackTask:
+    android.app.ProgressDialog progress
+    private static final java.lang.String SUCCESS_MESSAGE
+    private static final java.lang.String FAIL_MESSAGE
+com.appblade.framework.stats.AppBladeSessionLoggingService:
+    public android.content.Context mContext
+com.appblade.framework.stats.PostSessionTask:
+    private static final java.lang.String SUCCESS_MESSAGE
+    private static final java.lang.String FAIL_MESSAGE
+com.appblade.framework.stats.SessionHelper:
+    48:48:public SessionHelper()
+    161:163:public static int postSession(com.appblade.framework.stats.SessionData)
+    318:330:public static com.appblade.framework.stats.SessionData createPersistentSession(android.content.Context)
+    358:367:public static synchronized void removeSession(android.content.Context,com.appblade.framework.stats.SessionData)
+com.appblade.framework.stats.SessionHelper$3
+com.appblade.framework.updates.UpdateTask:
+    protected android.app.ProgressDialog progress
+com.appblade.framework.updates.UpdatesHelper:
+    private static final int NotificationNewVersionDownloading
+    private static final java.lang.String APK_MIMETYPE
+    private static final java.lang.String PrefsKey
+    private static final java.lang.String PrefsKeyTTL
+    private static final java.lang.String PrefsKeyTTLUpdated
+    private static final int MillisPerHour
+    private static final int MillisPerDay
+    58:58:public UpdatesHelper()
+    88:89:public static void checkForUpdate(android.app.Activity,boolean)
+    169:170:public static void checkForAuthenticatedUpdate(android.app.Activity,boolean)
+    182:193:public static void checkForAuthenticatedUpdate(android.app.Activity,boolean,boolean)
+    203:231:private static void checkAuthorization(android.app.Activity,boolean)
+    235:236:public static void checkForAnonymousUpdate(android.app.Activity,boolean)
+    537:562:private static void openWithAlert(android.app.Activity,java.io.File)
+    711:712:public int loadTtl(android.content.Context)
+    721:722:public int loadTtlLastUpdated(android.content.Context)
+com.appblade.framework.updates.UpdatesHelper$1
+com.appblade.framework.updates.UpdatesHelper$2
+com.appblade.framework.updates.UpdatesHelper$3
+com.appblade.framework.updates.UpdatesHelper$6
+com.appblade.framework.updates.UpdatesHelper$6$1
+com.appblade.framework.updates.UpdatesHelper$6$2
+com.appblade.framework.updates.UpdatesHelper$6$3
+com.appblade.framework.utils.Base64:
+    public static final int DEFAULT
+    public static final int NO_PADDING
+    public static final int NO_WRAP
+    public static final int CRLF
+    public static final int URL_SAFE
+    public static final int NO_CLOSE
+    119:119:public static byte[] decode(java.lang.String,int)
+    137:137:public static byte[] decode(byte[],int)
+    159:174:public static byte[] decode(byte[],int,int,int)
+com.appblade.framework.utils.Base64$Coder:
+    public abstract boolean process(byte[],int,int,boolean)
+    public abstract int maxOutputSize(int)
+com.appblade.framework.utils.Base64$Decoder
+com.appblade.framework.utils.Base64$Encoder:
+    public static final int LINE_GROUPS
+    604:604:public int maxOutputSize(int)
+com.appblade.framework.utils.ExceptionUtils:
+    9:9:public ExceptionUtils()
+com.appblade.framework.utils.HttpClientProvider:
+    private static final int SOCKET_OPERATION_TIMEOUT
+    24:24:public HttpClientProvider()
+com.appblade.framework.utils.HttpUtils:
+    public static final java.lang.String HeaderLastModified
+    public static final java.lang.String HeaderContentLength
+    public static final java.lang.String HeaderContentType
+    public static final java.lang.String HeaderAccept
+    public static final java.lang.String ContentTypeJson
+    public static final java.lang.String ContentTypeJpeg
+    public static final java.lang.String ContentTypeMultipartFormData
+    public static final java.lang.String ContentTypeOctetStream
+    13:13:public HttpUtils()
+com.appblade.framework.utils.IOUtils:
+    13:13:public IOUtils()
+com.appblade.framework.utils.StringUtils:
+    public static final int BUFFER_SIZE
+    public static final java.lang.String md5OfNull
+    public static final java.lang.String sha256OfNull
+    34:34:public StringUtils()
+    285:295:public static org.json.JSONArray parseStringToJSONArray(java.lang.String)
+com.appblade.framework.utils.SystemUtils:
+    public static final java.lang.String UserAgent
+    22:22:public SystemUtils()
+    47:62:public static java.lang.String getBestUniqueDeviceID(android.content.ContentResolver)
+    69:86:public static java.lang.String generateUniqueID(android.content.pm.PackageInfo)
+org.apache.http.entity.mime.Header:
+    68:68:public java.util.List getFields()
+    84:92:public java.util.List getFields(java.lang.String)
+    97:106:public int removeFields(java.lang.String)
+    110:133:public void setField(org.apache.http.entity.mime.MinimalField)
+org.apache.http.entity.mime.HttpMultipart:
+    138:139:public HttpMultipart(java.lang.String,java.nio.charset.Charset,java.lang.String)
+    142:143:public HttpMultipart(java.lang.String,java.lang.String)
+    146:146:public java.lang.String getSubType()
+    150:150:public java.nio.charset.Charset getCharset()
+    154:154:public org.apache.http.entity.mime.HttpMultipartMode getMode()
+org.apache.http.entity.mime.MIME:
+    public static final java.lang.String CONTENT_TYPE
+    public static final java.lang.String CONTENT_TRANSFER_ENC
+    public static final java.lang.String CONTENT_DISPOSITION
+    public static final java.lang.String ENC_8BIT
+    public static final java.lang.String ENC_BINARY
+    36:36:public MIME()
+org.apache.http.entity.mime.MultipartEntity:
+    93:94:public MultipartEntity(org.apache.http.entity.mime.HttpMultipartMode)
+org.apache.http.entity.mime.content.AbstractContentBody:
+    61:61:public java.lang.String getMediaType()
+    65:65:public java.lang.String getSubType()
+org.apache.http.entity.mime.content.ByteArrayBody:
+    75:76:public ByteArrayBody(byte[],java.lang.String)
+org.apache.http.entity.mime.content.ContentDescriptor:
+    public abstract java.lang.String getMediaType()
+    public abstract java.lang.String getSubType()
+org.apache.http.entity.mime.content.FileBody
+org.apache.http.entity.mime.content.InputStreamBody
+org.apache.http.entity.mime.content.StringBody:
+    58:60:public static org.apache.http.entity.mime.content.StringBody create(java.lang.String,java.lang.String,java.nio.charset.Charset)
+    69:69:public static org.apache.http.entity.mime.content.StringBody create(java.lang.String,java.nio.charset.Charset)
+    76:76:public static org.apache.http.entity.mime.content.StringBody create(java.lang.String)
+    113:114:public StringBody(java.lang.String,java.nio.charset.Charset)
+    130:130:public java.io.Reader getReader()
+    140:141:public void writeTo(java.io.OutputStream,int)

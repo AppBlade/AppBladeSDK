@@ -1,0 +1,486 @@
+com.appblade.example.MainActivity -> com.appblade.example.MainActivity:
+    25:32:void onCreate(android.os.Bundle) -> onCreate
+    35:40:void onResume() -> onResume
+    43:44:void onPause() -> onPause
+    147:156:boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
+com.appblade.example.MainActivity$1 -> com.appblade.example.a:
+    com.appblade.example.MainActivity this$0 -> a
+    65:72:void onClick(android.view.View) -> onClick
+com.appblade.example.MainActivity$2 -> com.appblade.example.b:
+    com.appblade.example.MainActivity this$0 -> a
+    76:78:void onClick(android.view.View) -> onClick
+com.appblade.example.MainActivity$3 -> com.appblade.example.c:
+    com.appblade.example.MainActivity this$0 -> a
+    84:85:void onClick(android.view.View) -> onClick
+com.appblade.example.MainActivity$4 -> com.appblade.example.d:
+    com.appblade.example.MainActivity this$0 -> a
+    89:90:void onClick(android.view.View) -> onClick
+com.appblade.example.MainActivity$5 -> com.appblade.example.e:
+    com.appblade.example.MainActivity this$0 -> a
+    96:97:void onClick(android.view.View) -> onClick
+com.appblade.example.MainActivity$6 -> com.appblade.example.f:
+    com.appblade.example.MainActivity this$0 -> a
+    101:102:void onClick(android.view.View) -> onClick
+com.appblade.example.MainActivity$7 -> com.appblade.example.g:
+    com.appblade.example.MainActivity this$0 -> a
+    108:120:void onClick(android.view.View) -> onClick
+    106:106:com.appblade.example.MainActivity access$0(com.appblade.example.MainActivity$7) -> a
+com.appblade.example.MainActivity$7$1 -> com.appblade.example.h:
+    com.appblade.example.MainActivity$7 this$1 -> a
+    116:117:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.example.MainActivity$8 -> com.appblade.example.i:
+    com.appblade.example.MainActivity this$0 -> a
+    126:127:void onClick(android.view.View) -> onClick
+com.appblade.example.MainActivity$9 -> com.appblade.example.j:
+    com.appblade.example.MainActivity this$0 -> a
+    131:132:void onClick(android.view.View) -> onClick
+com.appblade.example.MyApplication -> com.appblade.example.MyApplication:
+    11:24:void onCreate() -> onCreate
+com.appblade.framework.AppBlade -> com.appblade.framework.a:
+    java.lang.String LogTag -> a
+    boolean makeToast -> b
+    com.appblade.framework.AppInfo appInfo -> c
+    boolean canWriteToDisk -> d
+    java.lang.String rootDir -> e
+    java.lang.String exceptionsDir -> f
+    java.lang.String feedbackDir -> g
+    java.lang.String sessionsDir -> h
+    java.lang.String customParamsDir -> i
+    com.appblade.framework.stats.SessionData currentSession -> j
+    com.appblade.framework.stats.AppBladeSessionLoggingService sessionLoggingService -> k
+    99:100:void register(android.content.Context,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    198:212:void hardCheckIsRegistered() -> e
+    241:242:void authorize$3ef676ad(android.app.Activity) -> a
+    346:348:void checkForUpdates(android.app.Activity) -> b
+    357:359:void checkForUpdates$3ef676ad(android.app.Activity) -> c
+    399:399:boolean bindToSessionService(android.app.Activity) -> d
+    408:408:boolean unbindFromSessionService(android.app.Activity) -> e
+    418:418:boolean startSession(android.content.Context) -> a
+    448:448:boolean endSession(android.content.Context) -> b
+    484:487:void doFeedback(android.content.Context) -> c
+    496:500:void doFeedbackWithScreenshot(android.content.Context,android.app.Activity) -> a
+    535:545:void doFeedbackWithScreenshot(android.content.Context,android.graphics.Bitmap,java.lang.String) -> a
+    598:603:void registerExceptionHandler() -> a
+    624:632:void notify(java.lang.Throwable) -> a
+    651:658:void setCustomParameter$4fa28b99(java.lang.String,java.lang.Object) -> a
+    700:700:boolean hasPackageInfo() -> b
+    708:711:android.content.pm.PackageInfo getPackageInfo() -> c
+    720:728:void setDeviceId(java.lang.String) -> a
+    737:744:java.lang.String genDynamicBoundary() -> d
+    754:758:java.lang.String makeDirFromRoot(java.lang.String,android.content.Context) -> a
+com.appblade.framework.AppBlade$1 -> com.appblade.framework.b:
+    android.app.Activity val$activity -> a
+    boolean val$updateIfAvailable -> b
+    266:267:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.framework.AppBlade$2 -> com.appblade.framework.c:
+    android.app.Activity val$activity -> a
+    271:272:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.framework.AppBlade$3 -> com.appblade.framework.d:
+    android.app.Activity val$activity -> a
+    276:277:void onCancel(android.content.DialogInterface) -> onCancel
+com.appblade.framework.AppBlade$4 -> com.appblade.framework.e:
+    android.content.Context val$context -> a
+    542:543:void OnFeedbackDataAcquired(com.appblade.framework.feedback.FeedbackData) -> a
+com.appblade.framework.AppBladeExceptionHandler -> com.appblade.framework.f:
+    java.lang.Thread$UncaughtExceptionHandler defaultHandler -> a
+    20:22:void uncaughtException(java.lang.Thread,java.lang.Throwable) -> uncaughtException
+com.appblade.framework.AppInfo -> com.appblade.framework.g:
+    java.lang.String DefaultAppBladeHost -> a
+    java.lang.String DefaultServiceScheme -> b
+    java.lang.String Token -> c
+    java.lang.String Secret -> d
+    java.lang.String AppId -> e
+    java.lang.String Issuance -> f
+    java.lang.String Ext -> g
+    java.lang.String CurrentEndpoint -> h
+    java.lang.String CurrentEndpointNoPort -> i
+    java.lang.String CurrentServiceScheme -> j
+    android.content.pm.PackageInfo PackageInfo -> k
+    java.lang.String systemInfo -> m
+    java.lang.String storedANDROID_ID -> l
+    47:51:java.lang.String getSystemInfo() -> a
+    92:107:boolean isSigned(android.content.pm.PackageInfo) -> a
+    136:135:boolean isValid() -> b
+com.appblade.framework.WebServiceHelper -> com.appblade.framework.h:
+    55:94:java.lang.String getHMACAuthHeader(com.appblade.framework.AppInfo,java.lang.String,java.lang.String,com.appblade.framework.WebServiceHelper$HttpMethod) -> a
+    116:140:void addCommonHeaders(org.apache.http.HttpRequest) -> a
+    164:164:java.lang.String getUrl(java.lang.String) -> a
+    182:214:int getCurrentPort() -> a
+com.appblade.framework.WebServiceHelper$HttpMethod -> com.appblade.framework.i:
+    com.appblade.framework.WebServiceHelper$HttpMethod POST -> a
+    com.appblade.framework.WebServiceHelper$HttpMethod GET -> b
+    com.appblade.framework.WebServiceHelper$HttpMethod PUT -> c
+    com.appblade.framework.WebServiceHelper$HttpMethod[] ENUM$VALUES -> d
+    1:1:com.appblade.framework.WebServiceHelper$HttpMethod[] values() -> values
+    1:1:com.appblade.framework.WebServiceHelper$HttpMethod valueOf(java.lang.String) -> valueOf
+com.appblade.framework.authenticate.AuthHelper -> com.appblade.framework.authenticate.a:
+    101:110:void authorize(android.app.Activity) -> a
+com.appblade.framework.authenticate.AuthJavascriptInterface -> com.appblade.framework.authenticate.b:
+    android.app.Activity mActivity -> a
+com.appblade.framework.authenticate.KillSwitch -> com.appblade.framework.authenticate.c:
+    int ttl -> a
+    long ttlLastUpdated -> b
+    boolean inProgress -> c
+    58:63:void authorize(android.app.Activity) -> a
+    77:79:void kill(android.app.Activity) -> b
+    87:101:boolean shouldUpdate() -> a
+    109:116:void clear(android.app.Activity) -> c
+    123:140:org.apache.http.HttpResponse getKillSwitchResponse() -> b
+    51:51:void access$0(boolean) -> a
+    45:45:void access$1(int) -> a
+    46:46:void access$2(long) -> a
+    45:45:int access$3() -> c
+    46:46:long access$4() -> d
+com.appblade.framework.authenticate.KillSwitch$KillSwitchTask -> com.appblade.framework.authenticate.d:
+    android.app.Activity context -> a
+    android.app.ProgressDialog progress -> b
+    168:170:void onPreExecute() -> onPreExecute
+    173:178:java.lang.Void doInBackground$10299ca() -> a
+    193:194:void onCancelled() -> onCancelled
+    230:244:java.lang.String getKillSwitchUnauthorizedMessage(org.apache.http.HttpResponse) -> a
+    1:1:void onPostExecute(java.lang.Object) -> onPostExecute
+    1:1:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.appblade.framework.authenticate.KillSwitch$KillSwitchTask$1 -> com.appblade.framework.authenticate.e:
+    com.appblade.framework.authenticate.KillSwitch$KillSwitchTask this$1 -> a
+    java.lang.String val$message -> b
+    254:270:void run() -> run
+    252:252:com.appblade.framework.authenticate.KillSwitch$KillSwitchTask access$0(com.appblade.framework.authenticate.KillSwitch$KillSwitchTask$1) -> a
+com.appblade.framework.authenticate.KillSwitch$KillSwitchTask$1$1 -> com.appblade.framework.authenticate.f:
+    com.appblade.framework.authenticate.KillSwitch$KillSwitchTask$1 this$2 -> a
+    259:260:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.framework.authenticate.KillSwitch$KillSwitchTask$1$2 -> com.appblade.framework.authenticate.g:
+    com.appblade.framework.authenticate.KillSwitch$KillSwitchTask$1 this$2 -> a
+    264:267:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.framework.authenticate.RemoteAuthHelper -> com.appblade.framework.authenticate.h:
+    32:36:java.lang.String getAccessTokenFilename(android.content.Context) -> c
+    76:84:void clear(android.content.Context) -> a
+    92:115:java.lang.String getAccessToken(android.content.Context) -> b
+com.appblade.framework.authenticate.RemoteAuthorizeActivity -> com.appblade.framework.authenticate.RemoteAuthorizeActivity:
+    android.app.ProgressDialog progress -> a
+    com.appblade.framework.authenticate.AuthJavascriptInterface jsInterface -> b
+    android.webkit.WebView webview -> c
+    37:42:void onCreate(android.os.Bundle) -> onCreate
+com.appblade.framework.authenticate.RemoteAuthorizeActivity$1 -> com.appblade.framework.authenticate.i:
+    com.appblade.framework.authenticate.RemoteAuthorizeActivity this$0 -> a
+    61:62:void onProgressChanged(android.webkit.WebView,int) -> onProgressChanged
+com.appblade.framework.authenticate.RemoteAuthorizeActivity$2 -> com.appblade.framework.authenticate.j:
+    com.appblade.framework.authenticate.RemoteAuthorizeActivity this$0 -> a
+    68:69:void onLoadResource(android.webkit.WebView,java.lang.String) -> onLoadResource
+    72:75:void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+    78:81:void onPageStarted(android.webkit.WebView,java.lang.String,android.graphics.Bitmap) -> onPageStarted
+com.appblade.framework.crashreporting.CrashReportData -> com.appblade.framework.a.a:
+    java.lang.Throwable exception -> a
+com.appblade.framework.crashreporting.CrashReportHelper -> com.appblade.framework.a.b:
+    50:52:java.lang.Boolean postCrashes(com.appblade.framework.crashreporting.CrashReportData) -> a
+    60:69:void postExceptionsToServer() -> a
+    105:159:boolean sendExceptionData(java.io.File) -> a
+    163:180:org.apache.http.entity.mime.MultipartEntity getPostCrashReportBody(java.lang.String,org.json.JSONObject,java.lang.String) -> a
+com.appblade.framework.crashreporting.PostCrashReportTask -> com.appblade.framework.a.c:
+    android.content.Context context -> a
+    java.lang.Boolean success -> b
+    1:1:void onPostExecute(java.lang.Object) -> onPostExecute
+    1:1:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.appblade.framework.customparams.CustomParamData -> com.appblade.framework.b.a:
+    70:94:com.appblade.framework.customparams.CustomParamData refreshFromStoredData() -> a
+com.appblade.framework.customparams.CustomParamDataHelper -> com.appblade.framework.b.b:
+    java.lang.String customParamsFileName -> a
+    java.lang.String customParamsIndexMIMEType -> b
+    37:37:java.lang.String jsonFileURI() -> c
+    49:51:com.appblade.framework.customparams.CustomParamData getCurrentCustomParams() -> a
+    61:103:org.json.JSONObject getCustomParamsAsJSON(java.lang.String) -> a
+    112:112:org.json.JSONObject getCustomParamsAsJSON() -> b
+    123:158:void storeCurrentCustomParams$20006cc5(com.appblade.framework.customparams.CustomParamData) -> a
+com.appblade.framework.feedback.FeedbackData -> com.appblade.framework.c.a:
+    java.lang.String FileName -> a
+    java.lang.String Notes -> b
+    android.graphics.Bitmap Screenshot -> c
+    java.lang.String ScreenshotName -> d
+    java.lang.String ScreenshotFileLocation -> e
+    boolean sendScreenshotConfirmed -> f
+    102:106:void clearData() -> a
+com.appblade.framework.feedback.FeedbackHelper -> com.appblade.framework.c.b:
+    66:119:boolean postFeedbackWithCustomParams(com.appblade.framework.feedback.FeedbackData,com.appblade.framework.customparams.CustomParamData) -> a
+    131:184:void getFeedbackData(android.content.Context,com.appblade.framework.feedback.FeedbackData,com.appblade.framework.feedback.OnFeedbackDataAcquiredListener) -> a
+    195:220:org.apache.http.entity.mime.MultipartEntity getPostFeedbackBody(com.appblade.framework.feedback.FeedbackData,com.appblade.framework.customparams.CustomParamData,java.lang.String) -> a
+com.appblade.framework.feedback.FeedbackHelper$1 -> com.appblade.framework.c.c:
+    com.appblade.framework.feedback.FeedbackData val$fData -> a
+    android.widget.EditText val$editText -> b
+    android.widget.CheckBox val$screenshotCheckBox -> c
+    com.appblade.framework.feedback.OnFeedbackDataAcquiredListener val$listener -> d
+    172:175:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.framework.feedback.FeedbackHelper$2 -> com.appblade.framework.c.d:
+    com.appblade.framework.feedback.FeedbackData val$fData -> a
+    180:181:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.framework.feedback.OnFeedbackDataAcquiredListener -> com.appblade.framework.c.e:
+    void OnFeedbackDataAcquired(com.appblade.framework.feedback.FeedbackData) -> a
+com.appblade.framework.feedback.PostFeedbackTask -> com.appblade.framework.c.f:
+    android.content.Context context -> a
+    java.lang.Boolean success -> b
+    1:1:void onPostExecute(java.lang.Object) -> onPostExecute
+    1:1:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.appblade.framework.stats.AppBladeSessionActivity -> com.appblade.framework.stats.AppBladeSessionActivity:
+    15:18:void onResume() -> onResume
+    22:24:void onStop() -> onStop
+com.appblade.framework.stats.AppBladeSessionLoggingService -> com.appblade.framework.stats.AppBladeSessionLoggingService:
+    com.appblade.framework.stats.AppBladeSessionServiceConnection appbladeSessionServiceConnection -> a
+    32:33:void onCreate() -> onCreate
+    38:39:void onStart(android.content.Intent,int) -> onStart
+    45:46:void onDestroy() -> onDestroy
+    50:53:android.os.IBinder onBind(android.content.Intent) -> onBind
+    58:61:boolean onUnbind(android.content.Intent) -> onUnbind
+com.appblade.framework.stats.AppBladeSessionServiceConnection -> com.appblade.framework.stats.a:
+    18:19:void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
+    23:25:void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected
+com.appblade.framework.stats.OnSessionDataAcquiredListener -> com.appblade.framework.stats.b:
+    void OnSessionDataAcquired(java.util.List) -> a
+com.appblade.framework.stats.PostSessionTask -> com.appblade.framework.stats.c:
+    android.content.Context context -> a
+    java.util.List data -> b
+    java.lang.Boolean success -> c
+    int responseCode -> d
+    1:1:void onPostExecute(java.lang.Object) -> onPostExecute
+    1:1:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.appblade.framework.stats.SessionData -> com.appblade.framework.stats.d:
+    java.lang.String sessionBeganKey -> a
+    java.lang.String sessionEndedKey -> b
+    java.lang.String sessionCustomParamsKey -> c
+    java.lang.String storageDividerKey -> d
+    java.util.Date began -> e
+    java.util.Date ended -> f
+    org.json.JSONObject customParams -> g
+    85:98:java.lang.String sessionAsStoredString() -> a
+    128:141:org.json.JSONObject formattedSessionAsJSON() -> b
+    155:167:int compare(java.lang.Object,java.lang.Object) -> compare
+com.appblade.framework.stats.SessionHelper -> com.appblade.framework.stats.e:
+    java.lang.String sessionsIndexFileName -> a
+    java.lang.String sessionsIndexMIMEType -> b
+    boolean SUCCESS -> c
+    boolean FAILURE -> d
+    67:69:boolean startSession$faab209() -> a
+    77:89:boolean endSession(android.content.Context) -> a
+    99:129:boolean bindToSessionService(android.app.Activity) -> a
+    139:146:boolean unbindFromSessionService(android.app.Activity) -> b
+    172:217:int postSessions(java.util.List) -> a
+    227:242:org.apache.http.entity.mime.MultipartEntity getPostSessionBody(java.util.List,java.lang.String) -> a
+    250:258:void postExistingSessions(android.content.Context) -> b
+    270:283:void getSessionDataWithListener$6c653daa(com.appblade.framework.stats.OnSessionDataAcquiredListener) -> a
+    293:298:java.lang.String formattedSessionsBodyFromList(java.util.List) -> b
+    307:307:java.lang.String sessionsIndexFileURI() -> b
+    340:349:void insertSessionData(android.content.Context,com.appblade.framework.stats.SessionData) -> a
+    376:397:void removeSessionsEndedBefore(android.content.Context,java.util.Date) -> a
+    410:434:java.util.List readData$73d800c() -> c
+    445:498:void updateFile$4acaf3ee(java.lang.String,java.util.List) -> a
+com.appblade.framework.stats.SessionHelper$1 -> com.appblade.framework.stats.f:
+    android.content.Context val$context -> a
+    254:256:void OnSessionDataAcquired(java.util.List) -> a
+com.appblade.framework.stats.SessionHelper$2 -> com.appblade.framework.stats.g:
+    com.appblade.framework.stats.SessionData val$data -> a
+    android.content.Context val$context -> b
+    343:346:void OnSessionDataAcquired(java.util.List) -> a
+com.appblade.framework.stats.SessionHelper$4 -> com.appblade.framework.stats.h:
+    java.util.Date val$dateEnded -> a
+    android.content.Context val$context -> b
+    380:394:void OnSessionDataAcquired(java.util.List) -> a
+com.appblade.framework.updates.UpdateTask -> com.appblade.framework.d.a:
+    android.app.Activity taskActivity -> a
+    boolean requireAuthCredentials -> b
+    boolean promptDownloadConfirm -> c
+    41:41:void onPreExecute() -> onPreExecute
+    45:51:java.lang.Void doInBackground$10299ca() -> a
+    1:1:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.appblade.framework.updates.UpdatesHelper -> com.appblade.framework.d.b:
+    android.app.AlertDialog updateDialog -> a
+    com.appblade.framework.updates.UpdateTask updateTask -> b
+    java.lang.Thread downloadThread -> c
+    java.lang.Long ttl -> d
+    java.lang.Long ttlLastUpdated -> e
+    102:103:void checkForUpdateWithTimeout$3ef676ad(android.app.Activity) -> a
+    254:278:org.apache.http.HttpResponse getUpdateResponse(boolean) -> a
+    287:320:void confirmUpdate(android.app.Activity,org.json.JSONObject) -> a
+    330:351:void processUpdate(android.app.Activity,org.json.JSONObject) -> b
+    357:361:void handleDownloadedFile(android.app.Activity,java.io.File) -> a
+    486:518:void notifyRetryDownload(android.app.Activity,org.json.JSONObject) -> c
+    528:529:java.io.File fileFromUpdateJSON(org.json.JSONObject) -> b
+    565:571:java.io.File getRootDirectory() -> d
+    611:636:boolean deleteFileAndNotifyDownloadManager(java.io.File,android.content.Context) -> a
+    644:651:void deleteCurrentFile(android.content.Context) -> a
+    696:703:void saveTtl(long,android.content.Context) -> a
+    729:744:boolean fileFromJsonNotDownloadedYet(org.json.JSONObject) -> a
+    59:59:void access$0(android.app.AlertDialog) -> a
+    59:59:android.app.AlertDialog access$1() -> a
+    60:60:com.appblade.framework.updates.UpdateTask access$2() -> b
+    60:60:void access$3(com.appblade.framework.updates.UpdateTask) -> a
+    667:667:void access$4$3c4029ab() -> c
+com.appblade.framework.updates.UpdatesHelper$4 -> com.appblade.framework.d.c:
+    android.app.Activity val$activity -> a
+    org.json.JSONObject val$update -> b
+    289:318:void run() -> run
+com.appblade.framework.updates.UpdatesHelper$4$1 -> com.appblade.framework.d.d:
+    com.appblade.framework.updates.UpdatesHelper$4 this$1 -> a
+    android.app.Activity val$activity -> b
+    org.json.JSONObject val$update -> c
+    293:306:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.framework.updates.UpdatesHelper$4$1$1 -> com.appblade.framework.d.e:
+    com.appblade.framework.updates.UpdatesHelper$4$1 this$2 -> a
+    android.app.Activity val$activity -> b
+    org.json.JSONObject val$update -> c
+    298:303:void run() -> run
+com.appblade.framework.updates.UpdatesHelper$4$2 -> com.appblade.framework.d.f:
+    com.appblade.framework.updates.UpdatesHelper$4 this$1 -> a
+    313:314:void onDismiss(android.content.DialogInterface) -> onDismiss
+com.appblade.framework.updates.UpdatesHelper$5 -> com.appblade.framework.d.g:
+    android.app.Activity val$context -> a
+    org.json.JSONObject val$update -> b
+    490:514:void run() -> run
+com.appblade.framework.updates.UpdatesHelper$5$1 -> com.appblade.framework.d.h:
+    com.appblade.framework.updates.UpdatesHelper$5 this$1 -> a
+    android.app.Activity val$context -> b
+    494:499:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.framework.updates.UpdatesHelper$5$2 -> com.appblade.framework.d.i:
+    com.appblade.framework.updates.UpdatesHelper$5 this$1 -> a
+    android.app.Activity val$context -> b
+    org.json.JSONObject val$update -> c
+    503:504:void onClick(android.content.DialogInterface,int) -> onClick
+com.appblade.framework.updates.UpdatesHelper$5$3 -> com.appblade.framework.d.j:
+    com.appblade.framework.updates.UpdatesHelper$5 this$1 -> a
+    509:509:void onDismiss(android.content.DialogInterface) -> onDismiss
+com.appblade.framework.utils.Base64 -> com.appblade.framework.e.a:
+    boolean $assertionsDisabled -> a
+    459:462:java.lang.String encodeToString$79bb807(byte[]) -> a
+    480:483:java.lang.String encodeToString$5fb0bea7(byte[],int) -> a
+    497:497:byte[] encode$1cf9d9ca(byte[]) -> b
+    513:542:byte[] encode$3bcfdf96$7dcc7401(byte[],int) -> b
+com.appblade.framework.utils.Base64$Coder -> com.appblade.framework.e.b:
+    byte[] output -> a
+    int op -> b
+com.appblade.framework.utils.Base64$Encoder -> com.appblade.framework.e.c:
+    byte[] ENCODE -> h
+    byte[] ENCODE_WEBSAFE -> i
+    byte[] tail -> j
+    int tailLen -> c
+    int count -> k
+    boolean do_padding -> d
+    boolean do_newline -> e
+    boolean do_cr -> f
+    byte[] alphabet -> l
+    boolean $assertionsDisabled -> g
+    610:741:boolean process$7dcd25fc$1cf967a0(byte[],int) -> a
+com.appblade.framework.utils.HttpClientProvider -> com.appblade.framework.e.d:
+    36:54:org.apache.http.impl.client.DefaultHttpClient newInstance$1bfbb7be() -> a
+com.appblade.framework.utils.HttpUtils -> com.appblade.framework.e.e:
+    37:49:org.apache.http.Header getHeader(java.lang.String,java.lang.String) -> a
+    54:53:boolean isOK(org.apache.http.HttpResponse) -> a
+com.appblade.framework.utils.IOUtils -> com.appblade.framework.e.f:
+    22:30:void safeClose(java.io.Closeable) -> a
+    38:42:void safeClose(org.apache.http.client.HttpClient) -> a
+com.appblade.framework.utils.StringUtils -> com.appblade.framework.e.g:
+    47:63:java.lang.String readStream(java.io.InputStream) -> a
+    73:73:boolean isNullOrEmpty(java.lang.String) -> a
+    84:85:void append(java.lang.StringBuilder,java.lang.String,java.lang.Object[]) -> a
+    94:100:int safeParse$505cff29(java.lang.String) -> b
+    112:124:java.lang.String hmacSha256(java.lang.String,java.lang.String) -> a
+    136:143:byte[] sha256(java.lang.String) -> c
+    152:186:java.lang.String sha256FromInputStream(java.io.InputStream) -> b
+    196:206:java.lang.String md5(java.lang.String) -> d
+    215:231:java.lang.String md5FromFile(java.io.File) -> a
+    240:275:java.lang.String md5FromInputStream(java.io.InputStream) -> c
+    307:316:org.json.JSONObject parseStringToJSONObject(java.lang.String) -> e
+com.appblade.framework.utils.SystemUtils -> com.appblade.framework.e.h:
+    32:37:boolean hasPermission(android.content.pm.PackageInfo,java.lang.String) -> a
+    96:111:java.lang.String hashedUuidOfPackageFile(android.content.pm.PackageInfo,java.lang.String) -> b
+    178:179:java.lang.String getReadableApkFileNameFromPackageName(java.lang.String) -> a
+org.apache.http.entity.mime.FormBodyPart -> a.a.a.a.a.a:
+    java.lang.String name -> a
+    org.apache.http.entity.mime.Header header -> b
+    org.apache.http.entity.mime.content.ContentBody body -> c
+    68:68:org.apache.http.entity.mime.content.ContentBody getBody() -> a
+    72:72:org.apache.http.entity.mime.Header getHeader() -> b
+    76:80:void addField(java.lang.String,java.lang.String) -> a
+org.apache.http.entity.mime.Header -> a.a.a.a.a.b:
+    java.util.List fields -> a
+    java.util.Map fieldMap -> b
+    54:65:void addField(org.apache.http.entity.mime.MinimalField) -> a
+    72:80:org.apache.http.entity.mime.MinimalField getField(java.lang.String) -> a
+    136:136:java.util.Iterator iterator() -> iterator
+    141:141:java.lang.String toString() -> toString
+org.apache.http.entity.mime.HttpMultipart -> a.a.a.a.a.c:
+    org.apache.http.util.ByteArrayBuffer FIELD_SEP -> a
+    org.apache.http.util.ByteArrayBuffer CR_LF -> b
+    org.apache.http.util.ByteArrayBuffer TWO_DASHES -> c
+    java.lang.String subType -> d
+    java.nio.charset.Charset charset -> e
+    java.lang.String boundary -> f
+    java.util.List parts -> g
+    org.apache.http.entity.mime.HttpMultipartMode mode -> h
+    53:56:org.apache.http.util.ByteArrayBuffer encode(java.nio.charset.Charset,java.lang.String) -> a
+    61:62:void writeBytes(org.apache.http.util.ByteArrayBuffer,java.io.OutputStream) -> a
+    66:68:void writeBytes(java.lang.String,java.nio.charset.Charset,java.io.OutputStream) -> a
+    72:74:void writeBytes(java.lang.String,java.io.OutputStream) -> a
+    86:90:void writeField(org.apache.http.entity.mime.MinimalField,java.nio.charset.Charset,java.io.OutputStream) -> a
+    158:158:java.util.List getBodyParts() -> a
+    162:166:void addBodyPart(org.apache.http.entity.mime.FormBodyPart) -> a
+    177:214:void doWriteTo(org.apache.http.entity.mime.HttpMultipartMode,java.io.OutputStream,boolean) -> a
+    224:225:void writeTo(java.io.OutputStream) -> a
+    241:258:long getTotalLength() -> b
+org.apache.http.entity.mime.HttpMultipart$1 -> a.a.a.a.a.d:
+    int[] $SwitchMap$org$apache$http$entity$mime$HttpMultipartMode -> a
+org.apache.http.entity.mime.HttpMultipartMode -> a.a.a.a.a.e:
+    org.apache.http.entity.mime.HttpMultipartMode STRICT -> a
+    org.apache.http.entity.mime.HttpMultipartMode BROWSER_COMPATIBLE -> b
+    org.apache.http.entity.mime.HttpMultipartMode[] $VALUES -> c
+    34:34:org.apache.http.entity.mime.HttpMultipartMode[] values() -> values
+    34:34:org.apache.http.entity.mime.HttpMultipartMode valueOf(java.lang.String) -> valueOf
+org.apache.http.entity.mime.MIME -> a.a.a.a.a.f:
+    java.nio.charset.Charset DEFAULT_CHARSET -> a
+org.apache.http.entity.mime.MinimalField -> a.a.a.a.a.g:
+    java.lang.String name -> a
+    java.lang.String value -> b
+    47:47:java.lang.String getName() -> a
+    51:51:java.lang.String getBody() -> b
+    56:60:java.lang.String toString() -> toString
+org.apache.http.entity.mime.MultipartEntity -> a.a.a.a.a.h:
+    char[] MULTIPART_CHARS -> a
+    org.apache.http.entity.mime.HttpMultipart multipart -> b
+    org.apache.http.Header contentType -> c
+    long length -> d
+    boolean dirty -> e
+    117:123:java.lang.String generateBoundary() -> a
+    132:133:void addPart(java.lang.String,org.apache.http.entity.mime.content.ContentBody) -> a
+    136:142:boolean isRepeatable() -> isRepeatable
+    146:146:boolean isChunked() -> isChunked
+    150:150:boolean isStreaming() -> isStreaming
+    154:158:long getContentLength() -> getContentLength
+    162:162:org.apache.http.Header getContentType() -> getContentType
+    166:166:org.apache.http.Header getContentEncoding() -> getContentEncoding
+    171:175:void consumeContent() -> consumeContent
+    178:178:java.io.InputStream getContent() -> getContent
+    183:184:void writeTo(java.io.OutputStream) -> writeTo
+org.apache.http.entity.mime.content.AbstractContentBody -> a.a.a.a.a.a.a:
+    java.lang.String mimeType -> a
+    java.lang.String mediaType -> b
+    java.lang.String subType -> c
+    57:57:java.lang.String getMimeType() -> a
+org.apache.http.entity.mime.content.ByteArrayBody -> a.a.a.a.a.a.b:
+    byte[] data -> a
+    java.lang.String filename -> b
+    79:79:java.lang.String getFilename() -> b
+    83:84:void writeTo(java.io.OutputStream) -> a
+    87:87:java.lang.String getCharset() -> c
+    91:91:java.lang.String getTransferEncoding() -> d
+    95:95:long getContentLength() -> e
+org.apache.http.entity.mime.content.ContentBody -> a.a.a.a.a.a.c:
+    java.lang.String getFilename() -> b
+    void writeTo(java.io.OutputStream) -> a
+org.apache.http.entity.mime.content.ContentDescriptor -> a.a.a.a.a.a.d:
+    java.lang.String getMimeType() -> a
+    java.lang.String getCharset() -> c
+    java.lang.String getTransferEncoding() -> d
+    long getContentLength() -> e
+org.apache.http.entity.mime.content.StringBody -> a.a.a.a.a.a.e:
+    byte[] content -> a
+    java.nio.charset.Charset charset -> b
+    144:154:void writeTo(java.io.OutputStream) -> a
+    157:157:java.lang.String getTransferEncoding() -> d
+    161:161:java.lang.String getCharset() -> c
+    165:165:long getContentLength() -> e
+    169:169:java.lang.String getFilename() -> b

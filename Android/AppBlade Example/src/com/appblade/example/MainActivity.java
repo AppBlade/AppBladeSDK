@@ -6,6 +6,7 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,10 +60,10 @@ public class MainActivity extends AppBladeSessionActivity {
 
 		//Exception Reporting
 		btnDivideByZero.setOnClickListener(new OnClickListener() {
-			@SuppressWarnings("unused")
 			public void onClick(View v) {
 				try {
 					int divideByZero = 1 / 0;
+					Log.d("AppBlade", ""+divideByZero);
 				} catch (ArithmeticException ex) {
 					AppBlade.notify(ex);
 				} catch (Exception ex) {
@@ -71,9 +72,9 @@ public class MainActivity extends AppBladeSessionActivity {
 			}
 		});
 		btnDivideByZeroUncaught.setOnClickListener(new OnClickListener() {
-			@SuppressWarnings("unused")
 			public void onClick(View v) {
 				int divideByZero = 1 / 0;
+				Log.d("AppBlade", ""+divideByZero);
 			}
 		});
 
