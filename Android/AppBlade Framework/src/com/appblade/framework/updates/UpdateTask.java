@@ -6,24 +6,24 @@ import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.appblade.framework.AppBlade;
-import com.appblade.framework.updates.UpdatesHelper.ProgressDelegate;
-import com.appblade.framework.utils.HttpUtils;
-import com.appblade.framework.utils.StringUtils;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.appblade.framework.AppBlade;
+import com.appblade.framework.updates.DownloadProgressDialog.DownloadProgressDelegate;
+import com.appblade.framework.utils.HttpUtils;
+import com.appblade.framework.utils.StringUtils;
 
 /**
  * Class to check for updates asychronously, will automatically kick off a download in the event that one is available and confirmation prompting is disabled.<br>
  * If the requireAuthCredentials flag is set to true (default is false) then the update check will hard-check for authentication of the activity first. Potentially prompting a login dialog.
  * @author andrewtremblay
  */
-public class UpdateTask extends AsyncTask<Void, Void, Void> implements ProgressDelegate {
+public class UpdateTask extends AsyncTask<Void, Void, Void> implements DownloadProgressDelegate {
 	protected Activity taskActivity;
-	protected ProgressDialog progressDialog;
+	protected DownloadProgressDialog progressDialog;
 	public boolean requireAuthCredentials = false; // default anonymous
 	public boolean promptDownloadConfirm = true; // default noisy
 	
@@ -57,20 +57,22 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> implements ProgressD
 		}
 	}
 	
+	public void setOnCancelListener(OnCancelListener listener) {
+		if (progressDialog != null) {
+			progressDialog.setOnCancelListener(listener);
+		}
+	}
+	
 	protected void publishProgress(Integer... value) {
 		if (progressDialog != null) {
 			progressDialog.setProgress(value[0].intValue());
 		}
 	}
-	
+
 	@Override
 	protected void onPreExecute() {
 		//check if we already have an apk downloaded but haven't installed. No need to redownload if we do.
-		progressDialog = new ProgressDialog(taskActivity);
-		progressDialog.setMessage("Downloading...");
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setProgress(0);
-		progressDialog.setCancelable(false);
+		progressDialog = new DownloadProgressDialog(taskActivity);
 	}
 	
 	@Override

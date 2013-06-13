@@ -27,6 +27,7 @@ import android.app.NotificationManager;
 //import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +45,7 @@ import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
 import com.appblade.framework.WebServiceHelper.HttpMethod;
 import com.appblade.framework.authenticate.AuthHelper;
+import com.appblade.framework.updates.DownloadProgressDialog.DownloadProgressDelegate;
 import com.appblade.framework.utils.HttpClientProvider;
 import com.appblade.framework.utils.HttpUtils;
 import com.appblade.framework.utils.IOUtils;
@@ -60,7 +62,6 @@ public class UpdatesHelper {
 	private static AlertDialog updateDialog = null;//for checking download process
 	private static UpdateTask updateTask = null;//for checking download process
 	private static Thread downloadThread = null; //for checking download process
-	private static ProgressDialog progressDialog = null;
 	
 //	private static final int NotificationNewVersion = 0;
 	private static final int NotificationNewVersionDownloading = 1;	
@@ -78,12 +79,6 @@ public class UpdatesHelper {
 	@SuppressWarnings("unused")
 	private static final int MillisPerDay = MillisPerHour * 24;
 
-	public interface ProgressDelegate {
-		public void showProgress();
-		public void updateProgress(int value);
-		public void dismissProgress();
-	}	
-	
 	/**
 	 * Update check that soft-checks for the best update method available. <br>
 	 * If not authenticated, we checks with {@link #checkForAnonymousUpdate(Activity)}. <br> 
@@ -291,7 +286,7 @@ public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
  * @param update
  * @param delegate ProgressDelegate that handles progress view
  */
-public static void confirmUpdate(final Activity activity, final JSONObject update, final ProgressDelegate delegate) {
+public static void confirmUpdate(final Activity activity, final JSONObject update, final DownloadProgressDelegate delegate) {
 	activity.runOnUiThread(new Runnable() {
 		public void run() {
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -335,7 +330,7 @@ public static void confirmUpdate(final Activity activity, final JSONObject updat
  * @param update JSONObject containing the necessary update information (like where to install).
  * @param delegate ProgressDelegate that handles progress view
  */
-public static void processUpdate(Activity activity, JSONObject update, ProgressDelegate delegate) {
+public static void processUpdate(Activity activity, JSONObject update, DownloadProgressDelegate delegate) {
 	if(UpdatesHelper.fileFromJsonNotDownloadedYet(update))
 	{
 		if(UpdatesHelper.appCanDownload()) {
@@ -378,13 +373,15 @@ private static boolean appCanDownload() {
 	return hasAllPackagePermissions;
 }
 
+private static boolean isCanceled = false;
+
 /**
  * Attempts to download the update given the response from the server.
  * @param context Activity to handle the download and notifications
  * @param update the JSONObject that the server returned. 
  * @param delegate ProgressDelegate that handles progress view
  */
-public static void downloadUpdate(Activity context, JSONObject update, ProgressDelegate delegate) {
+public static void downloadUpdate(Activity context, JSONObject update, DownloadProgressDelegate delegate) {
 	File fileDownloadLocation = null; //filename is determined by the server
 
 	long expectedFileSize = 0;
@@ -396,9 +393,15 @@ public static void downloadUpdate(Activity context, JSONObject update, ProgressD
 	BufferedInputStream bufferedInputStream = null;
 	FileOutputStream fileOutput = null;
 	BufferedOutputStream bufferedOutput = null;
+	isCanceled = false;
 	
 	if (delegate != null) {
 		delegate.showProgress();
+		delegate.setOnCancelListener(new OnCancelListener() {
+			public void onCancel(DialogInterface dialog) {
+				isCanceled = true;
+			}
+		});
 	}
 	try
 	{
@@ -432,7 +435,7 @@ public static void downloadUpdate(Activity context, JSONObject update, ProgressD
 	        byte[] buffer = new byte[1024 * 16];
 	        totalBytesRead = 0;
 	    	
-	    	while(true)
+	    	while(!isCanceled)
 	    	{
 	    		synchronized (buffer)
 	    		{
@@ -452,27 +455,30 @@ public static void downloadUpdate(Activity context, JSONObject update, ProgressD
 	    		}
 	    	}
 	    	
-	    	bufferedOutput.flush();
-			IOUtils.safeClose(bufferedInputStream);
-			IOUtils.safeClose(bufferedOutput);
-			IOUtils.safeClose(fileOutput);
-	    	
-			if(expectedFileSize > 0 && expectedFileSize == totalBytesRead)
-				savedSuccessfully = true;
-
-			
-	    	if(savedSuccessfully)
-	    	{
-	    		//check md5 of the local file with the one we expect from the server, don't bother if we already know the bytestream was interrupted
-	    		String md5OnServer = update.getString("md5");
-	    		String md5Local = StringUtils.md5FromFile(fileDownloadLocation);
-	    		Log.v(AppBlade.LogTag, "" + fileDownloadLocation.getAbsolutePath() + " " + (fileDownloadLocation.exists() ? "exists" : "does not exist" ) );
-	    		Log.v(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? " + (md5OnServer.equals(md5Local) ? "equal" : "not equal" ));
-	    		savedSuccessfully = md5OnServer.equals(md5Local);
-	    		if(!savedSuccessfully){
-	    			notifyRetryDownload(context, update);
-	    		}
-	    		UpdatesHelper.addFileAndNotifyDownloadManager(fileDownloadLocation, context, md5OnServer, totalBytesRead);
+	    	if (!isCanceled) {
+		    	
+		    	bufferedOutput.flush();
+				IOUtils.safeClose(bufferedInputStream);
+				IOUtils.safeClose(bufferedOutput);
+				IOUtils.safeClose(fileOutput);
+		    	
+				if(expectedFileSize > 0 && expectedFileSize == totalBytesRead)
+					savedSuccessfully = true;
+	
+				
+		    	if(savedSuccessfully)
+		    	{
+		    		//check md5 of the local file with the one we expect from the server, don't bother if we already know the bytestream was interrupted
+		    		String md5OnServer = update.getString("md5");
+		    		String md5Local = StringUtils.md5FromFile(fileDownloadLocation);
+		    		Log.v(AppBlade.LogTag, "" + fileDownloadLocation.getAbsolutePath() + " " + (fileDownloadLocation.exists() ? "exists" : "does not exist" ) );
+		    		Log.v(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? " + (md5OnServer.equals(md5Local) ? "equal" : "not equal" ));
+		    		savedSuccessfully = md5OnServer.equals(md5Local);
+		    		if(!savedSuccessfully){
+		    			notifyRetryDownload(context, update);
+		    		}
+		    		UpdatesHelper.addFileAndNotifyDownloadManager(fileDownloadLocation, context, md5OnServer, totalBytesRead);
+		    	}
 	    	}
 	    	
 		}
