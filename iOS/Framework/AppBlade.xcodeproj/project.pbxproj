@@ -73,6 +73,7 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
+		319E5C5A175FDB5500B68107 /* AppBladeLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppBladeLogging.h; sourceTree = "<group>"; };
 		31B29E7713FC1BFC00AF9D5D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		31BD74C113FF2AEA00C3B6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		620217251404450900A14BA7 /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = CrashReporter.h; path = AppBlade/CrashReporter/Source/CrashReporter.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -292,6 +293,7 @@
 				CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */,
 				CB18A56D13ACE77C00091131 /* AppBladeWebClient.h */,
 				CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */,
+				319E5C5A175FDB5500B68107 /* AppBladeLogging.h */,
 			);
 			path = AppBlade;
 			sourceTree = "<group>";

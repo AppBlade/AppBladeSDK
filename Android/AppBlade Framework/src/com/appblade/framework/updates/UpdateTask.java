@@ -6,26 +6,26 @@ import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.appblade.framework.AppBlade;
-import com.appblade.framework.utils.HttpUtils;
-import com.appblade.framework.utils.StringUtils;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 
+
+import com.appblade.framework.AppBlade;
+import com.appblade.framework.updates.DownloadProgressDialog.DownloadProgressDelegate;
+import com.appblade.framework.utils.HttpUtils;
+import com.appblade.framework.utils.StringUtils;
 
 /**
  * Class to check for updates asychronously, will automatically kick off a download in the event that one is available and confirmation prompting is disabled.<br>
  * If the requireAuthCredentials flag is set to true (default is false) then the update check will hard-check for authentication of the activity first. Potentially prompting a login dialog.
  * @author andrewtremblay
  */
-public class UpdateTask extends AsyncTask<Void, Void, Void> {
+public class UpdateTask extends AsyncTask<Void, Void, Void> implements DownloadProgressDelegate {
 	protected Activity taskActivity;
-	protected ProgressDialog progress;
+	protected DownloadProgressDialog progressDialog;
 	public boolean requireAuthCredentials = false; // default anonymous
 	public boolean promptDownloadConfirm = true; // default noisy
-	
 	
 	public UpdateTask(Activity _activity, boolean hardCheckAuthenticate, boolean promptForDownload) {
 		this.taskActivity = _activity;
@@ -33,11 +33,46 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 		this.promptDownloadConfirm = promptForDownload;
 	}
 
-
+	public void showProgress() {
+		if ((taskActivity != null) && (progressDialog != null)) {
+			taskActivity.runOnUiThread(new Runnable() {
+				public void run() {
+					progressDialog.show();
+				}
+			});
+		}
+	}
 	
+	public void updateProgress(int value) {
+		publishProgress(value);
+	}
+
+	public void dismissProgress() {
+		if ((taskActivity != null) && (progressDialog != null)) {
+			taskActivity.runOnUiThread(new Runnable() {
+				public void run() {
+					progressDialog.dismiss();
+				}
+			});
+		}
+	}
+	
+	public void setOnCancelListener(OnCancelListener listener) {
+		if (progressDialog != null) {
+			progressDialog.setOnCancelListener(listener);
+		}
+	}
+	
+	protected void publishProgress(Integer... value) {
+		if (progressDialog != null) {
+			progressDialog.setProgress(value[0].intValue());
+		}
+	}
+
 	@Override
 	protected void onPreExecute() {
 		//check if we already have an apk downloaded but haven't installed. No need to redownload if we do.
+		progressDialog = new DownloadProgressDialog(taskActivity);
 	}
 	
 	@Override
@@ -50,7 +85,7 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 		handleResponse(response);
 		return null;
 	}
-
+	
 	/**
 	 * Handles the response back from the server. Gets new ttl and an optional update notification. 
 	 * @see UpdatesHelper
@@ -70,11 +105,11 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> {
 					if(update != null) {
 						if(this.promptDownloadConfirm && UpdatesHelper.fileFromJsonNotDownloadedYet(update))
 						{
-							UpdatesHelper.confirmUpdate(this.taskActivity, update);
+							UpdatesHelper.confirmUpdate(this.taskActivity, update, this);
 						}
 						else
 						{
-							UpdatesHelper.processUpdate(this.taskActivity, update);								
+							UpdatesHelper.processUpdate(this.taskActivity, update, this);
 						}
 					}
 					else

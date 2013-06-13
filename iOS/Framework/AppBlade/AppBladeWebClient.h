@@ -29,6 +29,8 @@ extern NSString *reportCrashURLFormat;
 extern NSString *reportFeedbackURLFormat;
 extern NSString *sessionURLFormat;
 
+extern NSString *deviceSecretHeaderField;
+
 
 @protocol AppBladeWebClientDelegate <NSObject>
 
@@ -41,8 +43,9 @@ extern NSString *sessionURLFormat;
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString;
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedTokenResponse:(NSDictionary *)response;
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions andShowUpdate:(BOOL)showUpdatePrompt;
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedGenerateTokenResponse:(NSDictionary *)response;
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedConfirmTokenResponse:(NSDictionary *)response;
+- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions;
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success;
 - (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success;
@@ -50,7 +53,7 @@ extern NSString *sessionURLFormat;
 
 @end
 
-@interface AppBladeWebClient : NSObject {    
+@interface AppBladeWebClient : NSOperation {
 
 @private
 
@@ -72,16 +75,20 @@ extern NSString *sessionURLFormat;
 @property (nonatomic, readonly) AppBladeWebClientAPI api;
 @property (nonatomic, retain) NSDictionary* userInfo;
 @property (nonatomic, retain) NSDictionary* responseHeaders;
+@property (nonatomic, retain) NSMutableData* receivedData;
+
+@property (nonatomic, retain) NSString* sentDeviceSecret;
+-(int)getReceivedStatusCode;
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
 
 + (NSString *)buildHostURL:(NSString *)customURLString;
 
 // AppBlade API.
-- (void)refreshToken;
-- (void)confirmToken;
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
 
-- (void)checkPermissions:(BOOL)andForUpdates;
+- (void)checkPermissions;
 - (void)checkForUpdates;
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params;
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsData;

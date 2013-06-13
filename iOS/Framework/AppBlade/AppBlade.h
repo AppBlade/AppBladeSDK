@@ -20,10 +20,6 @@ UIKIT_EXTERN int const kAppBladeParsingError;
 UIKIT_EXTERN int const kAppBladePermissionError;
 UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
-#define DEFAULT_APPBLADE_LOCATION_LOGGING_DISTANCE 10 //every ten meters
-#define DEFAULT_APPBLADE_LOCATION_LOGGING_TIME 900 //or every fifteen minutes
-
-
 
 @class AppBlade;
 
@@ -45,7 +41,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // AppBlade API project issued secret.
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
 
-// AppBlade API project issued device secret. Optional
+// AppBlade API project issued device secret. 
 @property (nonatomic, retain) NSString* appBladeDeviceSecret;
 
 
@@ -59,15 +55,17 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // Log SDK Version
 + (void)logSDKVersion;
 
+
 // AppBlade manager singleton.
 + (AppBlade *)sharedManager;
 
 // Use the plist that AppBlade embeds for the iOS settings
 - (void)registerWithAppBladePlist;
+- (void)registerWithAppBladePlist:(NSString*)plistName;
 
 //Device secret calls
-- (NSDictionary *) appBladeDeviceSecrets;
-- (NSString *) getAppBladeDeviceSecret;
+-(void)clearAppBladeKeychain;
+- (NSString *) appBladeDeviceSecret;
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 
 
@@ -82,7 +80,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 //Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
--(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated("use method -(void)setCustomParam:(id)newObject withValue:(NSString*)key")));
+-(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated("use method -(void)setCustomParam:(id)object forKey:(NSString*)keyme")));
 -(void)setCustomParam:(id)object forKey:(NSString*)key;
 -(void)clearAllCustomParams;
 
@@ -95,9 +93,8 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // Checks with AppBlade to see if the app is allowed to run on this device. Will also notify of updates.
 - (void)checkApproval;
 
-// Approval check with ability to disable the check/notification for updates.
-- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt;
-
+// Approval check with ability to disable the check/notification for updates. DEPRECATED
+- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt __attribute__((deprecated("use method - (void)checkForUpdates for update checks from now on")));
 
 // Checks with AppBlade anonymously to see if the app can be updated with a new build.
 - (void)checkForUpdates;
@@ -105,6 +102,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
 //Path to the AppBlade cache directory. Useful for direct modificaion of stored requests.
 + (NSString*)cachesDirectoryPath;
++ (void)clearCacheDirectory;
 
 // Sets up a 3-finger double tap for reporting feedback
 - (void)allowFeedbackReporting;
@@ -126,9 +124,9 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 + (void)endSession;
 
 
-- (void)refreshToken;
-- (void)confirmToken;
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
 
-
+-(BOOL)isAppStoreBuild;
 
 @end

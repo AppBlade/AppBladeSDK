@@ -8,8 +8,7 @@
     <uses-sdk android:targetSdkVersion="17" />
 
     <application
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+        android:label="@string/appblade_framework_app_name" >
     </application>
 
     

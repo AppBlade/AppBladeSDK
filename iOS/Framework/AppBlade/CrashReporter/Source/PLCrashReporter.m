@@ -367,7 +367,6 @@ static void uncaught_exception_handler (NSException *exception) {
     BOOL toRet = NO;
     NSArray *files = [self queuedCrashReportFiles];
     if(files != nil){
-        NSLog(@"%d stored crash reports", [files count]);
         toRet = [files count] > 0;
     }
     return toRet;

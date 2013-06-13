@@ -21,12 +21,12 @@
 
     AppBlade *blade = [AppBlade sharedManager];
     [blade registerWithAppBladePlist];
-    [blade catchAndReportCrashes];
+    [blade catchAndReportCrashes];  
     
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
     
-
+    [blade allowFeedbackReporting]; //must be called after window is keyed and visible
     return YES;
 }
 
@@ -53,6 +53,8 @@
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    AppBlade *blade = [AppBlade sharedManager];
+    [blade checkForUpdates];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -61,15 +63,9 @@
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
-    
     // Check the app blade update status of this application.
-   
-    [[AppBlade sharedManager] refreshToken];
-
-   // [AppBlade startSession];
-    [[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)
-    [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
-
+    [AppBlade startSession];
+   // [[AppBlade sharedManager] checkForExistingCrashReports]; //Not a necessary call, but better for more immediate crash reporting.
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -79,8 +75,7 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
-  //  [AppBlade endSession];
-
+    [AppBlade endSession];
 }
 
 
