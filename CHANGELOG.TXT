@@ -1,3 +1,9 @@
+2013-06-19 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
+	iOS
+	 * Version 0.5.0 (plus we added the version to the comments in AppBlade.h) 
+	 * Migrating core framework to ARC, PLCrashreporter remains ARC-free
+	 * Updating Build target to iOS 5.0 (from iOS 4.3)
+
 2013-04-01 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
 	Android
 	 * Anonymous update call improved. The apk to replace is stored externally and is linked to DownloadManager if available. The externally stored apk is removed on first launch after successful installation.   
