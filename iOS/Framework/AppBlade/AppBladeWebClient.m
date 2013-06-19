@@ -231,9 +231,9 @@ const int kNonceRandomStringLength = 74;
     
     if (redirectResponse) {
 		// Clone and retarget request to new URL.
-        NSMutableURLRequest *r = [self.request mutableCopy] ;
-        [r setURL: [aRequest URL]];
-        return [r copy];
+        NSMutableURLRequest *redirectRequest = [self.request mutableCopy] ;
+        [redirectRequest setURL: [aRequest URL]];
+        return [redirectRequest copy];
     }
     else
     {
