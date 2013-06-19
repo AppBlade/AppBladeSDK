@@ -107,7 +107,7 @@ const int kNonceRandomStringLength = 74;
 
 - (void) issueRequest
 {
-    if((nil != _request) && !self.isCancelled){
+    if((nil != self.request) && !self.isCancelled){
             ABDebugLog_internal(@"Success_IssueRequest: Starting API call.");
             self.executing = YES;
             [self didChangeValueForKey:@"isExecuting"];
@@ -133,9 +133,9 @@ const int kNonceRandomStringLength = 74;
         @synchronized(self){
             
             // end the background task
-            if (_backgroundTaskId != UIBackgroundTaskInvalid){
+            if (self.backgroundTaskId != UIBackgroundTaskInvalid){
                 [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskId];
-                _backgroundTaskId = UIBackgroundTaskInvalid;
+                self.backgroundTaskId = UIBackgroundTaskInvalid;
             }
             
             self.connectionThread = nil;
@@ -143,8 +143,8 @@ const int kNonceRandomStringLength = 74;
             [self willChangeValueForKey:@"isFinished"];
             [self willChangeValueForKey:@"isExecuting"];
             
-            _finished = YES;
-            _executing = NO;
+            self.finished = YES;
+            self.executing = NO;
             
             [self didChangeValueForKey:@"isExecuting"];
             [self didChangeValueForKey:@"isFinished"];
@@ -186,11 +186,11 @@ const int kNonceRandomStringLength = 74;
 
 // Flags
 - (BOOL)isExecuting {
-    return _executing;
+    return self.executing;
 }
 
 - (BOOL)isFinished {
-    return _finished;
+    return self.finished;
 }
 
 -(void) scheduleTimeout
@@ -231,13 +231,13 @@ const int kNonceRandomStringLength = 74;
     
     if (redirectResponse) {
 		// Clone and retarget request to new URL.
-        NSMutableURLRequest *r = [_request mutableCopy] ;
+        NSMutableURLRequest *r = [self.request mutableCopy] ;
         [r setURL: [aRequest URL]];
         return [r copy];
     }
     else
     {
-        return _request;
+        return self.request;
     }
 }
 
@@ -277,7 +277,7 @@ const int kNonceRandomStringLength = 74;
     self.finished = YES;
     [self didChangeValueForKey:@"isFinished"];
 
-    _request = nil;
+    self.request = nil;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -293,7 +293,7 @@ const int kNonceRandomStringLength = 74;
         return;
     }
     
-    if (_api == AppBladeWebClientAPI_GenerateToken) {
+    if (self.api == AppBladeWebClientAPI_GenerateToken) {
         NSError *error = nil;
         //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         //ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
@@ -304,7 +304,7 @@ const int kNonceRandomStringLength = 74;
             [delegateReference appBladeWebClient:selfReference receivedGenerateTokenResponse:json];
         });
     }
-    else if (_api == AppBladeWebClientAPI_ConfirmToken) {
+    else if (self.api == AppBladeWebClientAPI_ConfirmToken) {
         NSError *error = nil;
         //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         //ABDebugLog_internal(@"Received Device Secret Confirm Response from AppBlade: %@", string);
@@ -316,11 +316,11 @@ const int kNonceRandomStringLength = 74;
             [delegateReference appBladeWebClient:selfReference receivedConfirmTokenResponse:json];
         });
     }
-    else if(_api == AppBladeWebClientAPI_Permissions) {
+    else if(self.api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
         //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
-        //BOOL showUpdatePrompt = [_request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
+        //BOOL showUpdatePrompt = [self.request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
         
         
         if (plist && error == NULL) {
@@ -343,14 +343,14 @@ const int kNonceRandomStringLength = 74;
         }
         
     }
-    else if (_api == AppBladeWebClientAPI_ReportCrash) {
+    else if (self.api == AppBladeWebClientAPI_ReportCrash) {
         AppBladeWebClient *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClientCrashReported:selfReference];
         });
     }
-    else if (_api == AppBladeWebClientAPI_Feedback) {
+    else if (self.api == AppBladeWebClientAPI_Feedback) {
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
         AppBladeWebClient *selfReference = self;
@@ -359,7 +359,7 @@ const int kNonceRandomStringLength = 74;
             [delegateReference appBladeWebClientSentFeedback:selfReference withSuccess:success];
         });        
     }
-    else if (_api == AppBladeWebClientAPI_Sessions) {
+    else if (self.api == AppBladeWebClientAPI_Sessions) {
         //NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         //ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString);
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
@@ -370,7 +370,7 @@ const int kNonceRandomStringLength = 74;
             [delegateReference appBladeWebClientSentSessions:selfReference withSuccess:success];
         });
     }
-    else if(_api == AppBladeWebClientAPI_UpdateCheck) {
+    else if(self.api == AppBladeWebClientAPI_UpdateCheck) {
         NSError *error = nil;
         //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         //ABDebugLog_internal(@"Received Update Response from AppBlade: %@", string);
@@ -396,7 +396,7 @@ const int kNonceRandomStringLength = 74;
     }
     else
     {
-        ABErrorLog(@"Unhandled connection with AppBladeWebClientAPI value %d", _api);
+        ABErrorLog(@"Unhandled connection with AppBladeWebClientAPI value %d", self.api);
     }
     
     [self willChangeValueForKey:@"isFinished"];
@@ -405,7 +405,7 @@ const int kNonceRandomStringLength = 74;
     [self willChangeValueForKey:@"isFinished"];
     self.finished = YES;
     [self didChangeValueForKey:@"isFinished"];
-    _request = nil;
+    self.request = nil;
 }
 
 
@@ -428,7 +428,6 @@ const int kNonceRandomStringLength = 74;
         [apiRequest setHTTPMethod:@"GET"];
         [self addSecurityToRequest:apiRequest];
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
-        //apiRequest is a retained reference to the _request ivar.
     }
 }
 
@@ -936,10 +935,10 @@ const int kNonceRandomStringLength = 74;
 #pragma mark - sentDeviceSecret
 
 -(NSString *)sentDeviceSecret {
-    if(_request){
-        _sentDeviceSecret = [_request valueForHTTPHeaderField:deviceSecretHeaderField];
+    if(self.request){
+        self.sentDeviceSecret = [self.request valueForHTTPHeaderField:deviceSecretHeaderField];
     }
-    return _sentDeviceSecret;
+    return self.sentDeviceSecret;
 }
 
 #pragma mark buildHostURL
@@ -986,7 +985,7 @@ const int kNonceRandomStringLength = 74;
 //_mh_execute_header is declared in mach-o/ldsyms.h (and not an iVar as you might have thought).
 -(NSString *)genExecutableUUID //will break in simulator, please be careful
 {
-    if(_executableUUID == nil){
+    if(self.executableUUID == nil){
         const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
         for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx) {
             if (((const struct load_command *)command)->cmd == LC_UUID) {
@@ -1005,7 +1004,7 @@ const int kNonceRandomStringLength = 74;
             }
         }
     }
-    return _executableUUID;
+    return self.executableUUID;
 }
 
 
@@ -1014,7 +1013,7 @@ const int kNonceRandomStringLength = 74;
 
 // From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
 - (NSString *)osVersionBuild {
-    if(_osVersionBuild == nil){
+    if(self.osVersionBuild == nil){
         int mib[2] = {CTL_KERN, KERN_OSVERSION};
         u_int namelen = sizeof(mib) / sizeof(mib[0]);
         size_t bufferSize = 0;
@@ -1030,21 +1029,21 @@ const int kNonceRandomStringLength = 74;
         if (result >= 0) {
             osBuildVersion = [[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding];
         }
-        _osVersionBuild = osBuildVersion;
+        self.osVersionBuild = osBuildVersion;
     }
-    return _osVersionBuild;
+    return self.osVersionBuild;
 }
 
 - (NSString *) platform{
-    if(_platform == nil){
+    if(self.platform == nil){
         size_t size;
         sysctlbyname("hw.machine", NULL, &size, NULL, 0);
         char *machine = malloc(size);
         sysctlbyname("hw.machine", machine, &size, NULL, 0);
-        _platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+        self.platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
         free(machine);
     }
-    return _platform;
+    return self.platform;
 }
 
 

@@ -244,7 +244,7 @@ static BOOL is_encrypted () {
 - (id)init {
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
-        _delegate = self;
+        self.delegate = self;
     }
     return self;
 }
@@ -339,22 +339,22 @@ static BOOL is_encrypted () {
 
 -(NSOperationQueue *) tokenRequests {
     if(!_tokenRequests){
-        _tokenRequests = [[NSOperationQueue alloc] init];
-        _tokenRequests.name = @"AppBlade Token Queue";
-        _tokenRequests.maxConcurrentOperationCount = 1;
+        self.tokenRequests = [[NSOperationQueue alloc] init];
+        self.tokenRequests.name = @"AppBlade Token Queue";
+        self.tokenRequests.maxConcurrentOperationCount = 1;
     }
-    return _tokenRequests;
+    return self.tokenRequests;
 }
 
 //token requests are never pause or cancelled
 
 -(NSOperationQueue *) pendingRequests {
-    if(!_pendingRequests){
-        _pendingRequests = [[NSOperationQueue alloc] init];
-        _pendingRequests.name = @"AppBlade API Queue";
-        _pendingRequests.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+    if(!self.pendingRequests){
+        self.pendingRequests = [[NSOperationQueue alloc] init];
+        self.pendingRequests.name = @"AppBlade API Queue";
+        self.pendingRequests.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
     }
-    return _pendingRequests;
+    return self.pendingRequests;
 }
 
 -(void) pauseCurrentPendingRequests {
@@ -1541,13 +1541,13 @@ static BOOL is_encrypted () {
     if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
     {
         ABDebugLog_internal(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
-        _appBladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
+        self.appBladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
     }else
     {
-        _appBladeDeviceSecret = (NSString*)[device_secret_stored copy];
+        self.appBladeDeviceSecret = (NSString*)[device_secret_stored copy];
     }
     
-    return _appBladeDeviceSecret;
+    return self.appBladeDeviceSecret;
 }
 
 
