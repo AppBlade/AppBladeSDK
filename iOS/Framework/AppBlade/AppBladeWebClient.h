@@ -55,7 +55,7 @@ extern NSString *deviceSecretHeaderField;
 
 @interface AppBladeWebClient : NSOperation 
 
-@property (nonatomic, strong) id<AppBladeWebClientDelegate> delegate;
+@property (nonatomic, weak) id<AppBladeWebClientDelegate> delegate;
 @property (nonatomic, readonly) AppBladeWebClientAPI api;
 @property (nonatomic, strong) NSDictionary* userInfo;
 @property (nonatomic, strong) NSMutableURLRequest* request;
