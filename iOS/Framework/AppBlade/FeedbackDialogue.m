@@ -22,16 +22,6 @@
 #define submitButtonWidth           100
 #define submitButtonHeight          44
 
-@synthesize textView = _textView;
-@synthesize submitButton = _submitButton;
-@synthesize delegate = _delegate;
-@synthesize dialogueView = _dialogueView;
-@synthesize feedbackTitle = _feedbackTitle;
-@synthesize cancelButton = _cancelButton;
-@synthesize headerView = _headerView;
-@synthesize overlayView = _overlayView;
-@synthesize closing = _closing;
-
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];

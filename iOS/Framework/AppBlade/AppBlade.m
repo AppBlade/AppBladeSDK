@@ -140,25 +140,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 
 @implementation AppBlade
 
-@synthesize appBladeHost = _appBladeHost;
-@synthesize appBladeProjectSecret = _appBladeProjectSecret;
-@synthesize appBladeDeviceSecret = _appBladeDeviceSecret;
-@synthesize delegate = _delegate;
-@synthesize upgradeLink = _upgradeLink;
-@synthesize feedbackDictionary = _feedbackDictionary;
-@synthesize showingFeedbackDialogue = _showingFeedbackDialogue;
-@synthesize tapRecognizer = _tapRecognizer;
-
-@synthesize sessionStartDate = _sessionStartDate;
-
-@synthesize window = _window;
-
-@synthesize pendingRequests = _pendingRequests;
-@synthesize tokenRequests = _tokenRequests;
-
-
-
-
 static AppBlade *s_sharedManager = nil;
 
 /* A custom post-crash callback */
