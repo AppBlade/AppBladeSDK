@@ -53,31 +53,16 @@ extern NSString *deviceSecretHeaderField;
 
 @end
 
-@interface AppBladeWebClient : NSOperation {
+@interface AppBladeWebClient : NSOperation 
 
-@private
-
-    // Delegate providing AppBlade configuration and accepting messages regarding request outcomes.
-    id<AppBladeWebClientDelegate> _delegate;
-
-    // Type of API call.
-    AppBladeWebClientAPI _api;
-
-    // HTTP request object for the API call.
-    NSMutableURLRequest *_request;
-    
-    // Container for API response data.
-    NSMutableData *_receivedData;
-}
-
-
-@property (nonatomic, assign) id<AppBladeWebClientDelegate> delegate;
+@property (nonatomic, strong) id<AppBladeWebClientDelegate> delegate;
 @property (nonatomic, readonly) AppBladeWebClientAPI api;
-@property (nonatomic, retain) NSDictionary* userInfo;
-@property (nonatomic, retain) NSDictionary* responseHeaders;
-@property (nonatomic, retain) NSMutableData* receivedData;
+@property (nonatomic, strong) NSDictionary* userInfo;
+@property (nonatomic, strong) NSMutableURLRequest* request;
+@property (nonatomic, strong) NSDictionary* responseHeaders;
+@property (nonatomic, strong) NSMutableData* receivedData;
 
-@property (nonatomic, retain) NSString* sentDeviceSecret;
+@property (nonatomic, strong) NSString* sentDeviceSecret;
 -(int)getReceivedStatusCode;
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
