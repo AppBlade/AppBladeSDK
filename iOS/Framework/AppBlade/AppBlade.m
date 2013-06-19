@@ -140,25 +140,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 
 @implementation AppBlade
 
-@synthesize appBladeHost = _appBladeHost;
-@synthesize appBladeProjectSecret = _appBladeProjectSecret;
-@synthesize appBladeDeviceSecret = _appBladeDeviceSecret;
-@synthesize delegate = _delegate;
-@synthesize upgradeLink = _upgradeLink;
-@synthesize feedbackDictionary = _feedbackDictionary;
-@synthesize showingFeedbackDialogue = _showingFeedbackDialogue;
-@synthesize tapRecognizer = _tapRecognizer;
-
-@synthesize sessionStartDate = _sessionStartDate;
-
-@synthesize window = _window;
-
-@synthesize pendingRequests = _pendingRequests;
-@synthesize tokenRequests = _tokenRequests;
-
-
-
-
 static AppBlade *s_sharedManager = nil;
 
 /* A custom post-crash callback */
@@ -263,7 +244,7 @@ static BOOL is_encrypted () {
 - (id)init {
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
-        _delegate = self;
+        self.delegate = self;
     }
     return self;
 }
@@ -289,26 +270,6 @@ static BOOL is_encrypted () {
     abort();
 }
 
-- (void)dealloc
-{   
-    [_upgradeLink release];
-    [_feedbackDictionary release];
-    [_appBladeHost release];
-    [_appBladeProjectSecret release];
-    [_appBladeDeviceSecret release];
-    [_delegate release];
-    [_upgradeLink release];
-    [_feedbackDictionary release];
-    [_tapRecognizer release];
-    [_window release];
-    
-    [_sessionStartDate release];
-
-    [_pendingRequests release];
-    [_tokenRequests release];
-    
-    [super dealloc];
-}
 
 #pragma mark SDK setup
 
@@ -378,22 +339,22 @@ static BOOL is_encrypted () {
 
 -(NSOperationQueue *) tokenRequests {
     if(!_tokenRequests){
-        _tokenRequests = [[NSOperationQueue alloc] init];
-        _tokenRequests.name = @"AppBlade Token Queue";
-        _tokenRequests.maxConcurrentOperationCount = 1;
+        self.tokenRequests = [[NSOperationQueue alloc] init];
+        self.tokenRequests.name = @"AppBlade Token Queue";
+        self.tokenRequests.maxConcurrentOperationCount = 1;
     }
-    return _tokenRequests;
+    return self.tokenRequests;
 }
 
 //token requests are never pause or cancelled
 
 -(NSOperationQueue *) pendingRequests {
-    if(!_pendingRequests){
-        _pendingRequests = [[NSOperationQueue alloc] init];
-        _pendingRequests.name = @"AppBlade API Queue";
-        _pendingRequests.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+    if(!self.pendingRequests){
+        self.pendingRequests = [[NSOperationQueue alloc] init];
+        self.pendingRequests.name = @"AppBlade API Queue";
+        self.pendingRequests.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
     }
-    return _pendingRequests;
+    return self.pendingRequests;
 }
 
 -(void) pauseCurrentPendingRequests {
@@ -444,7 +405,7 @@ static BOOL is_encrypted () {
     
     //HOLD EVERYTHING. bubble the request to the top.
     [self pauseCurrentPendingRequests];
-    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
     [client refreshToken:[self appBladeDeviceSecret]];
     [self.tokenRequests addOperation:client];
 }
@@ -463,7 +424,7 @@ static BOOL is_encrypted () {
     //HOLD EVERYTHING. bubble the request to the top.
     [self pauseCurrentPendingRequests];
     
-    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
     [client confirmToken:[self appBladeDeviceSecret]];
     [self.tokenRequests addOperation:client];
 }
@@ -478,7 +439,7 @@ static BOOL is_encrypted () {
 - (void)checkApproval
 {
     [self validateProjectConfiguration];
-    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self] ;
     [client checkPermissions];
     [self.pendingRequests addOperation:client];
 }
@@ -487,7 +448,7 @@ static BOOL is_encrypted () {
 {
     [self validateProjectConfiguration];
     ABDebugLog_internal(@"Checking for updates");
-    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self] ;
     [client checkForUpdates];
     [self.pendingRequests addOperation:client];
 }
@@ -527,7 +488,7 @@ static BOOL is_encrypted () {
     // Try loading the crash report from the live file
     crashData = [crashReporter loadPendingCrashReportDataAndReturnError: &error];
     if (crashData != nil) {
-        PLCrashReport *report = [[[PLCrashReport alloc] initWithData: crashData error: &error] autorelease];
+        PLCrashReport *report = [[PLCrashReport alloc] initWithData: crashData error: &error];
         if (report != nil) {
             reportString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat: PLCrashReportTextFormatiOS];
             //send pending crash report to a unique file name in the the queue
@@ -558,7 +519,7 @@ static BOOL is_encrypted () {
     }
     
     if(queuedFilePath != nil){
-        AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+        AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
         client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:queuedFilePath,  kAppBladeCrashReportKeyFilePath, nil];
         [client reportCrash:reportString withParams:[self getCustomParams]];
         [self.pendingRequests addOperation:client];
@@ -573,13 +534,13 @@ static BOOL is_encrypted () {
 {
     NSString* returnString = nil;
     CFStringRef executableFileMD5Hash =
-    FileMD5HashCreateWithPath((CFStringRef)filePath, FileHashDefaultChunkSizeForReadingData);
+    FileMD5HashCreateWithPath((CFStringRef)CFBridgingRetain(filePath), FileHashDefaultChunkSizeForReadingData);
     if (executableFileMD5Hash) {
-        returnString = [(NSString *)executableFileMD5Hash retain];
+        returnString = (NSString *)CFBridgingRelease(executableFileMD5Hash);
         CFRelease(executableFileMD5Hash);
     }
     
-    return [returnString autorelease];
+    return returnString;
 }
 
 
@@ -591,6 +552,9 @@ static BOOL is_encrypted () {
 
 - (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString
 {
+    if (nil == client) {
+        return;
+    }
     int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];  
     // check only once if the delegate responds to this selector
     BOOL canSignalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
@@ -947,11 +911,11 @@ static BOOL is_encrypted () {
 {
     if(!approved) {
         
-        UIAlertView* alert = [[[UIAlertView alloc] initWithTitle:@"Permission Denied"
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Permission Denied"
                                                          message:[error localizedDescription]
                                                         delegate:self
                                                cancelButtonTitle:@"Exit"
-                                               otherButtonTitles: nil] autorelease];
+                                               otherButtonTitles: nil] ;
         [alert show];
     }
     
@@ -962,11 +926,11 @@ static BOOL is_encrypted () {
 {
     if (update) {
         
-        UIAlertView* alert = [[[UIAlertView alloc] initWithTitle:@"Update Available"
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Update Available"
                                                          message:message
                                                         delegate:self
                                                cancelButtonTitle:@"Cancel"
-                                               otherButtonTitles: @"Upgrade", nil] autorelease];
+                                               otherButtonTitles: @"Upgrade", nil] ;
         alert.tag = kUpdateAlertTag;
         self.upgradeLink = [NSURL URLWithString:url];
         
@@ -1038,7 +1002,7 @@ static BOOL is_encrypted () {
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window
 {
     self.window = window;
-    self.tapRecognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] autorelease];
+    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] ;
     self.tapRecognizer.numberOfTapsRequired = 2;
     self.tapRecognizer.numberOfTouchesRequired = 3;
     self.tapRecognizer.delegate = self;
@@ -1216,7 +1180,7 @@ static BOOL is_encrypted () {
         ABErrorLog(@"Error writing backup file to %@", backupFilePath);
     }
     
-    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
     ABDebugLog_internal(@"Sending screenshot");
     [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
     [self.pendingRequests addOperation:client];
@@ -1242,7 +1206,7 @@ static BOOL is_encrypted () {
                 NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
                 bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
                 if(screenShotFileExists){
-                    AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+                    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
                     client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
                     [client sendFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[self getCustomParams]];
                     [self.pendingRequests addOperation:client];
@@ -1277,11 +1241,11 @@ static BOOL is_encrypted () {
         ABErrorLog(@"ERROR, could not capture screenshot, possible invalid keywindow");
     }
     NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"png"];
-	NSString *pngFilePath = [[[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] retain];
+	NSString *pngFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] ;
 	NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(currentImage)];
 	[data1 writeToFile:pngFilePath atomically:YES];
     ABDebugLog_internal(@"Screen captured in fileName %@", fileName);
-    return [pngFilePath autorelease];
+    return pngFilePath ;
     
 }
 
@@ -1390,7 +1354,7 @@ static BOOL is_encrypted () {
         ABDebugLog_internal(@"%d Sessions Exist, posting them", [sessions count]);
         
         if(![self hasPendingSessions]){
-            AppBladeWebClient * client = [[[AppBladeWebClient alloc] initWithDelegate:self] autorelease];
+            AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
             [client postSessions:sessions];
             [self.pendingRequests addOperation:client];
         }
@@ -1407,7 +1371,7 @@ static BOOL is_encrypted () {
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
         NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
-        pastSessions = [[sessions mutableCopy] autorelease];
+        pastSessions = [sessions mutableCopy] ;
     }
     else {
         pastSessions = [NSMutableArray arrayWithCapacity:1];
@@ -1469,7 +1433,7 @@ static BOOL is_encrypted () {
     if (currentFields == nil) {
         currentFields = [NSDictionary dictionary];
     }
-    NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
+    NSMutableDictionary* mutableFields = [currentFields  mutableCopy];
     if(key && newObject){
         [mutableFields setObject:newObject forKey:key];
     }
@@ -1492,7 +1456,7 @@ static BOOL is_encrypted () {
     if (currentFields == nil) {
         currentFields = [NSDictionary dictionary];
     }
-    NSMutableDictionary* mutableFields = [[currentFields  mutableCopy] autorelease];
+    NSMutableDictionary* mutableFields = [currentFields  mutableCopy] ;
     if(key && object){
         [mutableFields setObject:object forKey:key];
     }
@@ -1577,13 +1541,13 @@ static BOOL is_encrypted () {
     if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
     {
         ABDebugLog_internal(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
-        _appBladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
+        self.appBladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
     }else
     {
-        _appBladeDeviceSecret = (NSString*)[device_secret_stored copy];
+        self.appBladeDeviceSecret = (NSString*)[device_secret_stored copy];
     }
     
-    return _appBladeDeviceSecret;
+    return self.appBladeDeviceSecret;
 }
 
 

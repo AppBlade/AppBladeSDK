@@ -371,6 +371,7 @@
 		31817C15161202EB00392343 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = Maps/ResourceRules.plist;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -389,6 +390,7 @@
 		31817C16161202EB00392343 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_RESOURCE_RULES_PATH = Maps/ResourceRules.plist;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

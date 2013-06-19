@@ -13,9 +13,9 @@
 + (NSMutableDictionary *)getKeychainQuery:(NSString *)service
 {
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:
-            (id)kSecClassGenericPassword, (id)kSecClass,
-            service, (id)kSecAttrService,
-            service, (id)kSecAttrAccount,
+            (id)CFBridgingRelease(kSecClassGenericPassword), (id)CFBridgingRelease(kSecClass),
+            service, (id)CFBridgingRelease(kSecAttrService),
+            service, (id)CFBridgingRelease(kSecAttrAccount),
 //          (id)kSecAttrAccessibleAfterFirstUnlock, (id)kSecAttrAccessible, // Keychain must be unlocked to access this value. // This is only available on iOS 4 and above.
             nil];
 }
@@ -24,9 +24,9 @@
 + (void)save:(NSString *)service data:(id)data
 {
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-    SecItemDelete((CFDictionaryRef)keychainQuery);
-    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(id)kSecValueData];
-    SecItemAdd((CFDictionaryRef)keychainQuery, NULL);
+    SecItemDelete((CFDictionaryRef)CFBridgingRetain(keychainQuery));
+    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(__bridge id)kSecValueData];
+    SecItemAdd((CFDictionaryRef)CFBridgingRetain(keychainQuery), NULL);
 }
 
 // Returns an object inflated from the data stored in the keychain entry for the given service.
@@ -34,12 +34,12 @@
 {
     id ret = nil;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-    [keychainQuery setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
-    [keychainQuery setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
+    [keychainQuery setObject:(id)kCFBooleanTrue forKey:(id)CFBridgingRelease(kSecReturnData)];
+    [keychainQuery setObject:(id)CFBridgingRelease(kSecMatchLimitOne) forKey:(id)CFBridgingRelease(kSecMatchLimit)];
     CFDataRef keyData = NULL;
-    if (SecItemCopyMatching((CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData) == noErr) {
+    if (SecItemCopyMatching((CFDictionaryRef)CFBridgingRetain(keychainQuery), (CFTypeRef *)&keyData) == noErr) {
         @try {
-            ret = [NSKeyedUnarchiver unarchiveObjectWithData:(NSData *)keyData];
+            ret = [NSKeyedUnarchiver unarchiveObjectWithData:(NSData *)CFBridgingRelease(keyData)];
         }
         @catch (NSException *e) {
             NSLog(@"Unarchive of %@ failed: %@", service, e);
@@ -54,7 +54,7 @@
 + (void)delete:(NSString *)service
 {
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-    SecItemDelete((CFDictionaryRef)keychainQuery);
+    SecItemDelete((CFDictionaryRef)CFBridgingRetain(keychainQuery));
 }
 
 @end
