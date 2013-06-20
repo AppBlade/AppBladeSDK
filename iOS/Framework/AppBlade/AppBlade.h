@@ -1,6 +1,6 @@
 //
 //  AppBlade.h
-//  AppBlade
+//  AppBlade iOS SDK v0.5.0
 //
 //  Created by Craig Spitzkoff on 6/1/11.
 //  Copyright 2011 AppBlade. All rights reserved.
@@ -8,7 +8,6 @@
 //  For instructions on how to use this library, please look at the README.
 //
 //  Support and FAQ can be found at http://support.appblade.com
-//
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
