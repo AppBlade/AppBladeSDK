@@ -39,6 +39,7 @@ import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
 import com.appblade.framework.stats.AppBladeSessionLoggingService;
 import com.appblade.framework.updates.UpdatesHelper;
+import com.appblade.framework.utils.LogLevel;
 import com.appblade.framework.utils.StringUtils;
 
 /**
@@ -56,11 +57,12 @@ import com.appblade.framework.utils.StringUtils;
 public class AppBlade {
 	private static String LogTag = "AppBlade";
 	public static boolean makeToast = false;  //for toast display in the device, not desired by default
-	public static final int LOG_DEBUG = Integer.parseInt("0001", 2); 
-	public static final int LOG_ERRORS = Integer.parseInt("0010", 2);
-	public static final int LOG_WARNINGS = Integer.parseInt("0100", 2);
-	public static final int LOG_ALL = LOG_DEBUG | LOG_ERRORS | LOG_WARNINGS;
-	public static int mLogFlags = 0;  //for display of internal AppBlade Logs, LOG_DEBUG, LOG_ERRORS, LOG_WARNINGS, or LOG_ALL
+
+	/**
+	 * A bitmap for displaying internal AppBlade Logs.
+	 * For the possible values, see {@link com.appblade.framework.utils.LogLevel } 
+	 */
+	public static int mLogFlags = LogLevel.NONE;  	
 	
 	/**
 	 * Contains basic anonymous information about the application and the device running it after a successful register() call. 
@@ -822,20 +824,20 @@ public class AppBlade {
 	
 	public static void Log(String message)
 	{
-		if((mLogFlags & LOG_DEBUG) > 0){  
+		if((mLogFlags & LogLevel.DEBUG) > 0){  
 			Log.d(LogTag, message);
 		}
 	}
 	
 	public static void Log_w(String message, Exception ex)
 	{
-		if((mLogFlags & LOG_WARNINGS) > 0){  
+		if((mLogFlags & LogLevel.WARNINGS) > 0){  
 			Log.w(LogTag, message, ex);
 		}
 	}
 
 	public static void Log_e(String message) {
-		if((mLogFlags & LOG_ERRORS) > 0){
+		if((mLogFlags & LogLevel.ERRORS) > 0){
 			Log.e(LogTag, message);		
 		}
 	}
