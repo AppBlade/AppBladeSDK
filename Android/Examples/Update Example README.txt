@@ -9,4 +9,4 @@ To demo this example for yourself:
 
 If you had a device that downloaded the build uploaded to AppBlade after step 3, then after step 5 resuming the build will prompt an update to be downloaded to that devices downloads folder.   
 
-(Simulators are not guaranteed to work with this demo)
+(Emulators are not guaranteed to work with this demo)
