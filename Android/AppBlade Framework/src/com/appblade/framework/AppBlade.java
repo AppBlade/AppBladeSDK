@@ -101,9 +101,9 @@ public class AppBlade {
 		String host = "";
 		String project_secret = "";			 
 		String device_secret = "";
-
+		String appbladekeys_filename = "AppBladeKeys.xml";
 		try {
-			final InputStream is = context.getResources().getAssets().open("AppBladeKeys.xml");
+			final InputStream is = context.getResources().getAssets().open(appbladekeys_filename);
             XmlPullParser parser = Xml.newPullParser();
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			parser.setInput(is, null);
@@ -136,10 +136,11 @@ public class AppBlade {
                	device_secret = text;
          	   }
                else {
-            	   Log.d(AppBlade.LogTag, "Unknown/unused Name passed: "+lastNameSeen);
+            	   Log.d(AppBlade.LogTag, "Unknown/unused keyvalue passed in "+appbladekeys_filename+": "+lastNameSeen);
                }
             }  
 		} catch (Exception e1) {
+			Log.w(AppBlade.LogTag, "Failed to parse "+appbladekeys_filename, e1);
 			e1.printStackTrace();
 		}
 		
