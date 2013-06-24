@@ -56,9 +56,12 @@ import com.appblade.framework.utils.StringUtils;
 public class AppBlade {
 	private static String LogTag = "AppBlade";
 	public static boolean makeToast = false;  //for toast display in the device, not desired by default
-	public static boolean logAll = false;  //for toast display in the device, not desired by default
-	public static boolean logWarnings = false;  //for toast display in the device, not desired by default
-	public static boolean logErrors = false;  //for toast display in the device, not desired by default
+	public static final int LOG_DEBUG = Integer.parseInt("0001", 2); 
+	public static final int LOG_ERRORS = Integer.parseInt("0010", 2);
+	public static final int LOG_WARNINGS = Integer.parseInt("0100", 2);
+	public static final int LOG_ALL = LOG_DEBUG | LOG_ERRORS | LOG_WARNINGS;
+	public static int mLogFlags = 0;  //for display of internal AppBlade Logs, LOG_DEBUG, LOG_ERRORS, LOG_WARNINGS, or LOG_ALL
+	
 	/**
 	 * Contains basic anonymous information about the application and the device running it after a successful register() call. 
 	 * See AppInfo class for more details.
@@ -819,20 +822,20 @@ public class AppBlade {
 	
 	public static void Log(String message)
 	{
-		if(logAll){  
+		if((mLogFlags & LOG_DEBUG) > 0){  
 			Log.d(LogTag, message);
 		}
 	}
 	
 	public static void Log_w(String message, Exception ex)
 	{
-		if(logWarnings || logAll){  
+		if((mLogFlags & LOG_WARNINGS) > 0){  
 			Log.w(LogTag, message, ex);
 		}
 	}
 
 	public static void Log_e(String message) {
-		if(logErrors || logAll){
+		if((mLogFlags & LOG_ERRORS) > 0){
 			Log.e(LogTag, message);		
 		}
 	}
