@@ -126,7 +126,6 @@ public class WebServiceHelper {
 	 * </ul>
 	 * @param request The HttpRequest to which we've added the above headers. 
 	 */
-	@SuppressWarnings("deprecation")
 	public static void addCommonHeaders(HttpRequest request) {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
@@ -143,7 +142,7 @@ public class WebServiceHelper {
 		}
 		
 		request.addHeader("android_release", Build.VERSION.RELEASE);
-		request.addHeader("android_api", Build.VERSION.SDK);
+		request.addHeader("android_api", String.format("%d", Build.VERSION.SDK_INT));
 		request.addHeader("device_mfg", Build.MANUFACTURER);
 		request.addHeader("device_model", Build.MODEL);
 		request.addHeader("device_id", Build.ID);
