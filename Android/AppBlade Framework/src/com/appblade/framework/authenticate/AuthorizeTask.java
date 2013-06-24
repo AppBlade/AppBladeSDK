@@ -39,7 +39,7 @@ public class AuthorizeTask extends AsyncTask<String, String, Void> {
 	
 	public AuthorizeTask(Context context)
 	{
-		this.context = context;
+		this.context = context.getApplicationContext();
 		this.url = WebServiceHelper.getUrl(WebServiceHelper.ServicePathTokenRefreshFormat);
 		this.request = new HttpGet();
 	}
