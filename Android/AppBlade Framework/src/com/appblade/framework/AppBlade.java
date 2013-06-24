@@ -56,7 +56,9 @@ import com.appblade.framework.utils.StringUtils;
 public class AppBlade {
 	private static String LogTag = "AppBlade";
 	public static boolean makeToast = false;  //for toast display in the device, not desired by default
-
+	public static boolean logAll = false;  //for toast display in the device, not desired by default
+	public static boolean logWarnings = false;  //for toast display in the device, not desired by default
+	public static boolean logErrors = false;  //for toast display in the device, not desired by default
 	/**
 	 * Contains basic anonymous information about the application and the device running it after a successful register() call. 
 	 * See AppInfo class for more details.
@@ -811,18 +813,27 @@ public class AppBlade {
 		return toRet;
 	}
 	
+	/*
+	 * Log methods for AppBlade. Use these for AppBlade development or if you think something's wrong with AppBlade. (AppBlade, of course, is never worng).
+	 */
 	
 	public static void Log(String message)
 	{
-		Log.d(LogTag, message);
+		if(logAll){  
+			Log.d(LogTag, message);
+		}
 	}
+	
 	public static void Log_w(String message, Exception ex)
 	{
-		Log.w(LogTag, message, ex);
+		if(logWarnings || logAll){  
+			Log.w(LogTag, message, ex);
+		}
 	}
 
-
 	public static void Log_e(String message) {
-		Log.e(LogTag, message);		
+		if(logErrors || logAll){
+			Log.e(LogTag, message);		
+		}
 	}
 }
