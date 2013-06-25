@@ -824,8 +824,24 @@ public class AppBlade {
 	
 	public static void Log(String message)
 	{
+		Log_d(message);
+	}
+	
+	public static void Log_v(String message) {
+		if((mLogFlags & LogLevel.VERBOSE) > 0){
+			Log.v(LogTag, message);
+		}
+	}
+	
+	public static void Log_d(String message) {
 		if((mLogFlags & LogLevel.DEBUG) > 0){  
 			Log.d(LogTag, message);
+		}
+	}
+	
+	public static void Log_i(String message) {
+		if((mLogFlags & LogLevel.INFO) > 0) {
+			Log.i(LogTag, message);
 		}
 	}
 	
@@ -841,4 +857,7 @@ public class AppBlade {
 			Log.e(LogTag, message);		
 		}
 	}
+	
+	
+	
 }

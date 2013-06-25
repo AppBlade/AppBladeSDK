@@ -9,9 +9,11 @@ package com.appblade.framework.utils;
  * @author andrewtremblay
  */
 public class LogLevel {
-    public static final int DEBUG = Integer.parseInt("0001", 2);
-    public static final int ERRORS = Integer.parseInt("0010", 2);
-    public static final int WARNINGS = Integer.parseInt("0100", 2);
-    public static final int ALL = DEBUG | ERRORS | WARNINGS;
+	public static final int VERBOSE = Integer.parseInt("00001", 2);
+    public static final int DEBUG = Integer.parseInt("00010", 2);
+    public static final int INFO = Integer.parseInt("00100");
+    public static final int WARNINGS = Integer.parseInt("01000", 2);
+    public static final int ERRORS = Integer.parseInt("10000", 2);
+    public static final int ALL = VERBOSE | DEBUG | INFO | WARNINGS | ERRORS;
 	public static final int NONE = 0;
 }
