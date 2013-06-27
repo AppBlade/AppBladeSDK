@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 		//AppBlade.authorize(this); //moved to a button call, but it would usually be here
 		//AppBlade.checkForUpdates(MainActivity.this); //moved to a button call, but it would usually be here
 		
-		AppBlade.setCustomParameter(getApplicationContext(), "AppState", "Resumed");
+//		AppBlade.setCustomParameter(getApplicationContext(), "AppState", "Resumed");
 	}
 
 	public void onPause() {

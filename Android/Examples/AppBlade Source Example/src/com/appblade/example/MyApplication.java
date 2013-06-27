@@ -9,7 +9,8 @@ public class MyApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		AppBlade.registerWithAssetFile(this);
+//		AppBlade.registerWithAssetFile(this);
+		AppBlade.registerViaService(this, "testProjectSecret");
 
 		AppBlade.registerExceptionHandler();
 	}

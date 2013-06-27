@@ -35,6 +35,7 @@ import com.appblade.framework.feedback.FeedbackData;
 import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
+import com.appblade.framework.servicebinding.AppBladeServiceManager;
 import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
 import com.appblade.framework.stats.AppBladeSessionLoggingService;
@@ -58,6 +59,8 @@ public class AppBlade {
 	private static String LogTag = "AppBlade";
 	public static boolean makeToast = false;  //for toast display in the device, not desired by default
 
+	public static final int SDKVersion = 940;
+	
 	/**
 	 * A bitmap for displaying internal AppBlade Logs.
 	 * For the possible values, see {@link com.appblade.framework.utils.LogLevel } 
@@ -96,6 +99,21 @@ public class AppBlade {
 	 * APPBLADE REGISTRATION
 	 * Methods to help assign the app with the necessary information to communicate with AppBlade. A register call should be made before all other calls, and only once. 
 	 */
+	
+	
+	public static void registerViaService(Context context, String projectSecret) {
+		AppBladeServiceManager serviceManager = AppBladeServiceManager.get();
+		serviceManager.bind(context);
+		
+		AppInfo appInfo = new AppInfo();
+		
+		
+		appInfo.DeviceSecret = RemoteAuthHelper.getAccessToken(context);
+		appInfo.ProjectSecret = projectSecret;
+		appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		
+		serviceManager.obtainToken(projectSecret, appInfo);
+	}
 	
 	public static void registerWithAssetFile(Context context)
 	{
@@ -154,6 +172,22 @@ public class AppBlade {
 		register(context, device_secret, project_secret, host);
 	}
 
+	
+	public static void register(Context context, String projectSecret) {
+		// Check parameters
+		if(context == null)
+		{
+			throw new IllegalArgumentException("Invalid context registered with AppBlade");
+		}
+
+		if(StringUtils.isNullOrEmpty(projectSecret)) 
+		{
+			throw new IllegalArgumentException("Invalid application info registered with AppBlade");
+		}
+		
+		
+		
+	}
 	
 	/**
 	 * Static entry point for registering with AppBlade (must be called before anything else).
