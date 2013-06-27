@@ -17,12 +17,14 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Message;
 import android.provider.Settings;
-
-import android.util.Xml;
 import android.util.Log;
-
+import android.util.Xml;
 import android.view.View;
+import android.widget.Toast;
 
 import com.appblade.framework.authenticate.AuthHelper;
 import com.appblade.framework.authenticate.KillSwitch;
@@ -35,10 +37,14 @@ import com.appblade.framework.feedback.FeedbackData;
 import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
+import com.appblade.framework.servicebinding.AppBladeServiceConstants.Keys;
 import com.appblade.framework.servicebinding.AppBladeServiceManager;
+import com.appblade.framework.servicebinding.BlockingTwoWayMessage;
+import com.appblade.framework.servicebinding.BlockingTwoWayMessage.ResponseDelegate;
+import com.appblade.framework.servicebinding.GetTokenMessage;
+import com.appblade.framework.stats.AppBladeSessionLoggingService;
 import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
-import com.appblade.framework.stats.AppBladeSessionLoggingService;
 import com.appblade.framework.updates.UpdatesHelper;
 import com.appblade.framework.utils.LogLevel;
 import com.appblade.framework.utils.StringUtils;
@@ -114,6 +120,41 @@ public class AppBlade {
 		
 		serviceManager.obtainToken(projectSecret, appInfo);
 	}
+	
+	
+	
+	public static void demoServiceBlocking(final Context context, final String projectSecret) {
+		new AsyncTask<Void, Void, String>() {
+			String token;
+			
+			@Override
+			protected String doInBackground(Void... params) {
+				GetTokenMessage getToken = new GetTokenMessage(projectSecret, appInfo);
+				BlockingTwoWayMessage blockingTest = new BlockingTwoWayMessage(getToken, new ResponseDelegate() {
+					public boolean handleMessage(Message msg) {
+						// Look, a token!
+						Bundle data = msg.getData();
+						if (data != null) {					
+							token = data.getString(Keys.Token);
+						}
+						
+						return true;
+					}
+				});
+				blockingTest.sendAndAwaitResponse();
+				
+				return token;
+			}
+			
+			protected void onPostExecute(String result) {
+				Toast.makeText(context, "Look a token!: (" + result + ")", Toast.LENGTH_SHORT).show();
+			}
+			
+		}.execute();
+	}
+	
+	
+	
 	
 	public static void registerWithAssetFile(Context context)
 	{

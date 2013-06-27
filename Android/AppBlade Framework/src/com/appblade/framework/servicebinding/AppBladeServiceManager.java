@@ -46,6 +46,23 @@ public class AppBladeServiceManager implements ServiceConnection {
 	private ClientMessageHandler receiverHandler;
 	
 	/**
+	 * Retrieves the {@link Handler} that is bound to our background receiver
+	 * thread. You can use this to {@link Handler#post(Runnable)} actions to
+	 * this background thread.
+	 * 
+	 * Note that since the action is run on the receiver thread, blocking it
+	 * will block messages from being received, so you should only perform
+	 * relatively quick actions. The main purpose is to allow other message
+	 * handlers to bind to this thread as well so that they wait here instead
+	 * of needing a separate Looper thread.
+	 * 
+	 * @return The {@link Handler} bound to the receiver thread.
+	 */
+	public Handler getReceiverThreadHandler() {
+		return receiverHandler;
+	}
+	
+	/**
 	 * Keeps track of our token and synchronization
 	 */
 	private TokenLock tokenLock;
