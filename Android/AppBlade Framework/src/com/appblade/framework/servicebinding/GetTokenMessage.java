@@ -13,7 +13,7 @@ public class GetTokenMessage implements IAppBladeMessage {
 		request = new TokenRequest(projectSecret, info);
 	}
 	
-	public Message createMessage() {
+	public Message getMessage() {
 		Message message = Message.obtain();
 		message.what = Messages.GetToken;
 		message.setData(TokenRequest.toBundle(request));

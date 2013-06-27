@@ -156,7 +156,7 @@ public class AppBladeServiceManager implements ServiceConnection {
 	 */
 	public void obtainToken(String projectSecret, AppInfo appInfo) {
 		GetTokenMessage message = new GetTokenMessage(projectSecret, appInfo);
-		sendMessageWithDefaultReceiver(message.createMessage());
+		sendMessage(message);
 	}
 	
 	
@@ -172,11 +172,49 @@ public class AppBladeServiceManager implements ServiceConnection {
 	// *****************
 	
 	/**
+	 * Sends a message, setting the default message receiver to handle
+	 * responses if the {@link Message#replyTo} field is not set. This
+	 * will enqueue the message if we are not connected to the service.
+	 * 
+	 * @param message The message to send
+	 * @return True if the message was sent, false if it was enqueued.
+	 */
+	public boolean sendMessage(IAppBladeMessage message) {
+		return sendMessage(message.getMessage());
+	}
+	
+	/**
+	 * Sends a message, setting the default message receiver to handle
+	 * responses if the {@link Message#replyTo} field is not set. This
+	 * will enqueue the message if we are not connected to the service.
+	 * 
+	 * @param message The message to send
+	 * @return True if the message was sent, false if it was enqueued.
+	 */
+	public boolean sendMessage(Message message) {
+		if (message.replyTo == null) {
+			return sendMessageWithDefaultReceiver(message);
+		}
+		return rawSendMessage(message);
+	}
+	
+	/**
 	 * Sends a message, setting our default message receiver to handle
 	 * responses. This will enqueue the message if we are not connected
 	 * to the service.
 	 * @param message The message to send
-	 * @return True if the message was sent, false if it was enqueud.
+	 * @return True if the message was sent, false if it was enqueued.
+	 */
+	protected boolean sendMessageWithDefaultReceiver(IAppBladeMessage message) {
+		return sendMessageWithDefaultReceiver(message.getMessage());
+	}
+	
+	/**
+	 * Sends a message, setting our default message receiver to handle
+	 * responses. This will enqueue the message if we are not connected
+	 * to the service.
+	 * @param message The message to send
+	 * @return True if the message was sent, false if it was enqueued.
 	 */
 	protected boolean sendMessageWithDefaultReceiver(Message message) {
 		// Huge race condition/edge case where our background thread

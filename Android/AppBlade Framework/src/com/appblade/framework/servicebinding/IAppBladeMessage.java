@@ -3,5 +3,5 @@ package com.appblade.framework.servicebinding;
 import android.os.Message;
 
 public interface IAppBladeMessage {
-	public Message createMessage();
+	public Message getMessage();
 }
