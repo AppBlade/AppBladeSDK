@@ -351,9 +351,9 @@ public class AppBladeServiceManager implements ServiceConnection {
 	 * @author Dylan James
 	 *
 	 */
-	private static class ClientMessageHandler extends Handler {		
+	private static class ClientMessageHandler extends AppBladeMessageHandler {		
 		@Override
-		public void handleMessage(Message msg) {
+		public void onMessageReceived(Message msg) {
 			AppBladeServiceManager serviceManager = AppBladeServiceManager.get();
 			// Switch on the message "what" identifer to determine the type of
 			// message

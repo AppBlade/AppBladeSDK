@@ -2,7 +2,6 @@ package com.appblade.framework.servicebinding;
 
 import java.lang.ref.WeakReference;
 
-import android.os.Handler;
 import android.os.Message;
 
 /**
@@ -141,7 +140,7 @@ public class BlockingTwoWayMessage extends TwoWayMessage {
 	 * the method would leak otherwise. Since this is the intended use case,
 	 * it's easier for the user to use this without worrying about extra leaks.
 	 */
-	public static class DelegateResponseHandler extends Handler {
+	public static class DelegateResponseHandler extends AppBladeMessageHandler {
 		// Keep a WeakReference so our outer class can still be GC'ed
 		private WeakReference<BlockingTwoWayMessage> messageRef;
 		
@@ -155,7 +154,7 @@ public class BlockingTwoWayMessage extends TwoWayMessage {
 		}
 		
 		@Override
-		public void handleMessage(Message msg) {
+		public void onMessageReceived(Message msg) {
 			BlockingTwoWayMessage handler = messageRef.get();
 			// If our message reference is still valid, send it a message
 			if (handler != null) {
