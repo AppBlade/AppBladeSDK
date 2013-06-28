@@ -129,6 +129,13 @@ public class AppBlade {
 			
 			@Override
 			protected String doInBackground(Void... params) {
+				AppInfo appInfo = new AppInfo();
+				
+				
+				appInfo.DeviceSecret = RemoteAuthHelper.getAccessToken(context);
+				appInfo.ProjectSecret = projectSecret;
+				appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+				
 				GetTokenMessage getToken = new GetTokenMessage(projectSecret, appInfo);
 				BlockingTwoWayMessage blockingTest = new BlockingTwoWayMessage(getToken, new ResponseDelegate() {
 					public boolean handleMessage(Message msg) {
