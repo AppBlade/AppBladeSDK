@@ -2,6 +2,8 @@ package com.appblade.framework.servicebinding;
 
 import java.lang.ref.WeakReference;
 
+import com.appblade.framework.servicebinding.AppBladeServiceManager.ServiceStateListener;
+
 import android.os.Message;
 
 /**
@@ -21,7 +23,7 @@ import android.os.Message;
  * 
  * @author Dylan James
  */
-public class BlockingTwoWayMessage extends TwoWayMessage {
+public class BlockingTwoWayMessage extends TwoWayMessage implements ServiceStateListener {
 
 	/**
 	 * Interface which is responsible for handling response messages.
@@ -46,7 +48,16 @@ public class BlockingTwoWayMessage extends TwoWayMessage {
 	 */
 	private ResponseDelegate delegate;
 	
+	private boolean started;
 	private boolean completed;
+	private boolean success;
+	private boolean isWaiting() { return (started && !completed); }
+	
+	/**
+	 * Holds the message we are sending during blocking so that it may be
+	 * cancelled
+	 */
+	private Message tempMessage;
 	
 	/**
 	 * Creates a {@link BlockingTwoWayMessage} which sends the given message
@@ -58,6 +69,8 @@ public class BlockingTwoWayMessage extends TwoWayMessage {
 		super(message);
 		this.delegate = delegate;
 		completed = false;
+		started = false;
+		success = false;
 	}
 	
 	
@@ -66,15 +79,31 @@ public class BlockingTwoWayMessage extends TwoWayMessage {
 	 * until a terminating response is received (as determined by the
 	 * {@link ResponseDelegate} passed in the constructor).
 	 * @see ResponseDelegate#handleMessage(Message)
+	 * @return True if the message was sent and received a response. False if
+	 * no response could be obtained (e.g. the service was lost.). This doesn't
+	 * necessarily mean the service didn't receive our message, but we have
+	 * no acknowledgment.
 	 */
-	public void sendAndAwaitResponse() {
+	public boolean sendAndAwaitResponse() {
 		synchronized (this) {
 			completed = false;
+			started = true;
+			
+			AppBladeServiceManager serviceManager = AppBladeServiceManager.get();
+			// Subscribe to updates while we're blocking
+			serviceManager.addStateListener(this);
+			
+			// If the service isn't available, fail
+			if (serviceManager.isServiceUnavailable()) {
+				completed = true;
+				return false;
+			}
+			
 			// Post our setup to the AppBladeServiceManagers receiver thread
 			// This will cause our handler to be created (and therefore run) on
 			// the background receiver thread. Therefore, it is ok to block
 			// this thread as messages will still be processed elsewhere
-			AppBladeServiceManager.get().getReceiverThreadHandler().post(sendMessageRunnable);
+			serviceManager.getReceiverThreadHandler().post(sendMessageRunnable);
 			
 			// Block until the completed flag is raised
 			while (!completed) {
@@ -84,6 +113,14 @@ public class BlockingTwoWayMessage extends TwoWayMessage {
 					// Check and keep waiting
 				}
 			}
+			
+			// We're done, so we don't need to listen to updates anymore
+			serviceManager.removeStateListener(this);
+			
+			tempMessage = null;
+			
+			// If the success flag isn't raised, we failed to obtain a response
+			return success;
 		}
 	}
 	
@@ -91,10 +128,48 @@ public class BlockingTwoWayMessage extends TwoWayMessage {
 		public void run() {
 			// Create a response handler on this thread
 			responseHandler = new ResponseHandler(new DelegateResponseHandler(BlockingTwoWayMessage.this));
+			if (tempMessage == null) {
+				tempMessage = getMessage();
+			}
 			// Send the message
-			AppBladeServiceManager.get().sendMessage(getMessage());
+			AppBladeServiceManager.get().sendMessage(tempMessage);
 		}
 	};
+	
+	
+	public void onServiceReconnected() {
+		synchronized (this) {
+			// If we're waiting for a response, we resend the message
+			// to make sure the service responds
+			if (isWaiting()) {
+				// Cancel the existing message if we can
+				attemptToCancel();
+				sendMessageRunnable.run();
+			}
+		}
+	}
+
+
+	public void onServiceLost() {
+		// Cancel the existing message if we can
+		attemptToCancel();
+		// Unlock, leaving the success flag alone
+		unlock();
+	}
+	
+	public void onServiceUnavailable() {
+		// Cancel the existing message if we can
+		attemptToCancel();
+		// Unlock, leaving the success flag alone
+		unlock();
+	}
+	
+	protected boolean attemptToCancel() {
+		if (tempMessage != null) {
+			return AppBladeServiceManager.get().cancelMessage(tempMessage);
+		}
+		return false;
+	}
 	
 	/**
 	 * Called when a terminating message is received and we should complete,
@@ -116,7 +191,11 @@ public class BlockingTwoWayMessage extends TwoWayMessage {
 		// If we have a delegate and it deems the message to be a terminating
 		// message, unlock
 		if (delegate != null && delegate.handleMessage(message)) {
-			unlock();
+			synchronized (this) {
+				// Flag that we were successful
+				success = true;
+				unlock();
+			}
 		}
 	}
 	

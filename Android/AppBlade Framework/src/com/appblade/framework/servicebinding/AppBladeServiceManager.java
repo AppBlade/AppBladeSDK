@@ -1,5 +1,6 @@
 package com.appblade.framework.servicebinding;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -26,6 +27,33 @@ public class AppBladeServiceManager implements ServiceConnection {
 	private static final AppBladeServiceManager INSTANCE = new AppBladeServiceManager();
 	public static AppBladeServiceManager get() { return INSTANCE; }
 
+	/**
+	 * Interface for a listener which listens to changes in the service
+	 * state.
+	 */
+	public interface ServiceStateListener {
+		/**
+		 * Called when we temporarily lost the connection to the service but
+		 * have now successfully reconnected. You may want to resend messages
+		 * because we don't know when or why the service stopped.
+		 */
+		public void onServiceReconnected();
+		/**
+		 * Called when we lost the connection to the service and were unable
+		 * to re-establish the connection.
+		 */
+		public void onServiceLost();
+		/**
+		 * Called when we determine that the service is unavailable.
+		 */
+		public void onServiceUnavailable();
+	}
+	
+	
+	/**
+	 * Manager which keeps track of {@link ServiceStateListener}s
+	 */
+	private ServiceStateManager stateManager;
 
 	/**
 	 * Messenger bound to the service which is used to send it messages.
@@ -67,6 +95,18 @@ public class AppBladeServiceManager implements ServiceConnection {
 	 */
 	private TokenLock tokenLock;
 	private int serviceVersion;
+	
+	private boolean serviceUnavailable;
+	/**
+	 * @return True if we tried to bind to the service and failed
+	 */
+	public boolean isServiceUnavailable() { return serviceUnavailable; }
+	
+	/**
+	 * Context we keep to attempt service reconnections.
+	 * This NEEDS to be an application context
+	 */
+	private Context context;
 
 	/**
 	 * Queue of messages to be sent
@@ -77,6 +117,7 @@ public class AppBladeServiceManager implements ServiceConnection {
 	private AppBladeServiceManager() {
 		tokenLock = new TokenLock();
 		messageQueue = new LinkedList<Message>();
+		stateManager = new ServiceStateManager();
 		
 		// Start a new thread to handle incoming messages so we don't have to
 		// block the main thread or anything else
@@ -105,16 +146,47 @@ public class AppBladeServiceManager implements ServiceConnection {
 	// ***************
 	
 	/**
-	 * Binds to the service using the given context
+	 * Tries to bind to the service using the given context
 	 * @param context
+	 * @return True if the service was bound, false if it was not found
+	 * (not installed) or an exception was thrown.
 	 */
-	public void bind(Context context) {
-		// Bind the service which responds to the the ACTION_BIND to this
-		// (ServiceConnection), creating it automatically if necessary
-		context.bindService(
-				new Intent(AppBladeServiceConstants.ACTION_BIND_APPBLADE_SERVICE),
-				this,
-				Context.BIND_AUTO_CREATE);
+	public boolean bind(Context context) {
+		boolean success = innerBind(context);
+		if (!success) {
+			// The service is unavailable
+			stateManager.onServiceUnavailable();
+		}
+		
+		return success;
+	}
+	
+	/**
+	 * Attempts to bind using the given context. Does not handle state changes.
+	 * @param context
+	 * @return True if the service was bound, false if it was not found
+	 * (not installed) or an exception was thrown.
+	 */
+	private boolean innerBind(Context context) {
+		// Make sure we do everything through the application context
+		context = context.getApplicationContext();
+		// Store the application context for later rebind attempts
+		this.context = context;
+		try {
+			// Bind the service which responds to the the ACTION_BIND to this
+			// (ServiceConnection), creating it automatically if necessary
+			boolean bound =  context.bindService(
+					new Intent(AppBladeServiceConstants.ACTION_BIND_APPBLADE_SERVICE),
+					this,
+					Context.BIND_AUTO_CREATE);
+			serviceUnavailable = !bound;
+			return bound;
+		} catch (Exception ex) {
+			// If anything goes wrong, we failed. Possibly a security exception
+			AppBlade.Log_w("Error connecting to the AppBlade Service", ex);
+			serviceUnavailable = true;
+			return false;
+		}
 	}
 
 	
@@ -139,6 +211,80 @@ public class AppBladeServiceManager implements ServiceConnection {
 			}
 		}
 	}
+	
+	
+
+	// ************************
+	// *** State Management ***
+	// ************************
+
+	/**
+	 * Subscribes the given {@link ServiceStateListener} to changes in the
+	 * services state
+	 * @param listener
+	 */
+	public void addStateListener(ServiceStateListener listener) {
+		stateManager.addListener(listener);
+	}
+	
+	/**
+	 * Unsubscribes the given {@link ServiceStateListener} from changes
+	 * in the services state
+	 * @param listener
+	 */
+	public void removeStateListener(ServiceStateListener listener) {
+		stateManager.removeListener(listener);
+	}
+	
+	/**
+	 * Called when the service is reconnected
+	 */
+	protected void onServiceReconnected() {
+		stateManager.onServiceReconnected();
+	}
+	
+	/**
+	 * Called when the service is lost
+	 */
+	protected void onServiceLost() {
+		stateManager.onServiceLost();
+	}
+	
+	public void onServiceDisconnected(ComponentName name) {
+		synchronized (this) {
+			appMessenger = null;
+			
+			boolean reconnected = false;
+			// If we have a context, attempt to rebind
+			if (context != null) {
+				// Use innerBind since we're handling state changes
+				reconnected = innerBind(context);
+			}
+			
+			// If we managed to reconnect, notify listeners
+			if (reconnected) {
+				onServiceReconnected();
+			} else {
+				// Otherwise, notify listeners that we lost the service
+				AppBlade.Log_w("The connection to the AppBlade Service was severed and could not be recreated", null);
+				onServiceLost();
+			}
+		}
+	}
+
+	public void onServiceConnected(ComponentName name, IBinder service) {
+		synchronized (this) {
+			// Create a Messenger to send messages to the service
+			appMessenger = new Messenger(service);
+			
+			// Flush any pending messages
+			flushMessageQueueAsync();
+			
+			// Wake up anyone who may be waiting for this...
+			this.notifyAll();
+		}
+	}
+
 	
 	
 
@@ -187,6 +333,17 @@ public class AppBladeServiceManager implements ServiceConnection {
 	// *****************
 	// *** Messaging ***
 	// *****************
+	
+	/**
+	 * Cancels the given {@link Message} if it is queued, returning
+	 * true if it is removed. If it was only sent once and this returns
+	 * true, it is guaranteed that it was never sent.
+	 * @param message
+	 * @return True if the message was removed from the queue
+	 */
+	public boolean cancelMessage(Message message) {
+		return messageQueue.remove(message);
+	}
 	
 	/**
 	 * Sends a message, setting the default message receiver to handle
@@ -319,31 +476,6 @@ public class AppBladeServiceManager implements ServiceConnection {
 		}
 	};
 	
-	
-	
-
-	public void onServiceDisconnected(ComponentName name) {
-		synchronized (this) {
-			// This really shouldn't happen... AppBlade app crashed?
-			// TODO - We may want a fallback - keep the Application Context and rebind?
-			Log.wtf(AppBladeServiceManager.class.getName(), "The service to the app was disconnected.");
-			appMessenger = null;
-		}
-	}
-
-	public void onServiceConnected(ComponentName name, IBinder service) {
-		synchronized (this) {
-			// Create a Messenger to send messages to the service
-			appMessenger = new Messenger(service);
-			
-			// Flush any pending messages
-			flushMessageQueueAsync();
-			
-			// Wake up anyone who may be waiting for this...
-			this.notifyAll();
-		}
-	}
-
 
 	/**
 	 * Class which handles all incoming messages. This needs to be static so it
@@ -369,6 +501,146 @@ public class AppBladeServiceManager implements ServiceConnection {
 				break;
 			default:
 				super.handleMessage(msg);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Class which handles service state changes and manages listeners and
+	 * notifies them of changes.
+	 */
+	private static class ServiceStateManager {
+		/**
+		 * Current list of listeners
+		 */
+		private LinkedList<ServiceStateListener> listeners;
+		
+		/**
+		 * Temporary lists used during transactions
+		 * See {@link #performAction(ListenerAction)} for details
+		 */
+		private HashSet<ServiceStateListener> toAdd, toRemove;
+		
+		/**
+		 * Flag which idnicates we're currently sending notifications
+		 */
+		private boolean isNotifying;
+		
+		private interface ListenerAction {
+			void performAction(ServiceStateListener listener);
+			
+			static final ListenerAction Reconnected = new ListenerAction() {
+				public void performAction(ServiceStateListener listener) {
+					listener.onServiceReconnected();
+				}
+			};
+			
+			static final ListenerAction Lost = new ListenerAction() {
+				public void performAction(ServiceStateListener listener) {
+					listener.onServiceLost();
+				}
+			};
+			
+			static final ListenerAction Unavailable = new ListenerAction() {
+				public void performAction(ServiceStateListener listener) {
+					listener.onServiceUnavailable();
+				}
+			};
+		}
+		
+		public ServiceStateManager() {
+			listeners = new LinkedList<ServiceStateListener>();
+			toAdd = new HashSet<ServiceStateListener>();
+			toRemove = new HashSet<ServiceStateListener>();
+			
+			isNotifying = false;
+		}
+		
+		/**
+		 * Subscribes the given listener to updates
+		 * @param listener
+		 */
+		public void addListener(ServiceStateListener listener) {
+			synchronized (this) {
+				// If we're notifying, add it to the temp list instead
+				// See performAction for details
+				if (isNotifying) {
+					toAdd.add(listener);
+				} else {
+					// Otherwise just add it
+					listeners.add(listener);
+				}
+			}
+		}
+		
+		/**
+		 * Unsubscribes the given listener from updates
+		 * @param listener
+		 */
+		public void removeListener(ServiceStateListener listener) {
+			synchronized (this) {
+				// If we're notifying, add it to the temp list instead
+				// See performAction for details
+				if (isNotifying) {
+					toRemove.add(listener);
+				} else {
+					// Otherwise just remove it
+					listeners.remove(listener);
+				}
+			}
+		}
+		
+		/**
+		 * Call this to notify listeners that the service was reconnected
+		 */
+		public void onServiceReconnected() {
+			performAction(ListenerAction.Reconnected);
+		}
+		
+		/**
+		 * Call this to notify listeners that the service was lost
+		 */
+		public void onServiceLost() {
+			performAction(ListenerAction.Lost);
+		}
+		
+		public void onServiceUnavailable() {
+			performAction(ListenerAction.Unavailable);
+		}
+		
+		private void performAction(ListenerAction action) {
+			synchronized (this) {
+				// Flag that we're doing a notify
+				isNotifying = true;
+				
+				// Notify all listeners
+				// Since we're using an iterator, we cannot modify
+				// this list. As such, during this loop, all functions
+				// should push to the toAdd and toRemove list. These
+				// lists will be processed once the loop is completed
+				for (ServiceStateListener listener : listeners) {
+					// If the temp list indicates that we're going
+					// to remove this listener, don't bother telling it
+					if (!toRemove.contains(listener)) {
+						action.performAction(listener);
+					}
+				}
+				
+				isNotifying = false;
+				
+				// Loop through both lists and perform their actions
+				for (ServiceStateListener listener : toAdd) {
+					addListener(listener);
+				}
+				
+				for (ServiceStateListener listener : toRemove) {
+					removeListener(listener);
+				}
+				
+				// Clear the temp lists since we've handled them
+				toAdd.clear();
+				toRemove.clear();
 			}
 		}
 	}

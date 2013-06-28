@@ -148,12 +148,15 @@ public class AppBlade {
 						return true;
 					}
 				});
-				blockingTest.sendAndAwaitResponse();
+				boolean success = blockingTest.sendAndAwaitResponse();
+				
+				AppBlade.Log_i("Success: " + success);
 				
 				return token;
 			}
 			
 			protected void onPostExecute(String result) {
+				AppBlade.Log_i("Result: " + result);
 				Toast.makeText(context, "Look a token!: (" + result + ")", Toast.LENGTH_SHORT).show();
 			}
 			
