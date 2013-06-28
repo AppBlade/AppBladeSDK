@@ -136,7 +136,10 @@ public class BlockingTwoWayMessage extends TwoWayMessage {
 	 * will not be leaked internally, so even if they pass dangerous references
 	 * in, we will still let them be GC'ed as normal.
 	 * 
-	 * If used in a blocking fashion, they 
+	 * If used in a blocking fashion, where the class is declared inline,
+	 * waited on, and no reference leaked, this will not leak anything more than
+	 * the method would leak otherwise. Since this is the intended use case,
+	 * it's easier for the user to use this without worrying about extra leaks.
 	 */
 	public static class DelegateResponseHandler extends Handler {
 		// Keep a WeakReference so our outer class can still be GC'ed
