@@ -109,16 +109,20 @@ public class AppBlade {
 	
 	public static void registerViaService(Context context, String projectSecret) {
 		AppBladeServiceManager serviceManager = AppBladeServiceManager.get();
-		serviceManager.bind(context);
-		
-		AppInfo appInfo = new AppInfo();
-		
-		
-		appInfo.DeviceSecret = RemoteAuthHelper.getAccessToken(context);
-		appInfo.ProjectSecret = projectSecret;
-		appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-		
-		serviceManager.obtainToken(projectSecret, appInfo);
+		if (serviceManager.bind(context)) {
+
+			AppInfo appInfo = new AppInfo();
+
+
+			appInfo.DeviceSecret = RemoteAuthHelper.getAccessToken(context);
+			appInfo.ProjectSecret = projectSecret;
+			appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+			serviceManager.obtainToken(projectSecret, appInfo);
+		} else {
+			AppBlade.Log_i("Failed to bind to the AppBlade Service");
+			// TODO - Fallback
+		}
 	}
 	
 	
