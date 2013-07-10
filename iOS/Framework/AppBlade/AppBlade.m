@@ -339,22 +339,22 @@ static BOOL is_encrypted () {
 
 -(NSOperationQueue *) tokenRequests {
     if(!_tokenRequests){
-        self.tokenRequests = [[NSOperationQueue alloc] init];
-        self.tokenRequests.name = @"AppBlade Token Queue";
-        self.tokenRequests.maxConcurrentOperationCount = 1;
+        _tokenRequests = [[NSOperationQueue alloc] init];
+        _tokenRequests.name = @"AppBlade Token Queue";
+        _tokenRequests.maxConcurrentOperationCount = 1;
     }
-    return self.tokenRequests;
+    return _tokenRequests;
 }
 
 //token requests are never pause or cancelled
 
 -(NSOperationQueue *) pendingRequests {
-    if(!self.pendingRequests){
-        self.pendingRequests = [[NSOperationQueue alloc] init];
-        self.pendingRequests.name = @"AppBlade API Queue";
-        self.pendingRequests.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+    if(!_pendingRequests){
+        _pendingRequests = [[NSOperationQueue alloc] init];
+        _pendingRequests.name = @"AppBlade API Queue";
+        _pendingRequests.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
     }
-    return self.pendingRequests;
+    return _pendingRequests;
 }
 
 -(void) pauseCurrentPendingRequests {
