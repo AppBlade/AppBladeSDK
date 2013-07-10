@@ -903,7 +903,7 @@ const int kNonceRandomStringLength = 74;
     FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
     if (executableFileMD5Hash) {
         returnString = (__bridge NSString *)(executableFileMD5Hash);
-        // CFRelease(executableFileMD5Hash);
+         CFRelease(executableFileMD5Hash);
     }
     return returnString ;
 }
