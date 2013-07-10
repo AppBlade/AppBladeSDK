@@ -535,14 +535,15 @@ static BOOL is_encrypted () {
 {
     NSString* returnString = nil;
     CFStringRef executableFileMD5Hash =
-    FileMD5HashCreateWithPath((CFStringRef)CFBridgingRetain(filePath), FileHashDefaultChunkSizeForReadingData);
+    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
     if (executableFileMD5Hash) {
-        returnString = (NSString *)CFBridgingRelease(executableFileMD5Hash);
-        CFRelease(executableFileMD5Hash);
+        returnString = (__bridge NSString *)(executableFileMD5Hash);
+        // CFRelease(executableFileMD5Hash);
     }
-    
     return returnString;
 }
+
+
 
 
 #pragma mark - AppBladeWebClient

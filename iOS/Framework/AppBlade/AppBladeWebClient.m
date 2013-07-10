@@ -802,7 +802,7 @@ const int kNonceRandomStringLength = 74;
 
 - (NSString *)urlEncodeValue:(NSString *)str //no longer being used
 {
-    NSString *result = (NSString *) CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)str, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8));
+    NSString *result = (__bridge NSString *)(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)str, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8));
     return result ;
 }
 
@@ -897,15 +897,14 @@ const int kNonceRandomStringLength = 74;
 
 - (NSString*)hashFile:(NSString *)filePath
 {
-    NSString* returnString = nil;
-    CFStringRef executableFileMD5Hash = 
-    FileMD5HashCreateWithPath((CFStringRef)CFBridgingRetain(filePath), 
-                              FileHashDefaultChunkSizeForReadingData);
-    if (executableFileMD5Hash) {
-        returnString = (NSString *)CFBridgingRelease(executableFileMD5Hash);
-        CFRelease(executableFileMD5Hash);
-    }
     
+    NSString* returnString = nil;
+    CFStringRef executableFileMD5Hash =
+    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
+    if (executableFileMD5Hash) {
+        returnString = (__bridge NSString *)(executableFileMD5Hash);
+        // CFRelease(executableFileMD5Hash);
+    }
     return returnString ;
 }
 
