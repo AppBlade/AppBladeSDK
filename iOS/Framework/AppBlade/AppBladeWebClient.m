@@ -802,7 +802,7 @@ const int kNonceRandomStringLength = 74;
 
 - (NSString *)urlEncodeValue:(NSString *)str //no longer being used
 {
-    NSString *result = (NSString *) CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)str, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8));
+    NSString *result = (__bridge NSString *)(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)str, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8));
     return result ;
 }
 
@@ -897,15 +897,14 @@ const int kNonceRandomStringLength = 74;
 
 - (NSString*)hashFile:(NSString *)filePath
 {
-    NSString* returnString = nil;
-    CFStringRef executableFileMD5Hash = 
-    FileMD5HashCreateWithPath((CFStringRef)CFBridgingRetain(filePath), 
-                              FileHashDefaultChunkSizeForReadingData);
-    if (executableFileMD5Hash) {
-        returnString = (NSString *)CFBridgingRelease(executableFileMD5Hash);
-        CFRelease(executableFileMD5Hash);
-    }
     
+    NSString* returnString = nil;
+    CFStringRef executableFileMD5Hash =
+    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
+    if (executableFileMD5Hash) {
+        returnString = (__bridge NSString *)(executableFileMD5Hash);
+        // CFRelease(executableFileMD5Hash);
+    }
     return returnString ;
 }
 
@@ -936,9 +935,9 @@ const int kNonceRandomStringLength = 74;
 
 -(NSString *)sentDeviceSecret {
     if(self.request){
-        self.sentDeviceSecret = [self.request valueForHTTPHeaderField:deviceSecretHeaderField];
+        _sentDeviceSecret = [self.request valueForHTTPHeaderField:deviceSecretHeaderField];
     }
-    return self.sentDeviceSecret;
+    return _sentDeviceSecret;
 }
 
 #pragma mark buildHostURL
@@ -985,12 +984,12 @@ const int kNonceRandomStringLength = 74;
 //_mh_execute_header is declared in mach-o/ldsyms.h (and not an iVar as you might have thought).
 -(NSString *)genExecutableUUID //will break in simulator, please be careful
 {
-    if(self.executableUUID == nil){
+    if(_executableUUID == nil){
         const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
         for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx) {
             if (((const struct load_command *)command)->cmd == LC_UUID) {
                 command += sizeof(struct load_command);
-                self.executableUUID = [NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+                _executableUUID = [NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
                                     command[0], command[1], command[2], command[3],
                                     command[4], command[5],
                                     command[6], command[7],
@@ -1004,7 +1003,7 @@ const int kNonceRandomStringLength = 74;
             }
         }
     }
-    return self.executableUUID;
+    return _executableUUID;
 }
 
 
@@ -1013,7 +1012,7 @@ const int kNonceRandomStringLength = 74;
 
 // From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
 - (NSString *)osVersionBuild {
-    if(self.osVersionBuild == nil){
+    if(_osVersionBuild == nil){
         int mib[2] = {CTL_KERN, KERN_OSVERSION};
         u_int namelen = sizeof(mib) / sizeof(mib[0]);
         size_t bufferSize = 0;
@@ -1029,13 +1028,13 @@ const int kNonceRandomStringLength = 74;
         if (result >= 0) {
             osBuildVersion = [[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding];
         }
-        self.osVersionBuild = osBuildVersion;
+        _osVersionBuild = osBuildVersion;
     }
-    return self.osVersionBuild;
+    return _osVersionBuild;
 }
 
 - (NSString *) platform{
-    if(self.platform == nil){
+    if(_platform == nil){
         size_t size;
         sysctlbyname("hw.machine", NULL, &size, NULL, 0);
         char *machine = malloc(size);
@@ -1043,7 +1042,7 @@ const int kNonceRandomStringLength = 74;
         self.platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
         free(machine);
     }
-    return self.platform;
+    return _platform;
 }
 
 

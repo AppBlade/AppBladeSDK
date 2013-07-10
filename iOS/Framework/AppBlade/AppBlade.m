@@ -87,7 +87,6 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 @property (nonatomic, retain) NSURL* upgradeLink;
 
-
 // Feedback
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
 @property (nonatomic, assign) BOOL showingFeedbackDialogue;
@@ -139,6 +138,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 
 
 @implementation AppBlade
+@synthesize appBladeDeviceSecret = _appbladeDeviceSecret;
+
 
 static AppBlade *s_sharedManager = nil;
 
@@ -534,14 +535,15 @@ static BOOL is_encrypted () {
 {
     NSString* returnString = nil;
     CFStringRef executableFileMD5Hash =
-    FileMD5HashCreateWithPath((CFStringRef)CFBridgingRetain(filePath), FileHashDefaultChunkSizeForReadingData);
+    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
     if (executableFileMD5Hash) {
-        returnString = (NSString *)CFBridgingRelease(executableFileMD5Hash);
-        CFRelease(executableFileMD5Hash);
+        returnString = (__bridge NSString *)(executableFileMD5Hash);
+        // CFRelease(executableFileMD5Hash);
     }
-    
     return returnString;
 }
+
+
 
 
 #pragma mark - AppBladeWebClient
@@ -1541,17 +1543,14 @@ static BOOL is_encrypted () {
     if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
     {
         ABDebugLog_internal(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
-        self.appBladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
+        _appbladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
     }else
     {
-        self.appBladeDeviceSecret = (NSString*)[device_secret_stored copy];
+        _appbladeDeviceSecret = (NSString*)[device_secret_stored copy];
     }
     
-    return self.appBladeDeviceSecret;
+    return _appbladeDeviceSecret;
 }
-
-
-
 
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret
 {
@@ -1566,7 +1565,6 @@ static BOOL is_encrypted () {
         }
         //save the stored keychain
         [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
-
 }
 
 
