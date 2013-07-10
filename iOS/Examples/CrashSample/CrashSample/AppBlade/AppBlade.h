@@ -1,6 +1,6 @@
 //
 //  AppBlade.h
-//  AppBlade
+//  AppBlade iOS SDK v0.5.0
 //
 //  Created by Craig Spitzkoff on 6/1/11.
 //  Copyright 2011 AppBlade. All rights reserved.
@@ -8,7 +8,6 @@
 //  For instructions on how to use this library, please look at the README.
 //
 //  Support and FAQ can be found at http://support.appblade.com
-//
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -64,10 +63,8 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 - (void)registerWithAppBladePlist:(NSString*)plistName;
 
 //Device secret calls
--(NSMutableDictionary*) appBladeDeviceSecrets;
 -(void)clearAppBladeKeychain;
 
-- (NSString *) appBladeDeviceSecret;
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 
 
@@ -126,9 +123,9 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 + (void)endSession;
 
 
-- (void)refreshToken;
-- (void)confirmToken;
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
 
-
+-(BOOL)isAppStoreBuild;
 
 @end
