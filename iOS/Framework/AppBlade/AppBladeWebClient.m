@@ -415,9 +415,8 @@ const int kNonceRandomStringLength = 74;
     [self setApi:  AppBladeWebClientAPI_GenerateToken];
     BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
     if(hasFairplay){
-        //we're signed by apple, skip authentication. Go straight to delegate.
+        //we're signed by apple, skip tokens. Go straight to delegate.
         ABDebugLog_internal(@"Binary signed by Apple, skipping token generation");
- //        [self.delegate appBladeWebClient:self receivedPermissions: ];
     }
     else
     {
