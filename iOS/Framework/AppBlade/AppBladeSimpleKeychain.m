@@ -25,19 +25,20 @@
     SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
     [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:@"Delete This Thing"] forKey:(__bridge id)kSecValueData];
     keychainInterimCode = SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
-    keychainErrorCode = (keychainInterimCode == noErr) ? keychainErrorCode : keychainInterimCode;
-    keychainInterimCodeLabel = (keychainInterimCode == noErr) ? keychainInterimCodeLabel : @"writing";
+    keychainErrorCode = keychainInterimCode;
+    keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"writing";
     
     //test reading
     keychainInterimCode = SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData);
-    keychainErrorCode = (keychainInterimCode == noErr) ? keychainErrorCode : keychainInterimCode;
+    keychainErrorCode = (keychainErrorCode != noErr) ? keychainErrorCode : keychainInterimCode;
+    keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"reading";
     if (keyData) CFRelease(keyData);
-    keychainInterimCodeLabel = (keychainInterimCode == noErr) ? keychainInterimCodeLabel : @"reading";
 
     //test deleting
+    keychainQuery = [self getKeychainQuery:@"AppBladeKeychainTest"];
     keychainInterimCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
-    keychainErrorCode = (keychainInterimCode == noErr) ? keychainErrorCode : keychainInterimCode;
-    keychainInterimCodeLabel = (keychainInterimCode == noErr) ? keychainInterimCodeLabel : @"deleting";
+    keychainErrorCode = (keychainErrorCode != noErr) ? keychainErrorCode : keychainInterimCode;
+    keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"deleting";
     
     
     // If the keychain item already exists, modify it:
