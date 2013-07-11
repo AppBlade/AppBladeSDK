@@ -9,6 +9,63 @@
 
 @implementation AppBladeSimpleKeychain
 
++(BOOL)hasKeychainAccess
+{
+    //test with some dummy data, we need to be able to write, read, and remove.
+    OSStatus keychainErrorCode = noErr; //
+    NSMutableDictionary *keychainQuery = [self getKeychainQuery:@"AppBladeTest"];
+    [keychainQuery setObject:(id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
+    [keychainQuery setObject:(__bridge id)kSecMatchLimitOne forKey:(__bridge id)kSecMatchLimit];
+    CFDataRef keyData = NULL;
+    keychainErrorCode = SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData);
+
+    // If the keychain item already exists, modify it:
+    if (keychainErrorCode == noErr)
+    {
+        //TODO: more tests for all the writing, reading,
+        return TRUE;
+    }else{
+        NSString *errorMessage = @"";
+        //SecCopyErrorMessageString doesn't work in iOS! Consternation!
+        switch (keychainErrorCode) {
+            case errSecSuccess:
+                errorMessage = @"\"No error.\" Wait. What? ";
+                break;
+            case errSecUnimplemented:
+                errorMessage = @"Function or operation not implemented.";
+                break;
+            case errSecParam:
+                errorMessage = @"One or more parameters passed to a function where not valid.";
+                break;
+            case errSecAllocate:
+                errorMessage = @"Failed to allocate memory.";
+                break;
+            case errSecNotAvailable:
+                errorMessage = @"No keychain is available. You may need to restart your device.";
+                break;
+            case errSecDuplicateItem:
+                errorMessage = @"The specified item already exists in the keychain.";
+                break;
+            case errSecItemNotFound:
+                errorMessage = @"The specified item could not be found in the keychain.";
+                break;
+            case errSecInteractionNotAllowed:
+                errorMessage = @"User interaction is not allowed.";
+                break;
+            case errSecDecode:
+                errorMessage = @"Unable to decode the provided data.";
+                break;
+            default:
+                errorMessage = @"(unknown error)";
+                break;
+        } //Not using the AppBlade Logs here because this is a CRITICAL error that should not be kept quiet.
+        NSLog(@"Keychain error occured: %ld : %@", keychainErrorCode, errorMessage);
+        NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
+        return FALSE;
+    }
+}
+
+
 // Returns the keychain request dictionary for a SimpleKeychain entry.
 + (NSMutableDictionary *)getKeychainQuery:(NSString *)service
 {
