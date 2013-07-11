@@ -13,12 +13,35 @@
 {
     //test with some dummy data, we need to be able to write, read, and remove.
     OSStatus keychainErrorCode = noErr; //
-    NSMutableDictionary *keychainQuery = [self getKeychainQuery:@"AppBladeTest"];
+    NSString *keychainInterimCodeLabel = @"";
+
+    OSStatus keychainInterimCode = noErr;
+    NSMutableDictionary *keychainQuery = [self getKeychainQuery:@"AppBladeKeychainTest"];
     [keychainQuery setObject:(id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
     [keychainQuery setObject:(__bridge id)kSecMatchLimitOne forKey:(__bridge id)kSecMatchLimit];
-    CFDataRef keyData = NULL;
-    keychainErrorCode = SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData);
 
+    CFDataRef keyData = NULL;
+    
+    //I only care about the first error code we hit
+    //test writing
+    SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:@"Delete This Thing"] forKey:(__bridge id)kSecValueData];
+    keychainInterimCode = SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
+    keychainErrorCode = (keychainInterimCode == noErr) ? keychainErrorCode : keychainInterimCode;
+    keychainInterimCodeLabel = (keychainInterimCode == noErr) ? keychainInterimCodeLabel : @"writing";
+    
+    //test reading
+    keychainInterimCode = SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData);
+    keychainErrorCode = (keychainInterimCode == noErr) ? keychainErrorCode : keychainInterimCode;
+    if (keyData) CFRelease(keyData);
+    keychainInterimCodeLabel = (keychainInterimCode == noErr) ? keychainInterimCodeLabel : @"reading";
+
+    //test deleting
+    keychainInterimCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+    keychainErrorCode = (keychainInterimCode == noErr) ? keychainErrorCode : keychainInterimCode;
+    keychainInterimCodeLabel = (keychainInterimCode == noErr) ? keychainInterimCodeLabel : @"deleting";
+    
+    
     // If the keychain item already exists, modify it:
     if (keychainErrorCode == noErr)
     {
@@ -59,7 +82,7 @@
                 errorMessage = @"(unknown error)";
                 break;
         } //Not using the AppBlade Logs here because this is a CRITICAL error that should not be kept quiet.
-        NSLog(@"Keychain error occured: %ld : %@", keychainErrorCode, errorMessage);
+        NSLog(@"Keychain error occured during keychain %@ test: %ld : %@", keychainInterimCodeLabel, keychainErrorCode, errorMessage);
         NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
         return FALSE;
     }
