@@ -281,6 +281,7 @@ static BOOL is_encrypted () {
 
 - (void)registerWithAppBladePlist:(NSString*)plistName
 {
+    ABDebugLog_internal(@"Kicking off AppBlade Registration");
     [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token.
     
     if (![AppBladeSimpleKeychain hasKeychainAccess]){
