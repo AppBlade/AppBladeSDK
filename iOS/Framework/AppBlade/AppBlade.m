@@ -281,11 +281,19 @@ static BOOL is_encrypted () {
 
 - (void)registerWithAppBladePlist:(NSString*)plistName
 {
-    [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token. 
+    [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token.
+    
+    if (![AppBladeSimpleKeychain hasKeychainAccess]){
+        [AppBlade clearCacheDirectory];
+        [NSException raise:@"AppBladeException" format: @"AppBlade is halting due to missing keychain permissions."];
+        abort();
+    }
+    
     NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
     NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     if(appbladeVariables != nil)
     {
+        
         NSDictionary* appBladePlistStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
         NSMutableDictionary* appBladeKeychainKeys = [self appBladeDeviceSecrets]; //keychain persists across updates, we need to be careful
         
@@ -568,6 +576,13 @@ static BOOL is_encrypted () {
         {  //the token we used to generate a new token is no longer valid
             ABErrorLog(@"Token refresh failed because current token had its access revoked.");
             [AppBlade clearCacheDirectory];//all of the pending data is to be considered invlid, don't let it clutter the app.
+            NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                            NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+            NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+            if(canSignalDelegate) {
+                [self.delegate appBlade:self applicationApproved:NO error:error];
+            }
         }
         else
         {  //likely a 500 or some other timeout
