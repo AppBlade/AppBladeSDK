@@ -17,8 +17,6 @@
 
     OSStatus keychainInterimCode = noErr;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:@"AppBladeKeychainTest"];
-    [keychainQuery setObject:(id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
-    [keychainQuery setObject:(__bridge id)kSecMatchLimitOne forKey:(__bridge id)kSecMatchLimit];
 
     CFDataRef keyData = NULL;
     
