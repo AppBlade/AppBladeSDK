@@ -278,10 +278,10 @@ static BOOL is_encrypted () {
 
 - (void)registerWithAppBladePlist
 {
-    [self registerWithAppBladePlist:@"AppBladeKeys"];
+    [self registerWithAppBladePlistNamed:@"AppBladeKeys"];
 }
 
-- (void)registerWithAppBladePlist:(NSString*)plistName
+- (void)registerWithAppBladePlistNamed:(NSString*)plistName
 {
     [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token. 
     NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
@@ -459,14 +459,12 @@ static BOOL is_encrypted () {
 
 - (void)catchAndReportCrashes
 {
-    ABDebugLog_internal(@"Catch and report crashes");
     [self validateProjectConfiguration];
+    ABDebugLog_internal(@"Catch and report crashes");
+    [self checkForExistingCrashReports];
 
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     NSError *error;
-    
-    [self checkForExistingCrashReports];
-    
     // Enable the Crash Reporter
     if (![crashReporter enableCrashReporterAndReturnError: &error])
         ABErrorLog(@"Warning: Could not enable crash reporter: %@", error);
@@ -991,11 +989,10 @@ static BOOL is_encrypted () {
 
 - (void)allowFeedbackReporting
 {
-    ABDebugLog_internal(@"allowFeedbackReporting");
-
+    
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     if (window) {
-        [self allowFeedbackReportingForWindow:window];
+        [self allowFeedbackReportingForWindow:window withOptions:AppBladeFeedbackSetupDefault];
         ABDebugLog_internal(@"Allowing feedback.");
     }
     else {
@@ -1003,15 +1000,19 @@ static BOOL is_encrypted () {
     }
 }
 
-- (void)allowFeedbackReportingForWindow:(UIWindow *)window
+
+- (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options
 {
     self.window = window;
-    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] ;
-    self.tapRecognizer.numberOfTapsRequired = 2;
-    self.tapRecognizer.numberOfTouchesRequired = 3;
-    self.tapRecognizer.delegate = self;
-    [window addGestureRecognizer:self.tapRecognizer];
     
+    if (options == AppBladeFeedbackSetupTripleFingerDoubleTap) {
+        //Set up our custom triple finger double-tap 
+        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] ;
+        self.tapRecognizer.numberOfTapsRequired = 2;
+        self.tapRecognizer.numberOfTouchesRequired = 3;
+        self.tapRecognizer.delegate = self;
+        [window addGestureRecognizer:self.tapRecognizer];
+    }    
     [self checkAndCreateAppBladeCacheDirectory];
     
     if ([self hasPendingFeedbackReports]) {
@@ -1019,43 +1020,13 @@ static BOOL is_encrypted () {
     }
 }
 
-- (void)setupCustomFeedbackReporting
-{
-    UIWindow* window = [[UIApplication sharedApplication] keyWindow];
-    if (window) {
-        [self setupCustomFeedbackReportingForWindow:window];
-        ABDebugLog_internal(@"Allowing custom feedback.");
-        
-    }
-    else {
-        ABErrorLog(@"Cannot setup for custom feedback. No keyWindow.");
-    }
-
-}
-
-- (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window
-{
-    if (window) {
-        ABDebugLog_internal(@"Allowing custom feedback for window %@", window);
-        self.window = window;
-    }
-    else
-    {
-        ABErrorLog(@"Cannot setup for custom feedback. Not a valid window.");
-        return;
-    }
-    [self checkAndCreateAppBladeCacheDirectory];
-    if ([self hasPendingFeedbackReports]) {
-        [self handleBackloggedFeedback];
-    }
-}
 
 - (void)showFeedbackDialogue
 {
-    [self showFeedbackDialogue:YES];
+    [self showFeedbackDialogueWithOptions:AppBladeFeedbackDisplayDefault];
 }
 
-- (void)showFeedbackDialogue:(BOOL)withScreenshot
+- (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options
 {
     if(!self.showingFeedbackDialogue){
         self.showingFeedbackDialogue = YES;
@@ -1064,7 +1035,7 @@ static BOOL is_encrypted () {
         }
 
         //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
-        if(withScreenshot){
+        if(options == AppBladeFeedbackDisplayWithScreenshot ){
             NSString* screenshotPath = [self captureScreen];
             [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
         }
@@ -1684,13 +1655,10 @@ static BOOL is_encrypted () {
 }
 
 -(NSString *) randomString: (int) len {
-    
     NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
-    
     for (int i=0; i<len; i++) {
         [randomString appendFormat: @"%C", [s_letters characterAtIndex: arc4random()%[s_letters length]]];
     }
-    
     return randomString;
 }
 

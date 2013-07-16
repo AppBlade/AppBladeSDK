@@ -12,6 +12,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "FeedbackReporting.h"
 
 UIKIT_EXTERN NSString* const kAppBladeErrorDomain;
 UIKIT_EXTERN int const kAppBladeOfflineError;
@@ -34,100 +35,101 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
 @interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> 
 
-// AppBlade host name //Include neither http:// nor https://, we'll handle that.
+// AppBlade host name, or custom endpoint.
 @property (nonatomic, retain) NSString* appBladeHost;
-
-// AppBlade API project issued secret.
+// AppBlade API project-issued secret.
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
-
-// AppBlade API project issued device secret. 
+// AppBlade API project-issued device secret.
 @property (nonatomic, retain) NSString* appBladeDeviceSecret;
-
+-(void)setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 
 // The AppBlade delegate receives messages regarding device authentication and other events.
 // See protocol declaration, above.
 @property (nonatomic, assign) id<AppBladeDelegate> delegate;
-
--(BOOL)isAppStoreBuild; //Checks to see if the current binary is signed by Apple. We use this to disable certain SDK behavior in the final build
-
-// Returns SDK Version
-+ (NSString*)sdkVersion;
-
-// Prints the SDK Version to the console
-+ (void)logSDKVersion;
-
-
-// AppBlade manager singleton.
+/******************************
+ SINGLETON
+ ******************************/
 + (AppBlade *)sharedManager;
 
-//App Registration calls
+/******************************
+ INITIAL API REGISTRATION CALLS
+ ******************************/
+// Uses the AppBlade plist that you embedded
 - (void)registerWithAppBladePlist;
-- (void)registerWithAppBladePlist:(NSString*)plistName;
+- (void)registerWithAppBladePlistNamed:(NSString*)plistName;
 
-//
 - (void)refreshToken:(NSString *)tokenToConfirm;
 - (void)confirmToken:(NSString *)tokenToConfirm;
 
-//Device secret calls
--(void)clearAppBladeKeychain;
-- (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
-
-
-
-
-// Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
-- (void)catchAndReportCrashes;
-
-//method to call if you want to attempt to send crash reports more often than ususal 
-- (void)checkForExistingCrashReports;
-
-
-
-//Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
--(NSDictionary *)getCustomParams;
--(void)setCustomParams:(NSDictionary *)newFieldValues;
--(void)setCustomParam:(id)newObject withValue:(NSString*)key __attribute__((deprecated("use method -(void)setCustomParam:(id)object forKey:(NSString*)keyme")));
--(void)setCustomParam:(id)object forKey:(NSString*)key;
--(void)clearAllCustomParams;
-
-
-/*
- *    WARNING: The following features below are only for ad hoc and enterprise applications. Shipping an app to the iTunes App
- *    store with a call to |-checkApproval|, for example, could result in app termination or rejection.
- */
-
-// Checks with AppBlade to see if the app is allowed to run on this device. Will also notify of updates.
+/******************************
+ APPBLADE AUTHENTICATION / KILLSWITCH
+ ******************************/
+// Checks with AppBlade to see if the app is allowed to run on this device.
 - (void)checkApproval;
 
-// Approval check with ability to disable the check/notification for updates. DEPRECATED
-- (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt __attribute__((deprecated("use method - (void)checkForUpdates for update checks from now on")));
-
+/******************************
+ AUTO UPDATING
+ ******************************/
 // Checks with AppBlade anonymously to see if the app can be updated with a new build.
 - (void)checkForUpdates;
 
+/******************************
+ CRASH REPORTING
+ ******************************/
+// Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
+- (void)catchAndReportCrashes;
+
+//method to call if you want to attempt to send crash reports more often than ususal
+- (void)checkForExistingCrashReports;
+
+
+/******************************
+ FEEDBACK REPORTING
+ ******************************/
+- (void)allowFeedbackReporting;
+- (void)allowFeedbackReportingForWindow:(UIWindow*)window withOptions:(AppBladeFeedbackSetupOptions)options;
+
+// Shows a feedback dialogue and handles screenshot
+- (void)showFeedbackDialogue;
+- (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options;
+
+/******************************
+ SESSION TRACKING
+ ******************************/
++ (void)startSession;
++ (void)endSession;
+
+
+/******************************
+ CUSTOM PARAMETERS
+ ******************************/
+//Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
+-(void)setCustomParam:(id)object forKey:(NSString*)key;
+
+//Other params
+-(NSDictionary *)getCustomParams;
+-(void)setCustomParams:(NSDictionary *)newCustomParams;
+-(void)clearAllCustomParams;
+
+
+/******************************
+ OTHER SDK METHODS
+ ******************************/
+
+//Checks the app binary for Apple's Signature, if true, then this build was signed by apple.
+-(BOOL)isAppStoreBuild;
+
+// Returns SDK Version
++ (NSString*)sdkVersion;
+// Log SDK Version
++ (void)logSDKVersion;
 
 //Path to the AppBlade cache directory. Useful for direct modificaion of stored requests.
 + (NSString*)cachesDirectoryPath;
 + (void)clearCacheDirectory;
 
-// Sets up a 3-finger double tap for reporting feedback
-- (void)allowFeedbackReporting;
-
-// In case you only want 3-finger double tap feedback in a specific window.
-- (void)allowFeedbackReportingForWindow:(UIWindow*)window;
-
-// In case you want feedback but want to handle prompting it yourself (no 3-finger double tap).
-- (void)setupCustomFeedbackReporting;
-
-- (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window;
-
-// Shows a feedback dialogue and handles screenshot
-- (void)showFeedbackDialogue; //the same as [blade showFeedbackDialogue:true]
-- (void)showFeedbackDialogue:(BOOL)withScreenshot;
-
-
-+ (void)startSession;
-+ (void)endSession;
+//Keychain 
+-(void)clearAppBladeKeychain;
 
 
 @end
