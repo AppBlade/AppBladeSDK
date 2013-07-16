@@ -295,9 +295,10 @@ const int kNonceRandomStringLength = 74;
     
     if (self.api == AppBladeWebClientAPI_GenerateToken) {
         NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        //ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
+        NSString* string = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
+        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
+        ABDebugLog_internal(@"Parsed JSON: %@", json);
         AppBladeWebClient *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -306,8 +307,8 @@ const int kNonceRandomStringLength = 74;
     }
     else if (self.api == AppBladeWebClientAPI_ConfirmToken) {
         NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        //ABDebugLog_internal(@"Received Device Secret Confirm Response from AppBlade: %@", string);
+        NSString* string = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
+        ABDebugLog_internal(@"Received Device Secret Confirm Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         self.receivedData = nil;
         AppBladeWebClient *selfReference = self;
@@ -318,7 +319,9 @@ const int kNonceRandomStringLength = 74;
     }
     else if(self.api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
+        NSString* string = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
+        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
+
         NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         //BOOL showUpdatePrompt = [self.request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
         
@@ -415,9 +418,8 @@ const int kNonceRandomStringLength = 74;
     [self setApi:  AppBladeWebClientAPI_GenerateToken];
     BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
     if(hasFairplay){
-        //we're signed by apple, skip authentication. Go straight to delegate.
+        //we're signed by apple, skip tokens. Go straight to delegate.
         ABDebugLog_internal(@"Binary signed by Apple, skipping token generation");
- //        [self.delegate appBladeWebClient:self receivedPermissions: ];
     }
     else
     {
@@ -903,7 +905,7 @@ const int kNonceRandomStringLength = 74;
     FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
     if (executableFileMD5Hash) {
         returnString = (__bridge NSString *)(executableFileMD5Hash);
-        // CFRelease(executableFileMD5Hash);
+         CFRelease(executableFileMD5Hash);
     }
     return returnString ;
 }

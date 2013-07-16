@@ -7,58 +7,58 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		31B29E7813FC1BFC00AF9D5D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31B29E7713FC1BFC00AF9D5D /* Security.framework */; };
-		31BD74C213FF2AEA00C3B6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31BD74C113FF2AEA00C3B6AE /* UIKit.framework */; };
-		620217591404450A00A14BA7 /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217261404450900A14BA7 /* CrashReporter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202175A1404450A00A14BA7 /* PLCrashAsync.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217271404450900A14BA7 /* PLCrashAsync.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202175C1404450A00A14BA7 /* PLCrashAsyncImage.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217291404450900A14BA7 /* PLCrashAsyncImage.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202175E1404450A00A14BA7 /* PLCrashAsyncSignalInfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 6202172B1404450900A14BA7 /* PLCrashAsyncSignalInfo.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217601404450A00A14BA7 /* PLCrashFrameWalker_arm.c in Sources */ = {isa = PBXBuildFile; fileRef = 6202172D1404450900A14BA7 /* PLCrashFrameWalker_arm.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217621404450A00A14BA7 /* PLCrashFrameWalker_i386.c in Sources */ = {isa = PBXBuildFile; fileRef = 6202172F1404450900A14BA7 /* PLCrashFrameWalker_i386.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217641404450A00A14BA7 /* PLCrashFrameWalker_ppc.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217311404450900A14BA7 /* PLCrashFrameWalker_ppc.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217661404450A00A14BA7 /* PLCrashFrameWalker_x86_64.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217331404450900A14BA7 /* PLCrashFrameWalker_x86_64.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217681404450A00A14BA7 /* PLCrashFrameWalker.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217351404450900A14BA7 /* PLCrashFrameWalker.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202176B1404450A00A14BA7 /* PLCrashLogWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217381404450900A14BA7 /* PLCrashLogWriter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202176C1404450A00A14BA7 /* PLCrashLogWriterEncoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217391404450900A14BA7 /* PLCrashLogWriterEncoding.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202176F1404450A00A14BA7 /* PLCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 6202173C1404450900A14BA7 /* PLCrashReport.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217711404450A00A14BA7 /* PLCrashReportApplicationInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6202173E1404450900A14BA7 /* PLCrashReportApplicationInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217731404450A00A14BA7 /* PLCrashReportBinaryImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217401404450900A14BA7 /* PLCrashReportBinaryImageInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217751404450A00A14BA7 /* PLCrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217421404450900A14BA7 /* PLCrashReporter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217771404450A00A14BA7 /* PLCrashReportExceptionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217441404450900A14BA7 /* PLCrashReportExceptionInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202177A1404450A00A14BA7 /* PLCrashReportMachineInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217471404450900A14BA7 /* PLCrashReportMachineInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202177C1404450A00A14BA7 /* PLCrashReportProcessInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217491404450900A14BA7 /* PLCrashReportProcessInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202177E1404450A00A14BA7 /* PLCrashReportProcessorInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6202174B1404450900A14BA7 /* PLCrashReportProcessorInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217801404450A00A14BA7 /* PLCrashReportSignalInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6202174D1404450900A14BA7 /* PLCrashReportSignalInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217821404450A00A14BA7 /* PLCrashReportSystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6202174F1404450900A14BA7 /* PLCrashReportSystemInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217841404450A00A14BA7 /* PLCrashReportTextFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217511404450900A14BA7 /* PLCrashReportTextFormatter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217861404450A00A14BA7 /* PLCrashReportThreadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217531404450900A14BA7 /* PLCrashReportThreadInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217881404450A00A14BA7 /* PLCrashSignalHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217551404450900A14BA7 /* PLCrashSignalHandler.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217891404450A00A14BA7 /* PLCrashSysctl.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217561404450900A14BA7 /* PLCrashSysctl.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6202178F1404451700A14BA7 /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 6202178C1404451700A14BA7 /* protobuf-c.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		620217921404461000A14BA7 /* crash_report.proto in Sources */ = {isa = PBXBuildFile; fileRef = 620217911404457200A14BA7 /* crash_report.proto */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690DA31562A839009391BD /* FileMD5Hash.h */; };
-		7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690DA31562A839009391BD /* FileMD5Hash.h */; };
-		7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
-		7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
-		7E71754D1565567400D810DF /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A0F13969C8B00949297 /* AppBlade.m */; };
-		7E71754F156556A500D810DF /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */; };
-		7E717550156556A800D810DF /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */; };
-		7E717551156556AC00D810DF /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; };
-		7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */; };
-		7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */; };
-		7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; };
-		7EE6A17C1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; };
-		A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */ = {isa = PBXBuildFile; fileRef = A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */; };
-		A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; };
-		CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */; };
-		CB51D33514293D0600A43CB5 /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = CBF47A0E13969C8B00949297 /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CBF479FC13969C2B00949297 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF479FB13969C2B00949297 /* Foundation.framework */; };
-		CBF47A1113969C8B00949297 /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A0F13969C8B00949297 /* AppBlade.m */; };
-		CBF47A1C1396BC9700949297 /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */; };
+		311A21531794C79F007BF879 /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060831794A2A3006DF03A /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		311A21541794C79F007BF879 /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061FD1794A357006DF03A /* FileMD5Hash.h */; };
+		311A21551794C79F007BF879 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* FeedbackBackgroundView.h */; };
+		311A21591794C79F007BF879 /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
+		311A215A1794C79F007BF879 /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
+		311A215B1794C79F007BF879 /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A61794A356006DF03A /* AppBladeWebClient.m */; };
+		311A215C1794C79F007BF879 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061F91794A357006DF03A /* FeedbackBackgroundView.m */; };
+		311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061FB1794A357006DF03A /* FeedbackDialogue.m */; };
+		311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061FC1794A357006DF03A /* FileMD5Hash.c */; };
+		3130607F1794A2A3006DF03A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
+		313060861794A2A3006DF03A /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
+		313061FF1794A357006DF03A /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
+		313062021794A357006DF03A /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A61794A356006DF03A /* AppBladeWebClient.m */; };
+		313062371794A357006DF03A /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060EF1794A356006DF03A /* CrashReporter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3130623D1794A357006DF03A /* PLCrashAsync.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060F21794A356006DF03A /* PLCrashAsync.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062401794A357006DF03A /* PLCrashAsyncImage.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060F41794A356006DF03A /* PLCrashAsyncImage.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062461794A357006DF03A /* PLCrashAsyncSignalInfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060F71794A356006DF03A /* PLCrashAsyncSignalInfo.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3130624F1794A357006DF03A /* PLCrashFrameWalker.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060FB1794A356006DF03A /* PLCrashFrameWalker.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062521794A357006DF03A /* PLCrashFrameWalker_arm.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060FD1794A356006DF03A /* PLCrashFrameWalker_arm.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062551794A357006DF03A /* PLCrashFrameWalker_i386.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060FF1794A356006DF03A /* PLCrashFrameWalker_i386.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062581794A357006DF03A /* PLCrashFrameWalker_ppc.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061011794A356006DF03A /* PLCrashFrameWalker_ppc.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3130625B1794A357006DF03A /* PLCrashFrameWalker_x86_64.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061031794A356006DF03A /* PLCrashFrameWalker_x86_64.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062611794A357006DF03A /* PLCrashLogWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061071794A356006DF03A /* PLCrashLogWriter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062641794A357006DF03A /* PLCrashLogWriterEncoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061081794A356006DF03A /* PLCrashLogWriterEncoding.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3130626A1794A357006DF03A /* PLCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3130610C1794A356006DF03A /* PLCrashReport.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3130626D1794A357006DF03A /* PLCrashReportApplicationInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3130610E1794A356006DF03A /* PLCrashReportApplicationInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062701794A357006DF03A /* PLCrashReportBinaryImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061101794A356006DF03A /* PLCrashReportBinaryImageInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062731794A357006DF03A /* PLCrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061121794A356006DF03A /* PLCrashReporter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062791794A357006DF03A /* PLCrashReportExceptionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061151794A356006DF03A /* PLCrashReportExceptionInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3130627C1794A357006DF03A /* PLCrashReportMachineInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061181794A356006DF03A /* PLCrashReportMachineInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3130627F1794A357006DF03A /* PLCrashReportProcessInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3130611A1794A356006DF03A /* PLCrashReportProcessInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062821794A357006DF03A /* PLCrashReportProcessorInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3130611C1794A356006DF03A /* PLCrashReportProcessorInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062851794A357006DF03A /* PLCrashReportSignalInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3130611E1794A356006DF03A /* PLCrashReportSignalInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062881794A357006DF03A /* PLCrashReportSystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061201794A356006DF03A /* PLCrashReportSystemInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3130628E1794A357006DF03A /* PLCrashReportTextFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061231794A356006DF03A /* PLCrashReportTextFormatter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062911794A357006DF03A /* PLCrashReportThreadInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061251794A356006DF03A /* PLCrashReportThreadInfo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313062941794A357006DF03A /* PLCrashSignalHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061271794A356006DF03A /* PLCrashSignalHandler.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3130629A1794A357006DF03A /* PLCrashSysctl.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061291794A356006DF03A /* PLCrashSysctl.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313063BF1794A357006DF03A /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061F91794A357006DF03A /* FeedbackBackgroundView.m */; };
+		313063C21794A357006DF03A /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061FB1794A357006DF03A /* FeedbackDialogue.m */; };
+		313063C51794A357006DF03A /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061FC1794A357006DF03A /* FileMD5Hash.c */; };
+		3130640E1794A3D8006DF03A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3130640D1794A3D8006DF03A /* Security.framework */; };
+		3130640F1794A403006DF03A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FC91794A146006DF03A /* UIKit.framework */; };
+		313064111794A820006DF03A /* crash_report.proto in Sources */ = {isa = PBXBuildFile; fileRef = 313060E21794A356006DF03A /* crash_report.proto */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313064131794A866006DF03A /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060831794A2A3006DF03A /* AppBlade.h */; };
+		313064141794A866006DF03A /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* FeedbackBackgroundView.h */; };
+		313064151794A866006DF03A /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061FD1794A357006DF03A /* FileMD5Hash.h */; };
+		313064171794B494006DF03A /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060D41794A356006DF03A /* protobuf-c.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
-		31BD702913FEAE2B00C3B6AE /* PBXBuildRule */ = {
+		313064161794A8C7006DF03A /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.proto";
@@ -73,315 +73,315 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
-		319E5C5A175FDB5500B68107 /* AppBladeLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppBladeLogging.h; sourceTree = "<group>"; };
-		31B29E7713FC1BFC00AF9D5D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		31BD74C113FF2AEA00C3B6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		620217251404450900A14BA7 /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = CrashReporter.h; path = AppBlade/CrashReporter/Source/CrashReporter.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		620217261404450900A14BA7 /* CrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CrashReporter.m; path = AppBlade/CrashReporter/Source/CrashReporter.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		620217271404450900A14BA7 /* PLCrashAsync.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashAsync.c; path = AppBlade/CrashReporter/Source/PLCrashAsync.c; sourceTree = SOURCE_ROOT; };
-		620217281404450900A14BA7 /* PLCrashAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashAsync.h; path = AppBlade/CrashReporter/Source/PLCrashAsync.h; sourceTree = SOURCE_ROOT; };
-		620217291404450900A14BA7 /* PLCrashAsyncImage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; name = PLCrashAsyncImage.c; path = AppBlade/CrashReporter/Source/PLCrashAsyncImage.c; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.c; };
-		6202172A1404450900A14BA7 /* PLCrashAsyncImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashAsyncImage.h; path = AppBlade/CrashReporter/Source/PLCrashAsyncImage.h; sourceTree = SOURCE_ROOT; };
-		6202172B1404450900A14BA7 /* PLCrashAsyncSignalInfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashAsyncSignalInfo.c; path = AppBlade/CrashReporter/Source/PLCrashAsyncSignalInfo.c; sourceTree = SOURCE_ROOT; };
-		6202172C1404450900A14BA7 /* PLCrashAsyncSignalInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashAsyncSignalInfo.h; path = AppBlade/CrashReporter/Source/PLCrashAsyncSignalInfo.h; sourceTree = SOURCE_ROOT; };
-		6202172D1404450900A14BA7 /* PLCrashFrameWalker_arm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker_arm.c; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker_arm.c; sourceTree = SOURCE_ROOT; };
-		6202172E1404450900A14BA7 /* PLCrashFrameWalker_arm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker_arm.h; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker_arm.h; sourceTree = SOURCE_ROOT; };
-		6202172F1404450900A14BA7 /* PLCrashFrameWalker_i386.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker_i386.c; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker_i386.c; sourceTree = SOURCE_ROOT; };
-		620217301404450900A14BA7 /* PLCrashFrameWalker_i386.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker_i386.h; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker_i386.h; sourceTree = SOURCE_ROOT; };
-		620217311404450900A14BA7 /* PLCrashFrameWalker_ppc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker_ppc.c; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker_ppc.c; sourceTree = SOURCE_ROOT; };
-		620217321404450900A14BA7 /* PLCrashFrameWalker_ppc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker_ppc.h; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker_ppc.h; sourceTree = SOURCE_ROOT; };
-		620217331404450900A14BA7 /* PLCrashFrameWalker_x86_64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker_x86_64.c; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker_x86_64.c; sourceTree = SOURCE_ROOT; };
-		620217341404450900A14BA7 /* PLCrashFrameWalker_x86_64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker_x86_64.h; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker_x86_64.h; sourceTree = SOURCE_ROOT; };
-		620217351404450900A14BA7 /* PLCrashFrameWalker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker.c; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker.c; sourceTree = SOURCE_ROOT; };
-		620217361404450900A14BA7 /* PLCrashFrameWalker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker.h; path = AppBlade/CrashReporter/Source/PLCrashFrameWalker.h; sourceTree = SOURCE_ROOT; };
-		620217371404450900A14BA7 /* PLCrashLogWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashLogWriter.h; path = AppBlade/CrashReporter/Source/PLCrashLogWriter.h; sourceTree = SOURCE_ROOT; };
-		620217381404450900A14BA7 /* PLCrashLogWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PLCrashLogWriter.m; path = AppBlade/CrashReporter/Source/PLCrashLogWriter.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		620217391404450900A14BA7 /* PLCrashLogWriterEncoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashLogWriterEncoding.c; path = AppBlade/CrashReporter/Source/PLCrashLogWriterEncoding.c; sourceTree = SOURCE_ROOT; };
-		6202173A1404450900A14BA7 /* PLCrashLogWriterEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashLogWriterEncoding.h; path = AppBlade/CrashReporter/Source/PLCrashLogWriterEncoding.h; sourceTree = SOURCE_ROOT; };
-		6202173B1404450900A14BA7 /* PLCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReport.h; path = AppBlade/CrashReporter/Source/PLCrashReport.h; sourceTree = SOURCE_ROOT; };
-		6202173C1404450900A14BA7 /* PLCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReport.m; path = AppBlade/CrashReporter/Source/PLCrashReport.m; sourceTree = SOURCE_ROOT; };
-		6202173D1404450900A14BA7 /* PLCrashReportApplicationInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportApplicationInfo.h; path = AppBlade/CrashReporter/Source/PLCrashReportApplicationInfo.h; sourceTree = SOURCE_ROOT; };
-		6202173E1404450900A14BA7 /* PLCrashReportApplicationInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportApplicationInfo.m; path = AppBlade/CrashReporter/Source/PLCrashReportApplicationInfo.m; sourceTree = SOURCE_ROOT; };
-		6202173F1404450900A14BA7 /* PLCrashReportBinaryImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportBinaryImageInfo.h; path = AppBlade/CrashReporter/Source/PLCrashReportBinaryImageInfo.h; sourceTree = SOURCE_ROOT; };
-		620217401404450900A14BA7 /* PLCrashReportBinaryImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportBinaryImageInfo.m; path = AppBlade/CrashReporter/Source/PLCrashReportBinaryImageInfo.m; sourceTree = SOURCE_ROOT; };
-		620217411404450900A14BA7 /* PLCrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReporter.h; path = AppBlade/CrashReporter/Source/PLCrashReporter.h; sourceTree = SOURCE_ROOT; };
-		620217421404450900A14BA7 /* PLCrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReporter.m; path = AppBlade/CrashReporter/Source/PLCrashReporter.m; sourceTree = SOURCE_ROOT; };
-		620217431404450900A14BA7 /* PLCrashReportExceptionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportExceptionInfo.h; path = AppBlade/CrashReporter/Source/PLCrashReportExceptionInfo.h; sourceTree = SOURCE_ROOT; };
-		620217441404450900A14BA7 /* PLCrashReportExceptionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportExceptionInfo.m; path = AppBlade/CrashReporter/Source/PLCrashReportExceptionInfo.m; sourceTree = SOURCE_ROOT; };
-		620217451404450900A14BA7 /* PLCrashReportFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportFormatter.h; path = AppBlade/CrashReporter/Source/PLCrashReportFormatter.h; sourceTree = SOURCE_ROOT; };
-		620217461404450900A14BA7 /* PLCrashReportMachineInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportMachineInfo.h; path = AppBlade/CrashReporter/Source/PLCrashReportMachineInfo.h; sourceTree = SOURCE_ROOT; };
-		620217471404450900A14BA7 /* PLCrashReportMachineInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportMachineInfo.m; path = AppBlade/CrashReporter/Source/PLCrashReportMachineInfo.m; sourceTree = SOURCE_ROOT; };
-		620217481404450900A14BA7 /* PLCrashReportProcessInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportProcessInfo.h; path = AppBlade/CrashReporter/Source/PLCrashReportProcessInfo.h; sourceTree = SOURCE_ROOT; };
-		620217491404450900A14BA7 /* PLCrashReportProcessInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportProcessInfo.m; path = AppBlade/CrashReporter/Source/PLCrashReportProcessInfo.m; sourceTree = SOURCE_ROOT; };
-		6202174A1404450900A14BA7 /* PLCrashReportProcessorInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportProcessorInfo.h; path = AppBlade/CrashReporter/Source/PLCrashReportProcessorInfo.h; sourceTree = SOURCE_ROOT; };
-		6202174B1404450900A14BA7 /* PLCrashReportProcessorInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportProcessorInfo.m; path = AppBlade/CrashReporter/Source/PLCrashReportProcessorInfo.m; sourceTree = SOURCE_ROOT; };
-		6202174C1404450900A14BA7 /* PLCrashReportSignalInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportSignalInfo.h; path = AppBlade/CrashReporter/Source/PLCrashReportSignalInfo.h; sourceTree = SOURCE_ROOT; };
-		6202174D1404450900A14BA7 /* PLCrashReportSignalInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportSignalInfo.m; path = AppBlade/CrashReporter/Source/PLCrashReportSignalInfo.m; sourceTree = SOURCE_ROOT; };
-		6202174E1404450900A14BA7 /* PLCrashReportSystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportSystemInfo.h; path = AppBlade/CrashReporter/Source/PLCrashReportSystemInfo.h; sourceTree = SOURCE_ROOT; };
-		6202174F1404450900A14BA7 /* PLCrashReportSystemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportSystemInfo.m; path = AppBlade/CrashReporter/Source/PLCrashReportSystemInfo.m; sourceTree = SOURCE_ROOT; };
-		620217501404450900A14BA7 /* PLCrashReportTextFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportTextFormatter.h; path = AppBlade/CrashReporter/Source/PLCrashReportTextFormatter.h; sourceTree = SOURCE_ROOT; };
-		620217511404450900A14BA7 /* PLCrashReportTextFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportTextFormatter.m; path = AppBlade/CrashReporter/Source/PLCrashReportTextFormatter.m; sourceTree = SOURCE_ROOT; };
-		620217521404450900A14BA7 /* PLCrashReportThreadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportThreadInfo.h; path = AppBlade/CrashReporter/Source/PLCrashReportThreadInfo.h; sourceTree = SOURCE_ROOT; };
-		620217531404450900A14BA7 /* PLCrashReportThreadInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportThreadInfo.m; path = AppBlade/CrashReporter/Source/PLCrashReportThreadInfo.m; sourceTree = SOURCE_ROOT; };
-		620217541404450900A14BA7 /* PLCrashSignalHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashSignalHandler.h; path = AppBlade/CrashReporter/Source/PLCrashSignalHandler.h; sourceTree = SOURCE_ROOT; };
-		620217551404450900A14BA7 /* PLCrashSignalHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashSignalHandler.m; path = AppBlade/CrashReporter/Source/PLCrashSignalHandler.m; sourceTree = SOURCE_ROOT; };
-		620217561404450900A14BA7 /* PLCrashSysctl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashSysctl.c; path = AppBlade/CrashReporter/Source/PLCrashSysctl.c; sourceTree = SOURCE_ROOT; };
-		620217571404450900A14BA7 /* PLCrashSysctl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashSysctl.h; path = AppBlade/CrashReporter/Source/PLCrashSysctl.h; sourceTree = SOURCE_ROOT; };
-		6202178B1404451700A14BA7 /* protobuf-c-private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "protobuf-c-private.h"; path = "AppBlade/CrashReporter/Dependencies/protobuf-2.0.3/src/protobuf-c-private.h"; sourceTree = SOURCE_ROOT; };
-		6202178C1404451700A14BA7 /* protobuf-c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "protobuf-c.c"; path = "AppBlade/CrashReporter/Dependencies/protobuf-2.0.3/src/protobuf-c.c"; sourceTree = SOURCE_ROOT; };
-		6202178D1404451700A14BA7 /* protobuf-c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "protobuf-c.h"; path = "AppBlade/CrashReporter/Dependencies/protobuf-2.0.3/src/protobuf-c.h"; sourceTree = SOURCE_ROOT; };
-		620217911404457200A14BA7 /* crash_report.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crash_report.proto; path = AppBlade/CrashReporter/Resources/crash_report.proto; sourceTree = SOURCE_ROOT; };
-		628A131E141EB60400EEB082 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE.md; path = AppBlade/LICENSE.md; sourceTree = "<group>"; };
-		7E690DA31562A839009391BD /* FileMD5Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMD5Hash.h; sourceTree = "<group>"; };
-		7E690DA41562A839009391BD /* FileMD5Hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FileMD5Hash.c; sourceTree = "<group>"; };
-		7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackBackgroundView.h; sourceTree = "<group>"; };
-		7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackBackgroundView.m; sourceTree = "<group>"; };
-		A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackDialogue.h; sourceTree = "<group>"; };
-		A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackDialogue.m; sourceTree = "<group>"; };
-		CB18A56D13ACE77C00091131 /* AppBladeWebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeWebClient.h; sourceTree = "<group>"; };
-		CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeWebClient.m; sourceTree = "<group>"; };
-		CB51D2FC1429274C00A43CB5 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		CBF479F813969C2B00949297 /* libAppBlade.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBlade.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		CBF479FB13969C2B00949297 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		CBF479FF13969C2B00949297 /* AppBlade-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppBlade-Prefix.pch"; sourceTree = "<group>"; };
-		CBF47A0E13969C8B00949297 /* AppBlade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
-		CBF47A0F13969C8B00949297 /* AppBlade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppBlade.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		CBF47A191396BC9600949297 /* AppBladeSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSimpleKeychain.h; sourceTree = "<group>"; };
-		CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeSimpleKeychain.m; sourceTree = "<group>"; };
+		311A21801794C79F007BF879 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		31305FC91794A146006DF03A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		31305FCB1794A146006DF03A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		3130607E1794A2A3006DF03A /* libAppBlade.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBlade.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		313060821794A2A3006DF03A /* AppBlade-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppBlade-Prefix.pch"; sourceTree = "<group>"; };
+		313060831794A2A3006DF03A /* AppBlade.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
+		313060851794A2A3006DF03A /* AppBlade.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppBlade.m; sourceTree = "<group>"; };
+		313060A21794A356006DF03A /* AppBladeLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeLogging.h; sourceTree = "<group>"; };
+		313060A31794A356006DF03A /* AppBladeSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSimpleKeychain.h; sourceTree = "<group>"; };
+		313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeSimpleKeychain.m; sourceTree = "<group>"; };
+		313060A51794A356006DF03A /* AppBladeWebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeWebClient.h; sourceTree = "<group>"; };
+		313060A61794A356006DF03A /* AppBladeWebClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeWebClient.m; sourceTree = "<group>"; };
+		313060D31794A356006DF03A /* protobuf-c-private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "protobuf-c-private.h"; sourceTree = "<group>"; };
+		313060D41794A356006DF03A /* protobuf-c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "protobuf-c.c"; sourceTree = "<group>"; };
+		313060D51794A356006DF03A /* protobuf-c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "protobuf-c.h"; sourceTree = "<group>"; };
+		313060E21794A356006DF03A /* crash_report.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crash_report.proto; path = Resources/crash_report.proto; sourceTree = "<group>"; };
+		313060EE1794A356006DF03A /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReporter.h; path = Source/CrashReporter.h; sourceTree = "<group>"; };
+		313060EF1794A356006DF03A /* CrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashReporter.m; path = Source/CrashReporter.m; sourceTree = "<group>"; };
+		313060F21794A356006DF03A /* PLCrashAsync.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashAsync.c; path = Source/PLCrashAsync.c; sourceTree = "<group>"; };
+		313060F31794A356006DF03A /* PLCrashAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashAsync.h; path = Source/PLCrashAsync.h; sourceTree = "<group>"; };
+		313060F41794A356006DF03A /* PLCrashAsyncImage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashAsyncImage.c; path = Source/PLCrashAsyncImage.c; sourceTree = "<group>"; };
+		313060F51794A356006DF03A /* PLCrashAsyncImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashAsyncImage.h; path = Source/PLCrashAsyncImage.h; sourceTree = "<group>"; };
+		313060F71794A356006DF03A /* PLCrashAsyncSignalInfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashAsyncSignalInfo.c; path = Source/PLCrashAsyncSignalInfo.c; sourceTree = "<group>"; };
+		313060F81794A356006DF03A /* PLCrashAsyncSignalInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashAsyncSignalInfo.h; path = Source/PLCrashAsyncSignalInfo.h; sourceTree = "<group>"; };
+		313060FB1794A356006DF03A /* PLCrashFrameWalker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker.c; path = Source/PLCrashFrameWalker.c; sourceTree = "<group>"; };
+		313060FC1794A356006DF03A /* PLCrashFrameWalker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker.h; path = Source/PLCrashFrameWalker.h; sourceTree = "<group>"; };
+		313060FD1794A356006DF03A /* PLCrashFrameWalker_arm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker_arm.c; path = Source/PLCrashFrameWalker_arm.c; sourceTree = "<group>"; };
+		313060FE1794A356006DF03A /* PLCrashFrameWalker_arm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker_arm.h; path = Source/PLCrashFrameWalker_arm.h; sourceTree = "<group>"; };
+		313060FF1794A356006DF03A /* PLCrashFrameWalker_i386.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker_i386.c; path = Source/PLCrashFrameWalker_i386.c; sourceTree = "<group>"; };
+		313061001794A356006DF03A /* PLCrashFrameWalker_i386.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker_i386.h; path = Source/PLCrashFrameWalker_i386.h; sourceTree = "<group>"; };
+		313061011794A356006DF03A /* PLCrashFrameWalker_ppc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker_ppc.c; path = Source/PLCrashFrameWalker_ppc.c; sourceTree = "<group>"; };
+		313061021794A356006DF03A /* PLCrashFrameWalker_ppc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker_ppc.h; path = Source/PLCrashFrameWalker_ppc.h; sourceTree = "<group>"; };
+		313061031794A356006DF03A /* PLCrashFrameWalker_x86_64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashFrameWalker_x86_64.c; path = Source/PLCrashFrameWalker_x86_64.c; sourceTree = "<group>"; };
+		313061041794A356006DF03A /* PLCrashFrameWalker_x86_64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashFrameWalker_x86_64.h; path = Source/PLCrashFrameWalker_x86_64.h; sourceTree = "<group>"; };
+		313061061794A356006DF03A /* PLCrashLogWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashLogWriter.h; path = Source/PLCrashLogWriter.h; sourceTree = "<group>"; };
+		313061071794A356006DF03A /* PLCrashLogWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashLogWriter.m; path = Source/PLCrashLogWriter.m; sourceTree = "<group>"; };
+		313061081794A356006DF03A /* PLCrashLogWriterEncoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashLogWriterEncoding.c; path = Source/PLCrashLogWriterEncoding.c; sourceTree = "<group>"; };
+		313061091794A356006DF03A /* PLCrashLogWriterEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashLogWriterEncoding.h; path = Source/PLCrashLogWriterEncoding.h; sourceTree = "<group>"; };
+		3130610B1794A356006DF03A /* PLCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReport.h; path = Source/PLCrashReport.h; sourceTree = "<group>"; };
+		3130610C1794A356006DF03A /* PLCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReport.m; path = Source/PLCrashReport.m; sourceTree = "<group>"; };
+		3130610D1794A356006DF03A /* PLCrashReportApplicationInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportApplicationInfo.h; path = Source/PLCrashReportApplicationInfo.h; sourceTree = "<group>"; };
+		3130610E1794A356006DF03A /* PLCrashReportApplicationInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportApplicationInfo.m; path = Source/PLCrashReportApplicationInfo.m; sourceTree = "<group>"; };
+		3130610F1794A356006DF03A /* PLCrashReportBinaryImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportBinaryImageInfo.h; path = Source/PLCrashReportBinaryImageInfo.h; sourceTree = "<group>"; };
+		313061101794A356006DF03A /* PLCrashReportBinaryImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportBinaryImageInfo.m; path = Source/PLCrashReportBinaryImageInfo.m; sourceTree = "<group>"; };
+		313061111794A356006DF03A /* PLCrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReporter.h; path = Source/PLCrashReporter.h; sourceTree = "<group>"; };
+		313061121794A356006DF03A /* PLCrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReporter.m; path = Source/PLCrashReporter.m; sourceTree = "<group>"; };
+		313061141794A356006DF03A /* PLCrashReportExceptionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportExceptionInfo.h; path = Source/PLCrashReportExceptionInfo.h; sourceTree = "<group>"; };
+		313061151794A356006DF03A /* PLCrashReportExceptionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportExceptionInfo.m; path = Source/PLCrashReportExceptionInfo.m; sourceTree = "<group>"; };
+		313061161794A356006DF03A /* PLCrashReportFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportFormatter.h; path = Source/PLCrashReportFormatter.h; sourceTree = "<group>"; };
+		313061171794A356006DF03A /* PLCrashReportMachineInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportMachineInfo.h; path = Source/PLCrashReportMachineInfo.h; sourceTree = "<group>"; };
+		313061181794A356006DF03A /* PLCrashReportMachineInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportMachineInfo.m; path = Source/PLCrashReportMachineInfo.m; sourceTree = "<group>"; };
+		313061191794A356006DF03A /* PLCrashReportProcessInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportProcessInfo.h; path = Source/PLCrashReportProcessInfo.h; sourceTree = "<group>"; };
+		3130611A1794A356006DF03A /* PLCrashReportProcessInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportProcessInfo.m; path = Source/PLCrashReportProcessInfo.m; sourceTree = "<group>"; };
+		3130611B1794A356006DF03A /* PLCrashReportProcessorInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportProcessorInfo.h; path = Source/PLCrashReportProcessorInfo.h; sourceTree = "<group>"; };
+		3130611C1794A356006DF03A /* PLCrashReportProcessorInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportProcessorInfo.m; path = Source/PLCrashReportProcessorInfo.m; sourceTree = "<group>"; };
+		3130611D1794A356006DF03A /* PLCrashReportSignalInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportSignalInfo.h; path = Source/PLCrashReportSignalInfo.h; sourceTree = "<group>"; };
+		3130611E1794A356006DF03A /* PLCrashReportSignalInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportSignalInfo.m; path = Source/PLCrashReportSignalInfo.m; sourceTree = "<group>"; };
+		3130611F1794A356006DF03A /* PLCrashReportSystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportSystemInfo.h; path = Source/PLCrashReportSystemInfo.h; sourceTree = "<group>"; };
+		313061201794A356006DF03A /* PLCrashReportSystemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportSystemInfo.m; path = Source/PLCrashReportSystemInfo.m; sourceTree = "<group>"; };
+		313061221794A356006DF03A /* PLCrashReportTextFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportTextFormatter.h; path = Source/PLCrashReportTextFormatter.h; sourceTree = "<group>"; };
+		313061231794A356006DF03A /* PLCrashReportTextFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportTextFormatter.m; path = Source/PLCrashReportTextFormatter.m; sourceTree = "<group>"; };
+		313061241794A356006DF03A /* PLCrashReportThreadInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashReportThreadInfo.h; path = Source/PLCrashReportThreadInfo.h; sourceTree = "<group>"; };
+		313061251794A356006DF03A /* PLCrashReportThreadInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashReportThreadInfo.m; path = Source/PLCrashReportThreadInfo.m; sourceTree = "<group>"; };
+		313061261794A356006DF03A /* PLCrashSignalHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashSignalHandler.h; path = Source/PLCrashSignalHandler.h; sourceTree = "<group>"; };
+		313061271794A356006DF03A /* PLCrashSignalHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashSignalHandler.m; path = Source/PLCrashSignalHandler.m; sourceTree = "<group>"; };
+		313061291794A356006DF03A /* PLCrashSysctl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashSysctl.c; path = Source/PLCrashSysctl.c; sourceTree = "<group>"; };
+		3130612A1794A356006DF03A /* PLCrashSysctl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashSysctl.h; path = Source/PLCrashSysctl.h; sourceTree = "<group>"; };
+		313061F81794A357006DF03A /* FeedbackBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackBackgroundView.h; sourceTree = "<group>"; };
+		313061F91794A357006DF03A /* FeedbackBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackBackgroundView.m; sourceTree = "<group>"; };
+		313061FA1794A357006DF03A /* FeedbackDialogue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackDialogue.h; sourceTree = "<group>"; };
+		313061FB1794A357006DF03A /* FeedbackDialogue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackDialogue.m; sourceTree = "<group>"; };
+		313061FC1794A357006DF03A /* FileMD5Hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FileMD5Hash.c; sourceTree = "<group>"; };
+		313061FD1794A357006DF03A /* FileMD5Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMD5Hash.h; sourceTree = "<group>"; };
+		313061FE1794A357006DF03A /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE.md; path = AppBlade/LICENSE.md; sourceTree = "<group>"; };
+		3130640D1794A3D8006DF03A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		CB51D2F91429274C00A43CB5 /* Frameworks */ = {
+		311A21781794C79F007BF879 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CBF479F513969C2B00949297 /* Frameworks */ = {
+		3130607B1794A2A3006DF03A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31BD74C213FF2AEA00C3B6AE /* UIKit.framework in Frameworks */,
-				31B29E7813FC1BFC00AF9D5D /* Security.framework in Frameworks */,
-				CBF479FC13969C2B00949297 /* Foundation.framework in Frameworks */,
+				3130640F1794A403006DF03A /* UIKit.framework in Frameworks */,
+				3130640E1794A3D8006DF03A /* Security.framework in Frameworks */,
+				3130607F1794A2A3006DF03A /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		31BD6FAD13FEA96E00C3B6AE /* CrashReporter */ = {
+		31305FBD1794A146006DF03A = {
 			isa = PBXGroup;
 			children = (
-				620217251404450900A14BA7 /* CrashReporter.h */,
-				620217261404450900A14BA7 /* CrashReporter.m */,
-				620217271404450900A14BA7 /* PLCrashAsync.c */,
-				620217281404450900A14BA7 /* PLCrashAsync.h */,
-				620217291404450900A14BA7 /* PLCrashAsyncImage.c */,
-				6202172A1404450900A14BA7 /* PLCrashAsyncImage.h */,
-				6202172B1404450900A14BA7 /* PLCrashAsyncSignalInfo.c */,
-				6202172C1404450900A14BA7 /* PLCrashAsyncSignalInfo.h */,
-				6202172D1404450900A14BA7 /* PLCrashFrameWalker_arm.c */,
-				6202172E1404450900A14BA7 /* PLCrashFrameWalker_arm.h */,
-				6202172F1404450900A14BA7 /* PLCrashFrameWalker_i386.c */,
-				620217301404450900A14BA7 /* PLCrashFrameWalker_i386.h */,
-				620217311404450900A14BA7 /* PLCrashFrameWalker_ppc.c */,
-				620217321404450900A14BA7 /* PLCrashFrameWalker_ppc.h */,
-				620217331404450900A14BA7 /* PLCrashFrameWalker_x86_64.c */,
-				620217341404450900A14BA7 /* PLCrashFrameWalker_x86_64.h */,
-				620217351404450900A14BA7 /* PLCrashFrameWalker.c */,
-				620217361404450900A14BA7 /* PLCrashFrameWalker.h */,
-				620217371404450900A14BA7 /* PLCrashLogWriter.h */,
-				620217381404450900A14BA7 /* PLCrashLogWriter.m */,
-				620217391404450900A14BA7 /* PLCrashLogWriterEncoding.c */,
-				6202173A1404450900A14BA7 /* PLCrashLogWriterEncoding.h */,
-				6202173B1404450900A14BA7 /* PLCrashReport.h */,
-				6202173C1404450900A14BA7 /* PLCrashReport.m */,
-				6202173D1404450900A14BA7 /* PLCrashReportApplicationInfo.h */,
-				6202173E1404450900A14BA7 /* PLCrashReportApplicationInfo.m */,
-				6202173F1404450900A14BA7 /* PLCrashReportBinaryImageInfo.h */,
-				620217401404450900A14BA7 /* PLCrashReportBinaryImageInfo.m */,
-				620217411404450900A14BA7 /* PLCrashReporter.h */,
-				620217421404450900A14BA7 /* PLCrashReporter.m */,
-				620217431404450900A14BA7 /* PLCrashReportExceptionInfo.h */,
-				620217441404450900A14BA7 /* PLCrashReportExceptionInfo.m */,
-				620217451404450900A14BA7 /* PLCrashReportFormatter.h */,
-				620217461404450900A14BA7 /* PLCrashReportMachineInfo.h */,
-				620217471404450900A14BA7 /* PLCrashReportMachineInfo.m */,
-				620217481404450900A14BA7 /* PLCrashReportProcessInfo.h */,
-				620217491404450900A14BA7 /* PLCrashReportProcessInfo.m */,
-				6202174A1404450900A14BA7 /* PLCrashReportProcessorInfo.h */,
-				6202174B1404450900A14BA7 /* PLCrashReportProcessorInfo.m */,
-				6202174C1404450900A14BA7 /* PLCrashReportSignalInfo.h */,
-				6202174D1404450900A14BA7 /* PLCrashReportSignalInfo.m */,
-				6202174E1404450900A14BA7 /* PLCrashReportSystemInfo.h */,
-				6202174F1404450900A14BA7 /* PLCrashReportSystemInfo.m */,
-				620217501404450900A14BA7 /* PLCrashReportTextFormatter.h */,
-				620217511404450900A14BA7 /* PLCrashReportTextFormatter.m */,
-				620217521404450900A14BA7 /* PLCrashReportThreadInfo.h */,
-				620217531404450900A14BA7 /* PLCrashReportThreadInfo.m */,
-				620217541404450900A14BA7 /* PLCrashSignalHandler.h */,
-				620217551404450900A14BA7 /* PLCrashSignalHandler.m */,
-				620217561404450900A14BA7 /* PLCrashSysctl.c */,
-				620217571404450900A14BA7 /* PLCrashSysctl.h */,
-				620217911404457200A14BA7 /* crash_report.proto */,
-				31BD701113FEA99500C3B6AE /* Protobuf */,
-			);
-			name = CrashReporter;
-			path = "AppBlade/plcrashreporter-1.0/Source";
-			sourceTree = "<group>";
-		};
-		31BD701113FEA99500C3B6AE /* Protobuf */ = {
-			isa = PBXGroup;
-			children = (
-				6202178B1404451700A14BA7 /* protobuf-c-private.h */,
-				6202178C1404451700A14BA7 /* protobuf-c.c */,
-				6202178D1404451700A14BA7 /* protobuf-c.h */,
-			);
-			name = Protobuf;
-			path = "../Dependencies/protobuf-2.0.3/src";
-			sourceTree = "<group>";
-		};
-		7E690DA91562AC51009391BD /* Hashing */ = {
-			isa = PBXGroup;
-			children = (
-				7E690DA31562A839009391BD /* FileMD5Hash.h */,
-				7E690DA41562A839009391BD /* FileMD5Hash.c */,
-			);
-			name = Hashing;
-			sourceTree = "<group>";
-		};
-		CBF479ED13969C2B00949297 = {
-			isa = PBXGroup;
-			children = (
-				628A131E141EB60400EEB082 /* LICENSE.md */,
-				31BD6FAD13FEA96E00C3B6AE /* CrashReporter */,
-				CBF479FD13969C2B00949297 /* AppBlade */,
-				CBF479FA13969C2B00949297 /* Frameworks */,
-				CBF479F913969C2B00949297 /* Products */,
+				313061FE1794A357006DF03A /* LICENSE.md */,
+				313060A71794A356006DF03A /* CrashReporter */,
+				313060801794A2A3006DF03A /* AppBlade */,
+				31305FC81794A146006DF03A /* Frameworks */,
+				31305FC71794A146006DF03A /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		CBF479F913969C2B00949297 /* Products */ = {
+		31305FC71794A146006DF03A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CBF479F813969C2B00949297 /* libAppBlade.a */,
-				CB51D2FC1429274C00A43CB5 /* libAppBladeUniversal.a */,
+				3130607E1794A2A3006DF03A /* libAppBlade.a */,
+				311A21801794C79F007BF879 /* libAppBladeUniversal.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		CBF479FA13969C2B00949297 /* Frameworks */ = {
+		31305FC81794A146006DF03A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				31BD74C113FF2AEA00C3B6AE /* UIKit.framework */,
-				31B29E7713FC1BFC00AF9D5D /* Security.framework */,
-				CBF479FB13969C2B00949297 /* Foundation.framework */,
+				31305FC91794A146006DF03A /* UIKit.framework */,
+				3130640D1794A3D8006DF03A /* Security.framework */,
+				31305FCB1794A146006DF03A /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		CBF479FD13969C2B00949297 /* AppBlade */ = {
+		313060801794A2A3006DF03A /* AppBlade */ = {
 			isa = PBXGroup;
 			children = (
-				7E690DA91562AC51009391BD /* Hashing */,
-				CBF479FE13969C2B00949297 /* Supporting Files */,
-				CBF47A0E13969C8B00949297 /* AppBlade.h */,
-				CBF47A0F13969C8B00949297 /* AppBlade.m */,
-				CBF47A191396BC9600949297 /* AppBladeSimpleKeychain.h */,
-				CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */,
-				CB18A56D13ACE77C00091131 /* AppBladeWebClient.h */,
-				CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */,
-				319E5C5A175FDB5500B68107 /* AppBladeLogging.h */,
+				3130640C1794A380006DF03A /* Hashing */,
+				313060811794A2A3006DF03A /* Supporting Files */,
+				313060831794A2A3006DF03A /* AppBlade.h */,
+				313060851794A2A3006DF03A /* AppBlade.m */,
+				313060A21794A356006DF03A /* AppBladeLogging.h */,
+				313060A31794A356006DF03A /* AppBladeSimpleKeychain.h */,
+				313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */,
+				313060A51794A356006DF03A /* AppBladeWebClient.h */,
+				313060A61794A356006DF03A /* AppBladeWebClient.m */,
 			);
 			path = AppBlade;
 			sourceTree = "<group>";
 		};
-		CBF479FE13969C2B00949297 /* Supporting Files */ = {
+		313060811794A2A3006DF03A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CBF479FF13969C2B00949297 /* AppBlade-Prefix.pch */,
-				A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */,
-				A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */,
-				7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */,
-				7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */,
+				313061F81794A357006DF03A /* FeedbackBackgroundView.h */,
+				313061F91794A357006DF03A /* FeedbackBackgroundView.m */,
+				313061FA1794A357006DF03A /* FeedbackDialogue.h */,
+				313061FB1794A357006DF03A /* FeedbackDialogue.m */,
+				313060821794A2A3006DF03A /* AppBlade-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		313060A71794A356006DF03A /* CrashReporter */ = {
+			isa = PBXGroup;
+			children = (
+				313060EE1794A356006DF03A /* CrashReporter.h */,
+				313060EF1794A356006DF03A /* CrashReporter.m */,
+				313060F21794A356006DF03A /* PLCrashAsync.c */,
+				313060F31794A356006DF03A /* PLCrashAsync.h */,
+				313060F41794A356006DF03A /* PLCrashAsyncImage.c */,
+				313060F51794A356006DF03A /* PLCrashAsyncImage.h */,
+				313060F71794A356006DF03A /* PLCrashAsyncSignalInfo.c */,
+				313060F81794A356006DF03A /* PLCrashAsyncSignalInfo.h */,
+				313060FB1794A356006DF03A /* PLCrashFrameWalker.c */,
+				313060FC1794A356006DF03A /* PLCrashFrameWalker.h */,
+				313060FD1794A356006DF03A /* PLCrashFrameWalker_arm.c */,
+				313060FE1794A356006DF03A /* PLCrashFrameWalker_arm.h */,
+				313060FF1794A356006DF03A /* PLCrashFrameWalker_i386.c */,
+				313061001794A356006DF03A /* PLCrashFrameWalker_i386.h */,
+				313061011794A356006DF03A /* PLCrashFrameWalker_ppc.c */,
+				313061021794A356006DF03A /* PLCrashFrameWalker_ppc.h */,
+				313061031794A356006DF03A /* PLCrashFrameWalker_x86_64.c */,
+				313061041794A356006DF03A /* PLCrashFrameWalker_x86_64.h */,
+				313061061794A356006DF03A /* PLCrashLogWriter.h */,
+				313061071794A356006DF03A /* PLCrashLogWriter.m */,
+				313061081794A356006DF03A /* PLCrashLogWriterEncoding.c */,
+				313061091794A356006DF03A /* PLCrashLogWriterEncoding.h */,
+				3130610B1794A356006DF03A /* PLCrashReport.h */,
+				3130610C1794A356006DF03A /* PLCrashReport.m */,
+				3130610D1794A356006DF03A /* PLCrashReportApplicationInfo.h */,
+				3130610E1794A356006DF03A /* PLCrashReportApplicationInfo.m */,
+				3130610F1794A356006DF03A /* PLCrashReportBinaryImageInfo.h */,
+				313061101794A356006DF03A /* PLCrashReportBinaryImageInfo.m */,
+				313061111794A356006DF03A /* PLCrashReporter.h */,
+				313061121794A356006DF03A /* PLCrashReporter.m */,
+				313061141794A356006DF03A /* PLCrashReportExceptionInfo.h */,
+				313061151794A356006DF03A /* PLCrashReportExceptionInfo.m */,
+				313061161794A356006DF03A /* PLCrashReportFormatter.h */,
+				313061171794A356006DF03A /* PLCrashReportMachineInfo.h */,
+				313061181794A356006DF03A /* PLCrashReportMachineInfo.m */,
+				313061191794A356006DF03A /* PLCrashReportProcessInfo.h */,
+				3130611A1794A356006DF03A /* PLCrashReportProcessInfo.m */,
+				3130611B1794A356006DF03A /* PLCrashReportProcessorInfo.h */,
+				3130611C1794A356006DF03A /* PLCrashReportProcessorInfo.m */,
+				3130611D1794A356006DF03A /* PLCrashReportSignalInfo.h */,
+				3130611E1794A356006DF03A /* PLCrashReportSignalInfo.m */,
+				3130611F1794A356006DF03A /* PLCrashReportSystemInfo.h */,
+				313061201794A356006DF03A /* PLCrashReportSystemInfo.m */,
+				313061221794A356006DF03A /* PLCrashReportTextFormatter.h */,
+				313061231794A356006DF03A /* PLCrashReportTextFormatter.m */,
+				313061241794A356006DF03A /* PLCrashReportThreadInfo.h */,
+				313061251794A356006DF03A /* PLCrashReportThreadInfo.m */,
+				313061261794A356006DF03A /* PLCrashSignalHandler.h */,
+				313061271794A356006DF03A /* PLCrashSignalHandler.m */,
+				313061291794A356006DF03A /* PLCrashSysctl.c */,
+				3130612A1794A356006DF03A /* PLCrashSysctl.h */,
+				313060E21794A356006DF03A /* crash_report.proto */,
+				313060D21794A356006DF03A /* Protobuf */,
+			);
+			name = CrashReporter;
+			path = AppBlade/CrashReporter;
+			sourceTree = "<group>";
+		};
+		313060D21794A356006DF03A /* Protobuf */ = {
+			isa = PBXGroup;
+			children = (
+				313060D31794A356006DF03A /* protobuf-c-private.h */,
+				313060D41794A356006DF03A /* protobuf-c.c */,
+				313060D51794A356006DF03A /* protobuf-c.h */,
+			);
+			name = Protobuf;
+			path = "Dependencies/protobuf-2.0.3/include/google/protobuf-c";
+			sourceTree = "<group>";
+		};
+		3130640C1794A380006DF03A /* Hashing */ = {
+			isa = PBXGroup;
+			children = (
+				313061FC1794A357006DF03A /* FileMD5Hash.c */,
+				313061FD1794A357006DF03A /* FileMD5Hash.h */,
+			);
+			name = Hashing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		CB51D2FA1429274C00A43CB5 /* Headers */ = {
+		311A21521794C79F007BF879 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB51D33514293D0600A43CB5 /* AppBlade.h in Headers */,
-				7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */,
-				7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
+				311A21531794C79F007BF879 /* AppBlade.h in Headers */,
+				311A21541794C79F007BF879 /* FileMD5Hash.h in Headers */,
+				311A21551794C79F007BF879 /* FeedbackBackgroundView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CBF479F613969C2B00949297 /* Headers */ = {
+		313064121794A84A006DF03A /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */,
-				7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */,
-				7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
+				313064131794A866006DF03A /* AppBlade.h in Headers */,
+				313064151794A866006DF03A /* FileMD5Hash.h in Headers */,
+				313064141794A866006DF03A /* FeedbackBackgroundView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		CB51D2FB1429274C00A43CB5 /* AppBladeUniversal */ = {
+		311A21511794C79F007BF879 /* AppBladeUniversal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CB51D3081429274C00A43CB5 /* Build configuration list for PBXNativeTarget "AppBladeUniversal" */;
+			buildConfigurationList = 311A217D1794C79F007BF879 /* Build configuration list for PBXNativeTarget "AppBladeUniversal" */;
 			buildPhases = (
-				CB51D2F81429274C00A43CB5 /* Sources */,
-				CB51D2F91429274C00A43CB5 /* Frameworks */,
-				CB51D2FA1429274C00A43CB5 /* Headers */,
-				CB51D30A142927A200A43CB5 /* ShellScript */,
+				311A21561794C79F007BF879 /* Sources */,
+				311A21781794C79F007BF879 /* Frameworks */,
+				311A21521794C79F007BF879 /* Headers */,
+				311A21811794C8F2007BF879 /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = AppBladeUniversal;
-			productName = AppBladeUniversal;
-			productReference = CB51D2FC1429274C00A43CB5 /* libAppBladeUniversal.a */;
+			productName = AppBlade;
+			productReference = 311A21801794C79F007BF879 /* libAppBladeUniversal.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		CBF479F713969C2B00949297 /* AppBlade */ = {
+		3130607D1794A2A3006DF03A /* AppBlade */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CBF47A0213969C2B00949297 /* Build configuration list for PBXNativeTarget "AppBlade" */;
+			buildConfigurationList = 3130609C1794A2A3006DF03A /* Build configuration list for PBXNativeTarget "AppBlade" */;
 			buildPhases = (
-				CBF479F613969C2B00949297 /* Headers */,
-				CBF479F413969C2B00949297 /* Sources */,
-				CBF479F513969C2B00949297 /* Frameworks */,
+				313064121794A84A006DF03A /* Headers */,
+				3130607A1794A2A3006DF03A /* Sources */,
+				3130607B1794A2A3006DF03A /* Frameworks */,
 			);
 			buildRules = (
-				31BD702913FEAE2B00C3B6AE /* PBXBuildRule */,
+				313064161794A8C7006DF03A /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
 			name = AppBlade;
 			productName = AppBlade;
-			productReference = CBF479F813969C2B00949297 /* libAppBlade.a */;
+			productReference = 3130607E1794A2A3006DF03A /* libAppBlade.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		CBF479EF13969C2B00949297 /* Project object */ = {
+		31305FBE1794A146006DF03A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0460;
-				ORGANIZATIONNAME = "Raizlabs Corporation";
+				ORGANIZATIONNAME = Raizlabs;
 			};
-			buildConfigurationList = CBF479F213969C2B00949297 /* Build configuration list for PBXProject "AppBlade" */;
+			buildConfigurationList = 31305FC11794A146006DF03A /* Build configuration list for PBXProject "AppBlade" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -395,19 +395,19 @@
 				pt,
 				ru,
 			);
-			mainGroup = CBF479ED13969C2B00949297;
-			productRefGroup = CBF479F913969C2B00949297 /* Products */;
+			mainGroup = 31305FBD1794A146006DF03A;
+			productRefGroup = 31305FC71794A146006DF03A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CBF479F713969C2B00949297 /* AppBlade */,
-				CB51D2FB1429274C00A43CB5 /* AppBladeUniversal */,
+				3130607D1794A2A3006DF03A /* AppBlade */,
+				311A21511794C79F007BF879 /* AppBladeUniversal */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		CB51D30A142927A200A43CB5 /* ShellScript */ = {
+		311A21811794C8F2007BF879 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -418,98 +418,251 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Version 2.0 (updated for Xcode 4, with some fixes)\n# Changes:\n#    - Works with xcode 4, even when running xcode 3 projects (Workarounds for apple bugs)\n#    - Faster / better: only runs lipo once, instead of once per recursion\n#    - Added some debugging statemetns that can be switched on/off by changing the DEBUG_THIS_SCRIPT variable to \"true\"\n#    - Fixed some typos\n# \n# Purpose:\n#   Create a static library for iPhone from within XCode\n#   Because Apple staff DELIBERATELY broke Xcode to make this impossible from the GUI (Xcode 3.2.3 specifically states this in the Release notes!)\n#   ...no, I don't understand why they did this!\n#\n# Author: Adam Martin - http://twitter.com/redglassesapps\n# Based on: original script from Eonil (main changes: Eonil's script WILL NOT WORK in Xcode GUI - it WILL CRASH YOUR COMPUTER)\n#\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\n\n#################[ Tests: helps workaround any future bugs in Xcode ]########\n#\nDEBUG_THIS_SCRIPT=\"true\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\n\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nIPHONE_SDK=iphoneos${SDK_VERSION}\nSIMULATOR_SDK=iphonesimulator${SDK_VERSION}\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"Building with 2 SDKs: ${IPHONE_SDK} and ${SIMULATOR_SDK}\"\n\n\n################################################\n# Invoke the two builds that we want to generate\n################################################\nACTION=\"build\"\n\necho \"Building Device version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${IPHONE_SDK}\\\" ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${IPHONE_SDK}\" ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\necho \"Building Simulator version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${SIMULATOR_SDK}\\\" -arch i386 ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${SIMULATOR_SDK}\" -arch i386 ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\nLIBRARY_NAME=libAppBlade.a\nUNIVERSAL_LIBRARY_NAME=libAppBladeUniversal.a\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\n// Modified slightly to create and remove an executable-specific directory\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${LIBRARY_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${LIBRARY_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${LIBRARY_NAME}\"\n\n\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\n# RZ: Modified to place in root of universal directory, though it looks in /usr/local/include.\n#\n#if [ -d \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include\" ]\n#then\n#mkdir -p \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\n# * needs to be outside the double quotes?\ncp \"${CONFIGURATION_BUILD_DIR}/usr/local/include/\"* \"${CREATING_UNIVERSAL_DIR}\"\n\n\nopen \"${CREATING_UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\necho \"${CREATING_UNIVERSAL_DIR}\"\n\n#to reduce confusion, you can remove the other libAppBladeUniversal.a binaries\nrm -f \"${CURRENTCONFIG_DEVICE_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\nrm -f \"${CURRENTCONFIG_SIMULATOR_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n#fi";
+			shellScript = "# Version 2.5 (updated for Xcode 4.6.3)\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\nDEBUG_THIS_SCRIPT=\"true\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\n\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nIPHONE_SDK=iphoneos${SDK_VERSION}\nSIMULATOR_SDK=iphonesimulator${SDK_VERSION}\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"Building with 2 SDKs: ${IPHONE_SDK} and ${SIMULATOR_SDK}\"\n\n\n################################################\n# Invoke the two builds that we want to generate\n################################################\nACTION=\"build\"\n\necho \"Building Device version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${IPHONE_SDK}\\\" ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${IPHONE_SDK}\" ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\necho \"Building Simulator version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${SIMULATOR_SDK}\\\" -arch i386 ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${SIMULATOR_SDK}\" -arch i386 ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\nLIBRARY_NAME=libAppBlade.a\nUNIVERSAL_LIBRARY_NAME=libAppBladeUniversal.a\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\n// Modified slightly to create and remove an executable-specific directory\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${LIBRARY_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${LIBRARY_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${LIBRARY_NAME}\"\n\n\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\n# RZ: Modified to place in root of universal directory, though it looks in /usr/local/include.\n#\n#if [ -d \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include\" ]\n#then\n#mkdir -p \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\n# * needs to be outside the double quotes?\ncp \"${CONFIGURATION_BUILD_DIR}/usr/local/include/\"* \"${CREATING_UNIVERSAL_DIR}\"\n\n\nopen \"${CREATING_UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\necho \"${CREATING_UNIVERSAL_DIR}\"\n\n#to reduce confusion, you can remove the other libAppBladeUniversal.a binaries\nrm -f \"${CURRENTCONFIG_DEVICE_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\nrm -f \"${CURRENTCONFIG_SIMULATOR_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n#fi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		CB51D2F81429274C00A43CB5 /* Sources */ = {
+		311A21561794C79F007BF879 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */,
-				7EE6A17C1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
-				7E71754D1565567400D810DF /* AppBlade.m in Sources */,
-				7E71754F156556A500D810DF /* AppBladeSimpleKeychain.m in Sources */,
-				7E717550156556A800D810DF /* AppBladeWebClient.m in Sources */,
-				7E717551156556AC00D810DF /* FeedbackDialogue.m in Sources */,
+				311A21591794C79F007BF879 /* AppBlade.m in Sources */,
+				311A215A1794C79F007BF879 /* AppBladeSimpleKeychain.m in Sources */,
+				311A215B1794C79F007BF879 /* AppBladeWebClient.m in Sources */,
+				311A215C1794C79F007BF879 /* FeedbackBackgroundView.m in Sources */,
+				311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */,
+				311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CBF479F413969C2B00949297 /* Sources */ = {
+		3130607A1794A2A3006DF03A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				620217921404461000A14BA7 /* crash_report.proto in Sources */,
-				CBF47A1113969C8B00949297 /* AppBlade.m in Sources */,
-				CBF47A1C1396BC9700949297 /* AppBladeSimpleKeychain.m in Sources */,
-				CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */,
-				620217591404450A00A14BA7 /* CrashReporter.m in Sources */,
-				6202175A1404450A00A14BA7 /* PLCrashAsync.c in Sources */,
-				6202175C1404450A00A14BA7 /* PLCrashAsyncImage.c in Sources */,
-				6202175E1404450A00A14BA7 /* PLCrashAsyncSignalInfo.c in Sources */,
-				620217601404450A00A14BA7 /* PLCrashFrameWalker_arm.c in Sources */,
-				620217621404450A00A14BA7 /* PLCrashFrameWalker_i386.c in Sources */,
-				620217641404450A00A14BA7 /* PLCrashFrameWalker_ppc.c in Sources */,
-				620217661404450A00A14BA7 /* PLCrashFrameWalker_x86_64.c in Sources */,
-				620217681404450A00A14BA7 /* PLCrashFrameWalker.c in Sources */,
-				6202176B1404450A00A14BA7 /* PLCrashLogWriter.m in Sources */,
-				6202176C1404450A00A14BA7 /* PLCrashLogWriterEncoding.c in Sources */,
-				6202176F1404450A00A14BA7 /* PLCrashReport.m in Sources */,
-				620217711404450A00A14BA7 /* PLCrashReportApplicationInfo.m in Sources */,
-				620217731404450A00A14BA7 /* PLCrashReportBinaryImageInfo.m in Sources */,
-				620217751404450A00A14BA7 /* PLCrashReporter.m in Sources */,
-				620217771404450A00A14BA7 /* PLCrashReportExceptionInfo.m in Sources */,
-				6202177A1404450A00A14BA7 /* PLCrashReportMachineInfo.m in Sources */,
-				6202177C1404450A00A14BA7 /* PLCrashReportProcessInfo.m in Sources */,
-				6202177E1404450A00A14BA7 /* PLCrashReportProcessorInfo.m in Sources */,
-				620217801404450A00A14BA7 /* PLCrashReportSignalInfo.m in Sources */,
-				620217821404450A00A14BA7 /* PLCrashReportSystemInfo.m in Sources */,
-				620217841404450A00A14BA7 /* PLCrashReportTextFormatter.m in Sources */,
-				620217861404450A00A14BA7 /* PLCrashReportThreadInfo.m in Sources */,
-				620217881404450A00A14BA7 /* PLCrashSignalHandler.m in Sources */,
-				620217891404450A00A14BA7 /* PLCrashSysctl.c in Sources */,
-				6202178F1404451700A14BA7 /* protobuf-c.c in Sources */,
-				A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */,
-				7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */,
-				7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
+				313064171794B494006DF03A /* protobuf-c.c in Sources */,
+				313064111794A820006DF03A /* crash_report.proto in Sources */,
+				313060861794A2A3006DF03A /* AppBlade.m in Sources */,
+				313061FF1794A357006DF03A /* AppBladeSimpleKeychain.m in Sources */,
+				313062021794A357006DF03A /* AppBladeWebClient.m in Sources */,
+				313063BF1794A357006DF03A /* FeedbackBackgroundView.m in Sources */,
+				313063C21794A357006DF03A /* FeedbackDialogue.m in Sources */,
+				313063C51794A357006DF03A /* FileMD5Hash.c in Sources */,
+				313062371794A357006DF03A /* CrashReporter.m in Sources */,
+				313062731794A357006DF03A /* PLCrashReporter.m in Sources */,
+				3130623D1794A357006DF03A /* PLCrashAsync.c in Sources */,
+				313062401794A357006DF03A /* PLCrashAsyncImage.c in Sources */,
+				313062461794A357006DF03A /* PLCrashAsyncSignalInfo.c in Sources */,
+				3130624F1794A357006DF03A /* PLCrashFrameWalker.c in Sources */,
+				313062521794A357006DF03A /* PLCrashFrameWalker_arm.c in Sources */,
+				313062551794A357006DF03A /* PLCrashFrameWalker_i386.c in Sources */,
+				313062581794A357006DF03A /* PLCrashFrameWalker_ppc.c in Sources */,
+				3130625B1794A357006DF03A /* PLCrashFrameWalker_x86_64.c in Sources */,
+				313062611794A357006DF03A /* PLCrashLogWriter.m in Sources */,
+				313062641794A357006DF03A /* PLCrashLogWriterEncoding.c in Sources */,
+				3130626A1794A357006DF03A /* PLCrashReport.m in Sources */,
+				3130626D1794A357006DF03A /* PLCrashReportApplicationInfo.m in Sources */,
+				313062701794A357006DF03A /* PLCrashReportBinaryImageInfo.m in Sources */,
+				313062791794A357006DF03A /* PLCrashReportExceptionInfo.m in Sources */,
+				3130627C1794A357006DF03A /* PLCrashReportMachineInfo.m in Sources */,
+				3130627F1794A357006DF03A /* PLCrashReportProcessInfo.m in Sources */,
+				313062821794A357006DF03A /* PLCrashReportProcessorInfo.m in Sources */,
+				313062851794A357006DF03A /* PLCrashReportSignalInfo.m in Sources */,
+				313062881794A357006DF03A /* PLCrashReportSystemInfo.m in Sources */,
+				3130628E1794A357006DF03A /* PLCrashReportTextFormatter.m in Sources */,
+				313062911794A357006DF03A /* PLCrashReportThreadInfo.m in Sources */,
+				313062941794A357006DF03A /* PLCrashSignalHandler.m in Sources */,
+				3130629A1794A357006DF03A /* PLCrashSysctl.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		62CD7F0B1406E994006201C7 /* Release_Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = "";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv7 armv7s i386";
-			};
-			name = Release_Production;
-		};
-		62CD7F0C1406E994006201C7 /* Release_Production */ = {
+		311A217E1794C79F007BF879 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = 0.9.5;
+				DSTROOT = /tmp/AppBlade.dst;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = AppBladeUniversal;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s i386";
+			};
+			name = Debug;
+		};
+		311A217F1794C79F007BF879 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CURRENT_PROJECT_VERSION = 0.9.5;
+				DSTROOT = /tmp/AppBlade.dst;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = AppBladeUniversal;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s i386";
+			};
+			name = Release;
+		};
+		31305FFC1794A146006DF03A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DEBUG,
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "armv7 armv7s i386";
+			};
+			name = Debug;
+		};
+		31305FFD1794A146006DF03A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = NO;
+				VALID_ARCHS = "armv7 armv7s i386";
+			};
+			name = Release;
+		};
+		3130609D1794A2A3006DF03A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = 0.9.5;
 				DSTROOT = /tmp/AppBlade.dst;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../MapsExample\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/system\"",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = "armv7 armv7s i386";
+			};
+			name = Debug;
+		};
+		3130609E1794A2A3006DF03A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CURRENT_PROJECT_VERSION = 0.9.5;
+				DSTROOT = /tmp/AppBlade.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -518,289 +671,43 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-			};
-			name = Release_Production;
-		};
-		62CD7F0D1406E9E8006201C7 /* Debug_Staging */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = "";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = NO;
 				VALID_ARCHS = "armv7 armv7s i386";
 			};
-			name = Debug_Staging;
-		};
-		62CD7F0E1406E9E8006201C7 /* Debug_Staging */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DSTROOT = /tmp/AppBlade.dst;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../MapsExample\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SDKROOT)/usr/lib/system\"",
-				);
-				OTHER_CFLAGS = "-DSTAGING=1";
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug_Staging;
-		};
-		62CD7F0F1406E9FC006201C7 /* Release_Staging */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = "";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv7 armv7s i386";
-			};
-			name = Release_Staging;
-		};
-		62CD7F101406E9FC006201C7 /* Release_Staging */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DSTROOT = /tmp/AppBlade.dst;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../MapsExample\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SDKROOT)/usr/lib/system\"",
-				);
-				OTHER_CFLAGS = "-DSTAGING=1";
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Release_Staging;
-		};
-		CB51D3041429274C00A43CB5 /* Debug_Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/AppBladeUniversal.dst;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug_Production;
-		};
-		CB51D3051429274C00A43CB5 /* Debug_Staging */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/AppBladeUniversal.dst;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug_Staging;
-		};
-		CB51D3061429274C00A43CB5 /* Release_Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/AppBladeUniversal.dst;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release_Production;
-		};
-		CB51D3071429274C00A43CB5 /* Release_Staging */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/AppBladeUniversal.dst;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release_Staging;
-		};
-		CBF47A0013969C2B00949297 /* Debug_Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = "";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv7 armv7s i386";
-			};
-			name = Debug_Production;
-		};
-		CBF47A0313969C2B00949297 /* Debug_Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DSTROOT = /tmp/AppBlade.dst;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/../MapsExample\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SDKROOT)/usr/lib/system\"",
-				);
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug_Production;
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CB51D3081429274C00A43CB5 /* Build configuration list for PBXNativeTarget "AppBladeUniversal" */ = {
+		311A217D1794C79F007BF879 /* Build configuration list for PBXNativeTarget "AppBladeUniversal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CB51D3041429274C00A43CB5 /* Debug_Production */,
-				CB51D3051429274C00A43CB5 /* Debug_Staging */,
-				CB51D3061429274C00A43CB5 /* Release_Production */,
-				CB51D3071429274C00A43CB5 /* Release_Staging */,
+				311A217E1794C79F007BF879 /* Debug */,
+				311A217F1794C79F007BF879 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release_Production;
+			defaultConfigurationName = Release;
 		};
-		CBF479F213969C2B00949297 /* Build configuration list for PBXProject "AppBlade" */ = {
+		31305FC11794A146006DF03A /* Build configuration list for PBXProject "AppBlade" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CBF47A0013969C2B00949297 /* Debug_Production */,
-				62CD7F0D1406E9E8006201C7 /* Debug_Staging */,
-				62CD7F0B1406E994006201C7 /* Release_Production */,
-				62CD7F0F1406E9FC006201C7 /* Release_Staging */,
+				31305FFC1794A146006DF03A /* Debug */,
+				31305FFD1794A146006DF03A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release_Production;
+			defaultConfigurationName = Release;
 		};
-		CBF47A0213969C2B00949297 /* Build configuration list for PBXNativeTarget "AppBlade" */ = {
+		3130609C1794A2A3006DF03A /* Build configuration list for PBXNativeTarget "AppBlade" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CBF47A0313969C2B00949297 /* Debug_Production */,
-				62CD7F0E1406E9E8006201C7 /* Debug_Staging */,
-				62CD7F0C1406E994006201C7 /* Release_Production */,
-				62CD7F101406E9FC006201C7 /* Release_Staging */,
+				3130609D1794A2A3006DF03A /* Debug */,
+				3130609E1794A2A3006DF03A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release_Production;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = CBF479EF13969C2B00949297 /* Project object */;
+	rootObject = 31305FBE1794A146006DF03A /* Project object */;
 }
