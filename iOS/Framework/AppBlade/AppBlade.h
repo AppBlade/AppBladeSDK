@@ -48,24 +48,31 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 // See protocol declaration, above.
 @property (nonatomic, assign) id<AppBladeDelegate> delegate;
 
+-(BOOL)isAppStoreBuild; //Checks to see if the current binary is signed by Apple. We use this to disable certain SDK behavior in the final build
+
 // Returns SDK Version
 + (NSString*)sdkVersion;
 
-// Log SDK Version
+// Prints the SDK Version to the console
 + (void)logSDKVersion;
 
 
 // AppBlade manager singleton.
 + (AppBlade *)sharedManager;
 
-// Use the plist that AppBlade embeds for the iOS settings
+//App Registration calls
 - (void)registerWithAppBladePlist;
 - (void)registerWithAppBladePlist:(NSString*)plistName;
 
+//
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
+
 //Device secret calls
 -(void)clearAppBladeKeychain;
-
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
+
+
 
 
 // Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
@@ -115,17 +122,12 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 - (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window;
 
 // Shows a feedback dialogue and handles screenshot
-- (void)showFeedbackDialogue;
+- (void)showFeedbackDialogue; //the same as [blade showFeedbackDialogue:true]
 - (void)showFeedbackDialogue:(BOOL)withScreenshot;
 
 
 + (void)startSession;
 + (void)endSession;
 
-
-- (void)refreshToken:(NSString *)tokenToConfirm;
-- (void)confirmToken:(NSString *)tokenToConfirm;
-
--(BOOL)isAppStoreBuild;
 
 @end

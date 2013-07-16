@@ -16,6 +16,8 @@
 		311A215C1794C79F007BF879 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061F91794A357006DF03A /* FeedbackBackgroundView.m */; };
 		311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061FB1794A357006DF03A /* FeedbackDialogue.m */; };
 		311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061FC1794A357006DF03A /* FileMD5Hash.c */; };
+		311A22981794E633007BF879 /* FeedbackReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22961794E633007BF879 /* FeedbackReporting.h */; };
+		311A22991794E633007BF879 /* FeedbackReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22971794E633007BF879 /* FeedbackReporting.m */; };
 		3130607F1794A2A3006DF03A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
 		313060861794A2A3006DF03A /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
 		313061FF1794A357006DF03A /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
@@ -74,6 +76,8 @@
 
 /* Begin PBXFileReference section */
 		311A21801794C79F007BF879 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		311A22961794E633007BF879 /* FeedbackReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackReporting.h; sourceTree = "<group>"; };
+		311A22971794E633007BF879 /* FeedbackReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackReporting.m; sourceTree = "<group>"; };
 		31305FC91794A146006DF03A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		31305FCB1794A146006DF03A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3130607E1794A2A3006DF03A /* libAppBlade.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBlade.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -171,6 +175,67 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		311A228F1794E58E007BF879 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				311A22931794E5B6007BF879 /* Feature Supporting Files */,
+				311A22951794E5F2007BF879 /* Authentication */,
+				311A22941794E5CA007BF879 /* Auto Updating */,
+				311A22921794E5AB007BF879 /* Session Tracking */,
+				311A22911794E59F007BF879 /* Crash Reporting */,
+				311A22901794E594007BF879 /* Feedback Reporting */,
+			);
+			name = Features;
+			sourceTree = "<group>";
+		};
+		311A22901794E594007BF879 /* Feedback Reporting */ = {
+			isa = PBXGroup;
+			children = (
+				311A22961794E633007BF879 /* FeedbackReporting.h */,
+				311A22971794E633007BF879 /* FeedbackReporting.m */,
+				313061F81794A357006DF03A /* FeedbackBackgroundView.h */,
+				313061F91794A357006DF03A /* FeedbackBackgroundView.m */,
+				313061FA1794A357006DF03A /* FeedbackDialogue.h */,
+				313061FB1794A357006DF03A /* FeedbackDialogue.m */,
+			);
+			name = "Feedback Reporting";
+			sourceTree = "<group>";
+		};
+		311A22911794E59F007BF879 /* Crash Reporting */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Crash Reporting";
+			sourceTree = "<group>";
+		};
+		311A22921794E5AB007BF879 /* Session Tracking */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Session Tracking";
+			sourceTree = "<group>";
+		};
+		311A22931794E5B6007BF879 /* Feature Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Feature Supporting Files";
+			sourceTree = "<group>";
+		};
+		311A22941794E5CA007BF879 /* Auto Updating */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Auto Updating";
+			sourceTree = "<group>";
+		};
+		311A22951794E5F2007BF879 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Authentication;
+			sourceTree = "<group>";
+		};
 		31305FBD1794A146006DF03A = {
 			isa = PBXGroup;
 			children = (
@@ -204,6 +269,7 @@
 		313060801794A2A3006DF03A /* AppBlade */ = {
 			isa = PBXGroup;
 			children = (
+				311A228F1794E58E007BF879 /* Features */,
 				3130640C1794A380006DF03A /* Hashing */,
 				313060811794A2A3006DF03A /* Supporting Files */,
 				313060831794A2A3006DF03A /* AppBlade.h */,
@@ -220,10 +286,6 @@
 		313060811794A2A3006DF03A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				313061F81794A357006DF03A /* FeedbackBackgroundView.h */,
-				313061F91794A357006DF03A /* FeedbackBackgroundView.m */,
-				313061FA1794A357006DF03A /* FeedbackDialogue.h */,
-				313061FB1794A357006DF03A /* FeedbackDialogue.m */,
 				313060821794A2A3006DF03A /* AppBlade-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -330,6 +392,7 @@
 				313064131794A866006DF03A /* AppBlade.h in Headers */,
 				313064151794A866006DF03A /* FileMD5Hash.h in Headers */,
 				313064141794A866006DF03A /* FeedbackBackgroundView.h in Headers */,
+				311A22981794E633007BF879 /* FeedbackReporting.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -473,6 +536,7 @@
 				313062911794A357006DF03A /* PLCrashReportThreadInfo.m in Sources */,
 				313062941794A357006DF03A /* PLCrashSignalHandler.m in Sources */,
 				3130629A1794A357006DF03A /* PLCrashSysctl.c in Sources */,
+				311A22991794E633007BF879 /* FeedbackReporting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

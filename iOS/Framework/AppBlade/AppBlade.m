@@ -14,7 +14,6 @@
 #import "PLCrashReport.h"
 #import "AppBladeWebClient.h"
 #import "PLCrashReportTextFormatter.h"
-#import "FeedbackDialogue.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -28,6 +27,9 @@
 #import <mach-o/ldsyms.h>
 
 #include "FileMD5Hash.h"
+
+//Feature List
+#import "FeedbackReporting.h"
 
 
 
