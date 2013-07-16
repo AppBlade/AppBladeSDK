@@ -12,17 +12,20 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "AppBladeSharedConstants.h"
+//Features
+#import "AppBladeAuthentication.h"
+#import "AppBladeUpdates.h"
+#import "SessionTracking.h"
+#import "CrashReporting.h"
 #import "FeedbackReporting.h"
-
-UIKIT_EXTERN NSString* const kAppBladeErrorDomain;
-UIKIT_EXTERN int const kAppBladeOfflineError;
-UIKIT_EXTERN int const kAppBladeParsingError;
-UIKIT_EXTERN int const kAppBladePermissionError;
-UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
-
+#import "AppBladeLogging.h"
 
 @class AppBlade;
 
+/******************************
+ APPBLADE DELEGATE PROTOCOL
+ ******************************/
 @protocol AppBladeDelegate <NSObject>
 
 // Was the application approved to run?
@@ -34,7 +37,9 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 @end
 
 @interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> 
-
+/******************************
+API KEYS
+ ******************************/
 // AppBlade host name, or custom endpoint.
 @property (nonatomic, retain) NSString* appBladeHost;
 // AppBlade API project-issued secret.

@@ -32,59 +32,6 @@
 #import "FeedbackReporting.h"
 
 
-
-static NSString* const s_sdkVersion                     = @"0.5.0";
-
-NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
-const int kAppBladeOfflineError                         = 1200;
-const int kAppBladeParsingError                         = 1208;
-const int kAppBladePermissionError                      = 1216;
-NSString* const kAppBladeCacheDirectory                 = @"AppBladeCache";
-
-const int kUpdateAlertTag                               = 316;
-
-const int kTokenRefreshStatusCode                       = 401; //if this is ever returned, that means the token is expired and needs renewing before the api can be called
-const int kTokenInvalidStatusCode                       = 403; //if this is ever returned, that means the app is being used illegally
-
-static NSString *s_letters                              = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-static NSString* const kAppBladeBacklogFileName         = @"AppBladeBacklog.plist";
-static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
-static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
-static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
-static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
-static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
-static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
-
-static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
-
-static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
-
-//Keychain Values
-static NSString* const kAppBladeKeychainTtlKey          = @"appBlade_ttl";
-static NSString* const kAppBladeKeychainDeviceSecretKey = @"appBlade_device_secret";
-    static NSString* const kAppBladeKeychainDeviceSecretKeyOld = @"old_secret";
-    static NSString* const kAppBladeKeychainDeviceSecretKeyNew = @"new_secret";
-    static NSString* const kAppBladeKeychainPlistHashKey = @"plist_hash";
-
-
-static NSString* const kAppBladeKeychainDisabledKey        = @"appBlade_disabled";
-static NSString* const kAppBladeKeychainDisabledKeyTrue    = @"riydwfudfhijkfsy7rew78toryiwehj";
-static NSString* const kAppBladeKeychainDisabledKeyFalse   = @"riydwfudfhijkfsz7rew78toryiwehj";
-
-//Plist Key Values
-static NSString* const kAppBladePlistApiDictionaryKey     = @"api_keys";
-    static NSString* const kAppBladePlistDeviceSecretKey     = @"device_secret";
-    static NSString* const kAppBladePlistProjectSecretKey    = @"project_secret";
-    static NSString* const kAppBladePlistEndpointKey         = @"host";
-static NSString* const kAppBladePlistDefaultDeviceSecretValue    = @"DEFAULT";
-static NSString* const kAppBladePlistDefaultProjectSecretValue   = @"DEFAULT";
-
-
-//API Response Values
-static NSString* const kAppBladeApiTokenResponseDeviceSecretKey     = @"device_secret";
-static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
-
-
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
 
 @property (nonatomic, retain) NSURL* upgradeLink;
