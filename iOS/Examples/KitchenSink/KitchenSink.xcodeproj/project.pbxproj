@@ -120,7 +120,6 @@
 		311A21A21794DC1B007BF879 = {
 			isa = PBXGroup;
 			children = (
-				311A22A217959E2C007BF879 /* Security.framework */,
 				311A21EC1794DC2B007BF879 /* AppBlade.xcodeproj */,
 				311A21B41794DC1B007BF879 /* KitchenSink */,
 				311A21DB1794DC1B007BF879 /* KitchenSinkTests */,
@@ -141,6 +140,7 @@
 		311A21AD1794DC1B007BF879 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				311A22A217959E2C007BF879 /* Security.framework */,
 				311A21AE1794DC1B007BF879 /* UIKit.framework */,
 				311A21B01794DC1B007BF879 /* Foundation.framework */,
 				311A21B21794DC1B007BF879 /* CoreGraphics.framework */,
