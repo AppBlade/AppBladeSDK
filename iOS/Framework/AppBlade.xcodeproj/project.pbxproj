@@ -18,6 +18,18 @@
 		311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061FC1794A357006DF03A /* FileMD5Hash.c */; };
 		311A22981794E633007BF879 /* FeedbackReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22961794E633007BF879 /* FeedbackReporting.h */; };
 		311A22991794E633007BF879 /* FeedbackReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22971794E633007BF879 /* FeedbackReporting.m */; };
+		311A22A71795CFFF007BF879 /* CrashReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22A51795CFFF007BF879 /* CrashReporting.h */; };
+		311A22A81795CFFF007BF879 /* CrashReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22A61795CFFF007BF879 /* CrashReporting.m */; };
+		311A22AE1795D24A007BF879 /* SessionTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22AC1795D24A007BF879 /* SessionTracking.h */; };
+		311A22AF1795D24A007BF879 /* SessionTracking.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22AD1795D24A007BF879 /* SessionTracking.m */; };
+		311A22B21795D259007BF879 /* AppBladeUpdates.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22B01795D259007BF879 /* AppBladeUpdates.h */; };
+		311A22B31795D259007BF879 /* AppBladeUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B11795D259007BF879 /* AppBladeUpdates.m */; };
+		311A22B61795D26E007BF879 /* AppBladeAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22B41795D26E007BF879 /* AppBladeAuthentication.h */; };
+		311A22B71795D26E007BF879 /* AppBladeAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B51795D26E007BF879 /* AppBladeAuthentication.m */; };
+		311A22BC1795D313007BF879 /* AppBladeCustomParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22BA1795D313007BF879 /* AppBladeCustomParameters.h */; };
+		311A22BD1795D313007BF879 /* AppBladeCustomParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22BA1795D313007BF879 /* AppBladeCustomParameters.h */; };
+		311A22BE1795D313007BF879 /* AppBladeCustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParameters.m */; };
+		311A22BF1795D313007BF879 /* AppBladeCustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParameters.m */; };
 		3130607F1794A2A3006DF03A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
 		313060861794A2A3006DF03A /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
 		313061FF1794A357006DF03A /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
@@ -78,6 +90,16 @@
 		311A21801794C79F007BF879 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		311A22961794E633007BF879 /* FeedbackReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackReporting.h; sourceTree = "<group>"; };
 		311A22971794E633007BF879 /* FeedbackReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackReporting.m; sourceTree = "<group>"; };
+		311A22A51795CFFF007BF879 /* CrashReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReporting.h; sourceTree = "<group>"; };
+		311A22A61795CFFF007BF879 /* CrashReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReporting.m; sourceTree = "<group>"; };
+		311A22AC1795D24A007BF879 /* SessionTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionTracking.h; sourceTree = "<group>"; };
+		311A22AD1795D24A007BF879 /* SessionTracking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionTracking.m; sourceTree = "<group>"; };
+		311A22B01795D259007BF879 /* AppBladeUpdates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeUpdates.h; sourceTree = "<group>"; };
+		311A22B11795D259007BF879 /* AppBladeUpdates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeUpdates.m; sourceTree = "<group>"; };
+		311A22B41795D26E007BF879 /* AppBladeAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeAuthentication.h; sourceTree = "<group>"; };
+		311A22B51795D26E007BF879 /* AppBladeAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeAuthentication.m; sourceTree = "<group>"; };
+		311A22BA1795D313007BF879 /* AppBladeCustomParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeCustomParameters.h; sourceTree = "<group>"; };
+		311A22BB1795D313007BF879 /* AppBladeCustomParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeCustomParameters.m; sourceTree = "<group>"; };
 		31305FC91794A146006DF03A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		31305FCB1794A146006DF03A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3130607E1794A2A3006DF03A /* libAppBlade.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBlade.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,12 +200,12 @@
 		311A228F1794E58E007BF879 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				311A22931794E5B6007BF879 /* Feature Supporting Files */,
 				311A22951794E5F2007BF879 /* Authentication */,
 				311A22941794E5CA007BF879 /* Auto Updating */,
 				311A22921794E5AB007BF879 /* Session Tracking */,
 				311A22911794E59F007BF879 /* Crash Reporting */,
 				311A22901794E594007BF879 /* Feedback Reporting */,
+				311A22B81795D2E8007BF879 /* Custom Parameters */,
 			);
 			name = Features;
 			sourceTree = "<group>";
@@ -204,6 +226,8 @@
 		311A22911794E59F007BF879 /* Crash Reporting */ = {
 			isa = PBXGroup;
 			children = (
+				311A22A51795CFFF007BF879 /* CrashReporting.h */,
+				311A22A61795CFFF007BF879 /* CrashReporting.m */,
 			);
 			name = "Crash Reporting";
 			sourceTree = "<group>";
@@ -211,20 +235,17 @@
 		311A22921794E5AB007BF879 /* Session Tracking */ = {
 			isa = PBXGroup;
 			children = (
+				311A22AC1795D24A007BF879 /* SessionTracking.h */,
+				311A22AD1795D24A007BF879 /* SessionTracking.m */,
 			);
 			name = "Session Tracking";
-			sourceTree = "<group>";
-		};
-		311A22931794E5B6007BF879 /* Feature Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Feature Supporting Files";
 			sourceTree = "<group>";
 		};
 		311A22941794E5CA007BF879 /* Auto Updating */ = {
 			isa = PBXGroup;
 			children = (
+				311A22B01795D259007BF879 /* AppBladeUpdates.h */,
+				311A22B11795D259007BF879 /* AppBladeUpdates.m */,
 			);
 			name = "Auto Updating";
 			sourceTree = "<group>";
@@ -232,15 +253,43 @@
 		311A22951794E5F2007BF879 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
+				311A22B41795D26E007BF879 /* AppBladeAuthentication.h */,
+				311A22B51795D26E007BF879 /* AppBladeAuthentication.m */,
 			);
 			name = Authentication;
+			sourceTree = "<group>";
+		};
+		311A22A91795D121007BF879 /* AppBladeSimpleKeychain */ = {
+			isa = PBXGroup;
+			children = (
+				313060A31794A356006DF03A /* AppBladeSimpleKeychain.h */,
+				313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */,
+			);
+			name = AppBladeSimpleKeychain;
+			sourceTree = "<group>";
+		};
+		311A22AA1795D12F007BF879 /* AppBladeWebClient */ = {
+			isa = PBXGroup;
+			children = (
+				313060A51794A356006DF03A /* AppBladeWebClient.h */,
+				313060A61794A356006DF03A /* AppBladeWebClient.m */,
+			);
+			name = AppBladeWebClient;
+			sourceTree = "<group>";
+		};
+		311A22B81795D2E8007BF879 /* Custom Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				311A22BA1795D313007BF879 /* AppBladeCustomParameters.h */,
+				311A22BB1795D313007BF879 /* AppBladeCustomParameters.m */,
+			);
+			name = "Custom Parameters";
 			sourceTree = "<group>";
 		};
 		31305FBD1794A146006DF03A = {
 			isa = PBXGroup;
 			children = (
 				313061FE1794A357006DF03A /* LICENSE.md */,
-				313060A71794A356006DF03A /* CrashReporter */,
 				313060801794A2A3006DF03A /* AppBlade */,
 				31305FC81794A146006DF03A /* Frameworks */,
 				31305FC71794A146006DF03A /* Products */,
@@ -259,6 +308,7 @@
 		31305FC81794A146006DF03A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				313060A71794A356006DF03A /* PLCrashReporter */,
 				31305FC91794A146006DF03A /* UIKit.framework */,
 				3130640D1794A3D8006DF03A /* Security.framework */,
 				31305FCB1794A146006DF03A /* Foundation.framework */,
@@ -269,16 +319,10 @@
 		313060801794A2A3006DF03A /* AppBlade */ = {
 			isa = PBXGroup;
 			children = (
-				311A228F1794E58E007BF879 /* Features */,
-				3130640C1794A380006DF03A /* Hashing */,
-				313060811794A2A3006DF03A /* Supporting Files */,
 				313060831794A2A3006DF03A /* AppBlade.h */,
 				313060851794A2A3006DF03A /* AppBlade.m */,
-				313060A21794A356006DF03A /* AppBladeLogging.h */,
-				313060A31794A356006DF03A /* AppBladeSimpleKeychain.h */,
-				313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */,
-				313060A51794A356006DF03A /* AppBladeWebClient.h */,
-				313060A61794A356006DF03A /* AppBladeWebClient.m */,
+				311A228F1794E58E007BF879 /* Features */,
+				313060811794A2A3006DF03A /* Supporting Files */,
 			);
 			path = AppBlade;
 			sourceTree = "<group>";
@@ -287,11 +331,15 @@
 			isa = PBXGroup;
 			children = (
 				313060821794A2A3006DF03A /* AppBlade-Prefix.pch */,
+				311A22AA1795D12F007BF879 /* AppBladeWebClient */,
+				311A22A91795D121007BF879 /* AppBladeSimpleKeychain */,
+				3130640C1794A380006DF03A /* Hashing */,
+				313060A21794A356006DF03A /* AppBladeLogging.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		313060A71794A356006DF03A /* CrashReporter */ = {
+		313060A71794A356006DF03A /* PLCrashReporter */ = {
 			isa = PBXGroup;
 			children = (
 				313060EE1794A356006DF03A /* CrashReporter.h */,
@@ -348,7 +396,7 @@
 				313060E21794A356006DF03A /* crash_report.proto */,
 				313060D21794A356006DF03A /* Protobuf */,
 			);
-			name = CrashReporter;
+			name = PLCrashReporter;
 			path = AppBlade/CrashReporter;
 			sourceTree = "<group>";
 		};
@@ -382,6 +430,7 @@
 				311A21531794C79F007BF879 /* AppBlade.h in Headers */,
 				311A21541794C79F007BF879 /* FileMD5Hash.h in Headers */,
 				311A21551794C79F007BF879 /* FeedbackBackgroundView.h in Headers */,
+				311A22BD1795D313007BF879 /* AppBladeCustomParameters.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +442,11 @@
 				313064151794A866006DF03A /* FileMD5Hash.h in Headers */,
 				313064141794A866006DF03A /* FeedbackBackgroundView.h in Headers */,
 				311A22981794E633007BF879 /* FeedbackReporting.h in Headers */,
+				311A22A71795CFFF007BF879 /* CrashReporting.h in Headers */,
+				311A22AE1795D24A007BF879 /* SessionTracking.h in Headers */,
+				311A22B21795D259007BF879 /* AppBladeUpdates.h in Headers */,
+				311A22B61795D26E007BF879 /* AppBladeAuthentication.h in Headers */,
+				311A22BC1795D313007BF879 /* AppBladeCustomParameters.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +550,7 @@
 				311A215C1794C79F007BF879 /* FeedbackBackgroundView.m in Sources */,
 				311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */,
 				311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */,
+				311A22BF1795D313007BF879 /* AppBladeCustomParameters.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,6 +592,11 @@
 				313062941794A357006DF03A /* PLCrashSignalHandler.m in Sources */,
 				3130629A1794A357006DF03A /* PLCrashSysctl.c in Sources */,
 				311A22991794E633007BF879 /* FeedbackReporting.m in Sources */,
+				311A22A81795CFFF007BF879 /* CrashReporting.m in Sources */,
+				311A22AF1795D24A007BF879 /* SessionTracking.m in Sources */,
+				311A22B31795D259007BF879 /* AppBladeUpdates.m in Sources */,
+				311A22B71795D26E007BF879 /* AppBladeAuthentication.m in Sources */,
+				311A22BE1795D313007BF879 /* AppBladeCustomParameters.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
