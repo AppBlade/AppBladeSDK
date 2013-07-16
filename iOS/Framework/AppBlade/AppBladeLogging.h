@@ -12,12 +12,12 @@
     #ifdef APPBLADE_DEBUG_LOGGING
         #define ABDebugLog_internal( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
     #else
-        #define ABDebugLog_internal( s, ... )
+        #define ABDebugLog_internal( s, ... ) //Do nothing
     #endif
 
     #ifdef APPBLADE_ERROR_LOGGING
         #define ABErrorLog( s, ... ) NSLog( @"< %@:(%d)> %@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
     #else
-        #define ABErrorLog( s, ... )
+        #define ABErrorLog( s, ... ) //Do nothing
     #endif
 #endif
