@@ -101,17 +101,17 @@
 
 }
 
-// Accepts service name and NSCoding-complaint data object.
+// Accepts service name and NSCoding-complaint data object. Automatically overwrites if something exists.
 + (void)save:(NSString *)service data:(id)data
 {
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
-    NSAssert(resultCode != noErr, @"Error storing to keychain");
-    NSData *storeData = [NSKeyedArchiver archivedDataWithRootObject:data];
+    NSAssert(resultCode == noErr || resultCode == errSecItemNotFound, @"Error storing to keychain");
     
+    NSData *storeData = [NSKeyedArchiver archivedDataWithRootObject:data];
     [keychainQuery setObject:storeData forKey:(__bridge id)kSecValueData];
-     resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
-    NSAssert(resultCode != noErr, @"Error storing to keychain");
+    resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
+    NSAssert(resultCode == noErr, @"Error storing to keychain");
 
 }
 
