@@ -11,16 +11,16 @@
 
 #import "AppBladeWebClient.h"
 
-typedef NS_OPTIONS(NSUInteger, ABFeedbackSetupOptions) {
-    ABFeedbackSetupDefault                 = 0,      // default behavior
-    ABFeedbackSetupTripleFingerDoubleTap   = 1 <<  0,    // on all touch downs
-    ABFeedbackSetupCustomPrompt            = 1 <<  1    // on multiple touchdowns (tap count > 1)
+typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackSetupOptions) {
+    AppBladeFeedbackSetupDefault                 = 0,      // default behavior
+    AppBladeFeedbackSetupTripleFingerDoubleTap   = 1 <<  0,    // on all touch downs
+    AppBladeFeedbackSetupCustomPrompt            = 1 <<  1    // on multiple touchdowns (tap count > 1)
 };
 
-typedef NS_OPTIONS(NSUInteger, ABFeedbackDisplayOptions) {
-    ABFeedbackDisplayDefault                 = 0,      // default behavior
-    ABFeedbackDisplayWithScreenshot          = 1 <<  0,   // Take a screenshot oto send with the feedback (default)
-    ABFeedbackDisplayWithoutScreenshot       = 1 <<  1    // Do not take a screenshot
+typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackDisplayOptions) {
+    AppBladeFeedbackDisplayDefault                 = 0,      // default behavior
+    AppBladeFeedbackDisplayWithScreenshot          = 1 <<  0,   // Take a screenshot oto send with the feedback (default)
+    AppBladeFeedbackDisplayWithoutScreenshot       = 1 <<  1    // Do not take a screenshot
 };
 
 
