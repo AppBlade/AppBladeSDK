@@ -133,9 +133,6 @@
         }
         @finally {}
     }
-    
-    NSLog(@"what do we have %@", ret);
-
     if (keyData) CFRelease(keyData);
     return ret;
 }
