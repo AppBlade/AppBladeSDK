@@ -24,6 +24,10 @@
 		311A21D81794DC1B007BF879 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21B01794DC1B007BF879 /* Foundation.framework */; };
 		311A21E01794DC1B007BF879 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 311A21DE1794DC1B007BF879 /* InfoPlist.strings */; };
 		311A21E31794DC1B007BF879 /* KitchenSinkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A21E21794DC1B007BF879 /* KitchenSinkTests.m */; };
+		311A22A01795859D007BF879 /* AppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 311A229E1795859D007BF879 /* AppBladeKeys.plist */; };
+		311A22A11795859D007BF879 /* ResourceRules.plist in Resources */ = {isa = PBXBuildFile; fileRef = 311A229F1795859D007BF879 /* ResourceRules.plist */; };
+		311A22A317959E2C007BF879 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A22A217959E2C007BF879 /* Security.framework */; };
+		311A22A417959E2F007BF879 /* libAppBlade.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21F21794DC2B007BF879 /* libAppBlade.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +86,9 @@
 		311A21E11794DC1B007BF879 /* KitchenSinkTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KitchenSinkTests.h; sourceTree = "<group>"; };
 		311A21E21794DC1B007BF879 /* KitchenSinkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KitchenSinkTests.m; sourceTree = "<group>"; };
 		311A21EC1794DC2B007BF879 /* AppBlade.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AppBlade.xcodeproj; path = ../../Framework/AppBlade.xcodeproj; sourceTree = "<group>"; };
+		311A229E1795859D007BF879 /* AppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppBladeKeys.plist; sourceTree = "<group>"; };
+		311A229F1795859D007BF879 /* ResourceRules.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ResourceRules.plist; sourceTree = "<group>"; };
+		311A22A217959E2C007BF879 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +96,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				311A22A417959E2F007BF879 /* libAppBlade.a in Frameworks */,
+				311A22A317959E2C007BF879 /* Security.framework in Frameworks */,
 				311A21AF1794DC1B007BF879 /* UIKit.framework in Frameworks */,
 				311A21B11794DC1B007BF879 /* Foundation.framework in Frameworks */,
 				311A21B31794DC1B007BF879 /* CoreGraphics.framework in Frameworks */,
@@ -111,6 +120,7 @@
 		311A21A21794DC1B007BF879 = {
 			isa = PBXGroup;
 			children = (
+				311A22A217959E2C007BF879 /* Security.framework */,
 				311A21EC1794DC2B007BF879 /* AppBlade.xcodeproj */,
 				311A21B41794DC1B007BF879 /* KitchenSink */,
 				311A21DB1794DC1B007BF879 /* KitchenSinkTests */,
@@ -156,6 +166,8 @@
 		311A21B51794DC1B007BF879 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				311A229E1795859D007BF879 /* AppBladeKeys.plist */,
+				311A229F1795859D007BF879 /* ResourceRules.plist */,
 				311A21B61794DC1B007BF879 /* KitchenSink-Info.plist */,
 				311A21B71794DC1B007BF879 /* InfoPlist.strings */,
 				311A21BA1794DC1B007BF879 /* main.m */,
@@ -296,6 +308,8 @@
 				311A21C51794DC1B007BF879 /* Default-568h@2x.png in Resources */,
 				311A21CB1794DC1B007BF879 /* ViewController_iPhone.xib in Resources */,
 				311A21CE1794DC1B007BF879 /* ViewController_iPad.xib in Resources */,
+				311A22A01795859D007BF879 /* AppBladeKeys.plist in Resources */,
+				311A22A11795859D007BF879 /* ResourceRules.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,6 +422,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_RESOURCE_RULES_PATH = KitchenSink/ResourceRules.plist;
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -440,6 +455,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_RESOURCE_RULES_PATH = KitchenSink/ResourceRules.plist;
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -456,11 +472,14 @@
 		311A21E71794DC1B007BF879 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_RESOURCE_RULES_PATH = KitchenSink/ResourceRules.plist;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KitchenSink/KitchenSink-Prefix.pch";
 				HEADER_SEARCH_PATHS = "../../Framework/**";
 				INFOPLIST_FILE = "KitchenSink/KitchenSink-Info.plist";
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -469,11 +488,14 @@
 		311A21E81794DC1B007BF879 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_RESOURCE_RULES_PATH = KitchenSink/ResourceRules.plist;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KitchenSink/KitchenSink-Prefix.pch";
 				HEADER_SEARCH_PATHS = "../../Framework/**";
 				INFOPLIST_FILE = "KitchenSink/KitchenSink-Info.plist";
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -532,6 +554,7 @@
 				311A21E81794DC1B007BF879 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		311A21E91794DC1B007BF879 /* Build configuration list for PBXNativeTarget "KitchenSinkTests" */ = {
 			isa = XCConfigurationList;
@@ -540,6 +563,7 @@
 				311A21EB1794DC1B007BF879 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

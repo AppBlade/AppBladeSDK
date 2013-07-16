@@ -2,14 +2,20 @@
 //  AppDelegate.m
 //  KitchenSink
 //
-//  Created by AndrewTremblay on 7/15/13.
+//  Created by AppBlade on 7/15/13.
 //  Copyright (c) 2013 Raizlabs Corporation. All rights reserved.
 //
 
 #import "AppDelegate.h"
-#import "AppBlade.h"
-
 #import "ViewController.h"
+
+//Use these defines to enable logging of internal AppBlade calls.
+//these calls are only recommended in the case that you think
+//something's wrong with the AppBlade SDK
+#define APPBLADE_DEBUG_LOGGING 1  //Debug-level logs are turned on.
+#define APPBLADE_ERROR_LOGGING 1  //Non-critical Error-level logs are on.
+
+#import "AppBlade.h" //Don't forget to actually import the library!
 
 @implementation AppDelegate
 
@@ -24,6 +30,30 @@
     }
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+    
+    /******************************************
+     APPBLADE SETUP CALL
+     ******************************************/
+    AppBlade *blade = [AppBlade sharedManager];
+    [blade registerWithAppBladePlist];
+    
+    /******************************************
+     CRASH REPORTING CALL
+     ******************************************/
+    [blade catchAndReportCrashes];
+    
+    /******************************************
+     FEEDBACK REPORTING SETUP CALL
+     Must be called after window is keyed and visible, so make sure this is called after 
+     [self.window makeKeyAndVisible];
+     ******************************************/
+    [blade allowFeedbackReporting]; //basic call that links a three-finger double-tap with the feedback modal
+    //[blade setupCustomFeedbackReporting]; //custom call that sets up feedback reporting but doesn't link it with an action
+    //call the modal from the interface with
+    //[blade showFeedbackDialogue];
+    //[blade showFeedbackDialogue:takeScreenshot]; has an optional takeScreenshot BOOL variable if you don't want to send a screnshot to AppBlade.
+    
     return YES;
 }
 

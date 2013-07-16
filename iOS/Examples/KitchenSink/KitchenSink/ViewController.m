@@ -2,7 +2,7 @@
 //  ViewController.m
 //  KitchenSink
 //
-//  Created by AndrewTremblay on 7/15/13.
+//  Created by AppBlade on 7/15/13.
 //  Copyright (c) 2013 Raizlabs Corporation. All rights reserved.
 //
 
