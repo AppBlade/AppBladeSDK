@@ -89,9 +89,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @implementation AppBlade
 @synthesize appBladeDeviceSecret = _appbladeDeviceSecret;
 
-
-static AppBlade *s_sharedManager = nil;
-
 /* A custom post-crash callback */
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
     [AppBlade endSession];
@@ -151,15 +148,7 @@ static BOOL is_encrypted () {
 
 #pragma mark - Lifecycle
 
-+ (NSString*)sdkVersion
-{
-    return s_sdkVersion;
-}
-
-+ (void)logSDKVersion
-{
-    NSLog(@"AppBlade SDK v %@.", s_sdkVersion);
-}
+static AppBlade *s_sharedManager = nil;
 
 + (AppBlade *)sharedManager
 {
@@ -1609,5 +1598,14 @@ static BOOL is_encrypted () {
     return randomString;
 }
 
++ (NSString*)sdkVersion
+{
+    return s_sdkVersion;
+}
+
++ (void)logSDKVersion
+{
+    NSLog(@"AppBlade SDK v %@.", s_sdkVersion);
+}
 
 @end
