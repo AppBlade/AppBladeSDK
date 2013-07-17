@@ -31,6 +31,7 @@
 		311A22BE1795D313007BF879 /* AppBladeCustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParameters.m */; };
 		311A22BF1795D313007BF879 /* AppBladeCustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParameters.m */; };
 		311A22C21796072C007BF879 /* AppBladeSharedConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C01796072C007BF879 /* AppBladeSharedConstants.h */; };
+		311A22CA1796DE3B007BF879 /* AppBladeBasicFeatureManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C81796DE3B007BF879 /* AppBladeBasicFeatureManager.h */; };
 		3130607F1794A2A3006DF03A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
 		313060861794A2A3006DF03A /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
 		313061FF1794A357006DF03A /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
@@ -102,6 +103,7 @@
 		311A22BA1795D313007BF879 /* AppBladeCustomParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeCustomParameters.h; sourceTree = "<group>"; };
 		311A22BB1795D313007BF879 /* AppBladeCustomParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeCustomParameters.m; sourceTree = "<group>"; };
 		311A22C01796072C007BF879 /* AppBladeSharedConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSharedConstants.h; sourceTree = "<group>"; };
+		311A22C81796DE3B007BF879 /* AppBladeBasicFeatureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeBasicFeatureManager.h; sourceTree = "<group>"; };
 		31305FC91794A146006DF03A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		31305FCB1794A146006DF03A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3130607E1794A2A3006DF03A /* libAppBlade.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBlade.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -338,6 +340,7 @@
 				3130640C1794A380006DF03A /* Hashing */,
 				313060A21794A356006DF03A /* AppBladeLogging.h */,
 				311A22C01796072C007BF879 /* AppBladeSharedConstants.h */,
+				311A22C81796DE3B007BF879 /* AppBladeBasicFeatureManager.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				311A22B61795D26E007BF879 /* AppBladeAuthenticationManager.h in Headers */,
 				311A22BC1795D313007BF879 /* AppBladeCustomParameters.h in Headers */,
 				311A22C21796072C007BF879 /* AppBladeSharedConstants.h in Headers */,
+				311A22CA1796DE3B007BF879 /* AppBladeBasicFeatureManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
