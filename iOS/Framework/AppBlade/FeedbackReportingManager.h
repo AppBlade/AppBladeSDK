@@ -10,6 +10,7 @@
 #import "FeedbackDialogue.h"
 
 #import "AppBladeWebOperation.h"
+#import "AppBladeBasicFeatureManager.h"
 
 typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackSetupOptions) {
     AppBladeFeedbackSetupDefault                 = 0,      // default behavior
@@ -24,10 +25,10 @@ typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackDisplayOptions) {
 };
 
 
-@interface FeedbackReportingManager : AppBladeWebOperation
+@interface FeedbackReportingManager : NSObject<AppBladeBasicFeatureManager>
+    @property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
+- (AppBladeWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict;
 
-
--(id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate andFeedbackDictionary:(NSDictionary *)feedbackDictionary;
-
+- (BOOL)hasPendingFeedbackReports;
 
 @end
