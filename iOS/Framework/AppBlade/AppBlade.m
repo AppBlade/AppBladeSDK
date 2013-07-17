@@ -32,11 +32,12 @@
 #import "FeedbackReportingManager.h"
 
 
-@interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
+@interface AppBlade () <AppBladeWebOperationDelegate, FeedbackDialogueDelegate>
 
 @property (nonatomic, retain) NSURL* upgradeLink;
 
 // Feedback
+@property (nonatomic, strong) FeedbackReportingManager* feedbackManager;
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
 @property (nonatomic, assign) BOOL showingFeedbackDialogue;
 @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
@@ -66,7 +67,6 @@
 
 - (BOOL)hasPendingSessions;
 //hasPendingCrashReport in PLCrashReporter
-- (BOOL)hasPendingFeedbackReports;
 - (void)handleBackloggedFeedback;
 - (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
 
@@ -184,6 +184,8 @@ static AppBlade *s_sharedManager = nil;
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         self.delegate = self;
+        
+        self.feedbackManager = [[FeedbackReportingManager alloc] initWithDelegate:self];
     }
     return self;
 }
@@ -782,7 +784,7 @@ static AppBlade *s_sharedManager = nil;
             }
             
             ABDebugLog_internal(@"checking for more pending feedback");
-            if ([self hasPendingFeedbackReports]) {
+            if ([self.feedbackManager hasPendingFeedbackReports]) {
                 ABDebugLog_internal(@"more pending feedback");
                 [self handleBackloggedFeedback];
             }
@@ -895,34 +897,6 @@ static AppBlade *s_sharedManager = nil;
 
 #pragma mark - Feedback
 
-- (BOOL)hasPendingFeedbackReports
-{
-    BOOL toRet = NO;
-    @synchronized (self){
-        NSString *feedbackBacklogFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-        if([[NSFileManager defaultManager] fileExistsAtPath:feedbackBacklogFilePath]){
-            ABDebugLog_internal(@"found file at %@", feedbackBacklogFilePath);
-            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:feedbackBacklogFilePath];
-            if (backupFiles.count > 0) {
-                ABDebugLog_internal(@"found %d files at feedbackBacklogFilePath", backupFiles.count);
-                toRet = YES;
-            }
-            else
-            {
-                ABDebugLog_internal(@"found NO files at feedbackBacklogFilePath");
-                toRet = NO;
-            }
-        }
-        else
-        {
-            ABDebugLog_internal(@"found nothing at %@", feedbackBacklogFilePath);
-            toRet = NO;
-        }
-    }
-    return toRet;
-}
-
-
 - (void)allowFeedbackReporting
 {
     
@@ -941,7 +915,7 @@ static AppBlade *s_sharedManager = nil;
 {
     self.window = window;
     
-    if (options == AppBladeFeedbackSetupTripleFingerDoubleTap) {
+    if (options == AppBladeFeedbackSetupTripleFingerDoubleTap || options == AppBladeFeedbackSetupDefault) {
         //Set up our custom triple finger double-tap 
         self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] ;
         self.tapRecognizer.numberOfTapsRequired = 2;
@@ -951,7 +925,7 @@ static AppBlade *s_sharedManager = nil;
     }    
     [self checkAndCreateAppBladeCacheDirectory];
     
-    if ([self hasPendingFeedbackReports]) {
+    if ([self.feedbackManager hasPendingFeedbackReports]) {
         [self handleBackloggedFeedback];
     }
 }
@@ -971,7 +945,7 @@ static AppBlade *s_sharedManager = nil;
         }
 
         //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
-        if(options == AppBladeFeedbackDisplayWithScreenshot ){
+        if(options == AppBladeFeedbackDisplayWithScreenshot || options == AppBladeFeedbackDisplayDefault){
             NSString* screenshotPath = [self captureScreen];
             [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
         }
@@ -1091,9 +1065,8 @@ static AppBlade *s_sharedManager = nil;
         ABErrorLog(@"Error writing backup file to %@", backupFilePath);
     }
     
-    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
+    AppBladeWebOperation * client = [self.feedbackManager generateFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
     ABDebugLog_internal(@"Sending screenshot");
-    [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
     [self.pendingRequests addOperation:client];
 }
 
@@ -1117,9 +1090,8 @@ static AppBlade *s_sharedManager = nil;
                 NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
                 bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
                 if(screenShotFileExists){
-                    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
+                    AppBladeWebOperation * client = [self.feedbackManager generateFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[self getCustomParams]];
                     client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
-                    [client sendFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[self getCustomParams]];
                     [self.pendingRequests addOperation:client];
                 }
                 else
