@@ -30,5 +30,6 @@ typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackDisplayOptions) {
 - (AppBladeWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict;
 
 - (BOOL)hasPendingFeedbackReports;
+- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
 
 @end

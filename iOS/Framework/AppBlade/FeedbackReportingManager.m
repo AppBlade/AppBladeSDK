@@ -121,6 +121,20 @@
 }
 
 
+- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath
+{
+    NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
+    if (feedback) {
+        ABDebugLog_internal(@"Cleaning Feedback %@", feedback);
+        NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
+        
+        NSError *screenShotError = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:screenshotFilePath error:&screenShotError];
+    }
+    NSError *feedbackPathError = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:feedbackPath error:&feedbackPathError];
+    
+}
 
 
 

@@ -68,7 +68,6 @@
 - (BOOL)hasPendingSessions;
 //hasPendingCrashReport in PLCrashReporter
 - (void)handleBackloggedFeedback;
-- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
 
 -(NSMutableDictionary*) appBladeDeviceSecrets;
 - (BOOL)hasDeviceSecret;
@@ -158,28 +157,6 @@ static AppBlade *s_sharedManager = nil;
     return s_sharedManager;
 }
 
-
-+ (NSString*)cachesDirectoryPath
-{
-    NSString* cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
-}
-
-+ (void)clearCacheDirectory
-{
-    NSFileManager *fm = [NSFileManager defaultManager];
-    NSString *directory = [AppBlade cachesDirectoryPath];
-    NSError *error = nil;
-    for (NSString *file in [fm contentsOfDirectoryAtPath:directory error:&error]) {
-        BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
-        if (!success || error) {
-            // it failed.
-            ABErrorLog(@"AppBlade failed to remove the caches directory after receiving invalid credentials");
-        }
-    }
-    [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory]; //reinitialize the folder
-}
-
 - (id)init {
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
@@ -189,7 +166,6 @@ static AppBlade *s_sharedManager = nil;
     }
     return self;
 }
-
 
 - (void)validateProjectConfiguration
 {
@@ -209,6 +185,29 @@ static AppBlade *s_sharedManager = nil;
     NSString* const exceptionMessageFormat = @"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.";
     [NSException raise:@"AppBladeException" format:exceptionMessageFormat, name];
     abort();
+}
+
+
+#pragma mark AppBlade cache methods 
++ (NSString*)cachesDirectoryPath
+{
+    NSString* cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
+}
+
++ (void)clearCacheDirectory
+{
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *directory = [AppBlade cachesDirectoryPath];
+    NSError *error = nil;
+    for (NSString *file in [fm contentsOfDirectoryAtPath:directory error:&error]) {
+        BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
+        if (!success || error) {
+            // it failed.
+            ABErrorLog(@"AppBlade failed to remove the caches directory after receiving invalid credentials");
+        }
+    }
+    [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory]; //reinitialize the folder
 }
 
 
@@ -276,7 +275,7 @@ static AppBlade *s_sharedManager = nil;
     return is_encrypted();
 }
 
-#pragma mark Pending Requests Queue 
+#pragma mark Pending/Token Requests Queue 
 
 -(NSOperationQueue *) tokenRequests {
     if(!_tokenRequests){
@@ -330,7 +329,6 @@ static AppBlade *s_sharedManager = nil;
 
 #pragma mark API Token Calls
 
-
 //Eventually these will help enable/disable our appBladeDisabled value. It gives us the ability to condemn/redeem the device.
 
 - (void)refreshToken:(NSString *)tokenToConfirm
@@ -369,6 +367,23 @@ static AppBlade *s_sharedManager = nil;
     [client confirmToken:[self appBladeDeviceSecret]];
     [self.tokenRequests addOperation:client];
 }
+
+
+- (BOOL)isCurrentToken:(NSString *)token {
+    return (nil != token) && [[self appBladeDeviceSecret] isEqualToString:token];
+}
+
+- (BOOL)tokenConfirmRequestPending {
+    NSInteger confirmTokenRequests = [[self.tokenRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", AppBladeWebClientAPI_ConfirmToken]];
+    return confirmTokenRequests > 0;
+}
+
+- (BOOL)tokenRefreshRequestPending {
+    NSInteger confirmTokenRequests = [[self.tokenRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", AppBladeWebClientAPI_GenerateToken]];
+    return confirmTokenRequests > 0;
+}
+
+
 
 #pragma mark API Blockable Calls
 
@@ -469,22 +484,60 @@ static AppBlade *s_sharedManager = nil;
     }
 }
 
-- (NSString*)hashFileOfPlist:(NSString *)filePath
+
+
+#pragma mark - AppBladeDelegate
+- (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
 {
-    NSString* returnString = nil;
-    CFStringRef executableFileMD5Hash =
-    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
-    if (executableFileMD5Hash) {
-        returnString = (__bridge NSString *)(executableFileMD5Hash);
-        // CFRelease(executableFileMD5Hash);
+    if(!approved) {
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Permission Denied"
+                                                        message:[error localizedDescription]
+                                                       delegate:self
+                                              cancelButtonTitle:@"Exit"
+                                              otherButtonTitles: nil] ;
+        [alert show];
     }
-    return returnString;
+    
+}
+
+
+-(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
+{
+    if (update) {
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Update Available"
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles: @"Upgrade", nil] ;
+        alert.tag = kUpdateAlertTag;
+        self.upgradeLink = [NSURL URLWithString:url];
+        
+        [alert show];
+        
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kUpdateAlertTag) {
+        if (buttonIndex == 1) {
+            [[UIApplication sharedApplication] openURL:self.upgradeLink];
+            self.upgradeLink = nil;
+            exit(0);
+        }
+    }
+    else
+    {
+        exit(0);
+    }
 }
 
 
 
 
-#pragma mark - AppBladeWebClient
+#pragma mark - AppBladeWebOperation
 -(void) appBladeWebClientFailed:(AppBladeWebOperation *)client
 {
     [self appBladeWebClientFailed:client withErrorString:NULL];
@@ -774,7 +827,7 @@ static AppBlade *s_sharedManager = nil;
 
             NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
             ABDebugLog_internal(@"Removing supporting feedback files and the feedback file herself");
-            [self removeIntermediateFeedbackFiles:filePath];
+            [self.feedbackManager removeIntermediateFeedbackFiles:filePath];
            
             ABDebugLog_internal(@"Removing Successful feedback object from main feedback list");
             [backups removeObject:fileName];
@@ -842,55 +895,6 @@ static AppBlade *s_sharedManager = nil;
     else
     {
         ABErrorLog(@"Error sending Session log");
-    }
-}
-
-
-#pragma mark - AppBladeDelegate
-- (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
-{
-    if(!approved) {
-        
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Permission Denied"
-                                                         message:[error localizedDescription]
-                                                        delegate:self
-                                               cancelButtonTitle:@"Exit"
-                                               otherButtonTitles: nil] ;
-        [alert show];
-    }
-    
-}
-
-
--(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
-{
-    if (update) {
-        
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Update Available"
-                                                         message:message
-                                                        delegate:self
-                                               cancelButtonTitle:@"Cancel"
-                                               otherButtonTitles: @"Upgrade", nil] ;
-        alert.tag = kUpdateAlertTag;
-        self.upgradeLink = [NSURL URLWithString:url];
-        
-        [alert show];
-        
-    }
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == kUpdateAlertTag) {
-        if (buttonIndex == 1) {
-            [[UIApplication sharedApplication] openURL:self.upgradeLink];
-            self.upgradeLink = nil;   
-            exit(0);
-        }
-    }
-    else
-    {
-        exit(0);
     }
 }
 
@@ -1097,7 +1101,7 @@ static AppBlade *s_sharedManager = nil;
                 else
                 {
                     //clean up files if one doesn't exist
-                    [self removeIntermediateFeedbackFiles:feedbackPath];
+                    [self.feedbackManager removeIntermediateFeedbackFiles:feedbackPath];
                     ABDebugLog_internal(@"invalid feedback at %@, removing File and intermediate files", feedbackPath);
                     [backupFiles removeObject:fileName];
                     ABDebugLog_internal(@"writing valid pending feedback objects back to file");
@@ -1502,22 +1506,6 @@ static AppBlade *s_sharedManager = nil;
     return returnObject;
 }
 
-
-- (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath
-{
-    NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
-    if (feedback) {
-        ABDebugLog_internal(@"Cleaning Feedback %@", feedback);
-        NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
-        
-        NSError *screenShotError = nil;
-        [[NSFileManager defaultManager] removeItemAtPath:screenshotFilePath error:&screenShotError];
-    }
-    NSError *feedbackPathError = nil;
-    [[NSFileManager defaultManager] removeItemAtPath:feedbackPath error:&feedbackPathError];
-
-}
-
 - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType {
     NSInteger amtToReturn = 0;
     
@@ -1532,15 +1520,9 @@ static AppBlade *s_sharedManager = nil;
     return amtToReturn;
 }
 
-
-- (BOOL)tokenConfirmRequestPending {
-    NSInteger confirmTokenRequests = [[self.tokenRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", AppBladeWebClientAPI_ConfirmToken]];
-    return confirmTokenRequests > 0;
-}
-
-- (BOOL)tokenRefreshRequestPending {
-    NSInteger confirmTokenRequests = [[self.tokenRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", AppBladeWebClientAPI_GenerateToken]];
-    return confirmTokenRequests > 0;
+-(BOOL)hasDeviceSecret
+{
+    return [[self appBladeDeviceSecret] length] == 0;
 }
 
 - (BOOL)isDeviceSecretBeingConfirmed {
@@ -1553,14 +1535,6 @@ static AppBlade *s_sharedManager = nil;
     return tokenRequestInProgress && processIsNotFinished;
 }
 
-- (BOOL)isCurrentToken:(NSString *)token {
-    return (nil != token) && [[self appBladeDeviceSecret] isEqualToString:token];
-}
-
--(BOOL)hasDeviceSecret
-{
-    return [[self appBladeDeviceSecret] length] == 0;
-}
 
 -(NSString *) randomString: (int) len {
     NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
@@ -1569,6 +1543,19 @@ static AppBlade *s_sharedManager = nil;
     }
     return randomString;
 }
+
+- (NSString*)hashFileOfPlist:(NSString *)filePath
+{
+    NSString* returnString = nil;
+    CFStringRef executableFileMD5Hash =
+    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
+    if (executableFileMD5Hash) {
+        returnString = (__bridge NSString *)(executableFileMD5Hash);
+        // CFRelease(executableFileMD5Hash);
+    }
+    return returnString;
+}
+
 
 + (NSString*)sdkVersion
 {
