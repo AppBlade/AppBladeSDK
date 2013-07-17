@@ -87,6 +87,8 @@ API KEYS
 //method to call if you want to attempt to send crash reports more often than ususal
 - (void)checkForExistingCrashReports;
 
+- (void)handleCrashReport;
+
 
 /******************************
  FEEDBACK REPORTING

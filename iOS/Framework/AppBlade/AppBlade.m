@@ -10,10 +10,7 @@
 #import "AppBladeLogging.h"
 #import "AppBladeSimpleKeychain.h"
 
-#import "PLCrashReporter.h"
-#import "PLCrashReport.h"
 #import "AppBladeWebOperation.h"
-#import "PLCrashReportTextFormatter.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -36,8 +33,12 @@
 
 @property (nonatomic, retain) NSURL* upgradeLink;
 
-// Feedback
+//Managers
+@property (nonatomic, strong) CrashReportingManager*    crashManager;
 @property (nonatomic, strong) FeedbackReportingManager* feedbackManager;
+
+
+// Feedback
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
 @property (nonatomic, assign) BOOL showingFeedbackDialogue;
 @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
@@ -53,7 +54,6 @@
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)checkAndCreateAppBladeCacheDirectory;
 
-- (void)handleCrashReport;
 - (void)showFeedbackDialogue;
 
 - (void)promptFeedbackDialogue;
@@ -161,8 +161,9 @@ static AppBlade *s_sharedManager = nil;
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         self.delegate = self;
-        
-        self.feedbackManager = [[FeedbackReportingManager alloc] initWithDelegate:self];
+        //init the managers
+        self.crashManager       = [[CrashReportingManager alloc] initWithDelegate:self];
+        self.feedbackManager    = [[FeedbackReportingManager alloc] initWithDelegate:self];
     }
     return self;
 }
@@ -413,75 +414,24 @@ static AppBlade *s_sharedManager = nil;
 - (void)catchAndReportCrashes
 {
     [self validateProjectConfiguration];
-    ABDebugLog_internal(@"Catch and report crashes");
-    [self checkForExistingCrashReports];
-
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    NSError *error;
-    // Enable the Crash Reporter
-    if (![crashReporter enableCrashReporterAndReturnError: &error])
-        ABErrorLog(@"Warning: Could not enable crash reporter: %@", error);
+    [self.crashManager catchAndReportCrashes];
 }
 
 - (void)checkForExistingCrashReports
 {
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    // Check if we previously crashed
-    if ([crashReporter hasPendingCrashReport]){
-        [self handleCrashReport];
-    }
+    [self.crashManager checkForExistingCrashReports];
 }
 
 - (void)handleCrashReport
 {
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
-    NSData *crashData;
-    NSError *error;
-    NSString* reportString = nil;
-    NSString *queuedFilePath = nil;
-    // Try loading the crash report from the live file
-    crashData = [crashReporter loadPendingCrashReportDataAndReturnError: &error];
-    if (crashData != nil) {
-        PLCrashReport *report = [[PLCrashReport alloc] initWithData: crashData error: &error];
-        if (report != nil) {
-            reportString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat: PLCrashReportTextFormatiOS];
-            //send pending crash report to a unique file name in the the queue
-            queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
-            if(queuedFilePath == nil){
-                ABErrorLog(@"error saving crash report");
-            }
-            else
-            {
-                ABDebugLog_internal(@"moved crash report to %@", queuedFilePath);
-            }
-        }
-        else
-        {
-            ABErrorLog(@"Could not parse crash report");
-        }
-    }
-    else
-    {
-        ABErrorLog(@"Could not load a crash report from live file");
-    }
-    [crashReporter purgePendingCrashReport]; //remove crash report from immediate file, we have it in the queue now
+   NSDictionary *crashDict = [self.crashManager handleCrashReportAsDictionary];
 
-    if(queuedFilePath == nil){
-        //we had no immediate crash, or an invalid save, grab any stored crash report
-        queuedFilePath = [crashReporter getNextCrashReportPath];
-        reportString = [NSString stringWithContentsOfFile:queuedFilePath encoding:NSUTF8StringEncoding error:&error];
-    }
-    
-    if(queuedFilePath != nil){
-        AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
-        client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:queuedFilePath,  kAppBladeCrashReportKeyFilePath, nil];
-        [client reportCrash:reportString withParams:[self getCustomParams]];
+    if(crashDict != nil){
+        AppBladeWebOperation * client = [self.crashManager generateCrashReportFromDictionary:crashDict withParams:[self getCustomParams]];
         [self.pendingRequests addOperation:client];
     }
-    else
-    {
-        ABDebugLog_internal(@"No crashes to report");
-    }
+
+    
 }
 
 
@@ -782,30 +732,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client
 {
-    // purge the crash report that was just reported.
-    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
-    BOOL success = (status == 201 || status == 200);
-    if(success){ //we don't need to hold onto this crash.
-        ABDebugLog_internal(@"Appblade: success sending crash report, response status code: %d", status);
-        [[PLCrashReporter sharedReporter] purgePendingCrashReport];
-        NSString *pathOfCrashReport = [client.userInfo valueForKey:kAppBladeCrashReportKeyFilePath];
-        [[NSFileManager defaultManager] removeItemAtPath:pathOfCrashReport error:nil];
-        ABDebugLog_internal(@"Appblade: removed crash report, %@", pathOfCrashReport);
-
-        if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
-            ABDebugLog_internal(@"Appblade: PLCrashReporter has more crash reports");
-            [self handleCrashReport];
-        }
-        else
-        {
-            ABDebugLog_internal(@"Appblade: PLCrashReporter has no more crash reports");
-        }
-    }
-    else
-    {
-        ABErrorLog(@"Appblade: error sending crash report, response status code: %d", status);
-        //No more crash reports for now. We might have bad internet access.
-    }
+    [self.crashManager handleWebClientCrashReported:client];
 }
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success

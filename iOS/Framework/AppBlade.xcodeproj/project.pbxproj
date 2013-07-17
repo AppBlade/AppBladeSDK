@@ -92,8 +92,8 @@
 		311A21801794C79F007BF879 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		311A22961794E633007BF879 /* FeedbackReportingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackReportingManager.h; sourceTree = "<group>"; };
 		311A22971794E633007BF879 /* FeedbackReportingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackReportingManager.m; sourceTree = "<group>"; };
-		311A22A51795CFFF007BF879 /* CrashReportingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportingManager.h; sourceTree = "<group>"; };
-		311A22A61795CFFF007BF879 /* CrashReportingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReportingManager.m; sourceTree = "<group>"; };
+		311A22A51795CFFF007BF879 /* CrashReportingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CrashReportingManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		311A22A61795CFFF007BF879 /* CrashReportingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CrashReportingManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		311A22AC1795D24A007BF879 /* SessionTrackingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionTrackingManager.h; sourceTree = "<group>"; };
 		311A22AD1795D24A007BF879 /* SessionTrackingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionTrackingManager.m; sourceTree = "<group>"; };
 		311A22B01795D259007BF879 /* AppBladeUpdatesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeUpdatesManager.h; sourceTree = "<group>"; };
@@ -109,7 +109,7 @@
 		3130607E1794A2A3006DF03A /* libAppBlade.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBlade.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		313060821794A2A3006DF03A /* AppBlade-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppBlade-Prefix.pch"; sourceTree = "<group>"; };
 		313060831794A2A3006DF03A /* AppBlade.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
-		313060851794A2A3006DF03A /* AppBlade.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppBlade.m; sourceTree = "<group>"; };
+		313060851794A2A3006DF03A /* AppBlade.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppBlade.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		313060A21794A356006DF03A /* AppBladeLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeLogging.h; sourceTree = "<group>"; };
 		313060A31794A356006DF03A /* AppBladeSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSimpleKeychain.h; sourceTree = "<group>"; };
 		313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeSimpleKeychain.m; sourceTree = "<group>"; };

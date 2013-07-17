@@ -81,6 +81,5 @@ extern NSString *deviceSecretHeaderField;
 
 - (void)checkPermissions;
 - (void)checkForUpdates;
-- (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params;
 - (void)postSessions:(NSArray *)sessions;
 @end

@@ -519,53 +519,6 @@ const int kNonceRandomStringLength = 74;
     }
 }
 
-- (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)paramsDict {
-    [self setApi: AppBladeWebClientAPI_ReportCrash];
-    @synchronized (self)
-    {
-    // Build report URL.
-    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [self.delegate appBladeHost]];
-    NSURL* urlCrashReport = [NSURL URLWithString:urlCrashReportString];    
-        
-        NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
-    // Create the API request.
-    NSMutableURLRequest* apiRequest = [self requestForURL:urlCrashReport];
-        [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
-    [apiRequest setHTTPMethod:@"POST"];
-    
-    NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=\"file\"; filename=\"report.crash\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Type: text/plain\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSData* data = [crashReport dataUsingEncoding:NSUTF8StringEncoding];
-    [body appendData:data];
-    
-    if([NSPropertyListSerialization propertyList:paramsDict isValidForFormat:NSPropertyListXMLFormat_v1_0]){
-        NSError* error = nil;
-        NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:paramsDict format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-        if(error == nil){
-            [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:paramsData];
-            ABDebugLog_internal(@"Parsed params! They were included.");
-        }
-        else
-        {
-            ABErrorLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
-        }
-    }
-    
-    [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [apiRequest setHTTPBody:body];
-    [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
-
-    [self addSecurityToRequest:apiRequest];
-
-        //apiRequest is a retained reference to the _request ivar.
-    }
-}
 
 - (void)postSessions:(NSArray *)sessions
 {
