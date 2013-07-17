@@ -53,15 +53,10 @@ NSString *deviceSecretHeaderField    = @"X-device-secret";
 -(void)scheduleTimeout;
 -(void)cancelTimeout;
 
-// Request builder methods.
-- (NSMutableURLRequest *)requestForURL:(NSURL *)url;
-- (void)addSecurityToRequest:(NSMutableURLRequest *)request;
 // Crypto methods.
 - (NSString *)HMAC_SHA256_Base64:(NSString *)data with_key:(NSString *)key;
 - (NSString *)SHA_Base64:(NSString *)raw;
-- (NSString *)encodeBase64WithData:(NSData *)objData;
 - (NSString *)genRandStringLength:(int)len;
-- (NSString *)genRandNumberLength:(int)len;
 - (NSString *)urlEncodeValue:(NSString*)string; //no longer being used
 - (NSString *)hashFile:(NSString*)filePath;
 - (NSString *)hashExecutable;
@@ -80,7 +75,7 @@ const int kNonceRandomStringLength = 74;
 
 #pragma mark - Lifecycle
 
-- (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate
+- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate
 {
     if((self = [super init])) {
         self.delegate = delegate;
@@ -264,7 +259,7 @@ const int kNonceRandomStringLength = 74;
     ABErrorLog(@"AppBlade failed with error: %@", error.localizedDescription);
     
     AppBladeWebOperation *selfReference = self;
-    id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+    id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
     dispatch_async(dispatch_get_main_queue(), ^{
         [delegateReference appBladeWebClientFailed:selfReference];
     });
@@ -299,7 +294,7 @@ const int kNonceRandomStringLength = 74;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         ABDebugLog_internal(@"Parsed JSON: %@", json);
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClient:selfReference receivedGenerateTokenResponse:json];
         });
@@ -311,7 +306,7 @@ const int kNonceRandomStringLength = 74;
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         self.receivedData = nil;
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClient:selfReference receivedConfirmTokenResponse:json];
         });
@@ -327,7 +322,7 @@ const int kNonceRandomStringLength = 74;
         
         if (plist && error == NULL) {
             AppBladeWebOperation *selfReference = self;
-            id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClient:selfReference receivedPermissions:plist];
             });
@@ -337,7 +332,7 @@ const int kNonceRandomStringLength = 74;
         {
             ABErrorLog(@"Error parsing permisions json: %@", [error debugDescription]);
             AppBladeWebOperation *selfReference = self;
-            id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid response was received from AppBlade; please contact support"];
             });
@@ -347,7 +342,7 @@ const int kNonceRandomStringLength = 74;
     }
     else if (self.api == AppBladeWebClientAPI_ReportCrash) {
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClientCrashReported:selfReference];
         });
@@ -356,7 +351,7 @@ const int kNonceRandomStringLength = 74;
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClientSentFeedback:selfReference withSuccess:success];
         });        
@@ -367,7 +362,7 @@ const int kNonceRandomStringLength = 74;
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClientSentSessions:selfReference withSuccess:success];
         });
@@ -381,7 +376,7 @@ const int kNonceRandomStringLength = 74;
         
         if (json && error == NULL) {
             AppBladeWebOperation *selfReference = self;
-            id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClient:selfReference receivedUpdate:json];
             });
@@ -390,7 +385,7 @@ const int kNonceRandomStringLength = 74;
         {
             ABErrorLog(@"Error parsing update plist: %@", [error debugDescription]);
             AppBladeWebOperation *selfReference = self;
-            id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
             });
@@ -476,7 +471,7 @@ const int kNonceRandomStringLength = 74;
         ABDebugLog_internal(@"Binary signed by Apple, skipping permissions check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClient:selfReference receivedPermissions:fairplayPermissions];
         });
@@ -503,7 +498,7 @@ const int kNonceRandomStringLength = 74;
         ABDebugLog_internal(@"Binary signed by Apple, skipping update check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClient:selfReference receivedUpdate:fairplayPermissions];
         });
@@ -572,65 +567,6 @@ const int kNonceRandomStringLength = 74;
     }
 }
 
-- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console params:(NSDictionary*)paramsDict
-{
-    [self setApi: AppBladeWebClientAPI_Feedback];
-    
-    @synchronized (self)
-    {
-        NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
-        
-        // Build report URL.
-        NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [self.delegate appBladeHost]];
-        NSURL* reportURL = [NSURL URLWithString:reportString];
-    
-        NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
-        
-        // Create the API request.
-        NSMutableURLRequest* apiRequest = [self requestForURL:reportURL];
-        [apiRequest setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
-        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-        [apiRequest setHTTPMethod:@"POST"];
-        
-        NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Disposition: form-data; name=\"feedback[notes]\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        [body appendData:[note dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"feedback[screenshot]\"; filename=\"base64:%@\"\r\n", screenshot] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        NSData* screenshotData = [[self encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
-        [body appendData:screenshotData];
-        
-        if([NSPropertyListSerialization propertyList:paramsDict isValidForFormat:NSPropertyListXMLFormat_v1_0]){
-            NSError* error = nil;
-            NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:paramsDict format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-            if(error == nil){
-                [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                [body appendData:paramsData];
-                ABDebugLog_internal(@"Parsed params! They were included.");
-            }
-            else
-            {
-                ABErrorLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
-            }
-        }
-        
-        [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        [apiRequest setHTTPBody:body];
-        [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
-        
-        [self addSecurityToRequest:apiRequest];
-        
-        //apiRequest is a retained reference to the _request ivar.
-    }
-}
-
 - (void)postSessions:(NSArray *)sessions
 {
     [self setApi: AppBladeWebClientAPI_Sessions];
@@ -676,7 +612,7 @@ const int kNonceRandomStringLength = 74;
         
         //we may have to remove the sessions file in extreme cases
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
         [delegateReference appBladeWebClientFailed:selfReference];
         });

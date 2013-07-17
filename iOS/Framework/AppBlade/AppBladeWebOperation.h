@@ -32,7 +32,7 @@ extern NSString *sessionURLFormat;
 extern NSString *deviceSecretHeaderField;
 
 
-@protocol AppBladeWebClientDelegate <NSObject>
+@protocol AppBladeWebOperationDelegate <NSObject>
 
 @required
 
@@ -55,7 +55,7 @@ extern NSString *deviceSecretHeaderField;
 
 @interface AppBladeWebOperation : NSOperation 
 
-@property (nonatomic, weak) id<AppBladeWebClientDelegate> delegate;
+@property (nonatomic, weak) id<AppBladeWebOperationDelegate> delegate;
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
 
 @property (nonatomic, strong) NSDictionary* userInfo;
@@ -66,9 +66,14 @@ extern NSString *deviceSecretHeaderField;
 @property (nonatomic, strong) NSString* sentDeviceSecret;
 -(int)getReceivedStatusCode;
 
-- (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate;
+- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate;
 
+// Request builder methods.
 + (NSString *)buildHostURL:(NSString *)customURLString;
+- (NSMutableURLRequest *)requestForURL:(NSURL *)url;
+- (NSString *)encodeBase64WithData:(NSData *)objData;
+- (NSString *)genRandNumberLength:(int)len;
+- (void)addSecurityToRequest:(NSMutableURLRequest *)request;
 
 // AppBlade API.
 - (void)refreshToken:(NSString *)tokenToConfirm;
@@ -77,6 +82,5 @@ extern NSString *deviceSecretHeaderField;
 - (void)checkPermissions;
 - (void)checkForUpdates;
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)params;
-- (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsData;
 - (void)postSessions:(NSArray *)sessions;
 @end
