@@ -27,7 +27,11 @@ typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackDisplayOptions) {
 
 @interface FeedbackReportingManager : NSObject<AppBladeBasicFeatureManager>
     @property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
+
+#pragma mark - Web Request Generators
 - (AppBladeWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict;
+
+#pragma mark Stored Web Request Handling
 
 - (BOOL)hasPendingFeedbackReports;
 - (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;

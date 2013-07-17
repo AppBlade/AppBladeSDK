@@ -32,7 +32,7 @@
     return client;
 }
 
-#pragma mark -
+#pragma mark - Web Request Generators
 
 - (AppBladeWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict
 {
@@ -91,7 +91,7 @@
 }
 
 
-#pragma mark pending request logic
+#pragma mark Stored Web Request Behavior 
 
 - (BOOL)hasPendingFeedbackReports
 {
