@@ -29,7 +29,7 @@
 #include "FileMD5Hash.h"
 
 //Feature List
-#import "FeedbackReporting.h"
+#import "FeedbackReportingManager.h"
 
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>

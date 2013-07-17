@@ -10,6 +10,6 @@
 
 #import "AppBladeWebOperation.h"
 
-@interface SessionTracking : AppBladeWebOperation
+@interface SessionTrackingManager : AppBladeWebOperation
 
 @end

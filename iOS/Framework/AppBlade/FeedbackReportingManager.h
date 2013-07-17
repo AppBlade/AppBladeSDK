@@ -24,7 +24,7 @@ typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackDisplayOptions) {
 };
 
 
-@interface FeedbackReporting : AppBladeWebOperation
+@interface FeedbackReportingManager : AppBladeWebOperation
 
 
 -(id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate andFeedbackDictionary:(NSDictionary *)feedbackDictionary;

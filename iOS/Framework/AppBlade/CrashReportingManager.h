@@ -10,6 +10,6 @@
 
 #import "AppBladeWebOperation.h"
 
-@interface CrashReporting : AppBladeWebOperation
+@interface CrashReportingManager : AppBladeWebOperation
 
 @end

@@ -14,11 +14,11 @@
 
 #import "AppBladeSharedConstants.h"
 //Features
-#import "AppBladeAuthentication.h"
-#import "AppBladeUpdates.h"
-#import "SessionTracking.h"
-#import "CrashReporting.h"
-#import "FeedbackReporting.h"
+#import "AppBladeAuthenticationManager.h"
+#import "AppBladeUpdatesManager.h"
+#import "SessionTrackingManager.h"
+#import "CrashReportingManager.h"
+#import "FeedbackReportingManager.h"
 #import "AppBladeLogging.h"
 
 @class AppBlade;

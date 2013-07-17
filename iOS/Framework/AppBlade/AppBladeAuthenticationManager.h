@@ -10,6 +10,6 @@
 
 #import "AppBladeWebOperation.h"
 
-@interface AppBladeAuthentication : AppBladeWebOperation
+@interface AppBladeAuthenticationManager : AppBladeWebOperation
 
 @end

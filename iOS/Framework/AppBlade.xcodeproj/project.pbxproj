@@ -16,16 +16,16 @@
 		311A215C1794C79F007BF879 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061F91794A357006DF03A /* FeedbackBackgroundView.m */; };
 		311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061FB1794A357006DF03A /* FeedbackDialogue.m */; };
 		311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061FC1794A357006DF03A /* FileMD5Hash.c */; };
-		311A22981794E633007BF879 /* FeedbackReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22961794E633007BF879 /* FeedbackReporting.h */; };
-		311A22991794E633007BF879 /* FeedbackReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22971794E633007BF879 /* FeedbackReporting.m */; };
-		311A22A71795CFFF007BF879 /* CrashReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22A51795CFFF007BF879 /* CrashReporting.h */; };
-		311A22A81795CFFF007BF879 /* CrashReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22A61795CFFF007BF879 /* CrashReporting.m */; };
-		311A22AE1795D24A007BF879 /* SessionTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22AC1795D24A007BF879 /* SessionTracking.h */; };
-		311A22AF1795D24A007BF879 /* SessionTracking.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22AD1795D24A007BF879 /* SessionTracking.m */; };
-		311A22B21795D259007BF879 /* AppBladeUpdates.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22B01795D259007BF879 /* AppBladeUpdates.h */; };
-		311A22B31795D259007BF879 /* AppBladeUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B11795D259007BF879 /* AppBladeUpdates.m */; };
-		311A22B61795D26E007BF879 /* AppBladeAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22B41795D26E007BF879 /* AppBladeAuthentication.h */; };
-		311A22B71795D26E007BF879 /* AppBladeAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B51795D26E007BF879 /* AppBladeAuthentication.m */; };
+		311A22981794E633007BF879 /* FeedbackReportingManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22961794E633007BF879 /* FeedbackReportingManager.h */; };
+		311A22991794E633007BF879 /* FeedbackReportingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22971794E633007BF879 /* FeedbackReportingManager.m */; };
+		311A22A71795CFFF007BF879 /* CrashReportingManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22A51795CFFF007BF879 /* CrashReportingManager.h */; };
+		311A22A81795CFFF007BF879 /* CrashReportingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22A61795CFFF007BF879 /* CrashReportingManager.m */; };
+		311A22AE1795D24A007BF879 /* SessionTrackingManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22AC1795D24A007BF879 /* SessionTrackingManager.h */; };
+		311A22AF1795D24A007BF879 /* SessionTrackingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22AD1795D24A007BF879 /* SessionTrackingManager.m */; };
+		311A22B21795D259007BF879 /* AppBladeUpdatesManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22B01795D259007BF879 /* AppBladeUpdatesManager.h */; };
+		311A22B31795D259007BF879 /* AppBladeUpdatesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B11795D259007BF879 /* AppBladeUpdatesManager.m */; };
+		311A22B61795D26E007BF879 /* AppBladeAuthenticationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22B41795D26E007BF879 /* AppBladeAuthenticationManager.h */; };
+		311A22B71795D26E007BF879 /* AppBladeAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B51795D26E007BF879 /* AppBladeAuthenticationManager.m */; };
 		311A22BC1795D313007BF879 /* AppBladeCustomParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22BA1795D313007BF879 /* AppBladeCustomParameters.h */; };
 		311A22BD1795D313007BF879 /* AppBladeCustomParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22BA1795D313007BF879 /* AppBladeCustomParameters.h */; };
 		311A22BE1795D313007BF879 /* AppBladeCustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParameters.m */; };
@@ -89,16 +89,16 @@
 
 /* Begin PBXFileReference section */
 		311A21801794C79F007BF879 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		311A22961794E633007BF879 /* FeedbackReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackReporting.h; sourceTree = "<group>"; };
-		311A22971794E633007BF879 /* FeedbackReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackReporting.m; sourceTree = "<group>"; };
-		311A22A51795CFFF007BF879 /* CrashReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReporting.h; sourceTree = "<group>"; };
-		311A22A61795CFFF007BF879 /* CrashReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReporting.m; sourceTree = "<group>"; };
-		311A22AC1795D24A007BF879 /* SessionTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionTracking.h; sourceTree = "<group>"; };
-		311A22AD1795D24A007BF879 /* SessionTracking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionTracking.m; sourceTree = "<group>"; };
-		311A22B01795D259007BF879 /* AppBladeUpdates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeUpdates.h; sourceTree = "<group>"; };
-		311A22B11795D259007BF879 /* AppBladeUpdates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeUpdates.m; sourceTree = "<group>"; };
-		311A22B41795D26E007BF879 /* AppBladeAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeAuthentication.h; sourceTree = "<group>"; };
-		311A22B51795D26E007BF879 /* AppBladeAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeAuthentication.m; sourceTree = "<group>"; };
+		311A22961794E633007BF879 /* FeedbackReportingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackReportingManager.h; sourceTree = "<group>"; };
+		311A22971794E633007BF879 /* FeedbackReportingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackReportingManager.m; sourceTree = "<group>"; };
+		311A22A51795CFFF007BF879 /* CrashReportingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportingManager.h; sourceTree = "<group>"; };
+		311A22A61795CFFF007BF879 /* CrashReportingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReportingManager.m; sourceTree = "<group>"; };
+		311A22AC1795D24A007BF879 /* SessionTrackingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionTrackingManager.h; sourceTree = "<group>"; };
+		311A22AD1795D24A007BF879 /* SessionTrackingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionTrackingManager.m; sourceTree = "<group>"; };
+		311A22B01795D259007BF879 /* AppBladeUpdatesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeUpdatesManager.h; sourceTree = "<group>"; };
+		311A22B11795D259007BF879 /* AppBladeUpdatesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeUpdatesManager.m; sourceTree = "<group>"; };
+		311A22B41795D26E007BF879 /* AppBladeAuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeAuthenticationManager.h; sourceTree = "<group>"; };
+		311A22B51795D26E007BF879 /* AppBladeAuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeAuthenticationManager.m; sourceTree = "<group>"; };
 		311A22BA1795D313007BF879 /* AppBladeCustomParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeCustomParameters.h; sourceTree = "<group>"; };
 		311A22BB1795D313007BF879 /* AppBladeCustomParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeCustomParameters.m; sourceTree = "<group>"; };
 		311A22C01796072C007BF879 /* AppBladeSharedConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSharedConstants.h; sourceTree = "<group>"; };
@@ -215,8 +215,8 @@
 		311A22901794E594007BF879 /* Feedback Reporting */ = {
 			isa = PBXGroup;
 			children = (
-				311A22961794E633007BF879 /* FeedbackReporting.h */,
-				311A22971794E633007BF879 /* FeedbackReporting.m */,
+				311A22961794E633007BF879 /* FeedbackReportingManager.h */,
+				311A22971794E633007BF879 /* FeedbackReportingManager.m */,
 				313061F81794A357006DF03A /* FeedbackBackgroundView.h */,
 				313061F91794A357006DF03A /* FeedbackBackgroundView.m */,
 				313061FA1794A357006DF03A /* FeedbackDialogue.h */,
@@ -228,8 +228,8 @@
 		311A22911794E59F007BF879 /* Crash Reporting */ = {
 			isa = PBXGroup;
 			children = (
-				311A22A51795CFFF007BF879 /* CrashReporting.h */,
-				311A22A61795CFFF007BF879 /* CrashReporting.m */,
+				311A22A51795CFFF007BF879 /* CrashReportingManager.h */,
+				311A22A61795CFFF007BF879 /* CrashReportingManager.m */,
 			);
 			name = "Crash Reporting";
 			sourceTree = "<group>";
@@ -237,8 +237,8 @@
 		311A22921794E5AB007BF879 /* Session Tracking */ = {
 			isa = PBXGroup;
 			children = (
-				311A22AC1795D24A007BF879 /* SessionTracking.h */,
-				311A22AD1795D24A007BF879 /* SessionTracking.m */,
+				311A22AC1795D24A007BF879 /* SessionTrackingManager.h */,
+				311A22AD1795D24A007BF879 /* SessionTrackingManager.m */,
 			);
 			name = "Session Tracking";
 			sourceTree = "<group>";
@@ -246,8 +246,8 @@
 		311A22941794E5CA007BF879 /* Auto Updating */ = {
 			isa = PBXGroup;
 			children = (
-				311A22B01795D259007BF879 /* AppBladeUpdates.h */,
-				311A22B11795D259007BF879 /* AppBladeUpdates.m */,
+				311A22B01795D259007BF879 /* AppBladeUpdatesManager.h */,
+				311A22B11795D259007BF879 /* AppBladeUpdatesManager.m */,
 			);
 			name = "Auto Updating";
 			sourceTree = "<group>";
@@ -255,8 +255,8 @@
 		311A22951794E5F2007BF879 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
-				311A22B41795D26E007BF879 /* AppBladeAuthentication.h */,
-				311A22B51795D26E007BF879 /* AppBladeAuthentication.m */,
+				311A22B41795D26E007BF879 /* AppBladeAuthenticationManager.h */,
+				311A22B51795D26E007BF879 /* AppBladeAuthenticationManager.m */,
 			);
 			name = Authentication;
 			sourceTree = "<group>";
@@ -444,11 +444,11 @@
 				313064131794A866006DF03A /* AppBlade.h in Headers */,
 				313064151794A866006DF03A /* FileMD5Hash.h in Headers */,
 				313064141794A866006DF03A /* FeedbackBackgroundView.h in Headers */,
-				311A22981794E633007BF879 /* FeedbackReporting.h in Headers */,
-				311A22A71795CFFF007BF879 /* CrashReporting.h in Headers */,
-				311A22AE1795D24A007BF879 /* SessionTracking.h in Headers */,
-				311A22B21795D259007BF879 /* AppBladeUpdates.h in Headers */,
-				311A22B61795D26E007BF879 /* AppBladeAuthentication.h in Headers */,
+				311A22981794E633007BF879 /* FeedbackReportingManager.h in Headers */,
+				311A22A71795CFFF007BF879 /* CrashReportingManager.h in Headers */,
+				311A22AE1795D24A007BF879 /* SessionTrackingManager.h in Headers */,
+				311A22B21795D259007BF879 /* AppBladeUpdatesManager.h in Headers */,
+				311A22B61795D26E007BF879 /* AppBladeAuthenticationManager.h in Headers */,
 				311A22BC1795D313007BF879 /* AppBladeCustomParameters.h in Headers */,
 				311A22C21796072C007BF879 /* AppBladeSharedConstants.h in Headers */,
 			);
@@ -595,11 +595,11 @@
 				313062911794A357006DF03A /* PLCrashReportThreadInfo.m in Sources */,
 				313062941794A357006DF03A /* PLCrashSignalHandler.m in Sources */,
 				3130629A1794A357006DF03A /* PLCrashSysctl.c in Sources */,
-				311A22991794E633007BF879 /* FeedbackReporting.m in Sources */,
-				311A22A81795CFFF007BF879 /* CrashReporting.m in Sources */,
-				311A22AF1795D24A007BF879 /* SessionTracking.m in Sources */,
-				311A22B31795D259007BF879 /* AppBladeUpdates.m in Sources */,
-				311A22B71795D26E007BF879 /* AppBladeAuthentication.m in Sources */,
+				311A22991794E633007BF879 /* FeedbackReportingManager.m in Sources */,
+				311A22A81795CFFF007BF879 /* CrashReportingManager.m in Sources */,
+				311A22AF1795D24A007BF879 /* SessionTrackingManager.m in Sources */,
+				311A22B31795D259007BF879 /* AppBladeUpdatesManager.m in Sources */,
+				311A22B71795D26E007BF879 /* AppBladeAuthenticationManager.m in Sources */,
 				311A22BE1795D313007BF879 /* AppBladeCustomParameters.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

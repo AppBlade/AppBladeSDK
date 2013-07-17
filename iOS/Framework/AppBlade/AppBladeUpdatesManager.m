@@ -1,13 +1,13 @@
 //
-//  AppBladeAuthentication.m
+//  AppBladeUpdates.m
 //  AppBlade
 //
 //  Created by AndrewTremblay on 7/16/13.
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
 
-#import "AppBladeAuthentication.h"
+#import "AppBladeUpdatesManager.h"
 
-@implementation AppBladeAuthentication
+@implementation AppBladeUpdatesManager
 
 @end
