@@ -935,6 +935,7 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
+//feedback UI must still be handled in the AppBlade class
 - (void)showFeedbackDialogue
 {
     [self showFeedbackDialogueWithOptions:AppBladeFeedbackDisplayDefault];
