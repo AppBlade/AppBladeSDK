@@ -6,7 +6,7 @@
 //  Copyright 2011 AppBlade. All rights reserved.
 //
 
-#import "AppBladeWebClient.h"
+#import "AppBladeWebOperation.h"
 #import "PLCrashReporter.h"
 
 #import "AppBlade.h"
@@ -35,9 +35,8 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 NSString *deviceSecretHeaderField    = @"X-device-secret";
 
 
-@interface AppBladeWebClient ()
+@interface AppBladeWebOperation ()
 
-@property (nonatomic, readwrite) AppBladeWebClientAPI api;
 
 @property (nonatomic, strong) NSString* osVersionBuild;
 @property (nonatomic, strong) NSString* platform;
@@ -74,7 +73,7 @@ NSString *deviceSecretHeaderField    = @"X-device-secret";
 
 @end
 
-@implementation AppBladeWebClient
+@implementation AppBladeWebOperation
 
 
 const int kNonceRandomStringLength = 74;
@@ -264,7 +263,7 @@ const int kNonceRandomStringLength = 74;
     
     ABErrorLog(@"AppBlade failed with error: %@", error.localizedDescription);
     
-    AppBladeWebClient *selfReference = self;
+    AppBladeWebOperation *selfReference = self;
     id<AppBladeWebClientDelegate> delegateReference = self.delegate;
     dispatch_async(dispatch_get_main_queue(), ^{
         [delegateReference appBladeWebClientFailed:selfReference];
@@ -299,7 +298,7 @@ const int kNonceRandomStringLength = 74;
 //        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         ABDebugLog_internal(@"Parsed JSON: %@", json);
-        AppBladeWebClient *selfReference = self;
+        AppBladeWebOperation *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClient:selfReference receivedGenerateTokenResponse:json];
@@ -311,7 +310,7 @@ const int kNonceRandomStringLength = 74;
 //        ABDebugLog_internal(@"Received Device Secret Confirm Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         self.receivedData = nil;
-        AppBladeWebClient *selfReference = self;
+        AppBladeWebOperation *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClient:selfReference receivedConfirmTokenResponse:json];
@@ -327,7 +326,7 @@ const int kNonceRandomStringLength = 74;
         
         
         if (plist && error == NULL) {
-            AppBladeWebClient *selfReference = self;
+            AppBladeWebOperation *selfReference = self;
             id<AppBladeWebClientDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClient:selfReference receivedPermissions:plist];
@@ -337,7 +336,7 @@ const int kNonceRandomStringLength = 74;
         else
         {
             ABErrorLog(@"Error parsing permisions json: %@", [error debugDescription]);
-            AppBladeWebClient *selfReference = self;
+            AppBladeWebOperation *selfReference = self;
             id<AppBladeWebClientDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid response was received from AppBlade; please contact support"];
@@ -347,7 +346,7 @@ const int kNonceRandomStringLength = 74;
         
     }
     else if (self.api == AppBladeWebClientAPI_ReportCrash) {
-        AppBladeWebClient *selfReference = self;
+        AppBladeWebOperation *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClientCrashReported:selfReference];
@@ -356,7 +355,7 @@ const int kNonceRandomStringLength = 74;
     else if (self.api == AppBladeWebClientAPI_Feedback) {
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
-        AppBladeWebClient *selfReference = self;
+        AppBladeWebOperation *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClientSentFeedback:selfReference withSuccess:success];
@@ -367,7 +366,7 @@ const int kNonceRandomStringLength = 74;
         //ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString);
         int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
-        AppBladeWebClient *selfReference = self;
+        AppBladeWebOperation *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClientSentSessions:selfReference withSuccess:success];
@@ -381,7 +380,7 @@ const int kNonceRandomStringLength = 74;
         self.receivedData = nil;
         
         if (json && error == NULL) {
-            AppBladeWebClient *selfReference = self;
+            AppBladeWebOperation *selfReference = self;
             id<AppBladeWebClientDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClient:selfReference receivedUpdate:json];
@@ -390,7 +389,7 @@ const int kNonceRandomStringLength = 74;
         else
         {
             ABErrorLog(@"Error parsing update plist: %@", [error debugDescription]);
-            AppBladeWebClient *selfReference = self;
+            AppBladeWebOperation *selfReference = self;
             id<AppBladeWebClientDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
@@ -476,7 +475,7 @@ const int kNonceRandomStringLength = 74;
         //we're signed by apple, skip authentication. Go straight to delegate.
         ABDebugLog_internal(@"Binary signed by Apple, skipping permissions check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
-        AppBladeWebClient *selfReference = self;
+        AppBladeWebOperation *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClient:selfReference receivedPermissions:fairplayPermissions];
@@ -503,7 +502,7 @@ const int kNonceRandomStringLength = 74;
         //we're signed by apple, skip updating. Go straight to delegate.
         ABDebugLog_internal(@"Binary signed by Apple, skipping update check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
-        AppBladeWebClient *selfReference = self;
+        AppBladeWebOperation *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegateReference appBladeWebClient:selfReference receivedUpdate:fairplayPermissions];
@@ -676,7 +675,7 @@ const int kNonceRandomStringLength = 74;
             ABErrorLog(@"Error %@", [error debugDescription]);
         
         //we may have to remove the sessions file in extreme cases
-        AppBladeWebClient *selfReference = self;
+        AppBladeWebOperation *selfReference = self;
         id<AppBladeWebClientDelegate> delegateReference = self.delegate;
         dispatch_async(dispatch_get_main_queue(), ^{
         [delegateReference appBladeWebClientFailed:selfReference];

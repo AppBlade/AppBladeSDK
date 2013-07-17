@@ -12,7 +12,7 @@
 
 #import "PLCrashReporter.h"
 #import "PLCrashReport.h"
-#import "AppBladeWebClient.h"
+#import "AppBladeWebOperation.h"
 #import "PLCrashReportTextFormatter.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
@@ -233,7 +233,7 @@ static AppBlade *s_sharedManager = nil;
             ABDebugLog_internal(@"Our hashes don't match! Clearing out current secrets!");
             [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
         }        
-        self.appBladeHost =  [AppBladeWebClient buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
+        self.appBladeHost =  [AppBladeWebOperation buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
         self.appBladeProjectSecret = [appBladePlistStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
         if(self.appBladeProjectSecret == nil)
         {
@@ -317,7 +317,7 @@ static AppBlade *s_sharedManager = nil;
     
     NSArray *currentOperations = [[self pendingRequests] operations];
     for (int i = 0; i < [currentOperations count]; i++) {
-        AppBladeWebClient *op = (AppBladeWebClient *)[currentOperations objectAtIndex:i];
+        AppBladeWebOperation *op = (AppBladeWebOperation *)[currentOperations objectAtIndex:i];
         if(nil == op.sentDeviceSecret || ![tokenToCheckAgainst isEqualToString:op.sentDeviceSecret]) {
             [op cancel];
         }
@@ -344,7 +344,7 @@ static AppBlade *s_sharedManager = nil;
     
     //HOLD EVERYTHING. bubble the request to the top.
     [self pauseCurrentPendingRequests];
-    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
+    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
     [client refreshToken:[self appBladeDeviceSecret]];
     [self.tokenRequests addOperation:client];
 }
@@ -363,7 +363,7 @@ static AppBlade *s_sharedManager = nil;
     //HOLD EVERYTHING. bubble the request to the top.
     [self pauseCurrentPendingRequests];
     
-    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
+    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
     [client confirmToken:[self appBladeDeviceSecret]];
     [self.tokenRequests addOperation:client];
 }
@@ -378,7 +378,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)checkApproval
 {
     [self validateProjectConfiguration];
-    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self] ;
+    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self] ;
     [client checkPermissions];
     [self.pendingRequests addOperation:client];
 }
@@ -387,7 +387,7 @@ static AppBlade *s_sharedManager = nil;
 {
     [self validateProjectConfiguration];
     ABDebugLog_internal(@"Checking for updates");
-    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self] ;
+    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self] ;
     [client checkForUpdates];
     [self.pendingRequests addOperation:client];
 }
@@ -456,7 +456,7 @@ static AppBlade *s_sharedManager = nil;
     }
     
     if(queuedFilePath != nil){
-        AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
+        AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
         client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:queuedFilePath,  kAppBladeCrashReportKeyFilePath, nil];
         [client reportCrash:reportString withParams:[self getCustomParams]];
         [self.pendingRequests addOperation:client];
@@ -483,12 +483,12 @@ static AppBlade *s_sharedManager = nil;
 
 
 #pragma mark - AppBladeWebClient
--(void) appBladeWebClientFailed:(AppBladeWebClient *)client
+-(void) appBladeWebClientFailed:(AppBladeWebOperation *)client
 {
     [self appBladeWebClientFailed:client withErrorString:NULL];
 }
 
-- (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString
+- (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString
 {
     if (nil == client) {
         return;
@@ -633,7 +633,7 @@ static AppBlade *s_sharedManager = nil;
     }
 }
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedGenerateTokenResponse:(NSDictionary *)response
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response
 {    
     NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
     if(deviceSecretString != nil) {
@@ -658,7 +658,7 @@ static AppBlade *s_sharedManager = nil;
     }
 }
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedConfirmTokenResponse:(NSDictionary *)response
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response
 {
     NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
     if(deviceSecretTimeout != nil) {
@@ -680,7 +680,7 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions
 {
     NSString *errorString = [permissions objectForKey:@"error"];
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
@@ -709,7 +709,7 @@ static AppBlade *s_sharedManager = nil;
     
 }
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)updateData
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData
 {
     // determine if there is an update available
     NSDictionary* update = [updateData objectForKey:@"update"];
@@ -725,7 +725,7 @@ static AppBlade *s_sharedManager = nil;
     
 }
 
-- (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
+- (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client
 {
     // purge the crash report that was just reported.
     int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
@@ -753,7 +753,7 @@ static AppBlade *s_sharedManager = nil;
     }
 }
 
-- (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success
+- (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
     @synchronized (self){
         BOOL isBacklog = [[self.pendingRequests operations] containsObject:client];
@@ -823,7 +823,7 @@ static AppBlade *s_sharedManager = nil;
     }
 }
 
-- (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success
+- (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
     if(success){
         //delete existing sessions, as we have reported them
@@ -1091,7 +1091,7 @@ static AppBlade *s_sharedManager = nil;
         ABErrorLog(@"Error writing backup file to %@", backupFilePath);
     }
     
-    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
+    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
     ABDebugLog_internal(@"Sending screenshot");
     [client sendFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
     [self.pendingRequests addOperation:client];
@@ -1117,7 +1117,7 @@ static AppBlade *s_sharedManager = nil;
                 NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
                 bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
                 if(screenShotFileExists){
-                    AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
+                    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
                     client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
                     [client sendFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[self getCustomParams]];
                     [self.pendingRequests addOperation:client];
@@ -1265,7 +1265,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"%d Sessions Exist, posting them", [sessions count]);
         
         if(![self hasPendingSessions]){
-            AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self];
+            AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
             [client postSessions:sessions];
             [self.pendingRequests addOperation:client];
         }
@@ -1575,7 +1575,7 @@ static AppBlade *s_sharedManager = nil;
     BOOL tokenRequestInProgress = ([[self tokenRequests] operationCount]) != 0;
     BOOL processIsNotFinished = tokenRequestInProgress; //if we have a process, assume it's not finished, if we have one then of course it's finished
     if(tokenRequestInProgress) { //the queue has a maximum concurrent process size of one, that's why we can do what comes next
-        AppBladeWebClient *process = (AppBladeWebClient *)[[[self tokenRequests] operations] objectAtIndex:0];
+        AppBladeWebOperation *process = (AppBladeWebOperation *)[[[self tokenRequests] operations] objectAtIndex:0];
         processIsNotFinished = ![process isFinished];
     }
     return tokenRequestInProgress && processIsNotFinished;

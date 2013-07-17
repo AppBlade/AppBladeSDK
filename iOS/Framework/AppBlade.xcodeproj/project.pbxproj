@@ -12,7 +12,7 @@
 		311A21551794C79F007BF879 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* FeedbackBackgroundView.h */; };
 		311A21591794C79F007BF879 /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
 		311A215A1794C79F007BF879 /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
-		311A215B1794C79F007BF879 /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A61794A356006DF03A /* AppBladeWebClient.m */; };
+		311A215B1794C79F007BF879 /* AppBladeWebOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A61794A356006DF03A /* AppBladeWebOperation.m */; };
 		311A215C1794C79F007BF879 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061F91794A357006DF03A /* FeedbackBackgroundView.m */; };
 		311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061FB1794A357006DF03A /* FeedbackDialogue.m */; };
 		311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061FC1794A357006DF03A /* FileMD5Hash.c */; };
@@ -34,7 +34,7 @@
 		3130607F1794A2A3006DF03A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
 		313060861794A2A3006DF03A /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
 		313061FF1794A357006DF03A /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
-		313062021794A357006DF03A /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A61794A356006DF03A /* AppBladeWebClient.m */; };
+		313062021794A357006DF03A /* AppBladeWebOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A61794A356006DF03A /* AppBladeWebOperation.m */; };
 		313062371794A357006DF03A /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060EF1794A356006DF03A /* CrashReporter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3130623D1794A357006DF03A /* PLCrashAsync.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060F21794A356006DF03A /* PLCrashAsync.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		313062401794A357006DF03A /* PLCrashAsyncImage.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060F41794A356006DF03A /* PLCrashAsyncImage.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -111,8 +111,8 @@
 		313060A21794A356006DF03A /* AppBladeLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeLogging.h; sourceTree = "<group>"; };
 		313060A31794A356006DF03A /* AppBladeSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSimpleKeychain.h; sourceTree = "<group>"; };
 		313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeSimpleKeychain.m; sourceTree = "<group>"; };
-		313060A51794A356006DF03A /* AppBladeWebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeWebClient.h; sourceTree = "<group>"; };
-		313060A61794A356006DF03A /* AppBladeWebClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeWebClient.m; sourceTree = "<group>"; };
+		313060A51794A356006DF03A /* AppBladeWebOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeWebOperation.h; sourceTree = "<group>"; };
+		313060A61794A356006DF03A /* AppBladeWebOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeWebOperation.m; sourceTree = "<group>"; };
 		313060D31794A356006DF03A /* protobuf-c-private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "protobuf-c-private.h"; sourceTree = "<group>"; };
 		313060D41794A356006DF03A /* protobuf-c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "protobuf-c.c"; sourceTree = "<group>"; };
 		313060D51794A356006DF03A /* protobuf-c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "protobuf-c.h"; sourceTree = "<group>"; };
@@ -273,8 +273,8 @@
 		311A22AA1795D12F007BF879 /* AppBladeWebClient */ = {
 			isa = PBXGroup;
 			children = (
-				313060A51794A356006DF03A /* AppBladeWebClient.h */,
-				313060A61794A356006DF03A /* AppBladeWebClient.m */,
+				313060A51794A356006DF03A /* AppBladeWebOperation.h */,
+				313060A61794A356006DF03A /* AppBladeWebOperation.m */,
 			);
 			name = AppBladeWebClient;
 			sourceTree = "<group>";
@@ -550,7 +550,7 @@
 			files = (
 				311A21591794C79F007BF879 /* AppBlade.m in Sources */,
 				311A215A1794C79F007BF879 /* AppBladeSimpleKeychain.m in Sources */,
-				311A215B1794C79F007BF879 /* AppBladeWebClient.m in Sources */,
+				311A215B1794C79F007BF879 /* AppBladeWebOperation.m in Sources */,
 				311A215C1794C79F007BF879 /* FeedbackBackgroundView.m in Sources */,
 				311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */,
 				311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */,
@@ -566,7 +566,7 @@
 				313064111794A820006DF03A /* crash_report.proto in Sources */,
 				313060861794A2A3006DF03A /* AppBlade.m in Sources */,
 				313061FF1794A357006DF03A /* AppBladeSimpleKeychain.m in Sources */,
-				313062021794A357006DF03A /* AppBladeWebClient.m in Sources */,
+				313062021794A357006DF03A /* AppBladeWebOperation.m in Sources */,
 				313063BF1794A357006DF03A /* FeedbackBackgroundView.m in Sources */,
 				313063C21794A357006DF03A /* FeedbackDialogue.m in Sources */,
 				313063C51794A357006DF03A /* FileMD5Hash.c in Sources */,

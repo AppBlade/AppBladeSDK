@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AppBladeWebClient.h"
+#import "AppBladeWebOperation.h"
 
-@interface AppBladeAuthentication : AppBladeWebClient
+@interface AppBladeAuthentication : AppBladeWebOperation
 
 @end

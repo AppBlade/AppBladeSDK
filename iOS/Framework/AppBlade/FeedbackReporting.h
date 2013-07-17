@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "FeedbackDialogue.h"
 
-#import "AppBladeWebClient.h"
+#import "AppBladeWebOperation.h"
 
 typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackSetupOptions) {
     AppBladeFeedbackSetupDefault                 = 0,      // default behavior
@@ -24,8 +24,10 @@ typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackDisplayOptions) {
 };
 
 
-@interface FeedbackReporting : AppBladeWebClient
+@interface FeedbackReporting : AppBladeWebOperation
 
+
+-(id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate andFeedbackDictionary:(NSDictionary *)feedbackDictionary;
 
 
 @end

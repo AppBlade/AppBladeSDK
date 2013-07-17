@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@class AppBladeWebClient;
+@class AppBladeWebOperation;
 
 typedef enum {
     AppBladeWebClientAPI_GenerateToken,
@@ -40,23 +40,24 @@ extern NSString *deviceSecretHeaderField;
 - (NSString *)appBladeProjectSecret;
 - (NSString *)appBladeDeviceSecret;
 
-- (void)appBladeWebClientFailed:(AppBladeWebClient *)client;
-- (void)appBladeWebClientFailed:(AppBladeWebClient *)client withErrorString:(NSString*)errorString;
+- (void)appBladeWebClientFailed:(AppBladeWebOperation *)client;
+- (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
 
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedGenerateTokenResponse:(NSDictionary *)response;
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedConfirmTokenResponse:(NSDictionary *)response;
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedPermissions:(NSDictionary *)permissions;
-- (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client;
-- (void)appBladeWebClientSentFeedback:(AppBladeWebClient *)client withSuccess:(BOOL)success;
-- (void)appBladeWebClientSentSessions:(AppBladeWebClient *)client withSuccess:(BOOL)success;
-- (void)appBladeWebClient:(AppBladeWebClient *)client receivedUpdate:(NSDictionary*)permissions;
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response;
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions;
+- (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client;
+- (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
+- (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)permissions;
 
 @end
 
-@interface AppBladeWebClient : NSOperation 
+@interface AppBladeWebOperation : NSOperation 
 
 @property (nonatomic, weak) id<AppBladeWebClientDelegate> delegate;
-@property (nonatomic, readonly) AppBladeWebClientAPI api;
+@property (nonatomic, readwrite) AppBladeWebClientAPI api;
+
 @property (nonatomic, strong) NSDictionary* userInfo;
 @property (nonatomic, strong) NSMutableURLRequest* request;
 @property (nonatomic, strong) NSDictionary* responseHeaders;
