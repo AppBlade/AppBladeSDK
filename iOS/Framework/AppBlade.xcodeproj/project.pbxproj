@@ -204,6 +204,7 @@
 		311A228F1794E58E007BF879 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				311A22C81796DE3B007BF879 /* AppBladeBasicFeatureManager.h */,
 				311A22951794E5F2007BF879 /* Authentication */,
 				311A22941794E5CA007BF879 /* Auto Updating */,
 				311A22921794E5AB007BF879 /* Session Tracking */,
@@ -272,13 +273,13 @@
 			name = AppBladeSimpleKeychain;
 			sourceTree = "<group>";
 		};
-		311A22AA1795D12F007BF879 /* AppBladeWebClient */ = {
+		311A22AA1795D12F007BF879 /* AppBladeWebOperation */ = {
 			isa = PBXGroup;
 			children = (
 				313060A51794A356006DF03A /* AppBladeWebOperation.h */,
 				313060A61794A356006DF03A /* AppBladeWebOperation.m */,
 			);
-			name = AppBladeWebClient;
+			name = AppBladeWebOperation;
 			sourceTree = "<group>";
 		};
 		311A22B81795D2E8007BF879 /* Custom Parameters */ = {
@@ -335,12 +336,11 @@
 			isa = PBXGroup;
 			children = (
 				313060821794A2A3006DF03A /* AppBlade-Prefix.pch */,
-				311A22AA1795D12F007BF879 /* AppBladeWebClient */,
+				311A22AA1795D12F007BF879 /* AppBladeWebOperation */,
 				311A22A91795D121007BF879 /* AppBladeSimpleKeychain */,
 				3130640C1794A380006DF03A /* Hashing */,
 				313060A21794A356006DF03A /* AppBladeLogging.h */,
 				311A22C01796072C007BF879 /* AppBladeSharedConstants.h */,
-				311A22C81796DE3B007BF879 /* AppBladeBasicFeatureManager.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
