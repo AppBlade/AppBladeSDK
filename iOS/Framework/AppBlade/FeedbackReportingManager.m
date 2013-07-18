@@ -25,19 +25,14 @@
     return self;
 }
 
-- (AppBladeWebOperation*) generateWebRequest;
-{
-    AppBladeWebOperation *client = [[AppBladeWebOperation alloc] initWithDelegate:self.delegate];
-    [client setApi: AppBladeWebClientAPI_Feedback];
-    return client;
-}
-
 #pragma mark - Web Request Generators
 
 - (AppBladeWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict
 {
     
-    AppBladeWebOperation *client = [self generateWebRequest];
+    AppBladeWebOperation *client = [[AppBladeWebOperation alloc] initWithDelegate:self.delegate];
+    [client setApi: AppBladeWebClientAPI_Feedback];
+
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
     
     // Build report URL.

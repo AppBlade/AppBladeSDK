@@ -17,7 +17,7 @@
 static NSString* const kCrashDictCrashReportString  = @"_crashReportString";
 static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
 @interface CrashReportingManager ()
-    - (AppBladeWebOperation*) generateCrashReport:(NSString *)crashReport withParams:(NSDictionary *)paramsDict;
+- (AppBladeWebOperation*) generateCrashReport:(NSString *)crashReport withParams:(NSDictionary *)paramsDict;
 @end
 
 
@@ -30,13 +30,6 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
     }
     
     return self;
-}
-
-- (AppBladeWebOperation*) generateWebRequest;
-{
-    AppBladeWebOperation *client = [[AppBladeWebOperation alloc] initWithDelegate:self.delegate];
-    [client setApi: AppBladeWebClientAPI_Feedback];
-    return client;
 }
 
 #pragma mark - Web Request Generators
@@ -54,7 +47,9 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
 
 - (AppBladeWebOperation*) generateCrashReport:(NSString *)crashReport withParams:(NSDictionary *)paramsDict
 {
-    AppBladeWebOperation *client = [self generateWebRequest];
+    AppBladeWebOperation *client = [[AppBladeWebOperation alloc] initWithDelegate:self.delegate];
+    [client setApi: AppBladeWebClientAPI_Feedback];
+
     @synchronized (self)
     {
         // Build report URL.
