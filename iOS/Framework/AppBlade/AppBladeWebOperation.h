@@ -11,6 +11,11 @@
 
 @class AppBladeWebOperation;
 
+
+typedef void (^RequestPrepareBlock)(NSDictionary *preparationData);
+typedef void (^RequestSuccessBlock)(NSDictionary *returnedData);
+typedef void (^RequestFailureBlock)(NSDictionary *returnedData, NSError *error);
+
 typedef enum {
     AppBladeWebClientAPI_GenerateToken,
     AppBladeWebClientAPI_ConfirmToken,
@@ -28,32 +33,37 @@ extern NSString *approvalURLFormat;
 extern NSString *reportCrashURLFormat;
 extern NSString *reportFeedbackURLFormat;
 extern NSString *sessionURLFormat;
-
 extern NSString *deviceSecretHeaderField;
 
 
 @protocol AppBladeWebOperationDelegate <NSObject>
 
 @required
-
 - (NSString *)appBladeHost;
 - (NSString *)appBladeProjectSecret;
 - (NSString *)appBladeDeviceSecret;
 
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
-
+//Token
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response;
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;
+///Authenticate
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions;
+///Update
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData;
+///Crash Report
 - (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client;
+///Feedback Report
 - (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
+///Session Report
 - (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)permissions;
 
 @end
 
 @interface AppBladeWebOperation : NSOperation 
+
+- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate;
 
 @property (nonatomic, weak) id<AppBladeWebOperationDelegate> delegate;
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
@@ -62,11 +72,13 @@ extern NSString *deviceSecretHeaderField;
 @property (nonatomic, strong) NSMutableURLRequest* request;
 @property (nonatomic, strong) NSDictionary* responseHeaders;
 @property (nonatomic, strong) NSMutableData* receivedData;
-
 @property (nonatomic, strong) NSString* sentDeviceSecret;
--(int)getReceivedStatusCode;
 
-- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate;
+@property (nonatomic, copy) RequestPrepareBlock prepareBlock;
+@property (nonatomic, copy) RequestSuccessBlock successBlock;
+@property (nonatomic, copy) RequestFailureBlock failBlock;
+
+-(int)getReceivedStatusCode;
 
 // Request builder methods.
 + (NSString *)buildHostURL:(NSString *)customURLString;
