@@ -38,7 +38,7 @@
 
 @interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> 
 /******************************
-API KEYS
+ API KEYS
  ******************************/
 // AppBlade host name, or custom endpoint.
 @property (nonatomic, retain) NSString* appBladeHost;
