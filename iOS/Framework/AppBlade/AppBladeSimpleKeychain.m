@@ -6,6 +6,7 @@
 //  Copyright 2011 Raizlabs. All rights reserved.
 //
 #import "AppBladeSimpleKeychain.h"
+#import "AppBladeLogging.h"
 
 @implementation AppBladeSimpleKeychain
 
@@ -159,10 +160,10 @@
     [keychainQuery setObject:storeData forKey:(__bridge id)kSecValueData];
     resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
     if(resultCode != noErr){
-        APPBLADE_ERROR_LOGGING(@"Error storing to keychain: %ld : %@", resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
+        NSLog(@"Error storing to keychain: %ld : %@", resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
         if(resultCode == errSecDuplicateItem){
             id dataExistenceCheck = [AppBladeSimpleKeychain load:service];
-            APPBLADE_ERROR_LOGGING(@"This exists instead: %@", dataExistenceCheck);
+            NSLog(@"This exists instead: %@", dataExistenceCheck);
         }
          wasSuccessful = NO;
     }else{
@@ -186,10 +187,10 @@
     if (SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData) == noErr) {
         @try {
             ret = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)keyData];
-            if(ret == nil){ APPBLADE_ERROR_LOGGING(@"Keychain data not found." ); }
+            if(ret == nil){ NSLog(@"Keychain data not found." ); }
         }
         @catch (NSException *e) {
-            APPBLADE_ERROR_LOGGING(@"Unarchive of %@ failed: %@", service, e);
+            NSLog(@"Unarchive of %@ failed: %@", service, e);
         }
         @finally {}
     }
@@ -205,7 +206,7 @@
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef) keychainQuery);
     if(resultCode != noErr){
-        APPBLADE_ERROR_LOGGING(@"Error deleting from keychain: %ld : %@", resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
+        NSLog(@"Error deleting from keychain: %ld : %@", resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
         wasSuccessful = NO;
     }else{
         wasSuccessful = YES;
