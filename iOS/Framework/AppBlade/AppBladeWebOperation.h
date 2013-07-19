@@ -47,6 +47,8 @@ extern NSString *deviceSecretHeaderField;
 - (NSString *)appBladeProjectSecret;
 - (NSString *)appBladeDeviceSecret;
 
+- (BOOL)containsOperationInPendingRequests:(AppBladeWebOperation *)webOperation;
+
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
 //Token

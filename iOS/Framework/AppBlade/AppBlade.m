@@ -485,6 +485,10 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
+- (BOOL)containsOperationInPendingRequests:(AppBladeWebOperation *)webOperation
+{
+    return [[self.pendingRequests operations] containsObject:webOperation];
+}
 
 
 #pragma mark - AppBladeWebOperation
