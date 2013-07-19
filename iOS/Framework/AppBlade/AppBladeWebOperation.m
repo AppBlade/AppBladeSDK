@@ -267,6 +267,11 @@ const int kNonceRandomStringLength = 74;
     dispatch_async(dispatch_get_main_queue(), ^{
         [delegateReference appBladeWebClientFailed:selfReference];
     });
+
+    
+    if(self.failBlock != nil){
+        self.failBlock(selfReference, error);
+    }
     
     [self willChangeValueForKey:@"isFinished"];
     self.executing = NO;
@@ -352,13 +357,16 @@ const int kNonceRandomStringLength = 74;
         });
     }
     else if (self.api == AppBladeWebClientAPI_Feedback) {
-        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
-        BOOL success = (status == 201 || status == 200);
-        AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegateReference appBladeWebClientSentFeedback:selfReference withSuccess:success];
-        });        
+        if(self.requestCompletionBlock != nil){
+            NSMutableURLRequest *requestLocal = [self.request copy];
+            NSDictionary* responseHeadersLocal = [self.responseHeaders copy];
+            self.requestCompletionBlock(requestLocal, nil, responseHeadersLocal, nil, nil);
+        }
+//        AppBladeWebOperation *selfReference = self;
+//        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [delegateReference appBladeWebClientSentFeedback:selfReference withSuccess:success];
+//        });        
     }
     else if (self.api == AppBladeWebClientAPI_Sessions) {
         //NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];

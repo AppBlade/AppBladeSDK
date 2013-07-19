@@ -81,7 +81,7 @@ extern NSString *deviceSecretHeaderField;
 @property (nonatomic, strong) NSString* sentDeviceSecret;
 
 @property (nonatomic, copy) AppBladeRequestPrepareBlock prepareBlock;
-@property (nonatomic, copy) AppBladeRequestCompletionBlock completionBlock;
+@property (nonatomic, copy) AppBladeRequestCompletionBlock requestCompletionBlock;
 @property (nonatomic, copy) AppBladeRequestSuccessBlock successBlock;
 @property (nonatomic, copy) AppBladeRequestFailureBlock failBlock;
 
