@@ -595,34 +595,6 @@ static AppBlade *s_sharedManager = nil;
             }
         }
         else if (client.api == AppBladeWebClientAPI_Feedback) {
-            @synchronized (self){
-                ABErrorLog(@"ERROR sending feedback");
-                NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-                NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-                NSString *fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
-                BOOL isBacklog = ([[backupFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@",fileName]] count] > 0);
-                if (!isBacklog) {
-                    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-                    NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-                    NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-                    [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
-                    
-                    if (!backupFiles) {
-                        backupFiles = [NSMutableArray array];
-                    }
-                    
-                    [backupFiles addObject:newFeedbackName];
-                    
-                    BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-                    if(!success){
-                        ABErrorLog(@"Error writing backup file to %@", backupFilePath);
-                    }
-                    self.feedbackDictionary = nil;
-                }
-                else {
-
-                }
-            }
         }
         else if(client.api == AppBladeWebClientAPI_Sessions){
             ABErrorLog(@"ERROR sending sessions");
@@ -741,72 +713,6 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
-    @synchronized (self){
-        BOOL isBacklog = [[self.pendingRequests operations] containsObject:client];
-        if (success) {
-            ABDebugLog_internal(@"feedback Successful");
-            
-            NSDictionary* feedback = [client.userInfo objectForKey:kAppBladeFeedbackKeyFeedback];
-            // Clean up
-            NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
-            [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
-
-            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-           
-            NSString* fileName = [client.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
-
-            NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
-            ABDebugLog_internal(@"Removing supporting feedback files and the feedback file herself");
-            [self.feedbackManager removeIntermediateFeedbackFiles:filePath];
-           
-            ABDebugLog_internal(@"Removing Successful feedback object from main feedback list");
-            [backups removeObject:fileName];
-            if (backups.count > 0) {
-                ABDebugLog_internal(@"writing pending feedback objects back to file");
-                [backups writeToFile:backupFilePath atomically:YES];
-            }
-            
-            ABDebugLog_internal(@"checking for more pending feedback");
-            if ([self.feedbackManager hasPendingFeedbackReports]) {
-                ABDebugLog_internal(@"more pending feedback");
-                [self handleBackloggedFeedback];
-            }
-            else
-            {
-                ABDebugLog_internal(@"no more pending feedback");
-            }
-        }
-        else if (!isBacklog) {
-            ABDebugLog_internal(@"Unsuccesful feedback not found in backLog");
-            
-            // If we fail sending, add to backlog
-            // We do not remove backlogged files unless the request is sucessful
-            
-            NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-            NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-            NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-            
-            [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
-            
-            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-            if (!backupFiles) {
-                backupFiles = [NSMutableArray array];
-            }
-            
-            [backupFiles addObject:newFeedbackName];
-            
-            BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-            if(!success){
-                ABErrorLog(@"Error writing backup file to %@", backupFilePath);
-            }
-        } //It's failed and already in the backlog. Keep it there.
-        
-        if (!isBacklog) {
-            self.feedbackDictionary = nil;
-        }
-    }
 }
 
 - (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success

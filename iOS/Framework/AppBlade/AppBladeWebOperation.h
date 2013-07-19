@@ -13,7 +13,7 @@
 
 
 typedef void (^AppBladeRequestPrepareBlock)(id preparationData);
-typedef void (^AppBladeRequestCompletionBlock)(NSMutableURLRequest *request, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *error, BOOL succeeded);
+typedef void (^AppBladeRequestCompletionBlock)(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *error);
 
 typedef void (^AppBladeRequestSuccessBlock)(id data, NSError* error); //we can return an error and still be successful
 typedef void (^AppBladeRequestFailureBlock)(id data, NSError* error);
@@ -61,7 +61,7 @@ extern NSString *deviceSecretHeaderField;
 ///Crash Report
 - (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client;
 ///Feedback Report
-- (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
+//- (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
 ///Session Report
 - (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
 

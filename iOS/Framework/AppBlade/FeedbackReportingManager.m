@@ -79,18 +79,128 @@
     [apiRequest setHTTPBody:body];
     [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
     
-    
+    //set our weak/block references
     __weak AppBladeWebOperation *weakClient = client;
+    //set our blocks
     [client setPrepareBlock:^(NSMutableURLRequest * apiRequest){
-        NSLog(@"WOO WE'RE IN A BLOCK");
+        NSLog(@"WOO WE'RE IN A BLOCK %@", apiRequest);
         [weakClient addSecurityToRequest:apiRequest];
     }];
+ 
+    
+    NSDictionary *blockFeedbackDictionary = [[[NSDictionary alloc] initWithObjectsAndKeys:note, kAppBladeFeedbackKeyNotes, screenshot, kAppBladeFeedbackKeyScreenshot, nil] copy];
+    [client setSuccessBlock:^(id data, NSError* error){
+        ABDebugLog_internal(@"feedback Successful");
+        
+        NSDictionary* feedback = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyFeedback];
+        // Clean up
+        NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
+        [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
+        
+        NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+        NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+        
+        NSString* fileName = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
+        
+        NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
+        ABDebugLog_internal(@"Removing supporting feedback files and the feedback file herself");
+        [self removeIntermediateFeedbackFiles:filePath];
+        
+        ABDebugLog_internal(@"Removing Successful feedback object from main feedback list");
+        [backups removeObject:fileName];
+        if (backups.count > 0) {
+            ABDebugLog_internal(@"writing pending feedback objects back to file");
+            [backups writeToFile:backupFilePath atomically:YES];
+        }
+        
+        ABDebugLog_internal(@"checking for more pending feedback");
+        if ([self hasPendingFeedbackReports]) {
+            ABDebugLog_internal(@"more pending feedback");
+            [[AppBlade sharedManager] handleBackloggedFeedback];
+        }
+        else
+        {
+            ABDebugLog_internal(@"no more pending feedback");
+        }
+
+    }];
+    [client setFailBlock:^(id data, NSError* error){
+        @synchronized (self){
+            ABErrorLog(@"ERROR sending feedback");
+            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+            NSString *fileName = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
+            BOOL isBacklog = ([[backupFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@",fileName]] count] > 0);
+            if (!isBacklog) {
+                NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+                NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+                NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+                [blockFeedbackDictionary writeToFile:feedbackPath atomically:YES];
+                
+                if (!backupFiles) {
+                    backupFiles = [NSMutableArray array];
+                }
+                
+                [backupFiles addObject:newFeedbackName];
+                
+                BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+                if(!success){
+                    ABErrorLog(@"Error writing backup file to %@", backupFilePath);
+                }
+            }
+            else {
+                
+            }
+        }
+
+    }];
+    
+    [client setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *error){
+        int status = [[responseHeaders valueForKey:@"statusCode"] intValue];
+        BOOL succeeded = (status == 201 || status == 200);
+        
+        BOOL isBacklog = [[weakClient delegate] containsOperationInPendingRequests:weakClient];
+        if (succeeded){
+            NSLog(@"Success!");
+            if(weakClient.successBlock != nil) {
+                NSLog(@"successBlock!");
+                weakClient.successBlock(receivedData, nil);
+            }
+        }
+        else if (!isBacklog) {
+            ABDebugLog_internal(@"Unsuccesful feedback not found in backLog");
+            
+            // If we fail sending, add to backlog
+            // We do not remove backlogged files unless the request is sucessful
+            
+            NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+            NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+            NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+            
+            [blockFeedbackDictionary writeToFile:feedbackPath atomically:YES];
+            
+            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+            if (!backupFiles) {
+                backupFiles = [NSMutableArray array];
+            }
+            
+            [backupFiles addObject:newFeedbackName];
+            
+            BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+            if(!success){
+                ABErrorLog(@"Error writing backup file to %@", backupFilePath);
+            }
+        } //else it's failed and already in the backlog. Keep it there.
+    }];
+    
+
     
     return client;
 }
 
 
-#pragma mark Stored Web Request Behavior 
+#pragma mark Stored Web Request Behavior
 
 - (BOOL)hasPendingFeedbackReports
 {
