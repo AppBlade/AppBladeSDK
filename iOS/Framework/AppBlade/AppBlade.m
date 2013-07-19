@@ -98,9 +98,10 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
++(void)disable; // disables the SDK from accepting any new calls to it. Not recommended.
+- (void)raiseConfigurationExceptionWithMessage:(NSString *)message;
 
 - (void)validateProjectConfiguration;
-- (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 - (void)checkAndCreateAppBladeCacheDirectory;
 
 - (void)handleCrashReport;
@@ -113,7 +114,6 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 
 - (NSString*)randomString:(int)length;
-
 
 - (BOOL)hasPendingSessions;
 //hasPendingCrashReport in PLCrashReporter
@@ -202,6 +202,11 @@ static BOOL is_encrypted () {
 
 #pragma mark - Lifecycle
 
++(void)disable
+{
+    
+}
+
 + (NSString*)sdkVersion
 {
     return s_sdkVersion;
@@ -253,22 +258,35 @@ static BOOL is_encrypted () {
 
 - (void)validateProjectConfiguration
 {
+    NSString* const exceptionMissingMessageFormat = @"AppBlade is missing %@. The project is likely misconfigured. Make sure you declare the shared AppBlade manager from within your application delegate and you have your AppBladeKeys plist file in the right place.";
+
+    NSString *missingElement = @"";
+    BOOL projectInvalid = FALSE;
     //All the necessary plist vairables must be included
-    if ([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0) {
-        if (self.appBladeProjectSecret == nil || self.appBladeProjectSecret.length == 0) {
-            [self raiseConfigurationExceptionWithFieldName:@"Project Secret OR Device Secret"];
-        }
+    if (self.appBladeProjectSecret == nil || self.appBladeProjectSecret.length == 0) {
+         missingElement = @"Project Secret";
+    }//project can be missing if we have a device secret
+    if (([missingElement isEqualToString:@"Project Secret"]) && ([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0)) {
+        missingElement = @"both a Device Secret and Project secret. It needs one of them.";
+        projectInvalid = TRUE;
     }
-    else if (!self.appBladeHost || self.appBladeHost.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project Host"];
+
+    if (!projectInvalid && (!self.appBladeHost || self.appBladeHost.length == 0)) {
+        missingElement =  @"the Project Host (endpoint).";
+        projectInvalid = TRUE;
+    }
+    
+    if(projectInvalid){
+        [self raiseConfigurationExceptionWithMessage:@"Device Secret"];
     }
 }
 
-- (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
+
+- (void)raiseConfigurationExceptionWithMessage:(NSString *)message
 {
-    NSString* const exceptionMessageFormat = @"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.";
-    [NSException raise:@"AppBladeException" format:exceptionMessageFormat, name];
-    abort();
+    NSLog(@"%@", message);
+    NSLog(@"AppBlade must now disable itself.");
+    [AppBlade disable];
 }
 
 
@@ -285,9 +303,8 @@ static BOOL is_encrypted () {
     [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token.
     
     if (![AppBladeSimpleKeychain hasKeychainAccess]){
-        [AppBlade clearCacheDirectory];
-        [NSException raise:@"AppBladeException" format: @"AppBlade is halting due to missing keychain permissions."];
-        abort();
+        [AppBlade disable];
+        NSLog(@"AppBlade must disable due to missing keychain permissions.");
     }
     
     NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
