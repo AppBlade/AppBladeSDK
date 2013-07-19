@@ -91,6 +91,21 @@
 // Returns the keychain request dictionary for a SimpleKeychain entry.
 + (NSMutableDictionary *)getKeychainQuery:(NSString *)service
 {
+    // kSecAttrAccessible
+    // kSecAttrAccount
+    // kSecAttrService
+    // kSecAttrAccessGroup
+    // kSecAttrCreationDate      //read only
+    // kSecAttrModificationDate  //read only
+    // kSecAttrDescription
+    // kSecAttrComment
+    // kSecAttrCreator
+    // kSecAttrType
+    // kSecAttrLabel
+    // kSecAttrIsInvisible
+    // kSecAttrIsNegative
+    // kSecAttrGeneric
+
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:
             (__bridge id)kSecClassGenericPassword, (__bridge id)kSecClass,
             service, (__bridge id)kSecAttrService,
@@ -104,6 +119,8 @@
 + (void)save:(NSString *)service data:(id)data
 {
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
+    NSLog(@"save(overwrite) with query: %@", keychainQuery  );
+    
     SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
     [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(__bridge id)kSecValueData];
     if(SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL) != noErr){ NSLog(@"Couldn't save the Keychain Item." ); }
@@ -116,6 +133,9 @@
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     [keychainQuery setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
     [keychainQuery setObject:(__bridge id)kSecMatchLimitOne forKey:(__bridge id)kSecMatchLimit];
+    
+    NSLog(@"load with query: %@", keychainQuery  );
+
     CFDataRef keyData = NULL;
     if (SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData) == noErr) {
         @try {
