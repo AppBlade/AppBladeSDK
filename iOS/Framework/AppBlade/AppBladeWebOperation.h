@@ -12,9 +12,13 @@
 @class AppBladeWebOperation;
 
 
-typedef void (^RequestPrepareBlock)(NSDictionary *preparationData);
-typedef void (^RequestSuccessBlock)(NSDictionary *returnedData);
-typedef void (^RequestFailureBlock)(NSDictionary *returnedData, NSError *error);
+typedef void (^AppBladeRequestPrepareBlock)(id preparationData);
+typedef void (^AppBladeRequestCompletionBlock)(NSMutableURLRequest *request, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *error, BOOL succeeded);
+
+typedef void (^AppBladeRequestSuccessBlock)(id data, NSError* error); //we can return an error and still be successful
+typedef void (^AppBladeRequestFailureBlock)(id data, NSError* error);
+
+
 
 typedef enum {
     AppBladeWebClientAPI_GenerateToken,
@@ -74,9 +78,10 @@ extern NSString *deviceSecretHeaderField;
 @property (nonatomic, strong) NSMutableData* receivedData;
 @property (nonatomic, strong) NSString* sentDeviceSecret;
 
-@property (nonatomic, copy) RequestPrepareBlock prepareBlock;
-@property (nonatomic, copy) RequestSuccessBlock successBlock;
-@property (nonatomic, copy) RequestFailureBlock failBlock;
+@property (nonatomic, copy) AppBladeRequestPrepareBlock prepareBlock;
+@property (nonatomic, copy) AppBladeRequestCompletionBlock completionBlock;
+@property (nonatomic, copy) AppBladeRequestSuccessBlock successBlock;
+@property (nonatomic, copy) AppBladeRequestFailureBlock failBlock;
 
 -(int)getReceivedStatusCode;
 

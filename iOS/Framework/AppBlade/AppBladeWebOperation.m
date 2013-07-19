@@ -102,6 +102,11 @@ const int kNonceRandomStringLength = 74;
 - (void) issueRequest
 {
     if((nil != self.request) && !self.isCancelled){
+        
+        if (self.prepareBlock) {
+            self.prepareBlock(self.request);
+        }
+        
             ABDebugLog_internal(@"Success_IssueRequest: Starting API call.");
             self.executing = YES;
             [self didChangeValueForKey:@"isExecuting"];
@@ -109,8 +114,7 @@ const int kNonceRandomStringLength = 74;
             self.finished = NO;
             [self didChangeValueForKey:@"isFinished"];
             self.activeConnection = [[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:YES] ;
-        
-        
+
         
         // Keep track of the current thread
         self.connectionThread = [NSThread currentThread];
