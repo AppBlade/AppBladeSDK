@@ -153,7 +153,7 @@
 {
     BOOL wasSuccessful = YES;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-    APPBLADE_DEBUG_LOGGING(@"save(overwrite) %@ with query: %@", service, keychainQuery  );
+    ABDebugLog_internal(@"save(overwrite) %@ with query: %@", service, keychainQuery  );
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
     //NSAssert(resultCode == noErr || resultCode == errSecItemNotFound, @"Error storing to keychain: %ld", resultCode);
     NSData *storeData = [NSKeyedArchiver archivedDataWithRootObject:data];
