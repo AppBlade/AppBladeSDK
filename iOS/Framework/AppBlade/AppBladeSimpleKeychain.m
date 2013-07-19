@@ -102,7 +102,7 @@
 // Returns the keychain request dictionary for a SimpleKeychain entry.
 + (NSMutableDictionary *)getKeychainQuery:(NSString *)service
 {
-    NSAssert(service != nil, @"service must not be nil");
+    //NSAssert(service != nil, @"service must not be nil");
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:
             (__bridge id)kSecClassGenericPassword, (__bridge id)kSecClass,
             service, kSecAttrService,
@@ -115,14 +115,27 @@
 // Accepts service name and NSCoding-complaint data object. Automatically overwrites if something exists.
 + (void)save:(NSString *)service data:(id)data
 {
+    NSLog(@"Saving %@ to keychain : %@", data, service);
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
-    NSAssert(resultCode == noErr || resultCode == errSecItemNotFound, @"Error storing to keychain");
+    //NSAssert(resultCode == noErr || resultCode == errSecItemNotFound, @"Error storing to keychain: %ld", resultCode);
     
     NSData *storeData = [NSKeyedArchiver archivedDataWithRootObject:data];
     [keychainQuery setObject:storeData forKey:(__bridge id)kSecValueData];
     resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
-    NSAssert(resultCode == noErr, @"Error storing to keychain");
+    if(resultCode != noErr){
+        NSLog(@"Error storing to keychain: %ld", resultCode);
+//        if(resultCode == errSecDuplicateItem){
+//            NSLog(@"Attempting to recover from duplication error");
+//            keychainQuery = [self getKeychainQuery:service];
+//            while(resultCode != errSecItemNotFound){
+//                resultCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+//                NSLog(@"Attempting duplicate removal : %ld", resultCode);
+//            }
+//            NSLog(@"Attempting resave");
+//            [self save:service data:data];
+//        }
+    }
 
 }
 
@@ -137,7 +150,7 @@
     if (SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData) == noErr) {
         @try {
             ret = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)keyData];
-            NSAssert(ret != nil, @"Keychain data not found.");
+           // NSAssert(ret != nil, @"Keychain data not found.");
         }
         @catch (NSException *e) {
             NSLog(@"Unarchive of %@ failed: %@", service, e);
