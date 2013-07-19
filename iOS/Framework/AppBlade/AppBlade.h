@@ -100,6 +100,11 @@
 - (void)showFeedbackDialogue;
 - (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options;
 
+//other feedback methods and functions
+- (void)handleBackloggedFeedback;
+
+
+
 /******************************
  SESSION TRACKING
  ******************************/
