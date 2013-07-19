@@ -279,8 +279,15 @@ static BOOL is_encrypted () {
         projectInvalid = TRUE;
     }
     
+    NSString *configurationExceptionMessage = [NSString stringWithFormat:exceptionMissingMessageFormat, missingElement];
+    
+    //we have the data, now check the keychain
+    if(![AppBladeSimpleKeychain hasKeychainAccess]){
+        configurationExceptionMessage = @"AppBlade cannot be enabled on this build because it cannot access the keychain. The build was likely signed improperly.";
+    }
+    
     if(projectInvalid){
-        [self raiseConfigurationExceptionWithMessage:[NSString stringWithFormat:exceptionMissingMessageFormat, missingElement]];
+        [self raiseConfigurationExceptionWithMessage:configurationExceptionMessage];
     }
 }
 
