@@ -267,17 +267,17 @@ static BOOL is_encrypted () {
          missingElement = @"Project Secret";
     }//project can be missing if we have a device secret
     if (([missingElement isEqualToString:@"Project Secret"]) && ([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0)) {
-        missingElement = @"both a Device Secret and Project secret. It needs one of them.";
+        missingElement = @"both a Device Secret and Project secret. It needs one of them";
         projectInvalid = TRUE;
     }
 
     if (!projectInvalid && (!self.appBladeHost || self.appBladeHost.length == 0)) {
-        missingElement =  @"the Project Host (endpoint).";
+        missingElement =  @"the Project Host (endpoint)";
         projectInvalid = TRUE;
     }
     
     if(projectInvalid){
-        [self raiseConfigurationExceptionWithMessage:@"Device Secret"];
+        [self raiseConfigurationExceptionWithMessage:[NSString stringWithFormat:exceptionMissingMessageFormat, missingElement]];
     }
 }
 
@@ -348,7 +348,7 @@ static BOOL is_encrypted () {
     }
     else
     {
-        [self raiseConfigurationExceptionWithFieldName:plistName];
+        [self raiseConfigurationExceptionWithMessage:plistName];
     }
     
     if([kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret] || self.appBladeProjectSecret == nil || [self.appBladeProjectSecret  length] == 0)
@@ -1433,7 +1433,7 @@ static BOOL is_encrypted () {
         toRet = [NSDictionary dictionary];
         [self setCustomParams:toRet];
     }
-    ABDebugLog_internal(@"getting %@", toRet);
+    ABDebugLog_internal(@"getting Custom Params %@", toRet);
 
     return toRet;
 }
