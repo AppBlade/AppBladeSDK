@@ -206,7 +206,10 @@ static BOOL is_encrypted () {
 
 +(void)disable
 {
-    s_sharedManager.isAllDisabled = true;
+    if(s_sharedManager != nil){
+        s_sharedManager.isAllDisabled = true;
+        [s_sharedManager pauseCurrentPendingRequests];
+    }
 }
 
 + (NSString*)sdkVersion
@@ -431,6 +434,12 @@ static BOOL is_encrypted () {
 
 - (void)refreshToken:(NSString *)tokenToConfirm
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't refreshToken, SDK disabled");
+        return;
+    }
+    
+
     //ensure no other requests or confirms are already running.
     if([self isDeviceSecretBeingConfirmed]) {
         ABDebugLog_internal(@"Refresh already in queue. Ignoring.");
@@ -449,6 +458,11 @@ static BOOL is_encrypted () {
 
 - (void)confirmToken:(NSString *)tokenToConfirm
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't confirmToken, SDK disabled");
+        return;
+    }
+    
     //ensure no other requests or confirms are already running.
     if([self isDeviceSecretBeingConfirmed]) {
         ABDebugLog_internal(@"Confirm (or refresh) already in queue. Ignoring.");
@@ -475,6 +489,11 @@ static BOOL is_encrypted () {
 
 - (void)checkApproval
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't checkApproval, SDK disabled");
+        return;
+    }
+
     [self validateProjectConfiguration];
     AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self] ;
     [client checkPermissions];
@@ -484,6 +503,10 @@ static BOOL is_encrypted () {
 - (void)checkForUpdates
 {
     [self validateProjectConfiguration];
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't checkForUpdates, SDK disabled");
+        return;
+    }
     ABDebugLog_internal(@"Checking for updates");
     AppBladeWebClient * client = [[AppBladeWebClient alloc] initWithDelegate:self] ;
     [client checkForUpdates];
@@ -493,8 +516,12 @@ static BOOL is_encrypted () {
 
 - (void)catchAndReportCrashes
 {
-    ABDebugLog_internal(@"Catch and report crashes");
     [self validateProjectConfiguration];
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't catch and report crashes, SDK disabled");
+        return;
+    }
+    ABDebugLog_internal(@"Catch and report crashes");
 
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     NSError *error;
@@ -508,6 +535,11 @@ static BOOL is_encrypted () {
 
 - (void)checkForExistingCrashReports
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't catch and report crashes, SDK disabled");
+        return;
+    }
+
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     // Check if we previously crashed
     if ([crashReporter hasPendingCrashReport]){
@@ -517,6 +549,11 @@ static BOOL is_encrypted () {
 
 - (void)handleCrashReport
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't catch and report crashes, SDK disabled");
+        return;
+    }
+
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     NSData *crashData;
     NSError *error;
@@ -1004,6 +1041,12 @@ static BOOL is_encrypted () {
 
 - (BOOL)hasPendingFeedbackReports
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't check HasPendingFeedbackReports, SDK disabled");
+        return NO;
+    }
+
+    
     BOOL toRet = NO;
     @synchronized (self){
         NSString *feedbackBacklogFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
@@ -1034,6 +1077,7 @@ static BOOL is_encrypted () {
 {
     ABDebugLog_internal(@"allowFeedbackReporting");
 
+    
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     if (window) {
         [self allowFeedbackReportingForWindow:window];
@@ -1046,6 +1090,12 @@ static BOOL is_encrypted () {
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window
 {
+    [self validateProjectConfiguration];
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't allow feedback, SDK disabled");
+        return;
+    }
+
     self.window = window;
     self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] ;
     self.tapRecognizer.numberOfTapsRequired = 2;
@@ -1076,6 +1126,13 @@ static BOOL is_encrypted () {
 
 - (void)setupCustomFeedbackReportingForWindow:(UIWindow*)window
 {
+    [self validateProjectConfiguration];
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't setup for custom feedback, SDK disabled");
+        return;
+    }
+
+    
     if (window) {
         ABDebugLog_internal(@"Allowing custom feedback for window %@", window);
         self.window = window;
@@ -1098,6 +1155,12 @@ static BOOL is_encrypted () {
 
 - (void)showFeedbackDialogue:(BOOL)withScreenshot
 {
+    [self validateProjectConfiguration];
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't show feedback dialog, SDK disabled");
+        return;
+    }
+
     if(!self.showingFeedbackDialogue){
         self.showingFeedbackDialogue = YES;
         if(self.feedbackDictionary == nil){
@@ -1202,7 +1265,11 @@ static BOOL is_encrypted () {
 
 - (void)reportFeedback:(NSString *)feedback
 {
-    
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't report feedback, SDK disabled");
+        return;
+    }
+
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     
     ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackDictionary);
@@ -1234,6 +1301,11 @@ static BOOL is_encrypted () {
 
 - (void)handleBackloggedFeedback
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't handleBackloggedFeedback, SDK disabled");
+        return;
+    }
+
     @synchronized (self){
         ABDebugLog_internal(@"handleBackloggedFeedback");
         NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
@@ -1370,7 +1442,12 @@ static BOOL is_encrypted () {
 
 #pragma mark - Analytics
 - (BOOL)hasPendingSessions
-{   //check active clients for API_Sessions
+{
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't check hasPendingSessions, SDK disabled");
+        return NO;
+    }
+    //check active clients for API_Sessions
     NSInteger sessionClients = [self pendingRequestsOfType:AppBladeWebClientAPI_Sessions];
     return sessionClients > 0;
 }
@@ -1378,6 +1455,7 @@ static BOOL is_encrypted () {
 
 + (void)startSession
 {
+    
     ABDebugLog_internal(@"Starting Session Logging");
     [[AppBlade sharedManager] logSessionStart];
 }
@@ -1391,6 +1469,12 @@ static BOOL is_encrypted () {
 
 - (void)logSessionStart
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't startSession, SDK disabled");
+        return;
+    }
+    
+
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     ABDebugLog_internal(@"Checking Session Path: %@", sessionFilePath);
 
@@ -1410,6 +1494,11 @@ static BOOL is_encrypted () {
 
 - (void)logSessionEnd
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't endSession, SDK disabled");
+        return;
+    }
+
     NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
     
     NSMutableArray* pastSessions = nil;
@@ -1431,6 +1520,11 @@ static BOOL is_encrypted () {
 #pragma mark - AppBlade Custom Params
 -(NSDictionary *)getCustomParams
 {
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't getCustomParams, SDK disabled");
+        return [NSDictionary dictionary];;
+    }
+
     NSDictionary *toRet = nil;
     NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
@@ -1450,6 +1544,11 @@ static BOOL is_encrypted () {
 
 -(void)setCustomParams:(NSDictionary *)newFieldValues
 {
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't setCustomParams, SDK disabled");
+        return;
+    }
+
     [self checkAndCreateAppBladeCacheDirectory];
     NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
@@ -1566,6 +1665,11 @@ static BOOL is_encrypted () {
 #pragma mark - Device Secret Methods
 -(NSMutableDictionary*) appBladeDeviceSecrets
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't get appBladeDeviceSecrets, SDK disabled");
+        return [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];;
+    }
+
     NSMutableDictionary* appBlade_deviceSecret_dict = (NSMutableDictionary* )[AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
     if(nil == appBlade_deviceSecret_dict)
     {
@@ -1579,6 +1683,11 @@ static BOOL is_encrypted () {
 
 - (NSString *)appBladeDeviceSecret
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't get appBladeDeviceSecret, SDK disabled");
+        return @"";
+    }
+
     //get the last available device secret
     NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
     NSString* device_secret_stored = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyNew]; //assume we have the newest in new_secret key
@@ -1597,6 +1706,11 @@ static BOOL is_encrypted () {
 
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't get setAppBladeDeviceSecret, SDK disabled");
+        return;
+    }
+
         //always store the last two device secrets
         NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
         NSString* device_secret_latest_stored = [appBlade_keychain_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //get the newest key (to our knowledge)
@@ -1614,12 +1728,23 @@ static BOOL is_encrypted () {
 
 - (void)clearAppBladeKeychain
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't clearAppBladeKeychain, SDK disabled");
+        return;
+    }
+
     NSMutableDictionary* appBlade_keychain_dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];
     [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
 }
 
 - (void)clearStoredDeviceSecrets
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't clearStoredDeviceSecrets, SDK disabled");
+        return;
+    }
+
+    
     NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
     if(nil != appBlade_keychain_dict)
     {
