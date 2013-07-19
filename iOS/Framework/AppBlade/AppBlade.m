@@ -84,6 +84,8 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
+@property (nonatomic, assign) BOOL isAllDisabled; //internal variable to disable the SDK gracefully
+
 
 @property (nonatomic, retain) NSURL* upgradeLink;
 
@@ -204,7 +206,7 @@ static BOOL is_encrypted () {
 
 +(void)disable
 {
-    
+    s_sharedManager.isAllDisabled = true;
 }
 
 + (NSString*)sdkVersion
@@ -221,6 +223,7 @@ static BOOL is_encrypted () {
 {
     if (s_sharedManager == nil) {
         s_sharedManager = [[super allocWithZone:NULL] init];
+        s_sharedManager.isAllDisabled = false;
     }
     return s_sharedManager;
 }
