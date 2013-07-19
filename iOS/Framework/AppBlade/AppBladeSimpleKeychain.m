@@ -106,7 +106,7 @@
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
     [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(__bridge id)kSecValueData];
-    NSAssert(SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL) == noErr, @"Couldn't save the Keychain Item." );
+    if(SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL) != noErr){ NSLog(@"Couldn't save the Keychain Item." ); }
 }
 
 // Returns an object inflated from the data stored in the keychain entry for the given service.
@@ -120,7 +120,7 @@
     if (SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData) == noErr) {
         @try {
             ret = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)keyData];
-            NSAssert(ret != nil, @"Keychain data not found.");
+            if(ret == nil){ NSLog(@"Keychain data not found." ); }
         }
         @catch (NSException *e) {
             NSLog(@"Unarchive of %@ failed: %@", service, e);
@@ -138,7 +138,7 @@
 + (void)delete:(NSString *)service
 {
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-    SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+    SecItemDelete((__bridge CFDictionaryRef) keychainQuery);
 }
 
 @end
