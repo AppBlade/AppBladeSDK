@@ -34,7 +34,6 @@
     [client setApi: AppBladeWebClientAPI_Feedback];
 
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
-    
     // Build report URL.
     NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [client.delegate appBladeHost]];
     NSURL* reportURL = [NSURL URLWithString:reportString];
@@ -80,7 +79,12 @@
     [apiRequest setHTTPBody:body];
     [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
     
-    [client addSecurityToRequest:apiRequest];
+    
+    __weak AppBladeWebOperation *weakClient = client;
+    [client setPrepareBlock:^(NSMutableURLRequest * apiRequest){
+        NSLog(@"WOO WE'RE IN A BLOCK");
+        [weakClient addSecurityToRequest:apiRequest];
+    }];
     
     return client;
 }
