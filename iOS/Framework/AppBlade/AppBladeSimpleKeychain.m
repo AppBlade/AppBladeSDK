@@ -39,14 +39,31 @@
     keychainInterimCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
     keychainErrorCode = (keychainErrorCode != noErr) ? keychainErrorCode : keychainInterimCode;
     keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"deleting";
-    
-    
-    // If the keychain item already exists, modify it:
     if (keychainErrorCode == noErr)
     {
         //TODO: more tests for all the writing, reading,
         return TRUE;
     }else{
+        // If the keychain item already exists, modify it:
+        NSLog(@"Keychain error occured during keychain %@ test: %ld : %@", keychainInterimCodeLabel, keychainErrorCode, [AppBladeSimpleKeychain errorMessageFromCode:keychainErrorCode]);
+        NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
+        return FALSE;
+    }
+}
+
+
++(NSString*) errorMessageFromCode:(OSStatus)keychainErrorCode
+{
+    //        errSecSuccess                = 0,       /* No error. */
+    //        errSecUnimplemented          = -4,      /* Function or operation not implemented. */
+    //        errSecParam                  = -50,     /* One or more parameters passed to a function where not valid. */
+    //        errSecAllocate               = -108,    /* Failed to allocate memory. */
+    //        errSecNotAvailable           = -25291,	/* No keychain is available. You may need to restart your computer. */
+    //        errSecDuplicateItem          = -25299,	/* The specified item already exists in the keychain. */
+    //        errSecItemNotFound           = -25300,	/* The specified item could not be found in the keychain. */
+    //        errSecInteractionNotAllowed  = -25308,	/* User interaction is not allowed. */
+    //        errSecDecode                 = -26275,  /* Unable to decode the provided data. */
+    //        errSecAuthFailed             = -25293,	/* The user name or passphrase you entered is not correct. */
         NSString *errorMessage = @"";
         //SecCopyErrorMessageString doesn't work in iOS! Consternation!
         switch (keychainErrorCode) {
@@ -81,16 +98,31 @@
                 errorMessage = @"(unknown error)";
                 break;
         } //Not using the AppBlade Logs here because this is a CRITICAL error that should not be kept quiet.
-        NSLog(@"Keychain error occured during keychain %@ test: %ld : %@", keychainInterimCodeLabel, keychainErrorCode, errorMessage);
-        NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
-        return FALSE;
-    }
+    return errorMessage;
 }
 
+
+//This is obviously a very dangerous function. Use it as you would an atom bomb.
++(void)deleteLocalKeychain
+{
+    for (id secclass in @[
+         (__bridge id)kSecClassGenericPassword,
+         (__bridge id)kSecClassInternetPassword,
+         (__bridge id)kSecClassCertificate,
+         (__bridge id)kSecClassKey,
+         (__bridge id)kSecClassIdentity]) {
+        NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                      secclass, (__bridge id)kSecClass,
+                                      nil];
+        
+        SecItemDelete((__bridge CFDictionaryRef)query);
+    }
+}
 
 // Returns the keychain request dictionary for a SimpleKeychain entry.
 + (NSMutableDictionary *)getKeychainQuery:(NSString *)service
 {
+    //kSecClassGenericPassword attributes
     // kSecAttrAccessible
     // kSecAttrAccount
     // kSecAttrService
@@ -105,25 +137,39 @@
     // kSecAttrIsInvisible
     // kSecAttrIsNegative
     // kSecAttrGeneric
-
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:
             (__bridge id)kSecClassGenericPassword, (__bridge id)kSecClass,
-            service, (__bridge id)kSecAttrService,
-            service, (__bridge id)kSecAttrAccount,
-            (__bridge id)kSecAttrAccessibleAfterFirstUnlock, (__bridge id)kSecAttrAccessible, // Keychain must be unlocked to access this value.
+            service, kSecAttrService,
+            service, kSecAttrAccount,
+            kSecAttrAccessibleAfterFirstUnlock, kSecAttrAccessible, // Keychain must be unlocked to access this value. It will persist across backups. 
             nil];
 
 }
 
-// Accepts service name and NSCoding-complaint data object.
-+ (void)save:(NSString *)service data:(id)data
+// Accepts service name and NSCoding-complaint data object. Automatically overwrites if something exists.
+//Returns true on success
++ (BOOL)save:(NSString *)service data:(id)data
 {
+    BOOL wasSuccessful = YES;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-    NSLog(@"save(overwrite) with query: %@", keychainQuery  );
+    APPBLADE_DEBUG_LOGGING(@"save(overwrite) %@ with query: %@", service, keychainQuery  );
+    OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+    //NSAssert(resultCode == noErr || resultCode == errSecItemNotFound, @"Error storing to keychain: %ld", resultCode);
+    NSData *storeData = [NSKeyedArchiver archivedDataWithRootObject:data];
+    [keychainQuery setObject:storeData forKey:(__bridge id)kSecValueData];
+    resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
+    if(resultCode != noErr){
+        APPBLADE_ERROR_LOGGING(@"Error storing to keychain: %ld : %@", resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
+        if(resultCode == errSecDuplicateItem){
+            id dataExistenceCheck = [AppBladeSimpleKeychain load:service];
+            APPBLADE_ERROR_LOGGING(@"This exists instead: %@", dataExistenceCheck);
+        }
+         wasSuccessful = NO;
+    }else{
+        wasSuccessful = YES;
+    }
     
-    SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
-    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(__bridge id)kSecValueData];
-    if(SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL) != noErr){ NSLog(@"Couldn't save the Keychain Item." ); }
+    return wasSuccessful;
 }
 
 // Returns an object inflated from the data stored in the keychain entry for the given service.
@@ -134,31 +180,40 @@
     [keychainQuery setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
     [keychainQuery setObject:(__bridge id)kSecMatchLimitOne forKey:(__bridge id)kSecMatchLimit];
     
-    NSLog(@"load with query: %@", keychainQuery  );
+    //NSLog(@"load with query: %@", keychainQuery  );
 
     CFDataRef keyData = NULL;
     if (SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData) == noErr) {
         @try {
             ret = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)keyData];
-            if(ret == nil){ NSLog(@"Keychain data not found." ); }
+            if(ret == nil){ APPBLADE_ERROR_LOGGING(@"Keychain data not found." ); }
         }
         @catch (NSException *e) {
-            NSLog(@"Unarchive of %@ failed: %@", service, e);
+            APPBLADE_ERROR_LOGGING(@"Unarchive of %@ failed: %@", service, e);
         }
         @finally {}
     }
-    
-    NSLog(@"what do we have %@", ret);
 
     if (keyData) CFRelease(keyData);
     return ret;
 }
 
 // Removes the entry for the given service from keychain.
-+ (void)delete:(NSString *)service
++ (BOOL)delete:(NSString *)service
 {
+    BOOL wasSuccessful = YES;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-    SecItemDelete((__bridge CFDictionaryRef) keychainQuery);
+    OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef) keychainQuery);
+    if(resultCode != noErr){
+        APPBLADE_ERROR_LOGGING(@"Error deleting from keychain: %ld : %@", resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
+        wasSuccessful = NO;
+    }else{
+        wasSuccessful = YES;
+    }
+    return wasSuccessful;
 }
+
+
+
 
 @end

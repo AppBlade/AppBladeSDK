@@ -16,9 +16,11 @@
 @interface AppBladeSimpleKeychain : NSObject
 + (BOOL)hasKeychainAccess;
 
-+ (void)save:(NSString *)service data:(id)data;
++ (BOOL)delete:(NSString *)service;
++ (BOOL)save:(NSString *)service data:(id)data;
 + (id)load:(NSString *)service;
-+ (void)delete:(NSString *)service;
 
++(NSString*) errorMessageFromCode:(OSStatus)errorCode;
 
++ (void)deleteLocalKeychain; //Deletes every deletable thing.
 @end
