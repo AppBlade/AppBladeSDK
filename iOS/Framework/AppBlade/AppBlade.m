@@ -244,26 +244,6 @@ static AppBlade *s_sharedManager = nil;
 - (void)registerWithAppBladePlistNamed:(NSString*)plistName
 {
     
-    #ifdef SKIP_FEEDBACK
-        ABDebugLog_internal(@"Skipping feedback reporting");
-    #endif
-    #ifdef SKIP_CRASH_REPORTING
-        ABDebugLog_internal(@"Skipping crash reporting");
-    #endif
-    #ifdef SKIP_SESSIONS
-        ABDebugLog_internal(@"Skipping session reporting");
-    #endif
-    #ifdef SKIP_CUSTOM_PARAMS
-        ABDebugLog_internal(@"Skipping custom parameter setting");
-    #endif
-    #ifdef SKIP_AUTHENTICATION
-        ABDebugLog_internal(@"Skipping authentication");
-    #endif
-    #ifdef SKIP_AUTO_UPDATING
-        ABDebugLog_internal(@"Skipping updating code");
-    #endif
-
-    
     ABDebugLog_internal(@"Kicking off AppBlade Registration");
     [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token.
     
@@ -440,50 +420,77 @@ static AppBlade *s_sharedManager = nil;
 
 #pragma mark API Blockable Calls
 
+#pragma mark  Authentication
+
 - (void)checkApprovalWithUpdatePrompt:(BOOL)shouldPrompt  //deprecated, do not use
 {
+#ifndef SKIP_AUTHENTICATION
     [self checkApproval];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
+#endif
 }
 
 - (void)checkApproval
 {
+#ifndef SKIP_AUTHENTICATION
     [self validateProjectConfiguration];
     AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self] ;
     [client checkPermissions];
     [self.pendingRequests addOperation:client];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
+#endif
 }
+
+#pragma mark Auto Updating
 
 - (void)checkForUpdates
 {
+#ifndef SKIP_AUTO_UPDATING
     [self validateProjectConfiguration];
     ABDebugLog_internal(@"Checking for updates");
     AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self] ;
     [client checkForUpdates];
     [self.pendingRequests addOperation:client];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
+#endif
 }
 
+#pragma mark Crash Reporting
 
 - (void)catchAndReportCrashes
 {
+#ifndef SKIP_CRASH_REPORTING
     [self validateProjectConfiguration];
     [self.crashManager catchAndReportCrashes];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
+#endif
 }
 
 - (void)checkForExistingCrashReports
 {
+#ifndef SKIP_CRASH_REPORTING
     [self.crashManager checkForExistingCrashReports];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
+#endif
 }
 
 - (void)handleCrashReport
 {
-   NSDictionary *crashDict = [self.crashManager handleCrashReportAsDictionary];
-
+#ifndef SKIP_CRASH_REPORTING    
+    NSDictionary *crashDict = [self.crashManager handleCrashReportAsDictionary];
+    
     if(crashDict != nil){
         AppBladeWebOperation * client = [self.crashManager generateCrashReportFromDictionary:crashDict withParams:[self getCustomParams]];
         [self.pendingRequests addOperation:client];
     }
-
-    
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
+#endif
 }
 
 
@@ -799,7 +806,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)allowFeedbackReporting
 {
-    
+#ifndef SKIP_FEEDBACK
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     if (window) {
         [self allowFeedbackReportingForWindow:window withOptions:AppBladeFeedbackSetupDefault];
@@ -808,11 +815,16 @@ static AppBlade *s_sharedManager = nil;
     else {
         ABErrorLog(@"Cannot setup for feedback. No keyWindow.");
     }
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+
 }
 
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options
 {
+#ifndef SKIP_FEEDBACK
     self.window = window;
     
     if (options == AppBladeFeedbackSetupTripleFingerDoubleTap || options == AppBladeFeedbackSetupDefault) {
@@ -828,17 +840,26 @@ static AppBlade *s_sharedManager = nil;
     if ([self.feedbackManager hasPendingFeedbackReports]) {
         [self handleBackloggedFeedback];
     }
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 }
 
 
 //feedback UI must still be handled in the AppBlade class
 - (void)showFeedbackDialogue
 {
+#ifndef SKIP_FEEDBACK
     [self showFeedbackDialogueWithOptions:AppBladeFeedbackDisplayDefault];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+
 }
 
 - (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options
 {
+#ifndef SKIP_FEEDBACK
     if(!self.showingFeedbackDialogue){
         self.showingFeedbackDialogue = YES;
         if(self.feedbackDictionary == nil){
@@ -862,10 +883,15 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Feedback window already presenting, or a screenshot is trying to be captured");
         return;
     }
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+
 }
 
 - (void)promptFeedbackDialogue
 {
+#ifndef SKIP_FEEDBACK
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     CGRect screenFrame = self.window.frame;
     
@@ -920,30 +946,37 @@ static AppBlade *s_sharedManager = nil;
         feedback.delegate = nil;
         self.showingFeedbackDialogue = NO;
     }
-    
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 }
 
 -(void)feedbackDidSubmitText:(NSString*)feedbackText{
-    
+#ifndef SKIP_FEEDBACK
     ABDebugLog_internal(@"reporting text %@", feedbackText);
     [self reportFeedback:feedbackText];
     self.showingFeedbackDialogue = NO;
-
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 }
 
 - (void)feedbackDidCancel
 {
+#ifndef SKIP_FEEDBACK
     NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot]];
     [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
     self.feedbackDictionary = nil;
     self.showingFeedbackDialogue = NO;
-    
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 }
 
 
 - (void)reportFeedback:(NSString *)feedback
 {
-    
+#ifndef SKIP_FEEDBACK
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     
     ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackDictionary);
@@ -969,11 +1002,16 @@ static AppBlade *s_sharedManager = nil;
     AppBladeWebOperation * client = [self.feedbackManager generateFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
     ABDebugLog_internal(@"Sending screenshot");
     [self.pendingRequests addOperation:client];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+
 }
 
 
 - (void)handleBackloggedFeedback
 {
+#ifndef SKIP_FEEDBACK
     @synchronized (self){
         ABDebugLog_internal(@"handleBackloggedFeedback");
         NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
@@ -1015,6 +1053,9 @@ static AppBlade *s_sharedManager = nil;
             }
         }
     }
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 }
 
 -(NSString *)captureScreen
@@ -1107,7 +1148,7 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-#pragma mark - Analytics
+#pragma mark - Session Reporting
 - (BOOL)hasPendingSessions
 {   //check active clients for API_Sessions
     NSInteger sessionClients = [self pendingRequestsOfType:AppBladeWebClientAPI_Sessions];
@@ -1117,19 +1158,28 @@ static AppBlade *s_sharedManager = nil;
 
 + (void)startSession
 {
+#ifndef SKIP_SESSIONS
     ABDebugLog_internal(@"Starting Session Logging");
     [[AppBlade sharedManager] logSessionStart];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 }
 
 
 + (void)endSession
 {
+#ifndef SKIP_SESSIONS
     ABDebugLog_internal(@"Ended Session Logging");
     [[AppBlade sharedManager] logSessionEnd];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 }
 
 - (void)logSessionStart
 {
+#ifndef SKIP_SESSIONS
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     ABDebugLog_internal(@"Checking Session Path: %@", sessionFilePath);
 
@@ -1143,12 +1193,17 @@ static AppBlade *s_sharedManager = nil;
             [self.pendingRequests addOperation:client];
         }
     }
-    
     self.sessionStartDate = [NSDate date];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+
 }
 
 - (void)logSessionEnd
 {
+#ifndef SKIP_SESSIONS
+
     NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
     
     NSMutableArray* pastSessions = nil;
@@ -1165,12 +1220,17 @@ static AppBlade *s_sharedManager = nil;
     
     NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
     [sessionData writeToFile:sessionFilePath atomically:YES];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+
 }
 
 #pragma mark - AppBlade Custom Params
 -(NSDictionary *)getCustomParams
 {
     NSDictionary *toRet = nil;
+#ifndef SKIP_CUSTOM_PARAMS
     NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
         NSDictionary* currentFields = [NSDictionary dictionaryWithContentsOfFile:customFieldsPath];
@@ -1183,12 +1243,16 @@ static AppBlade *s_sharedManager = nil;
         [self setCustomParams:toRet];
     }
     ABDebugLog_internal(@"getting %@", toRet);
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 
     return toRet;
 }
 
 -(void)setCustomParams:(NSDictionary *)newFieldValues
 {
+#ifndef SKIP_CUSTOM_PARAMS
     [self checkAndCreateAppBladeCacheDirectory];
     NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
@@ -1210,9 +1274,14 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"clearing custom params, removing file");
         [[NSFileManager defaultManager] removeItemAtPath:customFieldsPath error:nil];
     }
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+    
 }
 
 -(void)setCustomParam:(id)newObject withValue:(NSString*)key{
+#ifndef SKIP_CUSTOM_PARAMS
     NSDictionary* currentFields = [self getCustomParams];
     if (currentFields == nil) {
         currentFields = [NSDictionary dictionary];
@@ -1231,11 +1300,17 @@ static AppBlade *s_sharedManager = nil;
     ABDebugLog_internal(@"setting to %@", mutableFields);
     currentFields = (NSDictionary *)mutableFields;
     [self setCustomParams:currentFields];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+    
+
 }
 
 
 -(void)setCustomParam:(id)object forKey:(NSString*)key;
 {
+#ifndef SKIP_CUSTOM_PARAMS
     NSDictionary* currentFields = [self getCustomParams];
     if (currentFields == nil) {
         currentFields = [NSDictionary dictionary];
@@ -1254,11 +1329,19 @@ static AppBlade *s_sharedManager = nil;
     ABDebugLog_internal(@"setting to %@", mutableFields);
     currentFields = (NSDictionary *)mutableFields;
     [self setCustomParams:currentFields];
-}
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+    }
 
 -(void)clearAllCustomParams
 {
+#ifndef SKIP_CUSTOM_PARAMS
     [self setCustomParams:nil];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+    
 }
 
 
