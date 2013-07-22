@@ -1,13 +1,13 @@
 //
-//  AppBladeCustomParameters.m
+//  AppBladeCustomParameters.h
 //  AppBlade
 //
 //  Created by AndrewTremblay on 7/16/13.
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
 
-#import "AppBladeCustomParameters.h"
+#import <Foundation/Foundation.h>
 
-@implementation AppBladeCustomParameters
+@interface AppBladeCustomParametersManager : NSObject
 
 @end

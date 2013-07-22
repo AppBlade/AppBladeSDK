@@ -27,6 +27,8 @@
 
 //Feature List
 #import "FeedbackReportingManager.h"
+#import "CrashReportingManager.h"
+#import "AppBladeCustomParametersManager.h"
 
 
 @interface AppBlade () <AppBladeWebOperationDelegate, FeedbackDialogueDelegate>
@@ -36,7 +38,7 @@
 //Managers
 @property (nonatomic, strong) CrashReportingManager*    crashManager;
 @property (nonatomic, strong) FeedbackReportingManager* feedbackManager;
-
+@property (nonatomic, strong) AppBladeCustomParametersManager*  customParamsManager;
 
 // Feedback
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
