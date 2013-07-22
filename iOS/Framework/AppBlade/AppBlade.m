@@ -26,29 +26,25 @@
 #include "FileMD5Hash.h"
 
 //Feature List (with conditionals)
-#ifndef SKIP_FEEDBACK
-
-#endif
-
-#ifndef SKIP_CRASH_REPORTING
-
-#endif
-#ifndef SKIP_SESSIONS
-
-#endif
-#ifndef SKIP_CUSTOM_PARAMS
-
-#endif
 #ifndef SKIP_AUTHENTICATION
-
-#endif
+    #import "AppBladeAuthenticationManager.h"
+    #endif
 #ifndef SKIP_AUTO_UPDATING
+    #import "AppBladeUpdatesManager.h"
+    #endif
+#ifndef SKIP_FEEDBACK
+    #import "FeedbackReportingManager.h"
+    #endif
+#ifndef SKIP_CRASH_REPORTING
+    #import "CrashReportingManager.h"
+    #endif
+#ifndef SKIP_SESSIONS
+    #import "SessionTrackingManager.h"
+    #endif
+#ifndef SKIP_CUSTOM_PARAMS
+    #import "AppBladeCustomParametersManager.h"
+    #endif
 
-#endif
-
-#import "FeedbackReportingManager.h"
-#import "CrashReportingManager.h"
-#import "AppBladeCustomParametersManager.h"
 
 
 @interface AppBlade () <AppBladeWebOperationDelegate, FeedbackDialogueDelegate>
