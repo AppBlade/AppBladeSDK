@@ -115,7 +115,6 @@
 // Accepts service name and NSCoding-complaint data object. Automatically overwrites if something exists.
 + (void)save:(NSString *)service data:(id)data
 {
-    NSLog(@"Saving %@ to keychain : %@", data, service);
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
     //NSAssert(resultCode == noErr || resultCode == errSecItemNotFound, @"Error storing to keychain: %ld", resultCode);
@@ -136,7 +135,9 @@
 //            [self save:service data:data];
 //        }
     }
-
+    SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(__bridge id)kSecValueData];
+    NSAssert(SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL) == noErr, @"Couldn't save the Keychain Item." );
 }
 
 // Returns an object inflated from the data stored in the keychain entry for the given service.
@@ -151,12 +152,16 @@
         @try {
             ret = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)keyData];
            // NSAssert(ret != nil, @"Keychain data not found.");
+            NSAssert(ret != nil, @"Keychain data not found.");
         }
         @catch (NSException *e) {
             NSLog(@"Unarchive of %@ failed: %@", service, e);
         }
         @finally {}
     }
+    
+    NSLog(@"what do we have %@", ret);
+
     if (keyData) CFRelease(keyData);
     return ret;
 }
