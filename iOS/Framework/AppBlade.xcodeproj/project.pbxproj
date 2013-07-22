@@ -71,6 +71,8 @@
 		313064141794A866006DF03A /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* FeedbackBackgroundView.h */; };
 		313064151794A866006DF03A /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061FD1794A357006DF03A /* FileMD5Hash.h */; };
 		313064171794B494006DF03A /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060D41794A356006DF03A /* protobuf-c.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		318731CA179DABF700E0D187 /* AppBladeSharedConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C01796072C007BF879 /* AppBladeSharedConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		318731CB179DAC0500E0D187 /* AppBladeLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060A21794A356006DF03A /* AppBladeLogging.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -434,6 +436,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				311A21531794C79F007BF879 /* AppBlade.h in Headers */,
+				318731CA179DABF700E0D187 /* AppBladeSharedConstants.h in Headers */,
+				318731CB179DAC0500E0D187 /* AppBladeLogging.h in Headers */,
 				311A21541794C79F007BF879 /* FileMD5Hash.h in Headers */,
 				311A21551794C79F007BF879 /* FeedbackBackgroundView.h in Headers */,
 				311A22BD1795D313007BF879 /* AppBladeCustomParameters.h in Headers */,
