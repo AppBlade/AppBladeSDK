@@ -25,7 +25,27 @@
 
 #include "FileMD5Hash.h"
 
-//Feature List
+//Feature List (with conditionals)
+#ifndef SKIP_FEEDBACK
+
+#endif
+
+#ifndef SKIP_CRASH_REPORTING
+
+#endif
+#ifndef SKIP_SESSIONS
+
+#endif
+#ifndef SKIP_CUSTOM_PARAMS
+
+#endif
+#ifndef SKIP_AUTHENTICATION
+
+#endif
+#ifndef SKIP_AUTO_UPDATING
+
+#endif
+
 #import "FeedbackReportingManager.h"
 #import "CrashReportingManager.h"
 #import "AppBladeCustomParametersManager.h"
@@ -223,6 +243,27 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)registerWithAppBladePlistNamed:(NSString*)plistName
 {
+    
+    #ifdef SKIP_FEEDBACK
+        ABDebugLog_internal(@"Skipping feedback reporting");
+    #endif
+    #ifdef SKIP_CRASH_REPORTING
+        ABDebugLog_internal(@"Skipping crash reporting");
+    #endif
+    #ifdef SKIP_SESSIONS
+        ABDebugLog_internal(@"Skipping session reporting");
+    #endif
+    #ifdef SKIP_CUSTOM_PARAMS
+        ABDebugLog_internal(@"Skipping custom parameter setting");
+    #endif
+    #ifdef SKIP_AUTHENTICATION
+        ABDebugLog_internal(@"Skipping authentication");
+    #endif
+    #ifdef SKIP_AUTO_UPDATING
+        ABDebugLog_internal(@"Skipping updating code");
+    #endif
+
+    
     ABDebugLog_internal(@"Kicking off AppBlade Registration");
     [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token.
     
