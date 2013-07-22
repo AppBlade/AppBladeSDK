@@ -375,6 +375,10 @@ static BOOL is_encrypted () {
     return is_encrypted();
 }
 
+-(void)cleanOutKeychain {
+    [AppBladeSimpleKeychain deleteLocalKeychain];
+}
+
 #pragma mark Pending Requests Queue 
 
 -(NSOperationQueue *) tokenRequests {
