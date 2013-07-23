@@ -13,13 +13,6 @@
 #import <UIKit/UIKit.h>
 
 #import "AppBladeSharedConstants.h"
-//Features
-#import "AppBladeAuthenticationManager.h"
-#import "AppBladeUpdatesManager.h"
-#import "SessionTrackingManager.h"
-#import "CrashReportingManager.h"
-#import "FeedbackReportingManager.h"
-#import "AppBladeLogging.h"
 
 @class AppBlade;
 
