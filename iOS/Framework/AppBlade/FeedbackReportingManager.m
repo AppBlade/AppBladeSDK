@@ -9,7 +9,6 @@
 #import "FeedbackReportingManager.h"
 #import "AppBlade.h"
 
-
 @interface FeedbackReportingManager ()
 
 @end
@@ -24,6 +23,56 @@
     
     return self;
 }
+
+- (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options
+{
+    AppBlade *delegateRef = (AppBlade *)self.delegate;
+    delegateRef.window = window;
+    
+    if (options == AppBladeFeedbackSetupTripleFingerDoubleTap || options == AppBladeFeedbackSetupDefault) {
+        //Set up our custom triple finger double-tap
+        delegateRef.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:delegateRef action:@selector(showFeedbackDialogue)] ;
+        delegateRef.tapRecognizer.numberOfTapsRequired = 2;
+        delegateRef.tapRecognizer.numberOfTouchesRequired = 3;
+        delegateRef.tapRecognizer.delegate = delegateRef;
+        [delegateRef.window addGestureRecognizer:delegateRef.tapRecognizer];
+    }
+    [delegateRef checkAndCreateAppBladeCacheDirectory];
+    
+    if ([self hasPendingFeedbackReports]) {
+        [delegateRef handleBackloggedFeedback];
+    }
+}
+
+- (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options
+{
+    AppBlade *delegateRef = (AppBlade *)self.delegate;
+    if(!delegateRef.showingFeedbackDialogue){
+        delegateRef.showingFeedbackDialogue = YES;
+        if(delegateRef.feedbackDictionary == nil){
+            delegateRef.feedbackDictionary = [NSMutableDictionary  dictionary];
+        }
+        
+        //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
+        if(options == AppBladeFeedbackDisplayWithScreenshot || options == AppBladeFeedbackDisplayDefault){
+            NSString* screenshotPath = [delegateRef captureScreen];
+            [delegateRef.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
+        }
+        else
+        {
+            
+        }
+        //other setup methods (like the reintroduction of the console log) will go here
+        [delegateRef promptFeedbackDialogue];
+    }
+    else
+    {
+        ABDebugLog_internal(@"Feedback window already presenting, or a screenshot is trying to be captured");
+        return;
+    }    
+}
+
+
 
 #pragma mark - Web Request Generators
 
@@ -245,6 +294,68 @@
     
 }
 
+@end
 
+
+@implementation AppBlade (FeedbackReporting)
+
+- (void)promptFeedbackDialogue
+{
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    CGRect screenFrame = self.window.frame;
+    
+    CGRect vFrame = CGRectZero;
+    if([[self.window subviews] count] > 0){
+        UIView *v = [[self.window subviews] objectAtIndex:0];
+        vFrame = v.frame; //adjust for any possible offset in the subview we'll add our feedback to.
+    }
+    
+    CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+    
+    if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        //make an adjustment for the case where the view we're adding to is stretched beyond the window.
+        screenFrame.origin.x = screenFrame.origin.x -vFrame.origin.x + statusBarFrame.size.width;
+        
+        // We need to react properly to interface orientations
+        CGSize size = screenFrame.size;
+        screenFrame.size.width = size.height;
+        screenFrame.size.height = size.width;
+        CGPoint origin = screenFrame.origin;
+        screenFrame.origin.x = origin.y;
+        screenFrame.origin.y = origin.x;
+    }
+    else
+    {
+        //make an adjustment for the case where the view we're adding to is stretched beyond the window.
+        screenFrame.origin.y = screenFrame.origin.y -vFrame.origin.y + statusBarFrame.size.height;
+    }
+    
+    ABDebugLog_internal(@"Displaying feedback dialog in frame X:%.f Y:%.f W:%.f H:%.f",
+                        screenFrame.origin.x, screenFrame.origin.y,
+                        screenFrame.size.width, screenFrame.size.height);
+    
+    
+    FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(screenFrame.origin.x, screenFrame.origin.y, screenFrame.size.width, screenFrame.size.height)];
+    feedback.delegate = self;
+    
+    // get the first window in the application if one was not supplied.
+    if (!self.window){
+        self.window = [[UIApplication sharedApplication] keyWindow];
+        self.showingFeedbackDialogue = YES;
+        ABDebugLog_internal(@"Feedback window not defined, using default (Images might not come through.)");
+    }
+    if([[self.window subviews] count] > 0){
+        [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
+        self.showingFeedbackDialogue = YES;
+        [feedback.textView becomeFirstResponder];
+    }
+    else
+    {
+        ABErrorLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
+        feedback.delegate = nil;
+        self.showingFeedbackDialogue = NO;
+    }
+}
 
 @end
+

@@ -25,7 +25,9 @@
 
 #include "FileMD5Hash.h"
 
-//Feature List (with conditionals)
+#import "AppBladeBasicFeatureManager.h"
+
+//Feature List (with exclusion conditionals)
 #ifndef SKIP_AUTHENTICATION
     #import "AppBladeAuthenticationManager.h"
     #endif
@@ -46,53 +48,28 @@
     #endif
 
 
+@interface AppBlade () <AppBladeWebOperationDelegate
 #ifndef SKIP_FEEDBACK
-@interface AppBlade () <AppBladeWebOperationDelegate, FeedbackDialogueDelegate>
-#else
-@interface AppBlade () <AppBladeWebOperationDelegate>
+, FeedbackDialogueDelegate
 #endif
+>
 
-
-@property (nonatomic, retain) NSURL* upgradeLink;
-
-//Managers
-#ifndef SKIP_CRASH_REPORTING
-@property (nonatomic, strong) CrashReportingManager*    crashManager;
-#endif
-#ifndef SKIP_FEEDBACK
-@property (nonatomic, strong) FeedbackReportingManager* feedbackManager;
-#endif
-@property (nonatomic, strong) AppBladeCustomParametersManager*  customParamsManager;
-
-// Feedback
-@property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
-@property (nonatomic, assign) BOOL showingFeedbackDialogue;
-@property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
-@property (nonatomic, assign) UIWindow* window;
-
-@property (nonatomic, retain) NSDate *sessionStartDate;
+//Managers (included conditionally inside their respective .h files)
+//
+//AppBladeAuthorizationManager*     authorizationManager
+//AppBladeUpdatesManager*           updatesManager
+//CrashReportingManager*            crashManager
+//FeedbackReportingManager*         feedbackManager
+//SessionTrackingManager*           sessionTrackingManager
+//AppBladeCustomParametersManager*  customParamsManager
 
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
-
 - (void)validateProjectConfiguration;
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 
-- (void)showFeedbackDialogue;
-
-- (void)promptFeedbackDialogue;
-- (void)reportFeedback:(NSString*)feedback;
-- (NSString*)captureScreen;
-- (UIImage*)getContentBelowView;
-- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
-
 - (NSString*)randomString:(int)length;
-
-
-- (BOOL)hasPendingSessions;
-//hasPendingCrashReport in PLCrashReporter
-- (void)handleBackloggedFeedback;
 
 -(NSMutableDictionary*) appBladeDeviceSecrets;
 - (BOOL)hasDeviceSecret;
@@ -186,12 +163,24 @@ static AppBlade *s_sharedManager = nil;
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         self.delegate = self;
-        //init the managers
-#ifndef SKIP_CRASH_REPORTING
-        self.crashManager       = [[CrashReportingManager alloc] initWithDelegate:self];
+        //init the managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls
+#ifndef SKIP_AUTHENTICATION
+        self.authenticationManager  = [[AppBladeAuthenticationManager alloc] initWithDelegate:self];
+#endif
+#ifndef SKIP_AUTO_UPDATING
+        self.updatesManager         = [[AppBladeUpdatesManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_FEEDBACK
-        self.feedbackManager    = [[FeedbackReportingManager alloc] initWithDelegate:self];
+        self.feedbackManager        = [[FeedbackReportingManager alloc] initWithDelegate:self];
+#endif
+#ifndef SKIP_CRASH_REPORTING
+        self.crashManager           = [[CrashReportingManager alloc] initWithDelegate:self];
+#endif
+#ifndef SKIP_SESSIONS
+        self.sessionTrackingManager = [[SessionTrackingManager alloc] initWithDelegate:self];
+#endif
+#ifndef SKIP_CUSTOM_PARAMS
+        self.customParamsManager    = [[AppBladeCustomParametersManager alloc] initWithDelegate:self];
 #endif
     }
     return self;
@@ -834,21 +823,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options
 {
 #ifndef SKIP_FEEDBACK
-    self.window = window;
-    
-    if (options == AppBladeFeedbackSetupTripleFingerDoubleTap || options == AppBladeFeedbackSetupDefault) {
-        //Set up our custom triple finger double-tap 
-        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] ;
-        self.tapRecognizer.numberOfTapsRequired = 2;
-        self.tapRecognizer.numberOfTouchesRequired = 3;
-        self.tapRecognizer.delegate = self;
-        [window addGestureRecognizer:self.tapRecognizer];
-    }    
-    [self checkAndCreateAppBladeCacheDirectory];
-    
-    if ([self.feedbackManager hasPendingFeedbackReports]) {
-        [self handleBackloggedFeedback];
-    }
+    [self.feedbackManager allowFeedbackReportingForWindow:window withOptions:options];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -869,96 +844,13 @@ static AppBlade *s_sharedManager = nil;
 - (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options
 {
 #ifndef SKIP_FEEDBACK
-    if(!self.showingFeedbackDialogue){
-        self.showingFeedbackDialogue = YES;
-        if(self.feedbackDictionary == nil){
-            self.feedbackDictionary = [NSMutableDictionary  dictionary];
-        }
-
-        //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
-        if(options == AppBladeFeedbackDisplayWithScreenshot || options == AppBladeFeedbackDisplayDefault){
-            NSString* screenshotPath = [self captureScreen];
-            [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
-        }
-        else
-        {
-        
-        }
-        //other setup methods (like the reintroduction of the console log) will go here
-        [self promptFeedbackDialogue];
-    }
-    else
-    {
-        ABDebugLog_internal(@"Feedback window already presenting, or a screenshot is trying to be captured");
-        return;
-    }
+    [self.feedbackManager showFeedbackDialogueWithOptions:options];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
 
 }
 
-- (void)promptFeedbackDialogue
-{
-#ifndef SKIP_FEEDBACK
-    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGRect screenFrame = self.window.frame;
-    
-    CGRect vFrame = CGRectZero;
-    if([[self.window subviews] count] > 0){
-        UIView *v = [[self.window subviews] objectAtIndex:0];
-        vFrame = v.frame; //adjust for any possible offset in the subview we'll add our feedback to.
-    }
-    
-    CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
-    
-    if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
-        //make an adjustment for the case where the view we're adding to is stretched beyond the window.
-        screenFrame.origin.x = screenFrame.origin.x -vFrame.origin.x + statusBarFrame.size.width;
-        
-        // We need to react properly to interface orientations
-        CGSize size = screenFrame.size;
-        screenFrame.size.width = size.height;
-        screenFrame.size.height = size.width;
-        CGPoint origin = screenFrame.origin;
-        screenFrame.origin.x = origin.y;
-        screenFrame.origin.y = origin.x;
-    }
-    else
-    {
-        //make an adjustment for the case where the view we're adding to is stretched beyond the window.
-        screenFrame.origin.y = screenFrame.origin.y -vFrame.origin.y + statusBarFrame.size.height;
-    }
-    
-    ABDebugLog_internal(@"Displaying feedback dialog in frame X:%.f Y:%.f W:%.f H:%.f",
-          screenFrame.origin.x, screenFrame.origin.y,
-          screenFrame.size.width, screenFrame.size.height);
-    
-    
-    FeedbackDialogue *feedback = [[FeedbackDialogue alloc] initWithFrame:CGRectMake(screenFrame.origin.x, screenFrame.origin.y, screenFrame.size.width, screenFrame.size.height)];
-    feedback.delegate = self;
-    
-    // get the first window in the application if one was not supplied.
-    if (!self.window){
-        self.window = [[UIApplication sharedApplication] keyWindow];
-        self.showingFeedbackDialogue = YES;
-        ABDebugLog_internal(@"Feedback window not defined, using default (Images might not come through.)");
-    }
-    if([[self.window subviews] count] > 0){
-        [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
-        self.showingFeedbackDialogue = YES;
-        [feedback.textView becomeFirstResponder];
-    }
-    else
-    {
-        ABErrorLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
-        feedback.delegate = nil;
-        self.showingFeedbackDialogue = NO;
-    }
-#else
-    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
-#endif
-}
 
 -(void)feedbackDidSubmitText:(NSString*)feedbackText{
 #ifndef SKIP_FEEDBACK
