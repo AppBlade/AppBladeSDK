@@ -46,14 +46,22 @@
     #endif
 
 
-
+#ifndef SKIP_FEEDBACK
 @interface AppBlade () <AppBladeWebOperationDelegate, FeedbackDialogueDelegate>
+#else
+@interface AppBlade () <AppBladeWebOperationDelegate>
+#endif
+
 
 @property (nonatomic, retain) NSURL* upgradeLink;
 
 //Managers
+#ifndef SKIP_CRASH_REPORTING
 @property (nonatomic, strong) CrashReportingManager*    crashManager;
+#endif
+#ifndef SKIP_FEEDBACK
 @property (nonatomic, strong) FeedbackReportingManager* feedbackManager;
+#endif
 @property (nonatomic, strong) AppBladeCustomParametersManager*  customParamsManager;
 
 // Feedback
@@ -180,8 +188,12 @@ static AppBlade *s_sharedManager = nil;
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         self.delegate = self;
         //init the managers
+#ifndef SKIP_CRASH_REPORTING
         self.crashManager       = [[CrashReportingManager alloc] initWithDelegate:self];
+#endif
+#ifndef SKIP_FEEDBACK
         self.feedbackManager    = [[FeedbackReportingManager alloc] initWithDelegate:self];
+#endif
     }
     return self;
 }
@@ -770,7 +782,9 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client
 {
+#ifndef SKIP_CRASH_REPORTING
     [self.crashManager handleWebClientCrashReported:client];
+#endif
 }
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
