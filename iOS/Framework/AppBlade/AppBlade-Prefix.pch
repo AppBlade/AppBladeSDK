@@ -15,17 +15,3 @@
 #define FILEMD5HASH_EXTERN extern
 #endif
 
-//Got to the target preprocssor macros if you'd liek to overide the defaults
-// a column to each for easier internal setting changes
-//#ifndef SKIP_FEEDBACK
-//#endif
-//#ifndef SKIP_CRASH_REPORTING
-//#endif
-//#ifndef SKIP_SESSIONS
-//#endif
-//#ifndef SKIP_CUSTOM_PARAMS
-//#endif
-//#ifndef SKIP_AUTHENTICATION
-//#endif
-//#ifndef SKIP_AUTO_UPDATING
-//#endif
