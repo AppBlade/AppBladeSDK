@@ -1,5 +1,5 @@
 //
-//  AppBladeConstants.h
+//  AppBladeSharedConstants.h
 //  AppBlade
 //
 //  Created by AndrewTremblay on 7/16/13.
@@ -10,22 +10,22 @@
 #ifndef AppBlade_AppBladeSharedConstants_h
 #define AppBlade_AppBladeSharedConstants_h
 
-UIKIT_EXTERN NSString* const kAppBladeErrorDomain;
-UIKIT_EXTERN int const kAppBladeOfflineError;
-UIKIT_EXTERN int const kAppBladeParsingError;
-UIKIT_EXTERN int const kAppBladePermissionError;
-UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
-
+//UIKIT_EXTERN NSString* const kAppBladeErrorDomain;
+//UIKIT_EXTERN int const kAppBladeOfflineError;
+//UIKIT_EXTERN int const kAppBladeParsingError;
+//UIKIT_EXTERN int const kAppBladePermissionError;
+//UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
+//
 
 
 static NSString* const s_sdkVersion                     = @"0.5.0";
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
-NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
+static NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
 
-const int kUpdateAlertTag                               = 316;
-const int kTokenRefreshStatusCode                       = 401; 
+static const int kUpdateAlertTag                               = 316;
+static const int kTokenRefreshStatusCode                       = 401; 
 //if the above status code is ever returned, that means the token is expired and needs renewing before the api can be called
-const int kTokenInvalidStatusCode                       = 403;
+static const int kTokenInvalidStatusCode                       = 403;
 //if the above status code is ever returned, that means the app is being used illegally and should be closed
 
 
@@ -63,11 +63,11 @@ static NSString* const kAppBladePlistDefaultDeviceSecretValue    = @"DEFAULT";
 static NSString* const kAppBladePlistDefaultProjectSecretValue   = @"DEFAULT";
 
 
-const int kAppBladeOfflineError                         = 1200;
-const int kAppBladeParsingError                         = 1208;
-const int kAppBladePermissionError                      = 1216;
+static const int kAppBladeOfflineError                         = 1200;
+static const int kAppBladeParsingError                         = 1208;
+static const int kAppBladePermissionError                      = 1216;
 
-NSString* const kAppBladeCacheDirectory                 = @"AppBladeCache";
+static NSString* const kAppBladeCacheDirectory                 = @"AppBladeCache";
 
 static NSString* const s_letters                        = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 

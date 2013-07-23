@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AppBladeWebOperation.h"
+#import "AppBladeBasicFeatureManager.h"
 
-@interface AppBladeAuthenticationManager : AppBladeWebOperation
+@interface AppBladeAuthenticationManager : NSObject<AppBladeBasicFeatureManager>
+@property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
 
 @end

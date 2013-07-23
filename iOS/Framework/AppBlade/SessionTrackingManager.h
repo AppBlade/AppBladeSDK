@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AppBladeWebOperation.h"
+#import "AppBladeBasicFeatureManager.h"
 
-@interface SessionTrackingManager : AppBladeWebOperation
+@interface SessionTrackingManager : NSObject<AppBladeBasicFeatureManager>
+@property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
+
 
 @end

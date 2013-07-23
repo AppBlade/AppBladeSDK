@@ -10,4 +10,14 @@
 
 @implementation SessionTrackingManager
 
+- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate
+{
+    if((self = [super init])) {
+        self.delegate = delegate;
+    }
+    
+    return self;
+}
+
+
 @end

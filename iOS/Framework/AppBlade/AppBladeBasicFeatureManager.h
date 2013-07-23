@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AppBlade.h"
 #import "AppBladeWebOperation.h"
 #import "AppBladeLogging.h"
-#import "AppBladeSharedConstants.h"
 
 @protocol AppBladeBasicFeatureManager
 
