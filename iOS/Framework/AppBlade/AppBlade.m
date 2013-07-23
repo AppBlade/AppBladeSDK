@@ -78,7 +78,6 @@
 
 - (void)validateProjectConfiguration;
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
-- (void)checkAndCreateAppBladeCacheDirectory;
 
 - (void)showFeedbackDialogue;
 
