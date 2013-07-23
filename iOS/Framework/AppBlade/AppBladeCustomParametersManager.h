@@ -8,6 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
-@interface AppBladeCustomParametersManager : NSObject
+#import "AppBladeBasicFeatureManager.h"
+
+@interface AppBladeCustomParametersManager : NSObject<AppBladeBasicFeatureManager>
+@property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
+
+@end
+
+
+//Our additional requirements
+@interface AppBlade (CustomParameters)
+
+@property (nonatomic, strong) AppBladeCustomParametersManager* customParamsManager;
 
 @end
