@@ -27,9 +27,7 @@
 		311A22B61795D26E007BF879 /* AppBladeAuthenticationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22B41795D26E007BF879 /* AppBladeAuthenticationManager.h */; };
 		311A22B71795D26E007BF879 /* AppBladeAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B51795D26E007BF879 /* AppBladeAuthenticationManager.m */; };
 		311A22BC1795D313007BF879 /* AppBladeCustomParametersManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22BA1795D313007BF879 /* AppBladeCustomParametersManager.h */; };
-		311A22BD1795D313007BF879 /* AppBladeCustomParametersManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22BA1795D313007BF879 /* AppBladeCustomParametersManager.h */; };
 		311A22BE1795D313007BF879 /* AppBladeCustomParametersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParametersManager.m */; };
-		311A22BF1795D313007BF879 /* AppBladeCustomParametersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParametersManager.m */; };
 		311A22C21796072C007BF879 /* AppBladeSharedConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C01796072C007BF879 /* AppBladeSharedConstants.h */; };
 		311A22CA1796DE3B007BF879 /* AppBladeBasicFeatureManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C81796DE3B007BF879 /* AppBladeBasicFeatureManager.h */; };
 		3130607F1794A2A3006DF03A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
@@ -71,25 +69,49 @@
 		313064141794A866006DF03A /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* FeedbackBackgroundView.h */; };
 		313064151794A866006DF03A /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061FD1794A357006DF03A /* FileMD5Hash.h */; };
 		313064171794B494006DF03A /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060D41794A356006DF03A /* protobuf-c.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		318731CA179DABF700E0D187 /* AppBladeSharedConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C01796072C007BF879 /* AppBladeSharedConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		318189C8179E0337006EE07A /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060831794A2A3006DF03A /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		318189C9179E0343006EE07A /* AppBladeSharedConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C01796072C007BF879 /* AppBladeSharedConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		318189CA179E039D006EE07A /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
+		318189CB179E039D006EE07A /* AppBladeAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B51795D26E007BF879 /* AppBladeAuthenticationManager.m */; };
+		318189CC179E039D006EE07A /* AppBladeUpdatesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B11795D259007BF879 /* AppBladeUpdatesManager.m */; };
+		318189CD179E039D006EE07A /* SessionTrackingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22AD1795D24A007BF879 /* SessionTrackingManager.m */; };
+		318189CE179E039D006EE07A /* FeedbackReportingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22971794E633007BF879 /* FeedbackReportingManager.m */; };
+		318189CF179E039D006EE07A /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061F91794A357006DF03A /* FeedbackBackgroundView.m */; };
+		318189D0179E039D006EE07A /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061FB1794A357006DF03A /* FeedbackDialogue.m */; };
+		318189D1179E039D006EE07A /* AppBladeCustomParametersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParametersManager.m */; };
+		318189D2179E039D006EE07A /* AppBladeWebOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A61794A356006DF03A /* AppBladeWebOperation.m */; };
+		318189D3179E039D006EE07A /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
 		318731CB179DAC0500E0D187 /* AppBladeLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060A21794A356006DF03A /* AppBladeLogging.h */; };
-		318731D4179DE03300E0D187 /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
-		318731D5179DE03300E0D187 /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
-		318731D6179DE03300E0D187 /* AppBladeWebOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A61794A356006DF03A /* AppBladeWebOperation.m */; };
-		318731D7179DE03300E0D187 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061F91794A357006DF03A /* FeedbackBackgroundView.m */; };
-		318731D8179DE03300E0D187 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061FB1794A357006DF03A /* FeedbackDialogue.m */; };
-		318731D9179DE03300E0D187 /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061FC1794A357006DF03A /* FileMD5Hash.c */; };
-		318731DA179DE03300E0D187 /* AppBladeCustomParametersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParametersManager.m */; };
-		318731DD179DE03300E0D187 /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060831794A2A3006DF03A /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		318731DE179DE03300E0D187 /* AppBladeSharedConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C01796072C007BF879 /* AppBladeSharedConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		318731DF179DE03300E0D187 /* AppBladeLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060A21794A356006DF03A /* AppBladeLogging.h */; };
-		318731E0179DE03300E0D187 /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061FD1794A357006DF03A /* FileMD5Hash.h */; };
-		318731E1179DE03300E0D187 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* FeedbackBackgroundView.h */; };
-		318731E2179DE03300E0D187 /* AppBladeCustomParametersManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22BA1795D313007BF879 /* AppBladeCustomParametersManager.h */; };
+		318731F8179DE8C200E0D187 /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
+		318731F9179DE8C200E0D187 /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A41794A356006DF03A /* AppBladeSimpleKeychain.m */; };
+		318731FA179DE8C200E0D187 /* AppBladeWebOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060A61794A356006DF03A /* AppBladeWebOperation.m */; };
+		318731FB179DE8C200E0D187 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061F91794A357006DF03A /* FeedbackBackgroundView.m */; };
+		318731FC179DE8C200E0D187 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = 313061FB1794A357006DF03A /* FeedbackDialogue.m */; };
+		318731FD179DE8C200E0D187 /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 313061FC1794A357006DF03A /* FileMD5Hash.c */; };
+		31873217179DE8C200E0D187 /* FeedbackReportingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22971794E633007BF879 /* FeedbackReportingManager.m */; };
+		31873219179DE8C200E0D187 /* SessionTrackingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22AD1795D24A007BF879 /* SessionTrackingManager.m */; };
+		3187321A179DE8C200E0D187 /* AppBladeUpdatesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B11795D259007BF879 /* AppBladeUpdatesManager.m */; };
+		3187321B179DE8C200E0D187 /* AppBladeAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22B51795D26E007BF879 /* AppBladeAuthenticationManager.m */; };
+		3187321C179DE8C200E0D187 /* AppBladeCustomParametersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A22BB1795D313007BF879 /* AppBladeCustomParametersManager.m */; };
+		3187321E179DE8C200E0D187 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FC91794A146006DF03A /* UIKit.framework */; };
+		3187321F179DE8C200E0D187 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3130640D1794A3D8006DF03A /* Security.framework */; };
+		31873220179DE8C200E0D187 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
 		313064161794A8C7006DF03A /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.proto";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(INPUT_FILE_BASE).pb-c.c",
+				"$(INPUT_FILE_BASE).pb-c.h",
+			);
+			script = "cd \"${INPUT_FILE_DIR}\" && \"${SRCROOT}/AppBlade/CrashReporter/Dependencies/protobuf-2.0.3/bin/protoc-c\" --c_out=\"${DERIVED_FILES_DIR}\" \"${INPUT_FILE_NAME}\"";
+		};
+		31873221179DE8C200E0D187 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.proto";
@@ -193,7 +215,8 @@
 		313061FD1794A357006DF03A /* FileMD5Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMD5Hash.h; sourceTree = "<group>"; };
 		313061FE1794A357006DF03A /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE.md; path = AppBlade/LICENSE.md; sourceTree = "<group>"; };
 		3130640D1794A3D8006DF03A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		318731E7179DE03300E0D187 /* libAppBladeUniversal copy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAppBladeUniversal copy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrashUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +241,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3187321D179DE8C200E0D187 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3187321E179DE8C200E0D187 /* UIKit.framework in Frameworks */,
+				3187321F179DE8C200E0D187 /* Security.framework in Frameworks */,
+				31873220179DE8C200E0D187 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,7 +362,8 @@
 			children = (
 				3130607E1794A2A3006DF03A /* libAppBlade.a */,
 				311A21801794C79F007BF879 /* libAppBladeUniversal.a */,
-				318731E7179DE03300E0D187 /* libAppBladeUniversal copy.a */,
+				318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */,
+				31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -458,11 +492,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				311A21531794C79F007BF879 /* AppBlade.h in Headers */,
-				318731CA179DABF700E0D187 /* AppBladeSharedConstants.h in Headers */,
 				318731CB179DAC0500E0D187 /* AppBladeLogging.h in Headers */,
 				311A21541794C79F007BF879 /* FileMD5Hash.h in Headers */,
 				311A21551794C79F007BF879 /* FeedbackBackgroundView.h in Headers */,
-				311A22BD1795D313007BF879 /* AppBladeCustomParametersManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,12 +520,15 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				318731DD179DE03300E0D187 /* AppBlade.h in Headers */,
-				318731DE179DE03300E0D187 /* AppBladeSharedConstants.h in Headers */,
-				318731DF179DE03300E0D187 /* AppBladeLogging.h in Headers */,
-				318731E0179DE03300E0D187 /* FileMD5Hash.h in Headers */,
-				318731E1179DE03300E0D187 /* FeedbackBackgroundView.h in Headers */,
-				318731E2179DE03300E0D187 /* AppBladeCustomParametersManager.h in Headers */,
+				318189C8179E0337006EE07A /* AppBlade.h in Headers */,
+				318189C9179E0343006EE07A /* AppBladeSharedConstants.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		318731E9179DE8C200E0D187 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,9 +571,9 @@
 			productReference = 3130607E1794A2A3006DF03A /* libAppBlade.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		318731D2179DE03300E0D187 /* AppBladeNoCrash */ = {
+		318731D2179DE03300E0D187 /* AppBladeNoCrashUniversal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 318731E4179DE03300E0D187 /* Build configuration list for PBXNativeTarget "AppBladeNoCrash" */;
+			buildConfigurationList = 318731E4179DE03300E0D187 /* Build configuration list for PBXNativeTarget "AppBladeNoCrashUniversal" */;
 			buildPhases = (
 				318731D3179DE03300E0D187 /* Sources */,
 				318731DB179DE03300E0D187 /* Frameworks */,
@@ -549,9 +584,27 @@
 			);
 			dependencies = (
 			);
+			name = AppBladeNoCrashUniversal;
+			productName = AppBlade;
+			productReference = 318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		318731E8179DE8C200E0D187 /* AppBladeNoCrash */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 31873222179DE8C200E0D187 /* Build configuration list for PBXNativeTarget "AppBladeNoCrash" */;
+			buildPhases = (
+				318731E9179DE8C200E0D187 /* Headers */,
+				318731F5179DE8C200E0D187 /* Sources */,
+				3187321D179DE8C200E0D187 /* Frameworks */,
+			);
+			buildRules = (
+				31873221179DE8C200E0D187 /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
 			name = AppBladeNoCrash;
 			productName = AppBlade;
-			productReference = 318731E7179DE03300E0D187 /* libAppBladeUniversal copy.a */;
+			productReference = 31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -584,7 +637,8 @@
 			targets = (
 				3130607D1794A2A3006DF03A /* AppBlade */,
 				311A21511794C79F007BF879 /* AppBladeUniversal */,
-				318731D2179DE03300E0D187 /* AppBladeNoCrash */,
+				318731E8179DE8C200E0D187 /* AppBladeNoCrash */,
+				318731D2179DE03300E0D187 /* AppBladeNoCrashUniversal */,
 			);
 		};
 /* End PBXProject section */
@@ -601,7 +655,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Version 2.6 (updated for GCC_PREPROCESSOR_DEFINITIONS to be passed down though the targets)\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\nDEBUG_THIS_SCRIPT=\"true\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\n\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\n\necho \"PREPROCESSOR MACROS = $GCC_PREPROCESSOR_DEFINITIONS\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\n\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nIPHONE_SDK=iphoneos${SDK_VERSION}\nSIMULATOR_SDK=iphonesimulator${SDK_VERSION}\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"Building with 2 SDKs: ${IPHONE_SDK} and ${SIMULATOR_SDK}\"\n\n\n################################################\n# Invoke the two builds that we want to generate\n################################################\nACTION=\"build\"\n\necho \"Building Device version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${IPHONE_SDK}\\\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${IPHONE_SDK}\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\necho \"Building Simulator version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${SIMULATOR_SDK}\\\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${SIMULATOR_SDK}\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\nLIBRARY_NAME=libAppBlade.a\nUNIVERSAL_LIBRARY_NAME=libAppBladeUniversal.a\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\n// Modified slightly to create and remove an executable-specific directory\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${LIBRARY_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${LIBRARY_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${LIBRARY_NAME}\"\n\n\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\n# RZ: Modified to place in root of universal directory, though it looks in /usr/local/include.\n#\n#if [ -d \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include\" ]\n#then\n#mkdir -p \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\n# * needs to be outside the double quotes?\ncp \"${CONFIGURATION_BUILD_DIR}/usr/local/include/\"* \"${CREATING_UNIVERSAL_DIR}\"\n\n\nopen \"${CREATING_UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\necho \"${CREATING_UNIVERSAL_DIR}\"\n\n#to reduce confusion, you can remove the other libAppBladeUniversal.a binaries\nrm -f \"${CURRENTCONFIG_DEVICE_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\nrm -f \"${CURRENTCONFIG_SIMULATOR_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n#fi";
+			shellScript = "# Version 2.6 (updated for GCC_PREPROCESSOR_DEFINITIONS to be passed down though the targets)\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\nDEBUG_THIS_SCRIPT=\"true\"\n\n\nTARGET_SCHEME=\"AppBlade\"\nLIBRARY_NAME=libAppBlade.a\nUNIVERSAL_LIBRARY_NAME=libAppBladeUniversal.a\n\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\n\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\n\necho \"PREPROCESSOR MACROS = $GCC_PREPROCESSOR_DEFINITIONS\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nIPHONE_SDK=iphoneos${SDK_VERSION}\nSIMULATOR_SDK=iphonesimulator${SDK_VERSION}\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"Building with 2 SDKs: ${IPHONE_SDK} and ${SIMULATOR_SDK}\"\n\n\n################################################\n# Invoke the two builds that we want to generate\n################################################\nACTION=\"build\"\n\necho \"Building Device version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \\\"${IPHONE_SDK}\\\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \"${IPHONE_SDK}\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\necho \"Building Simulator version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \\\"${SIMULATOR_SDK}\\\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \"${SIMULATOR_SDK}\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\n// Modified slightly to create and remove an executable-specific directory\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${LIBRARY_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${LIBRARY_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${LIBRARY_NAME}\"\n\n\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\n# RZ: Modified to place in root of universal directory, though it looks in /usr/local/include.\n#\n#if [ -d \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include\" ]\n#then\n#mkdir -p \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\n# * needs to be outside the double quotes?\ncp \"${CONFIGURATION_BUILD_DIR}/usr/local/include/\"* \"${CREATING_UNIVERSAL_DIR}\"\n\n\nopen \"${CREATING_UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\necho \"${CREATING_UNIVERSAL_DIR}\"\n\n#to reduce confusion, you can remove the other libAppBladeUniversal.a binaries\nrm -f \"${CURRENTCONFIG_DEVICE_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\nrm -f \"${CURRENTCONFIG_SIMULATOR_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n#fi";
 		};
 		318731E3179DE03300E0D187 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -614,7 +668,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Version 2.6 (updated for GCC_PREPROCESSOR_DEFINITIONS to be passed down though the targets)\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\nDEBUG_THIS_SCRIPT=\"true\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\n\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\n\necho \"PREPROCESSOR MACROS = $GCC_PREPROCESSOR_DEFINITIONS\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\n\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nIPHONE_SDK=iphoneos${SDK_VERSION}\nSIMULATOR_SDK=iphonesimulator${SDK_VERSION}\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"Building with 2 SDKs: ${IPHONE_SDK} and ${SIMULATOR_SDK}\"\n\n\n################################################\n# Invoke the two builds that we want to generate\n################################################\nACTION=\"build\"\n\necho \"Building Device version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${IPHONE_SDK}\\\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${IPHONE_SDK}\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\necho \"Building Simulator version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${SIMULATOR_SDK}\\\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${SIMULATOR_SDK}\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\nLIBRARY_NAME=libAppBlade.a\nUNIVERSAL_LIBRARY_NAME=libAppBladeNoCrash.a\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\n// Modified slightly to create and remove an executable-specific directory\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${LIBRARY_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${LIBRARY_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${LIBRARY_NAME}\"\n\n\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\n# RZ: Modified to place in root of universal directory, though it looks in /usr/local/include.\n#\n#if [ -d \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include\" ]\n#then\n#mkdir -p \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\n# * needs to be outside the double quotes?\ncp \"${CONFIGURATION_BUILD_DIR}/usr/local/include/\"* \"${CREATING_UNIVERSAL_DIR}\"\n\n\nopen \"${CREATING_UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\necho \"${CREATING_UNIVERSAL_DIR}\"\n\n#to reduce confusion, you can remove the other libAppBladeUniversal.a binaries\nrm -f \"${CURRENTCONFIG_DEVICE_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\nrm -f \"${CURRENTCONFIG_SIMULATOR_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n#fi";
+			shellScript = "# Version 2.6 (updated for GCC_PREPROCESSOR_DEFINITIONS to be passed down though the targets)\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\nDEBUG_THIS_SCRIPT=\"true\"\n\n\nTARGET_SCHEME=\"AppBladeNoCrash\"\nLIBRARY_NAME=libAppBladeNoCrash.a\nUNIVERSAL_LIBRARY_NAME=libAppBladeNoCrashUniversal.a\n\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\n\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\n\necho \"PREPROCESSOR MACROS = $GCC_PREPROCESSOR_DEFINITIONS\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nIPHONE_SDK=iphoneos${SDK_VERSION}\nSIMULATOR_SDK=iphonesimulator${SDK_VERSION}\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"Building with 2 SDKs: ${IPHONE_SDK} and ${SIMULATOR_SDK}\"\n\n\n################################################\n# Invoke the two builds that we want to generate\n################################################\nACTION=\"build\"\n\necho \"Building Device version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \\\"${IPHONE_SDK}\\\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme \"${TARGET_SCHEME}\" -sdk \"${IPHONE_SDK}\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\necho \"Building Simulator version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \\\"${SIMULATOR_SDK}\\\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme \"${TARGET_SCHEME}\" -sdk \"${SIMULATOR_SDK}\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\n// Modified slightly to create and remove an executable-specific directory\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${LIBRARY_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${LIBRARY_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${LIBRARY_NAME}\"\n\n\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\n# RZ: Modified to place in root of universal directory, though it looks in /usr/local/include.\n#\n#if [ -d \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include\" ]\n#then\n#mkdir -p \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\n# * needs to be outside the double quotes?\ncp \"${CONFIGURATION_BUILD_DIR}/usr/local/include/\"* \"${CREATING_UNIVERSAL_DIR}\"\n\n\nopen \"${CREATING_UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\necho \"${CREATING_UNIVERSAL_DIR}\"\n\n#to reduce confusion, you can remove the other libAppBladeUniversal.a binaries\nrm -f \"${CURRENTCONFIG_DEVICE_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\nrm -f \"${CURRENTCONFIG_SIMULATOR_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n#fi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -629,7 +683,6 @@
 				311A215C1794C79F007BF879 /* FeedbackBackgroundView.m in Sources */,
 				311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */,
 				311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */,
-				311A22BF1795D313007BF879 /* AppBladeCustomParametersManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,13 +736,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				318731D4179DE03300E0D187 /* AppBlade.m in Sources */,
-				318731D5179DE03300E0D187 /* AppBladeSimpleKeychain.m in Sources */,
-				318731D6179DE03300E0D187 /* AppBladeWebOperation.m in Sources */,
-				318731D7179DE03300E0D187 /* FeedbackBackgroundView.m in Sources */,
-				318731D8179DE03300E0D187 /* FeedbackDialogue.m in Sources */,
-				318731D9179DE03300E0D187 /* FileMD5Hash.c in Sources */,
-				318731DA179DE03300E0D187 /* AppBladeCustomParametersManager.m in Sources */,
+				318189CA179E039D006EE07A /* AppBlade.m in Sources */,
+				318189CB179E039D006EE07A /* AppBladeAuthenticationManager.m in Sources */,
+				318189CC179E039D006EE07A /* AppBladeUpdatesManager.m in Sources */,
+				318189CD179E039D006EE07A /* SessionTrackingManager.m in Sources */,
+				318189CE179E039D006EE07A /* FeedbackReportingManager.m in Sources */,
+				318189CF179E039D006EE07A /* FeedbackBackgroundView.m in Sources */,
+				318189D0179E039D006EE07A /* FeedbackDialogue.m in Sources */,
+				318189D1179E039D006EE07A /* AppBladeCustomParametersManager.m in Sources */,
+				318189D2179E039D006EE07A /* AppBladeWebOperation.m in Sources */,
+				318189D3179E039D006EE07A /* AppBladeSimpleKeychain.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		318731F5179DE8C200E0D187 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				318731F8179DE8C200E0D187 /* AppBlade.m in Sources */,
+				318731F9179DE8C200E0D187 /* AppBladeSimpleKeychain.m in Sources */,
+				318731FA179DE8C200E0D187 /* AppBladeWebOperation.m in Sources */,
+				318731FB179DE8C200E0D187 /* FeedbackBackgroundView.m in Sources */,
+				318731FC179DE8C200E0D187 /* FeedbackDialogue.m in Sources */,
+				318731FD179DE8C200E0D187 /* FileMD5Hash.c in Sources */,
+				31873217179DE8C200E0D187 /* FeedbackReportingManager.m in Sources */,
+				31873219179DE8C200E0D187 /* SessionTrackingManager.m in Sources */,
+				3187321A179DE8C200E0D187 /* AppBladeUpdatesManager.m in Sources */,
+				3187321B179DE8C200E0D187 /* AppBladeAuthenticationManager.m in Sources */,
+				3187321C179DE8C200E0D187 /* AppBladeCustomParametersManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -832,6 +906,7 @@
 		3130609D1794A2A3006DF03A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_EMPTY_BODY = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
@@ -866,6 +941,7 @@
 		3130609E1794A2A3006DF03A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_EMPTY_BODY = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
@@ -925,7 +1001,7 @@
 				LIBRARY_SEARCH_PATHS = "";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "AppBladeUniversal copy";
+				PRODUCT_NAME = AppBladeNoCrashUniversal;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv7 armv7s i386";
@@ -959,9 +1035,79 @@
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "AppBladeUniversal copy";
+				PRODUCT_NAME = AppBladeNoCrashUniversal;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s i386";
+			};
+			name = Release;
+		};
+		31873223179DE8C200E0D187 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = 0.9.5;
+				DSTROOT = /tmp/AppBlade.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/system\"",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = AppBladeNoCrash;
+				SKIP_INSTALL = YES;
+				VALID_ARCHS = "armv7 armv7s i386";
+			};
+			name = Debug;
+		};
+		31873224179DE8C200E0D187 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = NO;
+				CLANG_WARN_INT_CONVERSION = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CURRENT_PROJECT_VERSION = 0.9.5;
+				DSTROOT = /tmp/AppBlade.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/system\"",
+				);
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = AppBladeNoCrash;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = NO;
 				VALID_ARCHS = "armv7 armv7s i386";
 			};
 			name = Release;
@@ -996,11 +1142,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		318731E4179DE03300E0D187 /* Build configuration list for PBXNativeTarget "AppBladeNoCrash" */ = {
+		318731E4179DE03300E0D187 /* Build configuration list for PBXNativeTarget "AppBladeNoCrashUniversal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				318731E5179DE03300E0D187 /* Debug */,
 				318731E6179DE03300E0D187 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		31873222179DE8C200E0D187 /* Build configuration list for PBXNativeTarget "AppBladeNoCrash" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31873223179DE8C200E0D187 /* Debug */,
+				31873224179DE8C200E0D187 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
