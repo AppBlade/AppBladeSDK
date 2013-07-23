@@ -22,3 +22,16 @@
 //then whatever else you feel like
 
 @end
+
+//Our additional requirements
+@interface AppBlade (SessionTracking)
+
+@property (nonatomic, strong) SessionTrackingManager*        sessionTrackingManager;
+
+@property (nonatomic, retain) NSDate *sessionStartDate;
+
+
+- (BOOL)hasPendingSessions;
+
+
+@end

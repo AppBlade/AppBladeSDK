@@ -26,3 +26,13 @@
 - (NSMutableDictionary *) handleCrashReportAsDictionary;
 
 @end
+
+
+//Our additional requirements
+@interface AppBlade (CrashReporting)
+
+@property (nonatomic, strong) CrashReportingManager*         crashManager;
+//hasPendingCrashReport in PLCrashReporter
+
+
+@end

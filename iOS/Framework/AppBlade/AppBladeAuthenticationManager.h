@@ -20,6 +20,13 @@
 //wherein you implement any storage behavior for pending API calls.
 //...
 //then whatever else you feel like
+@end
 
+
+//Our additional requirements
+@interface AppBlade (Authorization)
+
+    @property (nonatomic, strong) AppBladeAuthenticationManager* authenticationManager;
 
 @end
+

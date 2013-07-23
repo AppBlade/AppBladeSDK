@@ -21,3 +21,15 @@
 //then whatever else you feel like
 
 @end
+
+
+//Our additional requirements
+@interface AppBlade (Updates)
+
+@property (nonatomic, strong) AppBladeUpdatesManager*        updatesManager;
+
+@property (nonatomic, retain) NSURL* upgradeLink;
+
+@end
+
+
