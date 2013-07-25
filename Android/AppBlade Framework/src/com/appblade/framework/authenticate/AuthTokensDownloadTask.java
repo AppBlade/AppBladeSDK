@@ -89,13 +89,13 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 	}
 
 	private void handleResponse(HttpResponse response) {
-		Log.d(AppBlade.LogTag, "authData response " + response.getStatusLine());
+		Log.v(AppBlade.LogTag, "authData response " + response.getStatusLine());
 
 		
 		if(HttpUtils.isOK(response)) {
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.d(AppBlade.LogTag, "authData recieved " + data);
+				Log.v(AppBlade.LogTag, "authData recieved " + data);
 				JSONObject json = new JSONObject(data);
 				
 				String accessToken = json.getString("access_token");
@@ -107,8 +107,8 @@ public class AuthTokensDownloadTask extends AsyncTask<String, String, Void> {
 				
 				RemoteAuthHelper.store(context, token_type, accessToken, refresh_token, expires);
 			}
-			catch (IOException ex) { ex.printStackTrace(); }
-			catch (JSONException ex) { ex.printStackTrace(); }
+			catch (IOException ex) { Log.w(AppBlade.LogTag, "handleResponse(HttpResponse) Error storing AuthToken ", ex); }
+			catch (JSONException ex) { Log.w(AppBlade.LogTag, "handleResponse(HttpResponse) Error parsing JSON ", ex); }
 		}
 	}
 

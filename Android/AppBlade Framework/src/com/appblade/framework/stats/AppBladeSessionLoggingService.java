@@ -23,31 +23,31 @@ public class AppBladeSessionLoggingService extends Service {
         super();
 		appbladeSessionServiceConnection = new AppBladeSessionServiceConnection();
 
-		Log.d(AppBlade.LogTag, "Service contructed");
+		Log.v(AppBlade.LogTag, "Service contructed");
 	}
 	
 		
 	@Override
 	public void onCreate() {
-		Log.d(AppBlade.LogTag, "Service created");
+		Log.v(AppBlade.LogTag, "Service created");
 	}
 	
 	
 	@Override
 	public void onStart(Intent intent, int startid) {
-		Log.d(AppBlade.LogTag, "Service started");
+		Log.v(AppBlade.LogTag, "Service started");
 	}
 
 
 	
 	@Override
 	public void onDestroy() {
-		Log.d(AppBlade.LogTag, "Service ended");
+		Log.v(AppBlade.LogTag, "Service ended");
 	}
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.d(AppBlade.LogTag, "Service onBind");
+		Log.v(AppBlade.LogTag, "Service onBind");
 		AppBlade.startSession(this);
 		
 		return null; //we don't need an IBinder
@@ -55,7 +55,7 @@ public class AppBladeSessionLoggingService extends Service {
 
 	@Override
 	public boolean onUnbind (Intent intent) {
-		Log.d(AppBlade.LogTag, "Service unBind");
+		Log.v(AppBlade.LogTag, "Service unBind");
 		AppBlade.endSession(this);
 
 		return false; // we don't need onRebind

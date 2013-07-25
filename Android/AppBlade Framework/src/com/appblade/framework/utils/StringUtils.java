@@ -1,6 +1,9 @@
 package com.appblade.framework.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,6 +20,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appblade.framework.AppBlade;
+
+import android.util.Log;
+
 
 /**
  * Utility class for helpful String methods
@@ -26,6 +33,9 @@ import org.json.JSONObject;
  */
 public class StringUtils {
 	 public static final int BUFFER_SIZE = 2048;
+	 public static final String md5OfNull = "d41d8cd98f00b204e9800998ecf8427e";
+	 public static final String sha256OfNull = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+		 
 	 
 	/**
 	 * Utility method for pulling plain text from an InputStream object
@@ -196,6 +206,30 @@ public class StringUtils {
 	    return hash;
 	}
 	
+	/**
+	 * @warning Mostly deprecated due to vulnerabilities with MD5
+	 * @param file File to MD5 
+	 * @return MD5 String
+	 */
+	public static String md5FromFile(File file)  {
+		String toRet = "";
+		//open the file as an input string
+			try {
+				InputStream is = new FileInputStream(file);
+				Log.v(AppBlade.LogTag, "opened " + file.getAbsolutePath());
+				try {
+					Log.v(AppBlade.LogTag, is.available() +  " bytes available");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				toRet = StringUtils.md5FromInputStream(is);
+				Log.v(AppBlade.LogTag, "closed" + file.getAbsolutePath());
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		return toRet;
+	}
 	
 	/**
 	 * @warning Mostly deprecated due to vulnerabilities with MD5
@@ -212,17 +246,22 @@ public class StringUtils {
 		}
 		
 		if(md != null){
-			try {
-				is = new DigestInputStream(is, md);
-				// read stream to EOF as normal...
-			}
-			finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			DigestInputStream dis = new DigestInputStream(is, md);
+		    byte[] buffer = new byte[BUFFER_SIZE];
+		   try {
+			   try {
+					while (dis.read(buffer) != -1) {
+					 //
+					}
+			        dis.close();
+			   }
+			   finally {
+				   is.close();
+		       }
+		   }
+		   catch (IOException e) {
+				e.printStackTrace();
+		   }
 			byteArray = md.digest();
 		}
 		
@@ -239,7 +278,7 @@ public class StringUtils {
 	/**
 	 * The difference between this and the normal JSONArray parsing is that this falls back to an empty array should there be an error like an unparseable string
 	 * @param stringToParse
-	 * @return JSONArray of the stringToParse or an empty JSONArray if stringToParse is unparesable
+	 * @return JSONArray of the stringToParse or an empty JSONArray if stringToParse is unparseable
 	 */
 	public static JSONArray parseStringToJSONArray(String stringToParse)
 	{

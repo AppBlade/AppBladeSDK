@@ -23,17 +23,17 @@ public class AuthJavascriptInterface {
 	@JavascriptInterface
 	public void notifyAuthCode(final String code) {
 			final String message = String.format("AuthJavascriptInterface.notifyAuthCode code: %s", code);
-			Log.d(AppBlade.LogTag, message);
+			Log.v(AppBlade.LogTag, message);
 			
 			if(mActivity != null){
-				Log.d(AppBlade.LogTag, String.format("storing token"));
+				Log.v(AppBlade.LogTag, String.format("storing token"));
 
 				mActivity.runOnUiThread(new Runnable() {
 					public void run() {
 						AuthTokensDownloadTask task = new AuthTokensDownloadTask(mActivity);
 						task.setOnPostExecuteListener(new OnPostExecuteListener() {
 							public void onPostExecute() {
-								Log.d(AppBlade.LogTag, String.format("reauthorizing"));
+								Log.v(AppBlade.LogTag, String.format("reauthorizing"));
 
 								AppBlade.authorize(mActivity, true);
 							}
@@ -44,7 +44,7 @@ public class AuthJavascriptInterface {
 			}
 			else
 			{
-				Log.d(AppBlade.LogTag, "mActivity null, no token");
+				Log.v(AppBlade.LogTag, "mActivity null, no token");
 			}
 		}
 }

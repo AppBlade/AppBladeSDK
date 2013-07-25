@@ -1,36 +1,41 @@
 package com.appblade.example;
 
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
-import com.appblade.framework.AppBlade;
+import com.appblade.framework.stats.AppBladeSessionActivity;
 import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
-import com.appblade.framework.stats.AppBladeSessionActivity;
+import com.appblade.framework.AppBlade;
 
 public class MainActivity extends AppBladeSessionActivity {
-
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
+		String versionString = "Version: " + getAppVersion();
+		TextView versionTextView = (TextView)findViewById(R.id.versionText);
+		versionTextView.setText(versionString);
 		initControls();
 	}
 
 	public void onResume() {
 		super.onResume();
-		//AppBlade.authorize(this);
-
-		AppBlade.setCustomParameter(getApplicationContext(), "AppState",
-				"Resumed");
+		//AppBlade.authorize(this); //moved to a button call, but it would usually be here
+		//AppBlade.checkForUpdates(MainActivity.this); //moved to a button call, but it would usually be here
+		
+		AppBlade.setCustomParameter(getApplicationContext(), "AppState", "Resumed");
 	}
 
 	public void onPause() {
@@ -49,6 +54,9 @@ public class MainActivity extends AppBladeSessionActivity {
 
 		View btnClearAuthData = findViewById(R.id.btnClearAuthData);
 		
+		View btnCheckUpdatePrompt = findViewById(R.id.btnCheckUpdateLoud);
+		View btnCheckUpdateSilent = findViewById(R.id.btnCheckUpdateQuiet);
+
 		//Exception Reporting
 		btnDivideByZero.setOnClickListener(new OnClickListener() {
 			@SuppressWarnings("unused")
@@ -110,8 +118,26 @@ public class MainActivity extends AppBladeSessionActivity {
 				builder.show();
 			}
 		});
+		
+		//Update Check 
+		btnCheckUpdatePrompt.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AppBlade.checkForUpdates(MainActivity.this);
+			}
+		});
+		btnCheckUpdateSilent.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AppBlade.checkForUpdates(MainActivity.this, false);
+			}
+		});
+		
+
 	}
 
+	
+	
+	
+	
 	
 	
 	
@@ -135,5 +161,20 @@ public class MainActivity extends AppBladeSessionActivity {
 
 		AppBlade.doFeedbackWithScreenshot(this, this);
 	}
+	
+	
+	private String getAppVersion() {
+		String toRet = "Not Found";
+		PackageInfo info = AppBlade.getPackageInfo();
+		if(info != null)
+		{
+			toRet = info.versionName;
+		}
+		return toRet;
+	}
+
+	
+
+
 
 }

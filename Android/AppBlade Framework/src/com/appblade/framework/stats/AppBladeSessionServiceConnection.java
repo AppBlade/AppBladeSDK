@@ -15,12 +15,12 @@ public class AppBladeSessionServiceConnection implements ServiceConnection {
 	
 	public void onServiceConnected(ComponentName name, IBinder service) {
 		// Do nothing. We only need the bind count at the moment.
-		Log.d(AppBlade.LogTag, "Service Connected");
+		Log.v(AppBlade.LogTag, "Service Connected");
 	}
 
 	public void onServiceDisconnected(ComponentName name) {
 		// Do nothing. We only need the bind count at the moment.
-		Log.d(AppBlade.LogTag, "Service Disconnected");
+		Log.v(AppBlade.LogTag, "Service Disconnected");
 
 	}
 

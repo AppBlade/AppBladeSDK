@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<api_keys> <!-- YOU MUST START YOUR OWN PROJECT TO PROVIDE THESE KEYS  -->
+	  <host>https://appblade.com</host>
+	  <project_secret></project_secret> 
+	  <version_secret></version_secret> 
+	  <device_secret</device_secret>
+	</api_keys>
+</root>

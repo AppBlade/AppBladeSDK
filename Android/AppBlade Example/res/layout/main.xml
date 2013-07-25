@@ -14,18 +14,26 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="20dip" 
         android:contentDescription="@string/background_image"/>
-    
+
+      <TextView
+          android:id="@+id/versionText"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/imgLogo"
+          android:gravity="center_horizontal"
+          android:textSize="20sp"
+          android:textStyle="bold" />
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imgLogo"
+        android:layout_below="@+id/versionText"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dip">
-
             <!-- Exception reporting section... -->
             <TextView
                 android:layout_width="wrap_content"
@@ -120,7 +128,44 @@
 			        android:text="@string/end_session" />
 		    </LinearLayout>
 		    
-		            
+   		   <!-- Update check sections... -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Updating"
+                android:textColor="#464e54"
+                android:textStyle="bold"
+                android:layout_marginTop="10dip"
+                android:layout_marginLeft="10dip" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="3dip"
+                android:background="#464e54"
+                android:layout_marginBottom="5dip" />
+		
+			 <LinearLayout 
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+			            
+			    <Button
+			        android:id="@+id/btnCheckUpdateLoud"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="With Prompt" />
+			    <Button
+			        android:id="@+id/btnCheckUpdateQuiet"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="No Prompt" />
+
+			    <ProgressBar
+			        android:id="@+id/progressSpinnerUpdateCheck"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:visibility="invisible" />
+
+		    </LinearLayout>
 		            		    
    		   <!-- Remote authorization sections... -->
             <TextView
@@ -143,6 +188,9 @@
 		        android:layout_height="wrap_content"
 		        android:text="@string/clear_authorization_data" />
 		    
+		    
+		    		            		    
+	
 		    
         </LinearLayout>
         
