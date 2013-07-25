@@ -40,11 +40,6 @@ static AppBladeLocationSingleton* sharedSingleton = nil;
 	return self;
 }
 
--(void) dealloc
-{
-    [super dealloc];
-}
-
 #pragma mark - Location update lifecycle
 -(void)enableLocationTracking
 {

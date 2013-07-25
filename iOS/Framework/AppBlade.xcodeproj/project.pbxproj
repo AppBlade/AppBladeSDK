@@ -13,6 +13,10 @@
 		31EEEDCD17A174BC00583D2F /* AppBladeSimpleKeychain.h in Headers */ = {isa = PBXBuildFile; fileRef = 31EEEDCA17A174BC00583D2F /* AppBladeSimpleKeychain.h */; };
 		31EEEDCE17A174BC00583D2F /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 31EEEDCB17A174BC00583D2F /* AppBladeSimpleKeychain.m */; };
 		31EEEDCF17A174BC00583D2F /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 31EEEDCB17A174BC00583D2F /* AppBladeSimpleKeychain.m */; };
+		31FDA34817A179DB008B6B4E /* AppBladeLocationSingleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 31FDA34617A179DB008B6B4E /* AppBladeLocationSingleton.h */; };
+		31FDA34917A179DB008B6B4E /* AppBladeLocationSingleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 31FDA34617A179DB008B6B4E /* AppBladeLocationSingleton.h */; };
+		31FDA34A17A179DB008B6B4E /* AppBladeLocationSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 31FDA34717A179DB008B6B4E /* AppBladeLocationSingleton.m */; };
+		31FDA34B17A179DB008B6B4E /* AppBladeLocationSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 31FDA34717A179DB008B6B4E /* AppBladeLocationSingleton.m */; };
 		620217591404450A00A14BA7 /* CrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 620217261404450900A14BA7 /* CrashReporter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6202175A1404450A00A14BA7 /* PLCrashAsync.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217271404450900A14BA7 /* PLCrashAsync.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6202175C1404450A00A14BA7 /* PLCrashAsyncImage.c in Sources */ = {isa = PBXBuildFile; fileRef = 620217291404450900A14BA7 /* PLCrashAsyncImage.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -45,7 +49,6 @@
 		7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
 		7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; };
 		7E71754D1565567400D810DF /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A0F13969C8B00949297 /* AppBlade.m */; };
-		7E71754F156556A500D810DF /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */; };
 		7E717550156556A800D810DF /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */; };
 		7E717551156556AC00D810DF /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; };
 		7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EE6A1771562DBAF00D78B84 /* FeedbackBackgroundView.h */; };
@@ -58,7 +61,6 @@
 		CB51D33514293D0600A43CB5 /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = CBF47A0E13969C8B00949297 /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CBF479FC13969C2B00949297 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF479FB13969C2B00949297 /* Foundation.framework */; };
 		CBF47A1113969C8B00949297 /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A0F13969C8B00949297 /* AppBlade.m */; };
-		CBF47A1C1396BC9700949297 /* AppBladeSimpleKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -82,6 +84,8 @@
 		31BD74C113FF2AEA00C3B6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		31EEEDCA17A174BC00583D2F /* AppBladeSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSimpleKeychain.h; sourceTree = "<group>"; };
 		31EEEDCB17A174BC00583D2F /* AppBladeSimpleKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeSimpleKeychain.m; sourceTree = "<group>"; };
+		31FDA34617A179DB008B6B4E /* AppBladeLocationSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeLocationSingleton.h; sourceTree = "<group>"; };
+		31FDA34717A179DB008B6B4E /* AppBladeLocationSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeLocationSingleton.m; sourceTree = "<group>"; };
 		620217251404450900A14BA7 /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = CrashReporter.h; path = AppBlade/CrashReporter/Source/CrashReporter.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		620217261404450900A14BA7 /* CrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CrashReporter.m; path = AppBlade/CrashReporter/Source/CrashReporter.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		620217271404450900A14BA7 /* PLCrashAsync.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashAsync.c; path = AppBlade/CrashReporter/Source/PLCrashAsync.c; sourceTree = SOURCE_ROOT; };
@@ -152,8 +156,6 @@
 		CBF479FF13969C2B00949297 /* AppBlade-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppBlade-Prefix.pch"; sourceTree = "<group>"; };
 		CBF47A0E13969C8B00949297 /* AppBlade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
 		CBF47A0F13969C8B00949297 /* AppBlade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppBlade.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		CBF47A191396BC9600949297 /* AppBladeSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeSimpleKeychain.h; sourceTree = "<group>"; };
-		CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeSimpleKeychain.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,8 +297,6 @@
 				CBF479FE13969C2B00949297 /* Supporting Files */,
 				CBF47A0E13969C8B00949297 /* AppBlade.h */,
 				CBF47A0F13969C8B00949297 /* AppBlade.m */,
-				CBF47A191396BC9600949297 /* AppBladeSimpleKeychain.h */,
-				CBF47A1A1396BC9700949297 /* AppBladeSimpleKeychain.m */,
 				CB18A56D13ACE77C00091131 /* AppBladeWebClient.h */,
 				CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */,
 				319E5C5A175FDB5500B68107 /* AppBladeLogging.h */,
@@ -307,6 +307,8 @@
 		CBF479FE13969C2B00949297 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				31FDA34617A179DB008B6B4E /* AppBladeLocationSingleton.h */,
+				31FDA34717A179DB008B6B4E /* AppBladeLocationSingleton.m */,
 				31EEEDCA17A174BC00583D2F /* AppBladeSimpleKeychain.h */,
 				31EEEDCB17A174BC00583D2F /* AppBladeSimpleKeychain.m */,
 				CBF479FF13969C2B00949297 /* AppBlade-Prefix.pch */,
@@ -329,6 +331,7 @@
 				7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */,
 				7EE6A17A1562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
 				31EEEDCD17A174BC00583D2F /* AppBladeSimpleKeychain.h in Headers */,
+				31FDA34917A179DB008B6B4E /* AppBladeLocationSingleton.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +343,7 @@
 				7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */,
 				7EE6A1791562DBAF00D78B84 /* FeedbackBackgroundView.h in Headers */,
 				31EEEDCC17A174BC00583D2F /* AppBladeSimpleKeychain.h in Headers */,
+				31FDA34817A179DB008B6B4E /* AppBladeLocationSingleton.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,10 +444,10 @@
 				7E690DA81562A839009391BD /* FileMD5Hash.c in Sources */,
 				7EE6A17C1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
 				7E71754D1565567400D810DF /* AppBlade.m in Sources */,
-				7E71754F156556A500D810DF /* AppBladeSimpleKeychain.m in Sources */,
 				7E717550156556A800D810DF /* AppBladeWebClient.m in Sources */,
 				7E717551156556AC00D810DF /* FeedbackDialogue.m in Sources */,
 				31EEEDCF17A174BC00583D2F /* AppBladeSimpleKeychain.m in Sources */,
+				31FDA34B17A179DB008B6B4E /* AppBladeLocationSingleton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,7 +457,6 @@
 			files = (
 				620217921404461000A14BA7 /* crash_report.proto in Sources */,
 				CBF47A1113969C8B00949297 /* AppBlade.m in Sources */,
-				CBF47A1C1396BC9700949297 /* AppBladeSimpleKeychain.m in Sources */,
 				CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */,
 				620217591404450A00A14BA7 /* CrashReporter.m in Sources */,
 				6202175A1404450A00A14BA7 /* PLCrashAsync.c in Sources */,
@@ -485,6 +488,7 @@
 				7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */,
 				7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
 				31EEEDCE17A174BC00583D2F /* AppBladeSimpleKeychain.m in Sources */,
+				31FDA34A17A179DB008B6B4E /* AppBladeLocationSingleton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

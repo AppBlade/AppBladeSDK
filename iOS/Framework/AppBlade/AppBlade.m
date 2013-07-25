@@ -30,6 +30,9 @@
 #include "FileMD5Hash.h"
 
 #import "AppBladeLocationSingleton.h"
+#define DEFAULT_APPBLADE_LOCATION_LOGGING_DISTANCE 10 //every ten meters
+#define DEFAULT_APPBLADE_LOCATION_LOGGING_TIME 900 //or every fifteen minutes
+
 
 
 static NSString* const s_sdkVersion                     = @"0.5.0";
@@ -1349,11 +1352,16 @@ static BOOL is_encrypted () {
     return sessionClients > 0;
 }
 
-
-+ (void)startSession
+- (void)allowLocationLogging
 {
-    ABDebugLog_internal(@"Starting Session Logging");
-    [[AppBlade sharedManager] logSessionStart];
+    [self allowLocationLoggingForDistance:DEFAULT_APPBLADE_LOCATION_LOGGING_DISTANCE andOrTime:DEFAULT_APPBLADE_LOCATION_LOGGING_TIME];
+}
+
+
+- (void)allowLocationLoggingForDistance:(int)meters andOrTime:(int)seconds
+{
+    [[AppBladeLocationSingleton sharedInstance] enableLocationTracking];
+    [[AppBladeLocationSingleton sharedInstance] setLocationUpdateDistance:meters andTimeOut:seconds];
 }
 
 
@@ -1362,6 +1370,13 @@ static BOOL is_encrypted () {
     [[AppBladeLocationSingleton sharedInstance] enableLocationTracking];
     [[AppBladeLocationSingleton sharedInstance] updateStoredLocations];
 }
+
++ (void)startSession
+{
+    ABDebugLog_internal(@"Starting Session Logging");
+    [[AppBlade sharedManager] logSessionStart];
+}
+
 
 + (void)endSession
 {
