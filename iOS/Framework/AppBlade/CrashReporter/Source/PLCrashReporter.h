@@ -82,6 +82,7 @@ typedef struct PLCrashReporterCallbacks {
 + (PLCrashReporter *) sharedReporter;
 
 - (BOOL) hasPendingCrashReport;
+- (BOOL) hasQueuedCrashReports;
 
 - (NSData *) loadPendingCrashReportData;
 - (NSData *) loadPendingCrashReportDataAndReturnError: (NSError **) outError;
