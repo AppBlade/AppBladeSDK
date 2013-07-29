@@ -84,7 +84,7 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 
 @interface AppBlade () <AppBladeWebClientDelegate, FeedbackDialogueDelegate>
-@property (nonatomic, assign, getter = isAllDisabled) BOOL allDisabled; //internal variable to disable the SDK gracefully
+@property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled; //internal variable to disable the SDK gracefully
 
 
 @property (nonatomic, retain) NSURL* upgradeLink;
@@ -100,7 +100,6 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
-+(void)disable; // disables the SDK from accepting any new calls to it. Not recommended.
 - (void)raiseConfigurationExceptionWithMessage:(NSString *)message;
 
 - (void)validateProjectConfiguration;
@@ -204,11 +203,11 @@ static BOOL is_encrypted () {
 
 #pragma mark - Lifecycle
 
-+(void)disable
+-(void)setDisabled:(BOOL)isDisabled
 {
-    if(s_sharedManager != nil){
-        s_sharedManager.allDisabled = YES;
-        [s_sharedManager pauseCurrentPendingRequests];
+    self.allDisabled = isDisabled;
+    if(self.allDisabled){
+        [self pauseCurrentPendingRequests];
     }
 }
 
@@ -298,7 +297,7 @@ static BOOL is_encrypted () {
 {
     NSLog(@"%@", message);
     NSLog(@"AppBlade must now disable itself.");
-    [AppBlade disable];
+    [[AppBlade sharedManager] setDisabled:YES];
 }
 
 
@@ -315,8 +314,8 @@ static BOOL is_encrypted () {
     [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token.
     
     if (![AppBladeSimpleKeychain hasKeychainAccess]){
-        [AppBlade disable];
         NSLog(@"AppBlade must disable due to missing keychain permissions.");
+        [[AppBlade sharedManager] setDisabled:YES];
     }
     
     NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
