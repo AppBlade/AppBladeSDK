@@ -14,7 +14,7 @@
 @protocol AppBladeBasicFeatureManager
 
 @required
-    - (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate;
+    - (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)webOpDelegate;
 
 //Suggested pragma structure (after implementing the required methods, which should always be first)
 #pragma mark - Web Request Generators

@@ -15,6 +15,7 @@
 @end
 
 @implementation FeedbackReportingManager
+@synthesize delegate;
 
 @synthesize feedbackDictionary;
 @synthesize showingFeedbackDialogue;
@@ -22,10 +23,10 @@
 @synthesize feedbackWindow;
 
 
-- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate
+- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)webOpDelegate
 {
     if((self = [super init])) {
-        self.delegate = delegate;
+        self.delegate = webOpDelegate;
     }
     
     return self;

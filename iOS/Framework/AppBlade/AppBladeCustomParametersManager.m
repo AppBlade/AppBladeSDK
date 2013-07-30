@@ -9,11 +9,12 @@
 #import "AppBladeCustomParametersManager.h"
 
 @implementation AppBladeCustomParametersManager
+@synthesize delegate;
 
-- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate
+- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)webOpDelegate
 {
     if((self = [super init])) {
-        self.delegate = delegate;
+        self.delegate = webOpDelegate;
     }
     
     return self;
