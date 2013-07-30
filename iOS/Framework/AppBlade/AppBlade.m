@@ -607,7 +607,7 @@ static AppBlade *s_sharedManager = nil;
 
 -(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
 {
-    if (update) {
+    if (update && self.updatesManager != nil) {
         
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Update Available"
                                                         message:message
@@ -615,7 +615,7 @@ static AppBlade *s_sharedManager = nil;
                                               cancelButtonTitle:@"Cancel"
                                               otherButtonTitles: @"Upgrade", nil] ;
         alert.tag = kUpdateAlertTag;
-        self.upgradeLink = [NSURL URLWithString:url];
+        self.updatesManager.upgradeLink = [NSURL URLWithString:url];
         
         [alert show];
         
@@ -625,9 +625,9 @@ static AppBlade *s_sharedManager = nil;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == kUpdateAlertTag) {
-        if (buttonIndex == 1) {
-            [[UIApplication sharedApplication] openURL:self.upgradeLink];
-            self.upgradeLink = nil;
+        if (buttonIndex == 1  && self.updatesManager != nil && self.updatesManager.upgradeLink != nil) {
+            [[UIApplication sharedApplication] openURL:self.updatesManager.upgradeLink];
+            self.updatesManager.upgradeLink = nil;
             exit(0);
         }
     }

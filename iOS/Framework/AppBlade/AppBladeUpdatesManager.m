@@ -9,11 +9,13 @@
 #import "AppBladeUpdatesManager.h"
 
 @implementation AppBladeUpdatesManager
+@synthesize delegate;
+@synthesize upgradeLink;
 
-- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate
+- (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)webOpDelegate
 {
     if((self = [super init])) {
-        self.delegate = delegate;
+        self.delegate = webOpDelegate;
     }
     
     return self;

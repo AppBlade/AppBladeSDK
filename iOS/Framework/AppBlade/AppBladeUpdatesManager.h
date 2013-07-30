@@ -12,6 +12,8 @@
 
 @interface AppBladeUpdatesManager : NSObject<AppBladeBasicFeatureManager>
 @property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
+@property (nonatomic, retain) NSURL* upgradeLink;
+
 //Suggested pragma structure (after implementing the required methods, which should always be first)
 #pragma mark - Web Request Generators
 //wherein you generate the unique web request for the SDK
@@ -28,7 +30,6 @@
 
 @property (nonatomic, strong) AppBladeUpdatesManager*        updatesManager;
 
-@property (nonatomic, retain) NSURL* upgradeLink;
 
 @end
 
