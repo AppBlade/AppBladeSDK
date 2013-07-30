@@ -147,6 +147,9 @@ struct encryption_info_command {
 int main (int argc, char *argv[]);
 
 static BOOL is_encrypted () {
+#if TARGET_IPHONE_SIMULATOR
+    return NO;
+#else
     const struct mach_header *header;
     Dl_info dlinfo;
     
@@ -179,6 +182,7 @@ static BOOL is_encrypted () {
     
     /* Encryption info not found */
     return NO;
+#endif
 }
 
 

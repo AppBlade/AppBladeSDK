@@ -879,6 +879,9 @@ const int kNonceRandomStringLength = 74;
 //_mh_execute_header is declared in mach-o/ldsyms.h (and not an iVar as you might have thought).
 -(NSString *)genExecutableUUID //will break in simulator, please be careful
 {
+#if TARGET_IPHONE_SIMULATOR
+    return @"00000-0000-0000-0000-00000000";
+#else
     if(_executableUUID == nil){
         const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
         for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx) {
@@ -899,6 +902,7 @@ const int kNonceRandomStringLength = 74;
         }
     }
     return _executableUUID;
+#endif
 }
 
 
