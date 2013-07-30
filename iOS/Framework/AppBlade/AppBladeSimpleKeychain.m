@@ -8,8 +8,28 @@
 #import "AppBladeSimpleKeychain.h"
 #import "AppBladeLogging.h"
 
+#import <Security/Security.h>
+
+@interface AppBladeSimpleKeychain ()
++(BOOL)keychainInconsistencyTest:(BOOL)secondTry;
+
+
+@end
+
 @implementation AppBladeSimpleKeychain
 
++(void)sanitizeKeychain
+{
+    if([self keychainInconsistencyExists])
+    {
+        [self deleteLocalKeychain];
+    }
+}
+
+
+//SecKeychainGetStatus is a mac os only call,
+//in fact all of SecKeychainStatus seems to be missing
+//we gotta do this thing manually
 +(BOOL)hasKeychainAccess
 {
     //test with some dummy data, we need to be able to write, read, and remove.
@@ -52,6 +72,61 @@
     }
 }
 
++(BOOL)keychainInconsistencyExists
+{
+    return [self keychainInconsistencyTest:NO];
+}
+
+
++(BOOL)keychainInconsistencyTest:(BOOL)secondTry
+{
+//test the keychain on the current app
+    //test with some dummy data, we need to be able to write, read, and remove.
+    OSStatus keychainErrorCode = noErr; //
+    NSString *keychainInterimCodeLabel = @"";
+    
+    OSStatus keychainInterimCode = noErr;
+    NSMutableDictionary *keychainQuery = [self getKeychainQuery:@"AppBladeKeychainTest"];
+    
+    CFDataRef keyData = NULL;
+    
+    //I only care about the first error code we hit
+    //test writing
+    SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:@"Delete This Thing"] forKey:(__bridge id)kSecValueData];
+    keychainInterimCode = SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
+    keychainErrorCode = keychainInterimCode;
+    keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"writing";
+    
+    //test reading
+    keychainInterimCode = SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData);
+    keychainErrorCode = (keychainErrorCode != noErr) ? keychainErrorCode : keychainInterimCode;
+    keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"reading";
+    if (keyData) CFRelease(keyData);
+    
+    //test deleting
+    keychainQuery = [self getKeychainQuery:@"AppBladeKeychainTest"];
+    keychainInterimCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+    keychainErrorCode = (keychainErrorCode != noErr) ? keychainErrorCode : keychainInterimCode;
+    keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"deleting";
+    if (keychainErrorCode == noErr)
+    {
+        return TRUE;
+    }
+    else
+    {
+        // If the keychain item already exists, modify it:
+        NSLog(@"Keychain error occured during keychain %@ test: %ld : %@", keychainInterimCodeLabel, keychainErrorCode, [AppBladeSimpleKeychain errorMessageFromCode:keychainErrorCode]);
+        NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
+        if(secondTry){
+            NSLog(@"We've confirmed this fails twice in a row.");
+            return FALSE;
+        }else{
+            NSLog(@"Let's try one more time.");
+            return [self keychainInconsistencyTest:YES];
+        }
+    }
+}
 
 +(NSString*) errorMessageFromCode:(OSStatus)keychainErrorCode
 {

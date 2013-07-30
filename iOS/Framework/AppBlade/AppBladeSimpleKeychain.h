@@ -22,5 +22,9 @@
 
 +(NSString*) errorMessageFromCode:(OSStatus)errorCode;
 
-+ (void)deleteLocalKeychain; //Deletes every deletable thing.
++ (void)deleteLocalKeychain; //Deletes every deletable thing we have in the app.
++ (BOOL)keychainInconsistencyExists; //our current check for keychain inconsistency
+
++ (void)sanitizeKeychain; //a helper function for that's essentially deleteLocalKeychain if keychainInconsistencyExists
+
 @end
