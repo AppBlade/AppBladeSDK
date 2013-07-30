@@ -205,8 +205,8 @@ static BOOL is_encrypted () {
 
 -(void)setDisabled:(BOOL)isDisabled
 {
-    self.allDisabled = isDisabled;
-    if(self.allDisabled){
+    _allDisabled = isDisabled;
+    if(_allDisabled){
         [self pauseCurrentPendingRequests];
     }
 }
