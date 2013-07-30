@@ -62,7 +62,7 @@
 //FeedbackReportingManager*         feedbackManager
 //SessionTrackingManager*           sessionTrackingManager
 //AppBladeCustomParametersManager*  customParamsManager
-
+@property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
@@ -70,8 +70,7 @@
 - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 
 - (NSString*)randomString:(int)length;
-
--(NSMutableDictionary*) appBladeDeviceSecrets;
+- (NSMutableDictionary*) appBladeDeviceSecrets;
 - (BOOL)hasDeviceSecret;
 - (BOOL)isDeviceSecretBeingConfirmed;
 
@@ -89,6 +88,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 
 @implementation AppBlade
 @synthesize appBladeDeviceSecret = _appbladeDeviceSecret;
+@synthesize allDisabled = _allDisabled;
 
 /* A custom post-crash callback */
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
@@ -148,8 +148,15 @@ static BOOL is_encrypted () {
 
 
 #pragma mark - Lifecycle
-
 static AppBlade *s_sharedManager = nil;
+-(void)setDisabled:(BOOL)isDisabled
+{
+    _allDisabled = isDisabled;
+    if(isDisabled){
+        [self pauseCurrentPendingRequests];
+    }
+}
+
 
 + (AppBlade *)sharedManager
 {
@@ -188,22 +195,42 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)validateProjectConfiguration
 {
+    NSString* const exceptionMissingMessageFormat = @"AppBlade is missing %@. The project is likely misconfigured. Make sure you declare the shared AppBlade manager from within your application delegate and you have your AppBladeKeys plist file in the right place.";
+
+    NSString *missingElement = @"";
+    BOOL projectInvalid = FALSE;
     //All the necessary plist vairables must be included
-    if ([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0) {
-        if (self.appBladeProjectSecret == nil || self.appBladeProjectSecret.length == 0) {
-            [self raiseConfigurationExceptionWithFieldName:@"Project Secret OR Device Secret"];
-        }
+    if (self.appBladeProjectSecret == nil || self.appBladeProjectSecret.length == 0) {
+         missingElement = @"Project Secret";
+    }//project can be missing if we have a device secret
+    if (([missingElement isEqualToString:@"Project Secret"]) && ([self appBladeDeviceSecret] == nil || [[self appBladeDeviceSecret] length] == 0)) {
+        missingElement = @"both a Device Secret and Project secret. It needs one of them";
+        projectInvalid = TRUE;
     }
-    else if (!self.appBladeHost || self.appBladeHost.length == 0) {
-        [self raiseConfigurationExceptionWithFieldName:@"Project Host"];
+
+    if (!projectInvalid && (!self.appBladeHost || self.appBladeHost.length == 0)) {
+        missingElement =  @"the Project Host (endpoint)";
+        projectInvalid = TRUE;
+    }
+    
+    NSString *configurationExceptionMessage = [NSString stringWithFormat:exceptionMissingMessageFormat, missingElement];
+    
+    //we have the data, now check the keychain
+    if(![AppBladeSimpleKeychain hasKeychainAccess]){
+        configurationExceptionMessage = @"AppBlade cannot be enabled on this build because it cannot access the keychain. The build was likely signed improperly.";
+    }
+    
+    if(projectInvalid){
+        [self raiseConfigurationExceptionWithMessage:configurationExceptionMessage];
     }
 }
 
-- (void)raiseConfigurationExceptionWithFieldName:(NSString *)name
+
+- (void)raiseConfigurationExceptionWithMessage:(NSString *)message
 {
-    NSString* const exceptionMessageFormat = @"AppBlade %@ not set. Configure the shared AppBlade manager from within your application delegate or AppBlade plist file.";
-    [NSException raise:@"AppBladeException" format:exceptionMessageFormat, name];
-    abort();
+    NSLog(@"%@", message);
+    NSLog(@"AppBlade must now disable itself.");
+    [[AppBlade sharedManager] setDisabled:YES];
 }
 
 
@@ -244,9 +271,8 @@ static AppBlade *s_sharedManager = nil;
     [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token.
     
     if (![AppBladeSimpleKeychain hasKeychainAccess]){
-        [AppBlade clearCacheDirectory];
-        [NSException raise:@"AppBladeException" format: @"AppBlade is halting due to missing keychain permissions."];
-        abort();
+        [[AppBlade sharedManager] setDisabled:YES];
+        ABDebugLog_internal(@"AppBlade must disable due to missing keychain permissions.");
     }
     
     NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
@@ -290,7 +316,7 @@ static AppBlade *s_sharedManager = nil;
     }
     else
     {
-        [self raiseConfigurationExceptionWithFieldName:plistName];
+        [self raiseConfigurationExceptionWithMessage:plistName];
     }
     
     if([kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret] || self.appBladeProjectSecret == nil || [self.appBladeProjectSecret  length] == 0)
@@ -304,8 +330,11 @@ static AppBlade *s_sharedManager = nil;
     return is_encrypted();
 }
 
-#pragma mark Pending/Token Requests Queue 
+-(void)cleanOutKeychain {
+    [AppBladeSimpleKeychain deleteLocalKeychain];
+}
 
+#pragma mark Pending Requests Queue
 -(NSOperationQueue *) tokenRequests {
     if(!_tokenRequests){
         _tokenRequests = [[NSOperationQueue alloc] init];
@@ -362,6 +391,12 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)refreshToken:(NSString *)tokenToConfirm
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't refreshToken, SDK disabled");
+        return;
+    }
+    
+
     //ensure no other requests or confirms are already running.
     if([self isDeviceSecretBeingConfirmed]) {
         ABDebugLog_internal(@"Refresh already in queue. Ignoring.");
@@ -380,6 +415,11 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)confirmToken:(NSString *)tokenToConfirm
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't confirmToken, SDK disabled");
+        return;
+    }
+    
     //ensure no other requests or confirms are already running.
     if([self isDeviceSecretBeingConfirmed]) {
         ABDebugLog_internal(@"Confirm (or refresh) already in queue. Ignoring.");
@@ -430,6 +470,10 @@ static AppBlade *s_sharedManager = nil;
 - (void)checkApproval
 {
 #ifndef SKIP_AUTHENTICATION
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't checkApproval, SDK disabled");
+        return;
+    }
     [self validateProjectConfiguration];
     AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self] ;
     [client checkPermissions];
@@ -445,6 +489,10 @@ static AppBlade *s_sharedManager = nil;
 {
 #ifndef SKIP_AUTO_UPDATING
     [self validateProjectConfiguration];
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't checkForUpdates, SDK disabled");
+        return;
+    }
     ABDebugLog_internal(@"Checking for updates");
     AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self] ;
     [client checkForUpdates];
@@ -460,6 +508,11 @@ static AppBlade *s_sharedManager = nil;
 {
 #ifndef SKIP_CRASH_REPORTING
     [self validateProjectConfiguration];
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't catch and report crashes, SDK disabled");
+        return;
+    }
+    ABDebugLog_internal(@"Catch and report crashes");
     [self.crashManager catchAndReportCrashes];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
@@ -469,6 +522,11 @@ static AppBlade *s_sharedManager = nil;
 - (void)checkForExistingCrashReports
 {
 #ifndef SKIP_CRASH_REPORTING
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't catch and report crashes, SDK disabled");
+        return;
+    }
+
     [self.crashManager checkForExistingCrashReports];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
@@ -478,8 +536,12 @@ static AppBlade *s_sharedManager = nil;
 - (void)handleCrashReport
 {
 #ifndef SKIP_CRASH_REPORTING    
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't catch and report crashes, SDK disabled");
+        return;
+    }
+
     NSDictionary *crashDict = [self.crashManager handleCrashReportAsDictionary];
-    
     if(crashDict != nil){
         AppBladeWebOperation * client = [self.crashManager generateCrashReportFromDictionary:crashDict withParams:[self getCustomParams]];
         [self.pendingRequests addOperation:client];
@@ -805,6 +867,12 @@ static AppBlade *s_sharedManager = nil;
 - (void)allowFeedbackReporting
 {
 #ifndef SKIP_FEEDBACK
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't check HasPendingFeedbackReports, SDK disabled");
+        return;
+    }
+
+    ABDebugLog_internal(@"allowFeedbackReporting");
     UIWindow* window = [[UIApplication sharedApplication] keyWindow];
     if (window) {
         [self allowFeedbackReportingForWindow:window withOptions:AppBladeFeedbackSetupDefault];
@@ -816,13 +884,72 @@ static AppBlade *s_sharedManager = nil;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
+}
 
+- (BOOL)hasPendingFeedbackReports
+{
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't check HasPendingFeedbackReports, SDK disabled");
+        return NO;
+    }
+    
+    BOOL toRet = NO;
+    @synchronized (self){
+        NSString *feedbackBacklogFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+        if([[NSFileManager defaultManager] fileExistsAtPath:feedbackBacklogFilePath]){
+            ABDebugLog_internal(@"found file at %@", feedbackBacklogFilePath);
+            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:feedbackBacklogFilePath];
+            if (backupFiles.count > 0) {
+                ABDebugLog_internal(@"found %d files at feedbackBacklogFilePath", backupFiles.count);
+                toRet = YES;
+            }
+            else
+            {
+                ABDebugLog_internal(@"found NO files at feedbackBacklogFilePath");
+                toRet = NO;
+            }
+        }
+        else
+        {
+            ABDebugLog_internal(@"found nothing at %@", feedbackBacklogFilePath);
+            toRet = NO;
+        }
+    }
+    return toRet;
+}
+
+
+- (void)allowFeedbackReportingForWindow:(UIWindow *)window
+{
+    [self validateProjectConfiguration];
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't allow feedback, SDK disabled");
+        return;
+    }
+
+    self.window = window;
+    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] ;
+    self.tapRecognizer.numberOfTapsRequired = 2;
+    self.tapRecognizer.numberOfTouchesRequired = 3;
+    self.tapRecognizer.delegate = self;
+    [window addGestureRecognizer:self.tapRecognizer];
+    
+    [self checkAndCreateAppBladeCacheDirectory];
+    
+    if ([self hasPendingFeedbackReports]) {
+        [self handleBackloggedFeedback];
+    }
 }
 
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options
 {
 #ifndef SKIP_FEEDBACK
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't setup for custom feedback, SDK disabled");
+        return;
+    }
+    [self validateProjectConfiguration];
     [self.feedbackManager allowFeedbackReportingForWindow:window withOptions:options];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
@@ -844,11 +971,16 @@ static AppBlade *s_sharedManager = nil;
 - (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options
 {
 #ifndef SKIP_FEEDBACK
+    [self validateProjectConfiguration];
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't show feedback dialog, SDK disabled");
+        return;
+    }
+
     [self.feedbackManager showFeedbackDialogueWithOptions:options];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
-
 }
 
 
@@ -878,6 +1010,10 @@ static AppBlade *s_sharedManager = nil;
 - (void)reportFeedback:(NSString *)feedback
 {
 #ifndef SKIP_FEEDBACK
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't report feedback, SDK disabled");
+        return;
+    }
     [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     
     ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackDictionary);
@@ -913,6 +1049,10 @@ static AppBlade *s_sharedManager = nil;
 - (void)handleBackloggedFeedback
 {
 #ifndef SKIP_FEEDBACK
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't handleBackloggedFeedback, SDK disabled");
+        return;
+    }
     @synchronized (self){
         ABDebugLog_internal(@"handleBackloggedFeedback");
         NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
@@ -1051,7 +1191,12 @@ static AppBlade *s_sharedManager = nil;
 
 #pragma mark - Session Reporting
 - (BOOL)hasPendingSessions
-{   //check active clients for API_Sessions
+{
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't check hasPendingSessions, SDK disabled");
+        return NO;
+    }
+    //check active clients for API_Sessions
     NSInteger sessionClients = [self pendingRequestsOfType:AppBladeWebClientAPI_Sessions];
     return sessionClients > 0;
 }
@@ -1060,6 +1205,10 @@ static AppBlade *s_sharedManager = nil;
 + (void)startSession
 {
 #ifndef SKIP_SESSIONS
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't show feedback dialog, SDK disabled");
+        return;
+    }
     ABDebugLog_internal(@"Starting Session Logging");
     [[AppBlade sharedManager] logSessionStart];
 #else
@@ -1072,6 +1221,11 @@ static AppBlade *s_sharedManager = nil;
 {
 #ifndef SKIP_SESSIONS
     ABDebugLog_internal(@"Ended Session Logging");
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't show feedback dialog, SDK disabled");
+        return;
+    }
+
     [[AppBlade sharedManager] logSessionEnd];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
@@ -1081,6 +1235,10 @@ static AppBlade *s_sharedManager = nil;
 - (void)logSessionStart
 {
 #ifndef SKIP_SESSIONS
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't startSession, SDK disabled");
+        return;
+    }
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     ABDebugLog_internal(@"Checking Session Path: %@", sessionFilePath);
 
@@ -1104,7 +1262,10 @@ static AppBlade *s_sharedManager = nil;
 - (void)logSessionEnd
 {
 #ifndef SKIP_SESSIONS
-
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't endSession, SDK disabled");
+        return;
+    }
     NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
     
     NSMutableArray* pastSessions = nil;
@@ -1130,6 +1291,11 @@ static AppBlade *s_sharedManager = nil;
 #pragma mark - AppBlade Custom Params
 -(NSDictionary *)getCustomParams
 {
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't getCustomParams, SDK disabled");
+        return [NSDictionary dictionary];;
+    }
+
     NSDictionary *toRet = nil;
 #ifndef SKIP_CUSTOM_PARAMS
     NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
@@ -1147,13 +1313,17 @@ static AppBlade *s_sharedManager = nil;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
-
+    ABDebugLog_internal(@"getting Custom Params %@", toRet);
     return toRet;
 }
 
 -(void)setCustomParams:(NSDictionary *)newFieldValues
 {
 #ifndef SKIP_CUSTOM_PARAMS
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't setCustomParams, SDK disabled");
+        return;
+    }
     [self checkAndCreateAppBladeCacheDirectory];
     NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
@@ -1289,6 +1459,11 @@ static AppBlade *s_sharedManager = nil;
 #pragma mark - Device Secret Methods
 -(NSMutableDictionary*) appBladeDeviceSecrets
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't get appBladeDeviceSecrets, SDK disabled");
+        return [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];;
+    }
+
     NSMutableDictionary* appBlade_deviceSecret_dict = (NSMutableDictionary* )[AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
     if(nil == appBlade_deviceSecret_dict)
     {
@@ -1302,6 +1477,11 @@ static AppBlade *s_sharedManager = nil;
 
 - (NSString *)appBladeDeviceSecret
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't get appBladeDeviceSecret, SDK disabled");
+        return @"";
+    }
+
     //get the last available device secret
     NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
     NSString* device_secret_stored = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyNew]; //assume we have the newest in new_secret key
@@ -1320,6 +1500,11 @@ static AppBlade *s_sharedManager = nil;
 
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't get setAppBladeDeviceSecret, SDK disabled");
+        return;
+    }
+
         //always store the last two device secrets
         NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
         NSString* device_secret_latest_stored = [appBlade_keychain_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //get the newest key (to our knowledge)
@@ -1337,12 +1522,23 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)clearAppBladeKeychain
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't clearAppBladeKeychain, SDK disabled");
+        return;
+    }
+
     NSMutableDictionary* appBlade_keychain_dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];
     [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
 }
 
 - (void)clearStoredDeviceSecrets
 {
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't clearStoredDeviceSecrets, SDK disabled");
+        return;
+    }
+
+    
     NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
     if(nil != appBlade_keychain_dict)
     {

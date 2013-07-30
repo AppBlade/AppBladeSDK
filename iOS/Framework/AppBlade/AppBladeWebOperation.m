@@ -298,8 +298,6 @@ const int kNonceRandomStringLength = 74;
     
     if (self.api == AppBladeWebClientAPI_GenerateToken) {
         NSError *error = nil;
-//        NSString* string = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
-//        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         ABDebugLog_internal(@"Parsed JSON: %@", json);
         AppBladeWebOperation *selfReference = self;
@@ -310,8 +308,6 @@ const int kNonceRandomStringLength = 74;
     }
     else if (self.api == AppBladeWebClientAPI_ConfirmToken) {
         NSError *error = nil;
-//        NSString* string = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
-//        ABDebugLog_internal(@"Received Device Secret Confirm Response from AppBlade: %@", string);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         self.receivedData = nil;
         AppBladeWebOperation *selfReference = self;
@@ -322,9 +318,6 @@ const int kNonceRandomStringLength = 74;
     }
     else if(self.api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
-//        NSString* string = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
-//        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
-
         NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         //BOOL showUpdatePrompt = [self.request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
         

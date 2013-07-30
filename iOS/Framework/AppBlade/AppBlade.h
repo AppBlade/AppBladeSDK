@@ -139,4 +139,6 @@
 -(void)clearAppBladeKeychain;
 
 
+-(void)cleanOutKeychain;
+
 @end
