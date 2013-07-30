@@ -12,11 +12,14 @@
 
 
 @interface FeedbackReportingManager ()
-
 @end
 
 @implementation FeedbackReportingManager
 
+@synthesize feedbackDictionary;
+@synthesize showingFeedbackDialogue;
+@synthesize tapRecognizer;
+@synthesize feedbackWindow;
 
 
 - (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate
@@ -31,15 +34,15 @@
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options
 {
     AppBlade *delegateRef = (AppBlade *)self.delegate;
-    delegateRef.window = window;
+    self.feedbackWindow = window;
     
     if (options == AppBladeFeedbackSetupTripleFingerDoubleTap || options == AppBladeFeedbackSetupDefault) {
         //Set up our custom triple finger double-tap
-        delegateRef.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:delegateRef action:@selector(showFeedbackDialogue)] ;
-        delegateRef.tapRecognizer.numberOfTapsRequired = 2;
-        delegateRef.tapRecognizer.numberOfTouchesRequired = 3;
-        delegateRef.tapRecognizer.delegate = delegateRef;
-        [delegateRef.window addGestureRecognizer:delegateRef.tapRecognizer];
+        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:delegateRef action:@selector(showFeedbackDialogue)] ;
+        self.tapRecognizer.numberOfTapsRequired = 2;
+        self.tapRecognizer.numberOfTouchesRequired = 3;
+        self.tapRecognizer.delegate = delegateRef;
+        [self.feedbackWindow addGestureRecognizer:self.tapRecognizer];
     }
     [delegateRef checkAndCreateAppBladeCacheDirectory];
     
@@ -51,16 +54,16 @@
 - (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options
 {
     AppBlade *delegateRef = (AppBlade *)self.delegate;
-    if(!delegateRef.showingFeedbackDialogue){
-        delegateRef.showingFeedbackDialogue = YES;
-        if(delegateRef.feedbackDictionary == nil){
-            delegateRef.feedbackDictionary = [NSMutableDictionary  dictionary];
+    if(!self.showingFeedbackDialogue){
+        self.showingFeedbackDialogue = YES;
+        if(self.feedbackDictionary == nil){
+            self.feedbackDictionary = [NSMutableDictionary  dictionary];
         }
         
         //More like SETUP feedback dialogue, am I right? I'm hilarious. Anyway, this gets all our ducks in a row before showing the feedback dialogue
         if(options == AppBladeFeedbackDisplayWithScreenshot || options == AppBladeFeedbackDisplayDefault){
             NSString* screenshotPath = [delegateRef captureScreen];
-            [delegateRef.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
+            [self.feedbackDictionary setObject:[screenshotPath lastPathComponent] forKey:kAppBladeFeedbackKeyScreenshot];
         }
         else
         {
@@ -346,21 +349,18 @@
 #ifndef SKIP_FEEDBACK
 #pragma clang diagnostic ignored "-Wprotocol"
 @implementation AppBlade (FeedbackReporting)
-@dynamic feedbackDictionary;
-@dynamic showingFeedbackDialogue;
-@dynamic tapRecognizer;
-@dynamic window;
-@dynamic pendingRequests;
 @dynamic feedbackManager;
+@dynamic pendingRequests;
+
 
 - (void)promptFeedbackDialogue
 {
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGRect screenFrame = self.window.frame;
+    CGRect screenFrame = self.feedbackManager.feedbackWindow.frame;
     
     CGRect vFrame = CGRectZero;
-    if([[self.window subviews] count] > 0){
-        UIView *v = [[self.window subviews] objectAtIndex:0];
+    if([[self.feedbackManager.feedbackWindow subviews] count] > 0){
+        UIView *v = [[self.feedbackManager.feedbackWindow subviews] objectAtIndex:0];
         vFrame = v.frame; //adjust for any possible offset in the subview we'll add our feedback to.
     }
     
@@ -393,21 +393,21 @@
     feedback.delegate = self;
     
     // get the first window in the application if one was not supplied.
-    if (!self.window){
-        self.window = [[UIApplication sharedApplication] keyWindow];
-        self.showingFeedbackDialogue = YES;
+    if (!self.feedbackManager.feedbackWindow){
+        self.feedbackManager.feedbackWindow = [[UIApplication sharedApplication] keyWindow];
+        self.feedbackManager.showingFeedbackDialogue = YES;
         ABDebugLog_internal(@"Feedback window not defined, using default (Images might not come through.)");
     }
-    if([[self.window subviews] count] > 0){
-        [[[self.window subviews] objectAtIndex:0] addSubview:feedback];
-        self.showingFeedbackDialogue = YES;
+    if([[self.feedbackManager.feedbackWindow subviews] count] > 0){
+        [[[self.feedbackManager.feedbackWindow subviews] objectAtIndex:0] addSubview:feedback];
+        self.feedbackManager.showingFeedbackDialogue = YES;
         [feedback.textView becomeFirstResponder];
     }
     else
     {
         ABErrorLog(@"No subviews in feedback window, cannot prompt feedback dialog at this time.");
         feedback.delegate = nil;
-        self.showingFeedbackDialogue = NO;
+        self.feedbackManager.showingFeedbackDialogue = NO;
     }
 }
 
@@ -417,7 +417,7 @@
 - (void)reportFeedback:(NSString *)feedback
 {
 #ifndef SKIP_FEEDBACK
-    [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
+    [self.feedbackManager.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     
     ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackDictionary);
     
@@ -426,7 +426,7 @@
     NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
     NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
     
-    [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+    [self.feedbackManager.feedbackDictionary writeToFile:feedbackPath atomically:YES];
     NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
     NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
     if (!backupFiles) {
@@ -439,7 +439,7 @@
         ABErrorLog(@"Error writing backup file to %@", backupFilePath);
     }
     
-    AppBladeWebOperation * client = [self.feedbackManager generateFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
+    AppBladeWebOperation * client = [self.feedbackManager generateFeedbackWithScreenshot:[self.feedbackManager.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
     ABDebugLog_internal(@"Sending screenshot");
     [self.pendingRequests addOperation:client];
 #else

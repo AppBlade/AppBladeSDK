@@ -79,16 +79,10 @@
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
-    #ifndef SKIP_FEEDBACK
-    @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
-    @property (nonatomic, assign) BOOL showingFeedbackDialogue;
-    @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
-    @property (nonatomic, assign) UIWindow* window;
-    #endif
 
 
     - (void)validateProjectConfiguration;
-    - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
+    - (void)raiseConfigurationExceptionWithMessage:(NSString *)name;
 
     -(NSMutableDictionary*) appBladeDeviceSecrets;
     - (BOOL)hasDeviceSecret;
@@ -129,13 +123,6 @@
 @synthesize customParamsManager;
 #endif
 
-
-#ifndef SKIP_FEEDBACK
-@synthesize feedbackDictionary;
-@synthesize showingFeedbackDialogue;
-@synthesize tapRecognizer;
-@synthesize window;
-#endif
 
 /* A custom post-crash callback */
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
@@ -969,24 +956,16 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window
 {
-    [self validateProjectConfiguration];
+#ifndef SKIP_FEEDBACK
     if(self.isAllDisabled){
-        ABDebugLog_internal(@"Can't allow feedback, SDK disabled");
+        ABDebugLog_internal(@"Can't setup for custom feedback, SDK disabled");
         return;
     }
-
-    self.window = window;
-    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFeedbackDialogue)] ;
-    self.tapRecognizer.numberOfTapsRequired = 2;
-    self.tapRecognizer.numberOfTouchesRequired = 3;
-    self.tapRecognizer.delegate = self;
-    [window addGestureRecognizer:self.tapRecognizer];
-    
-    [self checkAndCreateAppBladeCacheDirectory];
-    
-    if ([self hasPendingFeedbackReports]) {
-        [self handleBackloggedFeedback];
-    }
+    [self validateProjectConfiguration];
+    [self.feedbackManager allowFeedbackReportingForWindow:window withOptions:AppBladeFeedbackSetupDefault];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 }
 
 
@@ -1036,7 +1015,7 @@ static AppBlade *s_sharedManager = nil;
 #ifndef SKIP_FEEDBACK
     ABDebugLog_internal(@"reporting text %@", feedbackText);
     [self reportFeedback:feedbackText];
-    self.showingFeedbackDialogue = NO;
+    self.feedbackManager.showingFeedbackDialogue = NO;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -1045,53 +1024,16 @@ static AppBlade *s_sharedManager = nil;
 - (void)feedbackDidCancel
 {
 #ifndef SKIP_FEEDBACK
-    NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot]];
+    NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[self.feedbackManager.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot]];
     [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
-    self.feedbackDictionary = nil;
-    self.showingFeedbackDialogue = NO;
+    self.feedbackManager.feedbackDictionary = nil;
+    self.feedbackManager.showingFeedbackDialogue = NO;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
 }
 
 
-- (void)reportFeedback:(NSString *)feedback
-{
-#ifndef SKIP_FEEDBACK
-    if(self.isAllDisabled){
-        ABDebugLog_internal(@"Can't report feedback, SDK disabled");
-        return;
-    }
-    [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
-    
-    ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackDictionary);
-    
-    //store the feedback in the cache director in the event of a termination
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-    NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-    
-    [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
-    NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-    NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-    if (!backupFiles) {
-        backupFiles = [NSMutableArray array];
-    }
-    [backupFiles addObject:newFeedbackName];
-    
-    BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-    if(!success){
-        ABErrorLog(@"Error writing backup file to %@", backupFilePath);
-    }
-    
-    AppBladeWebOperation * client = [self.feedbackManager generateFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
-    ABDebugLog_internal(@"Sending screenshot");
-    [self.pendingRequests addOperation:client];
-#else
-    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
-#endif
-
-}
 - (void)handleBackloggedFeedback
 {
 #ifndef SKIP_FEEDBACK
