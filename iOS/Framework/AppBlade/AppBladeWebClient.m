@@ -295,8 +295,7 @@ const int kNonceRandomStringLength = 74;
     
     if (self.api == AppBladeWebClientAPI_GenerateToken) {
         NSError *error = nil;
-        NSString* string = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
-        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
+        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         ABDebugLog_internal(@"Parsed JSON: %@", json);
         AppBladeWebClient *selfReference = self;
@@ -307,8 +306,7 @@ const int kNonceRandomStringLength = 74;
     }
     else if (self.api == AppBladeWebClientAPI_ConfirmToken) {
         NSError *error = nil;
-        NSString* string = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
-        ABDebugLog_internal(@"Received Device Secret Confirm Response from AppBlade: %@", string);
+        ABDebugLog_internal(@"Received Device Secret Confirm Response from AppBlade: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         self.receivedData = nil;
         AppBladeWebClient *selfReference = self;
@@ -319,8 +317,7 @@ const int kNonceRandomStringLength = 74;
     }
     else if(self.api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
-        NSString* string = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
-        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", string);
+        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
 
         NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         //BOOL showUpdatePrompt = [self.request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
