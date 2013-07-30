@@ -48,51 +48,100 @@
     #endif
 
 
-@interface AppBlade () <AppBladeWebOperationDelegate
-#ifndef SKIP_FEEDBACK
-, FeedbackDialogueDelegate
-#endif
->
 
-//Managers (included conditionally inside their respective .h files)
-//
-//AppBladeAuthorizationManager*     authorizationManager
-//AppBladeUpdatesManager*           updatesManager
-//CrashReportingManager*            crashManager
-//FeedbackReportingManager*         feedbackManager
-//SessionTrackingManager*           sessionTrackingManager
-//AppBladeCustomParametersManager*  customParamsManager
+@interface AppBlade ()<AppBladeWebOperationDelegate
+    #ifndef SKIP_FEEDBACK
+    , FeedbackDialogueDelegate
+    #endif
+    >
+
+
+#ifndef SKIP_AUTHENTICATION
+@property (nonatomic, strong) AppBladeAuthenticationManager* authenticationManager;
+#endif
+#ifndef SKIP_AUTO_UPDATING
+@property (nonatomic, strong) AppBladeUpdatesManager* updatesManager;
+#endif
+#ifndef SKIP_FEEDBACK
+@property (nonatomic, strong) CrashReportingManager* crashManager;
+#endif
+#ifndef SKIP_CRASH_REPORTING
+@property (nonatomic, strong) FeedbackReportingManager* feedbackManager;
+#endif
+#ifndef SKIP_SESSIONS
+@property (nonatomic, strong) SessionTrackingManager* sessionTrackingManager;
+#endif
+#ifndef SKIP_CUSTOM_PARAMS
+@property (nonatomic, strong) AppBladeCustomParametersManager* customParamsManager;
+#endif
+
 @property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
-- (void)validateProjectConfiguration;
-- (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
+    #ifndef SKIP_FEEDBACK
+    @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
+    @property (nonatomic, assign) BOOL showingFeedbackDialogue;
+    @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
+    @property (nonatomic, assign) UIWindow* window;
+    #endif
 
-- (NSString*)randomString:(int)length;
-- (NSMutableDictionary*) appBladeDeviceSecrets;
-- (BOOL)hasDeviceSecret;
-- (BOOL)isDeviceSecretBeingConfirmed;
 
-- (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
-- (BOOL)isCurrentToken:(NSString *)token;
+    - (void)validateProjectConfiguration;
+    - (void)raiseConfigurationExceptionWithFieldName:(NSString *)name;
 
-- (void) cancelAllPendingRequests;
-- (void) cancelPendingRequestsByToken:(NSString *)token;
+    -(NSMutableDictionary*) appBladeDeviceSecrets;
+    - (BOOL)hasDeviceSecret;
+    - (BOOL)isDeviceSecretBeingConfirmed;
 
-- (NSString*)hashFileOfPlist:(NSString *)filePath;
+    - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
+    - (BOOL)isCurrentToken:(NSString *)token;
 
-void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
+    - (void) cancelAllPendingRequests;
+    - (void) cancelPendingRequestsByToken:(NSString *)token;
+
+    - (NSString*)hashFileOfPlist:(NSString *)filePath;
+
+    void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @end
-
 
 @implementation AppBlade
 @synthesize appBladeDeviceSecret = _appbladeDeviceSecret;
 @synthesize allDisabled = _allDisabled;
 
+
+#ifndef SKIP_AUTHENTICATION
+@synthesize authenticationManager;
+#endif
+#ifndef SKIP_AUTO_UPDATING
+@synthesize updatesManager;
+#endif
+#ifndef SKIP_FEEDBACK
+@synthesize crashManager;
+#endif
+#ifndef SKIP_CRASH_REPORTING
+@synthesize feedbackManager;
+#endif
+#ifndef SKIP_SESSIONS
+@synthesize sessionTrackingManager;
+#endif
+#ifndef SKIP_CUSTOM_PARAMS
+@synthesize customParamsManager;
+#endif
+
+
+#ifndef SKIP_FEEDBACK
+@synthesize feedbackDictionary;
+@synthesize showingFeedbackDialogue;
+@synthesize tapRecognizer;
+@synthesize window;
+#endif
+
 /* A custom post-crash callback */
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
+#ifndef SKIP_SESSIONS
     [AppBlade endSession];
+#endif
 }
 
 
@@ -839,6 +888,7 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
+    
 }
 
 - (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
@@ -871,11 +921,9 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't check HasPendingFeedbackReports, SDK disabled");
         return;
     }
-
-    ABDebugLog_internal(@"allowFeedbackReporting");
-    UIWindow* window = [[UIApplication sharedApplication] keyWindow];
-    if (window) {
-        [self allowFeedbackReportingForWindow:window withOptions:AppBladeFeedbackSetupDefault];
+    UIWindow* feedbackWindow = [[UIApplication sharedApplication] keyWindow];
+    if (feedbackWindow) {
+        [self allowFeedbackReportingForWindow:feedbackWindow withOptions:AppBladeFeedbackSetupDefault];
         ABDebugLog_internal(@"Allowing feedback.");
     }
     else {
@@ -942,7 +990,7 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-- (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options
+- (void)allowFeedbackReportingForWindow:(UIWindow *)feedbackWindow withOptions:(AppBladeFeedbackSetupOptions)options
 {
 #ifndef SKIP_FEEDBACK
     if(self.isAllDisabled){
@@ -950,7 +998,7 @@ static AppBlade *s_sharedManager = nil;
         return;
     }
     [self validateProjectConfiguration];
-    [self.feedbackManager allowFeedbackReportingForWindow:window withOptions:options];
+    [self.feedbackManager allowFeedbackReportingForWindow:feedbackWindow withOptions:options];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -1044,8 +1092,6 @@ static AppBlade *s_sharedManager = nil;
 #endif
 
 }
-
-
 - (void)handleBackloggedFeedback
 {
 #ifndef SKIP_FEEDBACK
@@ -1054,131 +1100,11 @@ static AppBlade *s_sharedManager = nil;
         return;
     }
     @synchronized (self){
-        ABDebugLog_internal(@"handleBackloggedFeedback");
-        NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-        NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-        if (backupFiles.count > 0) {
-            NSString* fileName = [backupFiles objectAtIndex:0]; //get earliest unsent feedback
-            NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
-            
-            NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
-            if (feedback) {
-                ABDebugLog_internal(@"Feedback found at %@", feedbackPath);
-                ABDebugLog_internal(@"backlog Feedback dictionary %@", feedback);
-                NSString *screenshotFileName = [feedback objectForKey:kAppBladeFeedbackKeyScreenshot];
-                //validate that additional files exist
-                NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
-                bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
-                if(screenShotFileExists){
-                    AppBladeWebOperation * client = [self.feedbackManager generateFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[self getCustomParams]];
-                    client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
-                    [self.pendingRequests addOperation:client];
-                }
-                else
-                {
-                    //clean up files if one doesn't exist
-                    [self.feedbackManager removeIntermediateFeedbackFiles:feedbackPath];
-                    ABDebugLog_internal(@"invalid feedback at %@, removing File and intermediate files", feedbackPath);
-                    [backupFiles removeObject:fileName];
-                    ABDebugLog_internal(@"writing valid pending feedback objects back to file");
-                    [backupFiles writeToFile:backupFilePath atomically:YES];
-
-                }
-            }
-            else
-            {
-                ABDebugLog_internal(@"No Feedback found at %@, invalid feedback, removing File", feedbackPath);
-                [backupFiles removeObject:fileName];
-                ABDebugLog_internal(@"writing valid pending feedback objects back to file");
-                [backupFiles writeToFile:backupFilePath atomically:YES];
-            }
-        }
+        [self.feedbackManager handleBackloggedFeedback];
     }
 #else
-    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+        NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
-}
-
--(NSString *)captureScreen
-{
-    [self checkAndCreateAppBladeCacheDirectory];
-    UIImage *currentImage = [self getContentBelowView];
-    if(currentImage == nil){
-        ABErrorLog(@"ERROR, could not capture screenshot, possible invalid keywindow");
-    }
-    NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"png"];
-	NSString *pngFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] ;
-	NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(currentImage)];
-	[data1 writeToFile:pngFilePath atomically:YES];
-    ABDebugLog_internal(@"Screen captured in fileName %@", fileName);
-    return pngFilePath ;
-    
-}
-
-- (UIImage*)getContentBelowView
-{
-    UIWindow* keyWindow = [[UIApplication sharedApplication] keyWindow];
-    UIGraphicsBeginImageContext(keyWindow.bounds.size);
-    [keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    UIImage* returnImage = nil;
-    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    
-    if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
-        if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-            returnImage = [self rotateImage:image angle:270];
-        }
-        else {
-            returnImage = [self rotateImage:image angle:90];
-        }
-    }
-    else {
-        returnImage = image;
-    }
-    
-    return returnImage;
-    
-}
-
-// From: http://megasnippets.com/source-codes/objective_c/rotate_image
-- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle
-{
-    CGImageRef imgRef = [img CGImage];
-    CGContextRef context;
-    
-    switch (angle) {
-        case 90:
-            UIGraphicsBeginImageContext(CGSizeMake(img.size.height, img.size.width));
-            context = UIGraphicsGetCurrentContext();
-            CGContextTranslateCTM(context, img.size.height, img.size.width);
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextRotateCTM(context, M_PI/2.0);
-            break;
-        case 180:
-            UIGraphicsBeginImageContext(CGSizeMake(img.size.width, img.size.height));
-            context = UIGraphicsGetCurrentContext();
-            CGContextTranslateCTM(context, img.size.width, 0);
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextRotateCTM(context, -M_PI);
-            break;
-        case 270:
-            UIGraphicsBeginImageContext(CGSizeMake(img.size.height, img.size.width));
-            context = UIGraphicsGetCurrentContext();
-            CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextRotateCTM(context, -M_PI/2.0);
-            break;
-        default:
-            return nil;
-    }  
-    
-    CGContextDrawImage(context, CGRectMake(0, 0, img.size.width, img.size.height), imgRef);
-    UIImage *ret = UIGraphicsGetImageFromCurrentImageContext();  
-    
-    UIGraphicsEndImageContext();
-    return ret;
 }
 
 #pragma mark UIGestureRecognizerDelegate

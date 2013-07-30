@@ -25,8 +25,5 @@
 
 //Our additional requirements
 @interface AppBlade (Authorization)
-
-    @property (nonatomic, strong) AppBladeAuthenticationManager* authenticationManager;
-
 @end
 

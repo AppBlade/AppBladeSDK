@@ -138,6 +138,9 @@
 //Keychain 
 -(void)clearAppBladeKeychain;
 
+//Creates a random string of a specified length
+- (NSString*)randomString:(int)length;
+
 
 -(void)cleanOutKeychain;
 

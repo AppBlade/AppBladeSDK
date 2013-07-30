@@ -24,23 +24,26 @@
 
 #pragma mark Stored Web Request Handling
 
+- (void)handleBackloggedFeedback;
 - (BOOL)hasPendingFeedbackReports;
 - (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
 
 @end
 
-
+#ifndef SKIP_FEEDBACK
 //Our additional requirements
-@interface AppBlade (FeedbackReporting)
+@interface AppBlade (FeedbackReporting)  <AppBladeWebOperationDelegate, FeedbackDialogueDelegate>
+
 
 @property (nonatomic, strong) FeedbackReportingManager*      feedbackManager;
 
 
-// Feedback
+//Feedback variables need to stay in Appbade.h, as category interfaces cannot declare additional properties
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
 @property (nonatomic, assign) BOOL showingFeedbackDialogue;
 @property (nonatomic, retain) UITapGestureRecognizer* tapRecognizer;
 @property (nonatomic, assign) UIWindow* window;
+@property (nonatomic, retain) NSOperationQueue* pendingRequests;
 
 - (void)promptFeedbackDialogue;
 - (void)reportFeedback:(NSString*)feedback;
@@ -48,7 +51,7 @@
 - (UIImage*)getContentBelowView;
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 
-- (void)handleBackloggedFeedback;
-
 
 @end
+
+#endif

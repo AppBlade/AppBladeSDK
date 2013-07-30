@@ -8,12 +8,16 @@
 
 #import "FeedbackReportingManager.h"
 #import "AppBlade.h"
+#import <QuartzCore/QuartzCore.h>
+
 
 @interface FeedbackReportingManager ()
 
 @end
 
 @implementation FeedbackReportingManager
+
+
 
 - (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)delegate
 {
@@ -294,10 +298,60 @@
     
 }
 
+- (void)handleBackloggedFeedback
+{
+    ABDebugLog_internal(@"handleBackloggedFeedback");
+    NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+    NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+    if (backupFiles.count > 0) {
+        NSString* fileName = [backupFiles objectAtIndex:0]; //get earliest unsent feedback
+        NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
+        
+        NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
+        if (feedback) {
+            ABDebugLog_internal(@"Feedback found at %@", feedbackPath);
+            ABDebugLog_internal(@"backlog Feedback dictionary %@", feedback);
+            NSString *screenshotFileName = [feedback objectForKey:kAppBladeFeedbackKeyScreenshot];
+            //validate that additional files exist
+            NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
+            bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
+            if(screenShotFileExists){
+                AppBladeWebOperation * client = [self generateFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[[AppBlade sharedManager] getCustomParams]];
+                client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
+                [[[AppBlade sharedManager] pendingRequests] addOperation:client];
+            }
+            else
+            {
+                //clean up files if one doesn't exist
+                [self removeIntermediateFeedbackFiles:feedbackPath];
+                ABDebugLog_internal(@"invalid feedback at %@, removing File and intermediate files", feedbackPath);
+                [backupFiles removeObject:fileName];
+                ABDebugLog_internal(@"writing valid pending feedback objects back to file");
+                [backupFiles writeToFile:backupFilePath atomically:YES];
+                
+            }
+        }
+        else
+        {
+            ABDebugLog_internal(@"No Feedback found at %@, invalid feedback, removing File", feedbackPath);
+            [backupFiles removeObject:fileName];
+            ABDebugLog_internal(@"writing valid pending feedback objects back to file");
+            [backupFiles writeToFile:backupFilePath atomically:YES];
+        }
+    }
+}
+
 @end
 
-
+#ifndef SKIP_FEEDBACK
+#pragma clang diagnostic ignored "-Wprotocol"
 @implementation AppBlade (FeedbackReporting)
+@dynamic feedbackDictionary;
+@dynamic showingFeedbackDialogue;
+@dynamic tapRecognizer;
+@dynamic window;
+@dynamic pendingRequests;
+@dynamic feedbackManager;
 
 - (void)promptFeedbackDialogue
 {
@@ -357,5 +411,128 @@
     }
 }
 
+
+
+
+- (void)reportFeedback:(NSString *)feedback
+{
+#ifndef SKIP_FEEDBACK
+    [self.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
+    
+    ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackDictionary);
+    
+    //store the feedback in the cache director in the event of a termination
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
+    NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
+    
+    [self.feedbackDictionary writeToFile:feedbackPath atomically:YES];
+    NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
+    NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
+    if (!backupFiles) {
+        backupFiles = [NSMutableArray array];
+    }
+    [backupFiles addObject:newFeedbackName];
+    
+    BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
+    if(!success){
+        ABErrorLog(@"Error writing backup file to %@", backupFilePath);
+    }
+    
+    AppBladeWebOperation * client = [self.feedbackManager generateFeedbackWithScreenshot:[self.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
+    ABDebugLog_internal(@"Sending screenshot");
+    [self.pendingRequests addOperation:client];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+    
+}
+
+
+
+-(NSString *)captureScreen
+{
+    [self checkAndCreateAppBladeCacheDirectory];
+    UIImage *currentImage = [self getContentBelowView];
+    if(currentImage == nil){
+        ABErrorLog(@"ERROR, could not capture screenshot, possible invalid keywindow");
+    }
+    NSString* fileName = [[self randomString:36] stringByAppendingPathExtension:@"png"];
+	NSString *pngFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName] ;
+	NSData *data1 = [NSData dataWithData:UIImagePNGRepresentation(currentImage)];
+	[data1 writeToFile:pngFilePath atomically:YES];
+    ABDebugLog_internal(@"Screen captured in fileName %@", fileName);
+    return pngFilePath ;
+    
+}
+
+- (UIImage*)getContentBelowView
+{
+    UIWindow* keyWindow = [[UIApplication sharedApplication] keyWindow];
+    UIGraphicsBeginImageContext(keyWindow.bounds.size);
+    [keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIImage* returnImage = nil;
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
+        if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+            returnImage = [self rotateImage:image angle:270];
+        }
+        else {
+            returnImage = [self rotateImage:image angle:90];
+        }
+    }
+    else {
+        returnImage = image;
+    }
+    
+    return returnImage;
+    
+}
+
+// From: http://megasnippets.com/source-codes/objective_c/rotate_image
+- (UIImage *) rotateImage:(UIImage *)img angle:(int)angle
+{
+    CGImageRef imgRef = [img CGImage];
+    CGContextRef context;
+    
+    switch (angle) {
+        case 90:
+            UIGraphicsBeginImageContext(CGSizeMake(img.size.height, img.size.width));
+            context = UIGraphicsGetCurrentContext();
+            CGContextTranslateCTM(context, img.size.height, img.size.width);
+            CGContextScaleCTM(context, 1.0, -1.0);
+            CGContextRotateCTM(context, M_PI/2.0);
+            break;
+        case 180:
+            UIGraphicsBeginImageContext(CGSizeMake(img.size.width, img.size.height));
+            context = UIGraphicsGetCurrentContext();
+            CGContextTranslateCTM(context, img.size.width, 0);
+            CGContextScaleCTM(context, 1.0, -1.0);
+            CGContextRotateCTM(context, -M_PI);
+            break;
+        case 270:
+            UIGraphicsBeginImageContext(CGSizeMake(img.size.height, img.size.width));
+            context = UIGraphicsGetCurrentContext();
+            CGContextScaleCTM(context, 1.0, -1.0);
+            CGContextRotateCTM(context, -M_PI/2.0);
+            break;
+        default:
+            return nil;
+    }
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, img.size.width, img.size.height), imgRef);
+    UIImage *ret = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    return ret;
+}
+
 @end
+
+#endif
 
