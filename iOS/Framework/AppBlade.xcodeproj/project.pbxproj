@@ -69,6 +69,18 @@
 		313064141794A866006DF03A /* FeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* FeedbackBackgroundView.h */; };
 		313064151794A866006DF03A /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061FD1794A357006DF03A /* FileMD5Hash.h */; };
 		313064171794B494006DF03A /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060D41794A356006DF03A /* protobuf-c.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		313464BA17A86241009DDC86 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313464B917A86241009DDC86 /* SenTestingKit.framework */; };
+		313464BB17A86248009DDC86 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313464B917A86241009DDC86 /* SenTestingKit.framework */; };
+		3134651517A865C7009DDC86 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313464B917A86241009DDC86 /* SenTestingKit.framework */; };
+		3134651617A865C7009DDC86 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FC91794A146006DF03A /* UIKit.framework */; };
+		3134651717A865C7009DDC86 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
+		3134651D17A865C7009DDC86 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3134651B17A865C7009DDC86 /* InfoPlist.strings */; };
+		3134652017A865C7009DDC86 /* AppBladeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3134651F17A865C7009DDC86 /* AppBladeTests.m */; };
+		3134652A17A867B5009DDC86 /* libAppBlade.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3130607E1794A2A3006DF03A /* libAppBlade.a */; };
+		3134652B17A86A28009DDC86 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3130640D1794A3D8006DF03A /* Security.framework */; };
+		3134652D17A86A9C009DDC86 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3134652C17A86A9C009DDC86 /* CoreGraphics.framework */; };
+		3134653117A86D9A009DDC86 /* AppBladeSimpleKeychainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3134653017A86D9A009DDC86 /* AppBladeSimpleKeychainTests.m */; };
+		3134653417A86DC4009DDC86 /* AppBladeWebOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3134653317A86DC4009DDC86 /* AppBladeWebOperationTests.m */; };
 		318189C8179E0337006EE07A /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060831794A2A3006DF03A /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		318189C9179E0343006EE07A /* AppBladeSharedConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C01796072C007BF879 /* AppBladeSharedConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		318189CA179E039D006EE07A /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
@@ -124,6 +136,16 @@
 			script = "cd \"${INPUT_FILE_DIR}\" && \"${SRCROOT}/AppBlade/CrashReporter/Dependencies/protobuf-2.0.3/bin/protoc-c\" --c_out=\"${DERIVED_FILES_DIR}\" \"${INPUT_FILE_NAME}\"";
 		};
 /* End PBXBuildRule section */
+
+/* Begin PBXContainerItemProxy section */
+		3134652817A8675A009DDC86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31305FBE1794A146006DF03A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3130607D1794A2A3006DF03A;
+			remoteInfo = AppBlade;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		311A21801794C79F007BF879 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,6 +237,21 @@
 		313061FD1794A357006DF03A /* FileMD5Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMD5Hash.h; sourceTree = "<group>"; };
 		313061FE1794A357006DF03A /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE.md; path = AppBlade/LICENSE.md; sourceTree = "<group>"; };
 		3130640D1794A3D8006DF03A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		313464B917A86241009DDC86 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		313464CA17A8632B009DDC86 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		313464CB17A8632B009DDC86 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		313464CC17A8632B009DDC86 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		3134651417A865C7009DDC86 /* AppBladeTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppBladeTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3134651A17A865C7009DDC86 /* AppBladeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppBladeTests-Info.plist"; sourceTree = "<group>"; };
+		3134651C17A865C7009DDC86 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3134651E17A865C7009DDC86 /* AppBladeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppBladeTests.h; sourceTree = "<group>"; };
+		3134651F17A865C7009DDC86 /* AppBladeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppBladeTests.m; sourceTree = "<group>"; };
+		3134652117A865C7009DDC86 /* AppBladeTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppBladeTests-Prefix.pch"; sourceTree = "<group>"; };
+		3134652C17A86A9C009DDC86 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3134652F17A86D9A009DDC86 /* AppBladeSimpleKeychainTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppBladeSimpleKeychainTests.h; path = AppBladeTests/AppBladeSimpleKeychainTests.h; sourceTree = SOURCE_ROOT; };
+		3134653017A86D9A009DDC86 /* AppBladeSimpleKeychainTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppBladeSimpleKeychainTests.m; path = AppBladeTests/AppBladeSimpleKeychainTests.m; sourceTree = SOURCE_ROOT; };
+		3134653217A86DC4009DDC86 /* AppBladeWebOperationTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeWebOperationTests.h; sourceTree = "<group>"; };
+		3134653317A86DC4009DDC86 /* AppBladeWebOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeWebOperationTests.m; sourceTree = "<group>"; };
 		318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrashUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -231,9 +268,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				313464BB17A86248009DDC86 /* SenTestingKit.framework in Frameworks */,
 				3130640F1794A403006DF03A /* UIKit.framework in Frameworks */,
 				3130640E1794A3D8006DF03A /* Security.framework in Frameworks */,
 				3130607F1794A2A3006DF03A /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3134651017A865C7009DDC86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3134652D17A86A9C009DDC86 /* CoreGraphics.framework in Frameworks */,
+				3134652B17A86A28009DDC86 /* Security.framework in Frameworks */,
+				3134652A17A867B5009DDC86 /* libAppBlade.a in Frameworks */,
+				3134651517A865C7009DDC86 /* SenTestingKit.framework in Frameworks */,
+				3134651617A865C7009DDC86 /* UIKit.framework in Frameworks */,
+				3134651717A865C7009DDC86 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +299,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				313464BA17A86241009DDC86 /* SenTestingKit.framework in Frameworks */,
 				3187321E179DE8C200E0D187 /* UIKit.framework in Frameworks */,
 				3187321F179DE8C200E0D187 /* Security.framework in Frameworks */,
 				31873220179DE8C200E0D187 /* Foundation.framework in Frameworks */,
@@ -350,8 +402,10 @@
 		31305FBD1794A146006DF03A = {
 			isa = PBXGroup;
 			children = (
+				3134652C17A86A9C009DDC86 /* CoreGraphics.framework */,
 				313061FE1794A357006DF03A /* LICENSE.md */,
 				313060801794A2A3006DF03A /* AppBlade */,
+				3134651817A865C7009DDC86 /* AppBladeTests */,
 				31305FC81794A146006DF03A /* Frameworks */,
 				31305FC71794A146006DF03A /* Products */,
 			);
@@ -364,6 +418,7 @@
 				311A21801794C79F007BF879 /* libAppBladeUniversal.a */,
 				318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */,
 				31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */,
+				3134651417A865C7009DDC86 /* AppBladeTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -371,10 +426,12 @@
 		31305FC81794A146006DF03A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				313464B917A86241009DDC86 /* SenTestingKit.framework */,
 				313060A71794A356006DF03A /* PLCrashReporter */,
 				31305FC91794A146006DF03A /* UIKit.framework */,
 				3130640D1794A3D8006DF03A /* Security.framework */,
 				31305FCB1794A146006DF03A /* Foundation.framework */,
+				313464C917A8632B009DDC86 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -484,6 +541,97 @@
 			name = Hashing;
 			sourceTree = "<group>";
 		};
+		313464BD17A8626A009DDC86 /* FeatureTests */ = {
+			isa = PBXGroup;
+			children = (
+				3134653517A86DFD009DDC86 /* Authentication Tests */,
+				3134653617A86E08009DDC86 /* Auto Updating Tests */,
+				3134653717A86E19009DDC86 /* Session Tracking Tests */,
+				3134653A17A86E53009DDC86 /* Crash Reporting Tests */,
+				3134653917A86E40009DDC86 /* Feedback Reporting Tests */,
+				3134653817A86E33009DDC86 /* Custom Parameters Tests */,
+			);
+			name = FeatureTests;
+			path = ../AppBlade;
+			sourceTree = "<group>";
+		};
+		313464C917A8632B009DDC86 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				313464CA17A8632B009DDC86 /* AppKit.framework */,
+				313464CB17A8632B009DDC86 /* CoreData.framework */,
+				313464CC17A8632B009DDC86 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		3134651817A865C7009DDC86 /* AppBladeTests */ = {
+			isa = PBXGroup;
+			children = (
+				3134651E17A865C7009DDC86 /* AppBladeTests.h */,
+				3134651F17A865C7009DDC86 /* AppBladeTests.m */,
+				313464BD17A8626A009DDC86 /* FeatureTests */,
+				3134653217A86DC4009DDC86 /* AppBladeWebOperationTests.h */,
+				3134653317A86DC4009DDC86 /* AppBladeWebOperationTests.m */,
+				3134652F17A86D9A009DDC86 /* AppBladeSimpleKeychainTests.h */,
+				3134653017A86D9A009DDC86 /* AppBladeSimpleKeychainTests.m */,
+				3134651917A865C7009DDC86 /* Supporting Files */,
+			);
+			path = AppBladeTests;
+			sourceTree = "<group>";
+		};
+		3134651917A865C7009DDC86 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3134651A17A865C7009DDC86 /* AppBladeTests-Info.plist */,
+				3134651B17A865C7009DDC86 /* InfoPlist.strings */,
+				3134652117A865C7009DDC86 /* AppBladeTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3134653517A86DFD009DDC86 /* Authentication Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Authentication Tests";
+			sourceTree = "<group>";
+		};
+		3134653617A86E08009DDC86 /* Auto Updating Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Auto Updating Tests";
+			sourceTree = "<group>";
+		};
+		3134653717A86E19009DDC86 /* Session Tracking Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Session Tracking Tests";
+			sourceTree = "<group>";
+		};
+		3134653817A86E33009DDC86 /* Custom Parameters Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Custom Parameters Tests";
+			sourceTree = "<group>";
+		};
+		3134653917A86E40009DDC86 /* Feedback Reporting Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Feedback Reporting Tests";
+			sourceTree = "<group>";
+		};
+		3134653A17A86E53009DDC86 /* Crash Reporting Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Crash Reporting Tests";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -571,6 +719,25 @@
 			productReference = 3130607E1794A2A3006DF03A /* libAppBlade.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		3134651317A865C7009DDC86 /* AppBladeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3134652217A865C7009DDC86 /* Build configuration list for PBXNativeTarget "AppBladeTests" */;
+			buildPhases = (
+				3134650F17A865C7009DDC86 /* Sources */,
+				3134651017A865C7009DDC86 /* Frameworks */,
+				3134651117A865C7009DDC86 /* Resources */,
+				3134651217A865C7009DDC86 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3134652917A8675A009DDC86 /* PBXTargetDependency */,
+			);
+			name = AppBladeTests;
+			productName = AppBladeTests;
+			productReference = 3134651417A865C7009DDC86 /* AppBladeTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		318731D2179DE03300E0D187 /* AppBladeNoCrashUniversal */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 318731E4179DE03300E0D187 /* Build configuration list for PBXNativeTarget "AppBladeNoCrashUniversal" */;
@@ -639,9 +806,21 @@
 				311A21511794C79F007BF879 /* AppBladeUniversal */,
 				318731E8179DE8C200E0D187 /* AppBladeNoCrash */,
 				318731D2179DE03300E0D187 /* AppBladeNoCrashUniversal */,
+				3134651317A865C7009DDC86 /* AppBladeTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3134651117A865C7009DDC86 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3134651D17A865C7009DDC86 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		311A21811794C8F2007BF879 /* ShellScript */ = {
@@ -656,6 +835,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Version 2.6 (updated for GCC_PREPROCESSOR_DEFINITIONS to be passed down though the targets)\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\nDEBUG_THIS_SCRIPT=\"true\"\n\n\nTARGET_SCHEME=\"AppBlade\"\nLIBRARY_NAME=libAppBlade.a\nUNIVERSAL_LIBRARY_NAME=libAppBladeUniversal.a\n\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\n\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\n\necho \"PREPROCESSOR MACROS = $GCC_PREPROCESSOR_DEFINITIONS\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nIPHONE_SDK=iphoneos${SDK_VERSION}\nSIMULATOR_SDK=iphonesimulator${SDK_VERSION}\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"Building with 2 SDKs: ${IPHONE_SDK} and ${SIMULATOR_SDK}\"\n\n\n################################################\n# Invoke the two builds that we want to generate\n################################################\nACTION=\"build\"\n\necho \"Building Device version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \\\"${IPHONE_SDK}\\\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \"${IPHONE_SDK}\" ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\necho \"Building Simulator version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \\\"${SIMULATOR_SDK}\\\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\\\"${GCC_PREPROCESSOR_DEFINITIONS}\\\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme ${TARGET_SCHEME} -sdk \"${SIMULATOR_SDK}\" -arch i386 ${ACTION} GCC_PREPROCESSOR_DEFINITIONS=\"${GCC_PREPROCESSOR_DEFINITIONS}\" RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\n// Modified slightly to create and remove an executable-specific directory\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${LIBRARY_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${LIBRARY_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${LIBRARY_NAME}\"\n\n\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\n# RZ: Modified to place in root of universal directory, though it looks in /usr/local/include.\n#\n#if [ -d \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include\" ]\n#then\n#mkdir -p \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\n# * needs to be outside the double quotes?\ncp \"${CONFIGURATION_BUILD_DIR}/usr/local/include/\"* \"${CREATING_UNIVERSAL_DIR}\"\n\n\nopen \"${CREATING_UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\necho \"${CREATING_UNIVERSAL_DIR}\"\n\n#to reduce confusion, you can remove the other libAppBladeUniversal.a binaries\nrm -f \"${CURRENTCONFIG_DEVICE_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\nrm -f \"${CURRENTCONFIG_SIMULATOR_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n#fi";
+		};
+		3134651217A865C7009DDC86 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
 		318731E3179DE03300E0D187 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -732,6 +924,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3134650F17A865C7009DDC86 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3134652017A865C7009DDC86 /* AppBladeTests.m in Sources */,
+				3134653117A86D9A009DDC86 /* AppBladeSimpleKeychainTests.m in Sources */,
+				3134653417A86DC4009DDC86 /* AppBladeWebOperationTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		318731D3179DE03300E0D187 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -768,6 +970,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3134652917A8675A009DDC86 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3130607D1794A2A3006DF03A /* AppBlade */;
+			targetProxy = 3134652817A8675A009DDC86 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3134651B17A865C7009DDC86 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3134651C17A865C7009DDC86 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		311A217E1794C79F007BF879 /* Debug */ = {
@@ -918,6 +1139,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
@@ -952,6 +1174,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
@@ -970,6 +1193,65 @@
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = NO;
 				VALID_ARCHS = "armv7 armv7s i386";
+			};
+			name = Release;
+		};
+		3134652317A865C7009DDC86 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/libAppBlade.a";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppBladeTests/AppBladeTests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "AppBladeTests/AppBladeTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		3134652417A865C7009DDC86 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/libAppBlade.a";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppBladeTests/AppBladeTests-Prefix.pch";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "AppBladeTests/AppBladeTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
@@ -1057,6 +1339,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
@@ -1091,6 +1374,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
@@ -1141,6 +1425,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		3134652217A865C7009DDC86 /* Build configuration list for PBXNativeTarget "AppBladeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3134652317A865C7009DDC86 /* Debug */,
+				3134652417A865C7009DDC86 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		318731E4179DE03300E0D187 /* Build configuration list for PBXNativeTarget "AppBladeNoCrashUniversal" */ = {
 			isa = XCConfigurationList;
