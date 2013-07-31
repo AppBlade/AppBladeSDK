@@ -128,6 +128,7 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 
 -(BOOL)isAppStoreBuild;
 
+-(void)sanitizeKeychain;
 -(void)cleanOutKeychain;
 
 @end
