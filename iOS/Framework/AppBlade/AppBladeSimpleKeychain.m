@@ -229,11 +229,11 @@
     // kSecAttrGeneric
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:
             (__bridge id)kSecClassGenericPassword, (__bridge id)kSecClass,
-            service, kSecAttrService,
-            service, kSecAttrAccount,
-            kSecAttrAccessibleAfterFirstUnlock, kSecAttrAccessible, // Keychain must be unlocked to access this value. It will persist across backups. 
+            service, (__bridge id)kSecAttrService,
+            service, (__bridge id)kSecAttrAccount,
+            (__bridge id)kSecAttrAccessibleAfterFirstUnlock, (__bridge id)kSecAttrAccessible, // Keychain must be unlocked to access this value. It will persist across backups.
             nil];
-
+    
 }
 
 // Accepts service name and NSCoding-complaint data object. Automatically overwrites if something exists.
@@ -243,10 +243,7 @@
     BOOL wasSuccessful = YES;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
-    //NSAssert(resultCode == noErr || resultCode == errSecItemNotFound, @"Error storing to keychain: %ld", resultCode);
-    ABDebugLog_internal(@"save(overwrite) %@ with query: %@", service, keychainQuery  );
-    NSData *storeData = [NSKeyedArchiver archivedDataWithRootObject:data];
-    [keychainQuery setObject:storeData forKey:(__bridge id)kSecValueData];
+    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(__bridge id)kSecValueData];
     resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
     if(resultCode != noErr){
         NSLog(@"Error storing to keychain: %ld : %@", resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
@@ -267,7 +264,7 @@
 {
     id ret = nil;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-    [keychainQuery setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
+    [keychainQuery setObject:(id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
     [keychainQuery setObject:(__bridge id)kSecMatchLimitOne forKey:(__bridge id)kSecMatchLimit];
     
     //NSLog(@"load with query: %@", keychainQuery  );
