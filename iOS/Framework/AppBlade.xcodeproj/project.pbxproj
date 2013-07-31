@@ -113,6 +113,9 @@
 		3187321F179DE8C200E0D187 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3130640D1794A3D8006DF03A /* Security.framework */; };
 		31873220179DE8C200E0D187 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
 		31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
+		31C4881B17A9847000EA75E8 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
+		31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
+		31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -261,6 +264,7 @@
 		318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrashUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestAppBladeKeys.plist; sourceTree = "<group>"; };
+		31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBlade+PrivateMethods.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -410,7 +414,6 @@
 		31305FBD1794A146006DF03A = {
 			isa = PBXGroup;
 			children = (
-				3134652C17A86A9C009DDC86 /* CoreGraphics.framework */,
 				313061FE1794A357006DF03A /* LICENSE.md */,
 				313060801794A2A3006DF03A /* AppBlade */,
 				3134651817A865C7009DDC86 /* AppBladeTests */,
@@ -434,6 +437,7 @@
 		31305FC81794A146006DF03A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3134652C17A86A9C009DDC86 /* CoreGraphics.framework */,
 				313464B917A86241009DDC86 /* SenTestingKit.framework */,
 				313060A71794A356006DF03A /* PLCrashReporter */,
 				31305FC91794A146006DF03A /* UIKit.framework */,
@@ -449,6 +453,7 @@
 			children = (
 				313060831794A2A3006DF03A /* AppBlade.h */,
 				313060851794A2A3006DF03A /* AppBlade.m */,
+				31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */,
 				311A228F1794E58E007BF879 /* Features */,
 				313060811794A2A3006DF03A /* Supporting Files */,
 			);
@@ -672,6 +677,7 @@
 				311A22C21796072C007BF879 /* AppBladeSharedConstants.h in Headers */,
 				311A22CA1796DE3B007BF879 /* AppBladeBasicFeatureManager.h in Headers */,
 				31562C4D17A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
+				31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -690,6 +696,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				31562C4F17A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
+				31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -721,6 +728,7 @@
 				313064121794A84A006DF03A /* Headers */,
 				3130607A1794A2A3006DF03A /* Sources */,
 				3130607B1794A2A3006DF03A /* Frameworks */,
+				31C4881A17A9846600EA75E8 /* Resources */,
 			);
 			buildRules = (
 				313064161794A8C7006DF03A /* PBXBuildRule */,
@@ -831,6 +839,14 @@
 			files = (
 				3134651D17A865C7009DDC86 /* InfoPlist.strings in Resources */,
 				31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		31C4881A17A9846600EA75E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31C4881B17A9847000EA75E8 /* TestAppBladeKeys.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
