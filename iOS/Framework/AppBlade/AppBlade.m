@@ -7,6 +7,7 @@
 //
 
 #import "AppBlade.h"
+#import "AppBlade+PrivateMethods.h"
 #import "AppBladeLogging.h"
 #import "AppBladeSimpleKeychain.h"
 
@@ -80,21 +81,6 @@
 @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
 
-
-    - (void)validateProjectConfiguration;
-    - (void)raiseConfigurationExceptionWithMessage:(NSString *)name;
-
-    -(NSMutableDictionary*) appBladeDeviceSecrets;
-    - (BOOL)hasDeviceSecret;
-    - (BOOL)isDeviceSecretBeingConfirmed;
-
-    - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
-    - (BOOL)isCurrentToken:(NSString *)token;
-
-    - (void) cancelAllPendingRequests;
-    - (void) cancelPendingRequestsByToken:(NSString *)token;
-
-    - (NSString*)hashFileOfPlist:(NSString *)filePath;
 
     void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @end
@@ -319,40 +305,7 @@ static AppBlade *s_sharedManager = nil;
     NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     if(appbladeVariables != nil)
     {
-        
-        NSDictionary* appBladePlistStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
-        NSMutableDictionary* appBladeKeychainKeys = [self appBladeDeviceSecrets]; //keychain persists across updates, we need to be careful
-        
-        NSString * md5 = [self hashFileOfPlist:plistPath];
-        NSString* appBlade_plist_hash = (NSString *)[appBladeKeychainKeys objectForKey:kAppBladeKeychainPlistHashKey];
-        if(![appBlade_plist_hash isEqualToString:md5]){ //our hashes don't match!
-            ABDebugLog_internal(@"Our hashes don't match! Clearing out current secrets!");
-            [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
-        }        
-        self.appBladeHost =  [AppBladeWebOperation buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
-        self.appBladeProjectSecret = [appBladePlistStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
-        if(self.appBladeProjectSecret == nil)
-        {
-            self.appBladeProjectSecret = @"";
-        }
-        
-        NSString *storedDeviceSecret = [self appBladeDeviceSecret];
-        if(storedDeviceSecret == nil || [storedDeviceSecret length] == 0){
-            NSString * storedDeviceSecret = (NSString *)[appBladePlistStoredKeys objectForKey:kAppBladePlistDeviceSecretKey];
-            ABDebugLog_internal(@"Our device secret being set from plist:%@.", storedDeviceSecret);
-            [self setAppBladeDeviceSecret:storedDeviceSecret];
-            appBladeKeychainKeys = [self appBladeDeviceSecrets];
-            [appBladeKeychainKeys setValue:md5 forKey:kAppBladeKeychainPlistHashKey];
-            [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBladeKeychainKeys]; //update our md5 as well. We JUST updated.
-            ABDebugLog_internal(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
-        }
-        [self validateProjectConfiguration];
-        
-        if(self.appBladeProjectSecret.length > 0) {
-            [[AppBlade  sharedManager] refreshToken:[self appBladeDeviceSecret]];
-        } else {
-            [[AppBlade  sharedManager] confirmToken:[self appBladeDeviceSecret]]; //confirm our existing device_secret immediately
-        }
+        [self registerWithAppBladeDictionary:appbladeVariables atPlistPath:plistPath];
     }
     else
     {
@@ -362,6 +315,48 @@ static AppBlade *s_sharedManager = nil;
     if([kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret] || self.appBladeProjectSecret == nil || [self.appBladeProjectSecret  length] == 0)
     {
         ABDebugLog_internal(@"User did not provide proper API credentials for AppBlade to be used in development.");
+    }
+}
+
+- (void)registerWithAppBladeDictionary:(NSDictionary*)appbladeVariables atPlistPath:(NSString*)plistPath
+{
+    
+    NSDictionary* appBladePlistStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
+    NSMutableDictionary* appBladeKeychainKeys = [self appBladeDeviceSecrets]; //keychain persists across updates, we need to be careful
+    
+    NSString * md5 = @"";
+    if(plistPath != nil)
+    {
+        md5 = [self hashFileOfPlist:plistPath];
+        NSString* appBlade_plist_hash = (NSString *)[appBladeKeychainKeys objectForKey:kAppBladeKeychainPlistHashKey];
+        if(![appBlade_plist_hash isEqualToString:md5]){ //our hashes don't match!
+            ABDebugLog_internal(@"Our hashes don't match! Clearing out current secrets!");
+            [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
+        }
+    }
+    self.appBladeHost =  [AppBladeWebOperation buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
+    self.appBladeProjectSecret = [appBladePlistStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
+    if(self.appBladeProjectSecret == nil)
+    {
+        self.appBladeProjectSecret = @"";
+    }
+    
+    NSString *storedDeviceSecret = [self appBladeDeviceSecret];
+    if(storedDeviceSecret == nil || [storedDeviceSecret length] == 0){
+        NSString * storedDeviceSecret = (NSString *)[appBladePlistStoredKeys objectForKey:kAppBladePlistDeviceSecretKey];
+        ABDebugLog_internal(@"Our device secret being set from plist:%@.", storedDeviceSecret);
+        [self setAppBladeDeviceSecret:storedDeviceSecret];
+        appBladeKeychainKeys = [self appBladeDeviceSecrets];
+        [appBladeKeychainKeys setValue:md5 forKey:kAppBladeKeychainPlistHashKey];
+        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBladeKeychainKeys]; //update our md5 as well. We JUST updated.
+        ABDebugLog_internal(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
+    }
+    [self validateProjectConfiguration];
+    
+    if(self.appBladeProjectSecret.length > 0) {
+        [[AppBlade  sharedManager] refreshToken:[self appBladeDeviceSecret]];
+    } else {
+        [[AppBlade  sharedManager] confirmToken:[self appBladeDeviceSecret]]; //confirm our existing device_secret immediately
     }
 }
 
