@@ -8,6 +8,7 @@
 
 #import "AppBladeWebOperationTests.h"
 #import "AppBladeWebOperation.h"
+#import "AppBladeWebOperation+PrivateMethods.h"
 #import "AppBlade.h"
 
 

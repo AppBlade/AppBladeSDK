@@ -11,6 +11,7 @@
 
 #import "AppBlade.h"
 #import "AppBladeLogging.h"
+#import "AppBladeWebOperation+PrivateMethods.h"
 
 #import <CommonCrypto/CommonHMAC.h>
 #include "FileMD5Hash.h"
@@ -34,9 +35,7 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 
 NSString *deviceSecretHeaderField    = @"X-device-secret";
 
-
 @interface AppBladeWebOperation ()
-
 
 @property (nonatomic, strong) NSString* osVersionBuild;
 @property (nonatomic, strong) NSString* platform;
@@ -49,22 +48,6 @@ NSString *deviceSecretHeaderField    = @"X-device-secret";
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 @property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTaskId;
 @property (nonatomic, strong) NSThread *connectionThread;
--(void)issueRequest;
--(void)scheduleTimeout;
--(void)cancelTimeout;
-
-// Crypto methods.
-- (NSString *)HMAC_SHA256_Base64:(NSString *)data with_key:(NSString *)key;
-- (NSString *)SHA_Base64:(NSString *)raw;
-- (NSString *)genRandStringLength:(int)len;
-- (NSString *)urlEncodeValue:(NSString*)string; //no longer being used
-- (NSString *)hashFile:(NSString*)filePath;
-- (NSString *)hashExecutable;
-- (NSString *)hashInfoPlist;
-//Device info
-- (NSString *)genExecutableUUID;
-- (NSString *)executable_uuid;
-- (NSString *)ios_version_sanitized;
 
 @end
 
