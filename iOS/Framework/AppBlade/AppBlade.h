@@ -142,6 +142,7 @@
 - (NSString*)randomString:(int)length;
 
 
+-(void)sanitizeKeychain;
 -(void)cleanOutKeychain;
 
 @end

@@ -374,7 +374,12 @@ static AppBlade *s_sharedManager = nil;
     [AppBladeSimpleKeychain deleteLocalKeychain];
 }
 
+-(void)sanitizeKeychain {
+    [AppBladeSimpleKeychain sanitizeKeychain];
+}
+
 #pragma mark Pending Requests Queue
+
 -(NSOperationQueue *) tokenRequests {
     if(!_tokenRequests){
         _tokenRequests = [[NSOperationQueue alloc] init];
