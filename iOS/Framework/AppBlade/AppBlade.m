@@ -356,7 +356,7 @@ static AppBlade *s_sharedManager = nil;
     }
     else
     {
-        [self raiseConfigurationExceptionWithMessage:plistName];
+        [self raiseConfigurationExceptionWithMessage: [NSString stringWithFormat:@"Could not load %@.plist, make sure it exists and is connected to your project target.", plistName]];
     }
     
     if([kAppBladePlistDefaultProjectSecretValue isEqualToString:self.appBladeProjectSecret] || self.appBladeProjectSecret == nil || [self.appBladeProjectSecret  length] == 0)
