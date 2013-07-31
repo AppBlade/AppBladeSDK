@@ -108,6 +108,7 @@
 		3187321E179DE8C200E0D187 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FC91794A146006DF03A /* UIKit.framework */; };
 		3187321F179DE8C200E0D187 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3130640D1794A3D8006DF03A /* Security.framework */; };
 		31873220179DE8C200E0D187 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
+		31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -254,6 +255,7 @@
 		3134653317A86DC4009DDC86 /* AppBladeWebOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeWebOperationTests.m; sourceTree = "<group>"; };
 		318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrashUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestAppBladeKeys.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -583,6 +585,7 @@
 		3134651917A865C7009DDC86 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */,
 				3134651A17A865C7009DDC86 /* AppBladeTests-Info.plist */,
 				3134651B17A865C7009DDC86 /* InfoPlist.strings */,
 				3134652117A865C7009DDC86 /* AppBladeTests-Prefix.pch */,
@@ -817,6 +820,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3134651D17A865C7009DDC86 /* InfoPlist.strings in Resources */,
+				31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
