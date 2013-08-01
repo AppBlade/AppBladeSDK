@@ -25,8 +25,8 @@
 NSString *defaultURLScheme           = @"https";
 NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
 NSString *tokenGenerateURLFormat     = @"%@/api/3/authorize/new";
-NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these separate for readiblilty and possible editing later
-NSString *authorizeURLFormat         = @"%@/api/3/authorize";
+NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //POST request (keeping these separate for readiblilty and possible editing later)
+NSString *authorizeURLFormat         = @"%@/api/3/authorize"; //GET  request
 NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
 NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
@@ -262,7 +262,7 @@ const int kNonceRandomStringLength = 74;
     }
     
     
-    ABErrorLog(@"AppBlade failed with error: %@", error.localizedDescription);
+    ABErrorLog(@"AppBlade failed with error: %@ for %@", error.localizedDescription, self.request.URL);
     
     AppBladeWebClient *selfReference = self;
     id<AppBladeWebClientDelegate> delegateReference = self.delegate;
