@@ -314,8 +314,8 @@ static BOOL is_encrypted () {
     [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token.
     
     if (![AppBladeSimpleKeychain hasKeychainAccess]){
-        [[AppBlade sharedManager] setDisabled:YES];
-        ABDebugLog_internal(@"AppBlade must disable due to missing keychain permissions.");
+        [[AppBlade sharedManager] raiseConfigurationExceptionWithMessage:@"AppBlade has missing keychain access, likely due to a provisioning profile change."];
+        return;
     }
     
     NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
