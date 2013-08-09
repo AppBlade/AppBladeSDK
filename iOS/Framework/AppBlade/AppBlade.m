@@ -1486,6 +1486,7 @@ static BOOL is_encrypted () {
 
     if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
         NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
+        
         ABDebugLog_internal(@"%d Sessions Exist, posting them", [sessions count]);
         
         if(![self hasPendingSessions]){
@@ -1789,7 +1790,7 @@ static BOOL is_encrypted () {
     else {
         NSError* error = nil;
         if (![[NSFileManager defaultManager] removeItemAtPath:filePath error:&error]) {
-            ABErrorLog(@"AppBlade cannot remove file %@", [filePath lastPathComponent]);
+            ABErrorLog(@"AppBlade cannot remove file %@ : Error: %@", filePath, error);
         }
     }
     return returnObject;

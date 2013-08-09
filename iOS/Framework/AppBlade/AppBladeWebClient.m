@@ -208,6 +208,22 @@ const int kNonceRandomStringLength = 74;
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
 
+-(void) timeout
+{
+    if (self.isFinished || self.isCancelled) {
+        return;
+    }
+
+    ABDebugLog_internal(@"AppBlade Timeout for %@", self.request.URL);
+    
+    AppBladeWebClient *selfReference = self;
+    id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [delegateReference appBladeWebClientFailed:selfReference];
+    });
+    [self cancel];
+}
+
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
@@ -252,7 +268,7 @@ const int kNonceRandomStringLength = 74;
     
     if (self.isCancelled) {
         ABDebugLog_internal(@"API Call cancelled. didFailWithError, but Ignoring.");
-        [self willChangeValueForKey:@"isFinished"];
+        [self willChangeValueForKey:@"isExecuting"];
         self.executing = NO;
         [self didChangeValueForKey:@"isExecuting"];
         [self willChangeValueForKey:@"isFinished"];
@@ -261,8 +277,9 @@ const int kNonceRandomStringLength = 74;
         return;
     }
     
-    
-    ABErrorLog(@"AppBlade failed with error: %@ for %@", error.localizedDescription, self.request.URL);
+    if(error){
+        ABErrorLog(@"AppBlade failed with error: %@ for %@", error.localizedDescription, self.request.URL);
+    }
     
     AppBladeWebClient *selfReference = self;
     id<AppBladeWebClientDelegate> delegateReference = self.delegate;
@@ -270,7 +287,7 @@ const int kNonceRandomStringLength = 74;
         [delegateReference appBladeWebClientFailed:selfReference];
     });
     
-    [self willChangeValueForKey:@"isFinished"];
+    [self willChangeValueForKey:@"isExecuting"];
     self.executing = NO;
     [self didChangeValueForKey:@"isExecuting"];
     [self willChangeValueForKey:@"isFinished"];
@@ -284,7 +301,7 @@ const int kNonceRandomStringLength = 74;
 {
     if (self.isCancelled) {
         ABDebugLog_internal(@"API Call cancelled. connectionDidFinishLoading, but Ignoring.");
-        [self willChangeValueForKey:@"isFinished"];
+        [self willChangeValueForKey:@"isExecuting"];
         self.executing = NO;
         [self didChangeValueForKey:@"isExecuting"];
         [self willChangeValueForKey:@"isFinished"];
@@ -333,7 +350,9 @@ const int kNonceRandomStringLength = 74;
         }
         else
         {
-            ABErrorLog(@"Error parsing permisions json: %@", [error debugDescription]);
+            if(error){
+                ABErrorLog(@"Error parsing permisions json: %@", [error debugDescription]);
+            }
             AppBladeWebClient *selfReference = self;
             id<AppBladeWebClientDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -386,7 +405,9 @@ const int kNonceRandomStringLength = 74;
         }
         else
         {
-            ABErrorLog(@"Error parsing update plist: %@", [error debugDescription]);
+            if(error){
+                ABErrorLog(@"Error parsing update plist: %@", [error debugDescription]);
+            }
             AppBladeWebClient *selfReference = self;
             id<AppBladeWebClientDelegate> delegateReference = self.delegate;
             dispatch_async(dispatch_get_main_queue(), ^{
