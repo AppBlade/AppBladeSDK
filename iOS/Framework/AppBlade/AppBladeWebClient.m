@@ -208,6 +208,22 @@ const int kNonceRandomStringLength = 74;
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
 
+-(void) timeout
+{
+    if (self.isFinished || self.isCancelled) {
+        return;
+    }
+
+    ABDebugLog_internal(@"AppBlade Timeout for %@", self.request.URL);
+    
+    AppBladeWebClient *selfReference = self;
+    id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [delegateReference appBladeWebClientFailed:selfReference];
+    });
+    [self cancel];
+}
+
 #pragma mark - NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
