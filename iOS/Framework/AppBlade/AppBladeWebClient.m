@@ -268,7 +268,7 @@ const int kNonceRandomStringLength = 74;
     
     if (self.isCancelled) {
         ABDebugLog_internal(@"API Call cancelled. didFailWithError, but Ignoring.");
-        [self willChangeValueForKey:@"isFinished"];
+        [self willChangeValueForKey:@"isExecuting"];
         self.executing = NO;
         [self didChangeValueForKey:@"isExecuting"];
         [self willChangeValueForKey:@"isFinished"];
@@ -286,7 +286,7 @@ const int kNonceRandomStringLength = 74;
         [delegateReference appBladeWebClientFailed:selfReference];
     });
     
-    [self willChangeValueForKey:@"isFinished"];
+    [self willChangeValueForKey:@"isExecuting"];
     self.executing = NO;
     [self didChangeValueForKey:@"isExecuting"];
     [self willChangeValueForKey:@"isFinished"];
@@ -300,7 +300,7 @@ const int kNonceRandomStringLength = 74;
 {
     if (self.isCancelled) {
         ABDebugLog_internal(@"API Call cancelled. connectionDidFinishLoading, but Ignoring.");
-        [self willChangeValueForKey:@"isFinished"];
+        [self willChangeValueForKey:@"isExecuting"];
         self.executing = NO;
         [self didChangeValueForKey:@"isExecuting"];
         [self willChangeValueForKey:@"isFinished"];
