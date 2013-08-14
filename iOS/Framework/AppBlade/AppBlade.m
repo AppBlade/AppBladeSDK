@@ -1497,7 +1497,9 @@ static BOOL is_encrypted () {
     }
     
     self.sessionStartDate = [NSDate date];
+    ABDebugLog_internal(@"Session begun at %@", self.sessionStartDate);
 }
+
 
 - (void)logSessionEnd
 {
@@ -1505,9 +1507,16 @@ static BOOL is_encrypted () {
         ABDebugLog_internal(@"Can't endSession, SDK disabled");
         return;
     }
-
-    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
+    if(self.sessionStartDate == nil){
+        ABDebugLog_internal(@"We can't end this session because we haven't started one.");
+        return;
+    }
     
+    ABDebugLog_internal(@"Session ended at %@", [NSDate date]);
+    
+    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
+    ABDebugLog_internal(@"Full Session Data %@", sessionDict);
+
     NSMutableArray* pastSessions = nil;
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
