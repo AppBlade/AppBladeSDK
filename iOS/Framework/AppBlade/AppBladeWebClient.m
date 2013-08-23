@@ -334,7 +334,7 @@ const int kNonceRandomStringLength = 74;
     }
     else if(self.api == AppBladeWebClientAPI_Permissions) {
         NSError *error = nil;
-        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+        ABDebugLog_internal(@"Received Permission Check Response from AppBlade: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
 
         NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
         //BOOL showUpdatePrompt = [self.request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
@@ -465,8 +465,7 @@ const int kNonceRandomStringLength = 74;
     {
         //NSString *storedSecret = [[AppBlade sharedManager] appBladeDeviceSecret];
         //ABDebugLog_internal(@"storedSecret %@", storedSecret);
-        ABDebugLog_internal(@"tokenToConfirm %@", tokenToConfirm);
-        
+        ABDebugLog_internal(@"tokenToConfirm %@", tokenToConfirm);            
 
         if(nil != tokenToConfirm && ![tokenToConfirm isEqualToString:@""]){
             // Create the request.
