@@ -711,7 +711,7 @@ static BOOL is_encrypted () {
             // users from unlocking an app by simply changing their clock.
             ABDebugLog_internal(@"Permissions callback : %@", client.sentDeviceSecret);
 
-            if ([self withinStoredTTL] || client.sentDeviceSecret == nil) {
+            if ([self withinStoredTTL] || (client.sentDeviceSecret == nil)) {
                 if(canSignalDelegate) {
                     [self.delegate appBlade:self applicationApproved:YES error:nil];
                 }
