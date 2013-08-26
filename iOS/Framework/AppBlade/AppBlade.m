@@ -1231,7 +1231,7 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
--(void)setCustomParam:(id)object forKey:(NSString*)key;
+-(void)setCustomParam:(id)object forKey:(NSString*)key
 {
 #ifndef SKIP_CUSTOM_PARAMS
     NSDictionary* currentFields = [self getCustomParams];
@@ -1255,7 +1255,7 @@ static AppBlade *s_sharedManager = nil;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
-    }
+}
 
 -(void)clearAllCustomParams
 {
