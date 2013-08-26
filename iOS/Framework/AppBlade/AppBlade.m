@@ -879,11 +879,13 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
-    
+#ifndef SKIP_FEEDBACK
+#endif
 }
 
 - (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
+#ifndef SKIP_SESSIONS
     if(success){
         //delete existing sessions, as we have reported them
         NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
@@ -900,6 +902,9 @@ static AppBlade *s_sharedManager = nil;
     {
         ABErrorLog(@"Error sending Session log");
     }
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
 }
 
 
@@ -1049,9 +1054,14 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't check hasPendingSessions, SDK disabled");
         return NO;
     }
+#ifndef SKIP_SESSIONS
     //check active clients for API_Sessions
     NSInteger sessionClients = [self pendingRequestsOfType:AppBladeWebClientAPI_Sessions];
     return sessionClients > 0;
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+    return NO;
+#endif
 }
 
 
