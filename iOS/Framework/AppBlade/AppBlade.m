@@ -1144,12 +1144,12 @@ static AppBlade *s_sharedManager = nil;
 #pragma mark - AppBlade Custom Params
 -(NSDictionary *)getCustomParams
 {
+    NSDictionary *toRet = [NSDictionary dictionary];
+
     if([[AppBlade sharedManager] isAllDisabled]){
         ABDebugLog_internal(@"Can't getCustomParams, SDK disabled");
-        return [NSDictionary dictionary];;
+        return toRet;
     }
-
-    NSDictionary *toRet = nil;
 #ifndef SKIP_CUSTOM_PARAMS
     NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
     if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
@@ -1159,7 +1159,6 @@ static AppBlade *s_sharedManager = nil;
     else
     {
         ABDebugLog_internal(@"no file found, reinitializing");
-        toRet = [NSDictionary dictionary];
         [self setCustomParams:toRet];
     }
     ABDebugLog_internal(@"getting %@", toRet);
