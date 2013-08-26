@@ -928,33 +928,14 @@ static AppBlade *s_sharedManager = nil;
 - (BOOL)hasPendingFeedbackReports
 {
     if(self.isAllDisabled){
-        ABDebugLog_internal(@"Can't check HasPendingFeedbackReports, SDK disabled");
+        ABDebugLog_internal(@"Can't check hasPendingFeedbackReports, SDK disabled");
         return NO;
     }
-    
-    BOOL toRet = NO;
-    @synchronized (self){
-        NSString *feedbackBacklogFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-        if([[NSFileManager defaultManager] fileExistsAtPath:feedbackBacklogFilePath]){
-            ABDebugLog_internal(@"found file at %@", feedbackBacklogFilePath);
-            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:feedbackBacklogFilePath];
-            if (backupFiles.count > 0) {
-                ABDebugLog_internal(@"found %d files at feedbackBacklogFilePath", backupFiles.count);
-                toRet = YES;
-            }
-            else
-            {
-                ABDebugLog_internal(@"found NO files at feedbackBacklogFilePath");
-                toRet = NO;
-            }
-        }
-        else
-        {
-            ABDebugLog_internal(@"found nothing at %@", feedbackBacklogFilePath);
-            toRet = NO;
-        }
-    }
-    return toRet;
+    #ifndef SKIP_FEEDBACK
+        return [self.feedbackManager hasPendingFeedbackReports];
+    #else
+        NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+    #endif
 }
 
 
