@@ -593,320 +593,6 @@ static AppBlade *s_sharedManager = nil;
 
 
 
-#pragma mark - AppBladeDelegate
-- (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
-{
-    if(!approved) {
-        
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Permission Denied"
-                                                        message:[error localizedDescription]
-                                                       delegate:self
-                                              cancelButtonTitle:@"Exit"
-                                              otherButtonTitles: nil] ;
-        [alert show];
-    }
-    
-}
-
-
--(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
-{
-    if (update && self.updatesManager != nil) {
-        
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Update Available"
-                                                        message:message
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles: @"Upgrade", nil] ;
-        alert.tag = kUpdateAlertTag;
-        self.updatesManager.upgradeLink = [NSURL URLWithString:url];
-        
-        [alert show];
-        
-    }
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == kUpdateAlertTag) {
-        if (buttonIndex == 1  && self.updatesManager != nil && self.updatesManager.upgradeLink != nil) {
-            [[UIApplication sharedApplication] openURL:self.updatesManager.upgradeLink];
-            self.updatesManager.upgradeLink = nil;
-            exit(0);
-        }
-    }
-    else
-    {
-        exit(0);
-    }
-}
-
-
-- (BOOL)containsOperationInPendingRequests:(AppBladeWebOperation *)webOperation
-{
-    return [[self.pendingRequests operations] containsObject:webOperation];
-}
-
-
-#pragma mark - AppBladeWebOperation
--(void) appBladeWebClientFailed:(AppBladeWebOperation *)client
-{
-    [self appBladeWebClientFailed:client withErrorString:NULL];
-}
-
-- (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString
-{
-    if (nil == client) {
-        return;
-    }
-    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];  
-    // check only once if the delegate responds to this selector
-    BOOL canSignalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
-
-    if (client.api == AppBladeWebClientAPI_GenerateToken)  {
-        ABErrorLog(@"ERROR generating token");
-        //wait for a retry or deactivate the SDK for the duration of the current install
-        if(status == kTokenInvalidStatusCode)
-        {  //the token we used to generate a new token is no longer valid
-            ABErrorLog(@"Token refresh failed because current token had its access revoked.");
-            [AppBlade clearCacheDirectory];//all of the pending data is to be considered invlid, don't let it clutter the app.
-            NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                            NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-            NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
-            if(canSignalDelegate) {
-                [self.delegate appBlade:self applicationApproved:NO error:error];
-            }
-        }
-        else
-        {  //likely a 500 or some other timeout
-            ABErrorLog(@"Token refresh failed due to an error from the server.");
-            //try to confirm the token that we have. If it works, we can go with that.
-        }
-    }
-    else if (client.api == AppBladeWebClientAPI_ConfirmToken)  {
-        ABErrorLog(@"ERROR confirming token");
-        //schedule a token refresh or deactivate based on status
-        if(status == kTokenRefreshStatusCode)
-        {
-            [[AppBlade  sharedManager] refreshToken:[client sentDeviceSecret]];
-        }
-        else if(status == kTokenInvalidStatusCode)
-        {
-            NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                               NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                               NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-            NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
-            if(canSignalDelegate) {
-                [self.delegate appBlade:self applicationApproved:NO error:error];
-            }
-        }
-        else
-        {  //likely a 500 or some other timeout from the server
-            //if we can't confirm the token then we can't use it.
-            [self cancelPendingRequestsByToken:[client sentDeviceSecret]];
-            //Try again later.
-            double delayInSeconds = 30.0;
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                [[AppBlade  sharedManager] confirmToken:[client sentDeviceSecret]];
-            });
-        }
-    }
-    else {
-        //non-token related api failures all attempt a token refresh when given a refresh status code,
-        if([self isCurrentToken:[client sentDeviceSecret]]){
-            if(status == kTokenRefreshStatusCode)
-            {
-                [[AppBlade  sharedManager] refreshToken:[client sentDeviceSecret]]; //refresh the token
-            }else if(status == kTokenInvalidStatusCode) { //we think the response was invlaid?
-                [[AppBlade  sharedManager] confirmToken:[client sentDeviceSecret]]; //one more confirm, just to be safe.
-            }
-        }
-        
-        if (client.api == AppBladeWebClientAPI_Permissions)  {
-            // if the connection failed, see if the application is still within the previous TTL window.
-            // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
-            // prevent the app from running until the request completes successfully. This will prevent
-            // users from unlocking an app by simply changing their clock.
-            if ([self withinStoredTTL]) {
-                if(canSignalDelegate) {
-                    [self.delegate appBlade:self applicationApproved:YES error:nil];
-                }
-            }
-            else {
-                [self closeTTLWindow];
-                if(canSignalDelegate) {
-                    NSDictionary* errorDictionary = nil;
-                    NSError* error = nil;
-                    if(errorString){
-                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                           NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                           NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
-
-                    }
-                    else
-                    {
-                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
-                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
-                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
-                    }
-                    [self.delegate appBlade:self applicationApproved:NO error:error];
-                }
-                
-            }
-        }
-        else if (client.api == AppBladeWebClientAPI_Feedback) {
-        }
-        else if(client.api == AppBladeWebClientAPI_Sessions){
-            ABErrorLog(@"ERROR sending sessions");
-        }
-        else if(client.api == AppBladeWebClientAPI_ReportCrash)
-        {
-            ABErrorLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
-        }
-        else if(client.api == AppBladeWebClientAPI_UpdateCheck)
-        {
-            ABErrorLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
-        }
-        else
-        {
-            ABErrorLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
-        }
-    }
-}
-
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response
-{    
-    NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
-    if(deviceSecretString != nil) {
-        ABDebugLog_internal(@"Updating token ");
-        [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
-        //immediately confirm we have a new token stored
-        ABDebugLog_internal(@"token from request %@", [client sentDeviceSecret]);
-        ABDebugLog_internal(@"confirming new token %@", [self appBladeDeviceSecret]);
-        [self confirmToken:[self appBladeDeviceSecret]];
-    }
-    else {
-        ABDebugLog_internal(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
-        int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
-        ABDebugLog_internal(@"token refresh response status code %d", statusCode);
-        if(statusCode == kTokenInvalidStatusCode){
-            [self.delegate appBlade:self applicationApproved:NO error:nil];
-        }else if (statusCode == kTokenRefreshStatusCode){
-            [self refreshToken:[self appBladeDeviceSecret]];
-        }else{
-            [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
-        }
-    }
-}
-
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response
-{
-    NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
-    if(deviceSecretTimeout != nil) {
-        ABDebugLog_internal(@"Token confirmed. Business as usual.");
-        [self resumeCurrentPendingRequests]; //continue requests that we could have had pending. they will be ignored if they fail with the old token.
-    }
-    else {
-        ABDebugLog_internal(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
-        int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
-        ABDebugLog_internal(@"token confirm response status code %d", statusCode);
-        if(statusCode == kTokenInvalidStatusCode){
-            [self.delegate appBlade:self applicationApproved:NO error:nil];
-        }else if (statusCode == kTokenRefreshStatusCode){
-            [self refreshToken:[self appBladeDeviceSecret]];
-        }else{
-            [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
-        }
-    }
-}
-
-
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions
-{
-    NSString *errorString = [permissions objectForKey:@"error"];
-    BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
-    
-    if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
-        [self closeTTLWindow];
-        NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                         NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-        NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
-        
-        if (signalApproval) {
-            [self.delegate appBlade:self applicationApproved:NO error:error];
-        }
-    }
-    else {
-        NSNumber *ttl = [permissions objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
-        if (ttl) {
-            [self updateTTL:ttl];
-        }
-        
-        // tell the client the application was approved.
-        if (signalApproval) {
-            [self.delegate appBlade:self applicationApproved:YES error:nil];
-        }
-    }
-    
-}
-
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData
-{
-    // determine if there is an update available
-    NSDictionary* update = [updateData objectForKey:@"update"];
-    if(update)
-    {
-        NSString* updateMessage = [update objectForKey:@"message"];
-        NSString* updateURL = [update objectForKey:@"url"];
-        
-        if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
-            [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
-        }
-    }
-    
-}
-
-- (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client
-{
-#ifndef SKIP_CRASH_REPORTING
-    [self.crashManager handleWebClientCrashReported:client];
-#endif
-}
-
-- (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
-{
-#ifndef SKIP_FEEDBACK
-#endif
-}
-
-- (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
-{
-#ifndef SKIP_SESSIONS
-    if(success){
-        //delete existing sessions, as we have reported them
-        NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-            NSError *deleteError = nil;
-            [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
-            
-            if(deleteError){
-                ABErrorLog(@"Error deleting Session log: %@", deleteError.debugDescription);
-            }
-        }
-    }
-    else
-    {
-        ABErrorLog(@"Error sending Session log");
-    }
-#else
-    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
-#endif
-}
-
 
 #pragma mark - Feedback
 
@@ -1199,7 +885,324 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-#pragma mark - TTL (Time To Live) Methods
+#pragma mark - AppBladeDelegate
+- (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
+{
+    if(!approved) {
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Permission Denied"
+                                                        message:[error localizedDescription]
+                                                       delegate:self
+                                              cancelButtonTitle:@"Exit"
+                                              otherButtonTitles: nil] ;
+        [alert show];
+    }
+    
+}
+
+
+-(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
+{
+    if (update && self.updatesManager != nil) {
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Update Available"
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles: @"Upgrade", nil] ;
+        alert.tag = kUpdateAlertTag;
+        self.updatesManager.upgradeLink = [NSURL URLWithString:url];
+        
+        [alert show];
+        
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kUpdateAlertTag) {
+        if (buttonIndex == 1  && self.updatesManager != nil && self.updatesManager.upgradeLink != nil) {
+            [[UIApplication sharedApplication] openURL:self.updatesManager.upgradeLink];
+            self.updatesManager.upgradeLink = nil;
+            exit(0);
+        }
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+
+- (BOOL)containsOperationInPendingRequests:(AppBladeWebOperation *)webOperation
+{
+    return [[self.pendingRequests operations] containsObject:webOperation];
+}
+
+
+#pragma mark - AppBladeWebOperation
+-(void) appBladeWebClientFailed:(AppBladeWebOperation *)client
+{
+    [self appBladeWebClientFailed:client withErrorString:NULL];
+}
+
+- (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString
+{
+    if (nil == client) {
+        return;
+    }
+    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+    // check only once if the delegate responds to this selector
+    BOOL canSignalDelegate = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
+    
+    if (client.api == AppBladeWebClientAPI_GenerateToken)  {
+        ABErrorLog(@"ERROR generating token");
+        //wait for a retry or deactivate the SDK for the duration of the current install
+        if(status == kTokenInvalidStatusCode)
+        {  //the token we used to generate a new token is no longer valid
+            ABErrorLog(@"Token refresh failed because current token had its access revoked.");
+            [AppBlade clearCacheDirectory];//all of the pending data is to be considered invlid, don't let it clutter the app.
+            NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                            NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+            NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+            if(canSignalDelegate) {
+                [self.delegate appBlade:self applicationApproved:NO error:error];
+            }
+        }
+        else
+        {  //likely a 500 or some other timeout
+            ABErrorLog(@"Token refresh failed due to an error from the server.");
+            //try to confirm the token that we have. If it works, we can go with that.
+        }
+    }
+    else if (client.api == AppBladeWebClientAPI_ConfirmToken)  {
+        ABErrorLog(@"ERROR confirming token");
+        //schedule a token refresh or deactivate based on status
+        if(status == kTokenRefreshStatusCode)
+        {
+            [[AppBlade  sharedManager] refreshToken:[client sentDeviceSecret]];
+        }
+        else if(status == kTokenInvalidStatusCode)
+        {
+            NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                            NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+            NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+            if(canSignalDelegate) {
+                [self.delegate appBlade:self applicationApproved:NO error:error];
+            }
+        }
+        else
+        {  //likely a 500 or some other timeout from the server
+            //if we can't confirm the token then we can't use it.
+            [self cancelPendingRequestsByToken:[client sentDeviceSecret]];
+            //Try again later.
+            double delayInSeconds = 30.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [[AppBlade  sharedManager] confirmToken:[client sentDeviceSecret]];
+            });
+        }
+    }
+    else {
+        //non-token related api failures all attempt a token refresh when given a refresh status code,
+        if([self isCurrentToken:[client sentDeviceSecret]]){
+            if(status == kTokenRefreshStatusCode)
+            {
+                [[AppBlade  sharedManager] refreshToken:[client sentDeviceSecret]]; //refresh the token
+            }else if(status == kTokenInvalidStatusCode) { //we think the response was invlaid?
+                [[AppBlade  sharedManager] confirmToken:[client sentDeviceSecret]]; //one more confirm, just to be safe.
+            }
+        }
+        
+        if (client.api == AppBladeWebClientAPI_Permissions)  {
+            // if the connection failed, see if the application is still within the previous TTL window.
+            // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
+            // prevent the app from running until the request completes successfully. This will prevent
+            // users from unlocking an app by simply changing their clock.
+            if ([self withinStoredTTL]) {
+                if(canSignalDelegate) {
+                    [self.delegate appBlade:self applicationApproved:YES error:nil];
+                }
+            }
+            else {
+                [self closeTTLWindow];
+                if(canSignalDelegate) {
+                    NSDictionary* errorDictionary = nil;
+                    NSError* error = nil;
+                    if(errorString){
+                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                           NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+                        
+                    }
+                    else
+                    {
+                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
+                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
+                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
+                    }
+                    [self.delegate appBlade:self applicationApproved:NO error:error];
+                }
+                
+            }
+        }
+        else if (client.api == AppBladeWebClientAPI_Feedback) {
+        }
+        else if(client.api == AppBladeWebClientAPI_Sessions){
+            ABErrorLog(@"ERROR sending sessions");
+        }
+        else if(client.api == AppBladeWebClientAPI_ReportCrash)
+        {
+            ABErrorLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
+        }
+        else if(client.api == AppBladeWebClientAPI_UpdateCheck)
+        {
+            ABErrorLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
+        }
+        else
+        {
+            ABErrorLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
+        }
+    }
+}
+
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response
+{
+    NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
+    if(deviceSecretString != nil) {
+        ABDebugLog_internal(@"Updating token ");
+        [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
+        //immediately confirm we have a new token stored
+        ABDebugLog_internal(@"token from request %@", [client sentDeviceSecret]);
+        ABDebugLog_internal(@"confirming new token %@", [self appBladeDeviceSecret]);
+        [self confirmToken:[self appBladeDeviceSecret]];
+    }
+    else {
+        ABDebugLog_internal(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
+        int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+        ABDebugLog_internal(@"token refresh response status code %d", statusCode);
+        if(statusCode == kTokenInvalidStatusCode){
+            [self.delegate appBlade:self applicationApproved:NO error:nil];
+        }else if (statusCode == kTokenRefreshStatusCode){
+            [self refreshToken:[self appBladeDeviceSecret]];
+        }else{
+            [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
+        }
+    }
+}
+
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response
+{
+    NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
+    if(deviceSecretTimeout != nil) {
+        ABDebugLog_internal(@"Token confirmed. Business as usual.");
+        [self resumeCurrentPendingRequests]; //continue requests that we could have had pending. they will be ignored if they fail with the old token.
+    }
+    else {
+        ABDebugLog_internal(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
+        int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+        ABDebugLog_internal(@"token confirm response status code %d", statusCode);
+        if(statusCode == kTokenInvalidStatusCode){
+            [self.delegate appBlade:self applicationApproved:NO error:nil];
+        }else if (statusCode == kTokenRefreshStatusCode){
+            [self refreshToken:[self appBladeDeviceSecret]];
+        }else{
+            [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
+        }
+    }
+}
+
+
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions
+{
+    NSString *errorString = [permissions objectForKey:@"error"];
+    BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
+    
+    if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
+        [self closeTTLWindow];
+        NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                         NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+        NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
+        
+        if (signalApproval) {
+            [self.delegate appBlade:self applicationApproved:NO error:error];
+        }
+    }
+    else {
+        NSNumber *ttl = [permissions objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
+        if (ttl) {
+            [self updateTTL:ttl];
+        }
+        
+        // tell the client the application was approved.
+        if (signalApproval) {
+            [self.delegate appBlade:self applicationApproved:YES error:nil];
+        }
+    }
+    
+}
+
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData
+{
+    // determine if there is an update available
+    NSDictionary* update = [updateData objectForKey:@"update"];
+    if(update)
+    {
+        NSString* updateMessage = [update objectForKey:@"message"];
+        NSString* updateURL = [update objectForKey:@"url"];
+        
+        if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
+            [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
+        }
+    }
+    
+}
+
+- (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client
+{
+#ifndef SKIP_CRASH_REPORTING
+    [self.crashManager handleWebClientCrashReported:client];
+#endif
+}
+
+- (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
+{
+#ifndef SKIP_FEEDBACK
+#endif
+}
+
+- (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
+{
+#ifndef SKIP_SESSIONS
+    if(success){
+        //delete existing sessions, as we have reported them
+        NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+            NSError *deleteError = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
+            
+            if(deleteError){
+                ABErrorLog(@"Error deleting Session log: %@", deleteError.debugDescription);
+            }
+        }
+    }
+    else
+    {
+        ABErrorLog(@"Error sending Session log");
+    }
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+}
+
+
+#pragma mark - Helper Methods
+
+#pragma mark TTL (Time To Live) Methods
 
 - (void)closeTTLWindow
 {
@@ -1239,7 +1242,7 @@ static AppBlade *s_sharedManager = nil;
     return YES;
 }
 
-#pragma mark - Device Secret Methods
+#pragma mark Device Secret Methods
 -(NSMutableDictionary*) appBladeDeviceSecrets
 {
     if(self.isAllDisabled){
@@ -1302,7 +1305,6 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-
 - (void)clearAppBladeKeychain
 {
     if(self.isAllDisabled){
@@ -1333,7 +1335,24 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-#pragma mark - Helper Methods
+-(BOOL)hasDeviceSecret
+{
+    return [[self appBladeDeviceSecret] length] == 0;
+}
+
+- (BOOL)isDeviceSecretBeingConfirmed
+{
+    BOOL tokenRequestInProgress = ([[self tokenRequests] operationCount]) != 0;
+    BOOL processIsNotFinished = tokenRequestInProgress; //if we have a process, assume it's not finished, if we have one then of course it's finished
+    if(tokenRequestInProgress) { //the queue has a maximum concurrent process size of one, that's why we can do what comes next
+        AppBladeWebOperation *process = (AppBladeWebOperation *)[[[self tokenRequests] operations] objectAtIndex:0];
+        processIsNotFinished = ![process isFinished];
+    }
+    return tokenRequestInProgress && processIsNotFinished;
+}
+
+
+#pragma mark File I/O
 
 - (void)checkAndCreateAppBladeCacheDirectory
 {
@@ -1366,6 +1385,20 @@ static AppBlade *s_sharedManager = nil;
     return returnObject;
 }
 
+- (NSString*)hashFileOfPlist:(NSString *)filePath
+{
+    NSString* returnString = nil;
+    CFStringRef executableFileMD5Hash =
+    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
+    if (executableFileMD5Hash) {
+        returnString = (__bridge NSString *)(executableFileMD5Hash);
+        // CFRelease(executableFileMD5Hash);
+    }
+    return returnString;
+}
+
+
+#pragma mark AppBladeWebOperation 
 
 - (AppBladeWebOperation *)generateWebOperation
 {
@@ -1393,21 +1426,7 @@ static AppBlade *s_sharedManager = nil;
     return amtToReturn;
 }
 
--(BOOL)hasDeviceSecret
-{
-    return [[self appBladeDeviceSecret] length] == 0;
-}
-
-- (BOOL)isDeviceSecretBeingConfirmed {
-    BOOL tokenRequestInProgress = ([[self tokenRequests] operationCount]) != 0;
-    BOOL processIsNotFinished = tokenRequestInProgress; //if we have a process, assume it's not finished, if we have one then of course it's finished
-    if(tokenRequestInProgress) { //the queue has a maximum concurrent process size of one, that's why we can do what comes next
-        AppBladeWebOperation *process = (AppBladeWebOperation *)[[[self tokenRequests] operations] objectAtIndex:0];
-        processIsNotFinished = ![process isFinished];
-    }
-    return tokenRequestInProgress && processIsNotFinished;
-}
-
+#pragma mark Assorted Other
 
 -(NSString *) randomString: (int) len {
     NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
@@ -1417,17 +1436,6 @@ static AppBlade *s_sharedManager = nil;
     return randomString;
 }
 
-- (NSString*)hashFileOfPlist:(NSString *)filePath
-{
-    NSString* returnString = nil;
-    CFStringRef executableFileMD5Hash =
-    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
-    if (executableFileMD5Hash) {
-        returnString = (__bridge NSString *)(executableFileMD5Hash);
-        // CFRelease(executableFileMD5Hash);
-    }
-    return returnString;
-}
 
 
 + (NSString*)sdkVersion
