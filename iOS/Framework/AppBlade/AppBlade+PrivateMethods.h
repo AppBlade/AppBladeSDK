@@ -25,8 +25,11 @@
 - (void) cancelAllPendingRequests;
 - (void) cancelPendingRequestsByToken:(NSString *)token;
 
+- (NSObject*)readFile:(NSString *)filePath;
 - (NSString*)hashFileOfPlist:(NSString *)filePath;
 - (void)registerWithAppBladeDictionary:(NSDictionary*)appbladeVariables atPlistPath:(NSString*)plistPath;
+
+
 
 
 @end
