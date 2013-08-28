@@ -7,9 +7,12 @@
 //
 
 #import "SessionTrackingManager.h"
+#import "AppBlade+PrivateMethods.h"
 
 @implementation SessionTrackingManager
 @synthesize delegate;
+@synthesize sessionStartDate;
+
 
 - (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)webOpDelegate
 {
@@ -20,12 +23,43 @@
     return self;
 }
 
-//Suggested pragma structure (after implementing the required methods, which should always be first)
-#pragma mark - Web Request Generators
-//wherein you generate the unique web request for the SDK
-#pragma mark Stored Web Request Handling
-//wherein you implement any storage behavior for pending API calls.
-//...
-//then whatever else you feel like
+- (void)logSessionStart
+{
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    ABDebugLog_internal(@"Checking Session Path: %@", sessionFilePath);
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
+        ABDebugLog_internal(@"%d Sessions Exist, posting them", [sessions count]);
+        
+        if(![[AppBlade sharedManager]  hasPendingSessions]){
+            AppBladeWebOperation * client = [[AppBlade sharedManager] generateWebOperation];
+            [client postSessions:sessions];
+            [[AppBlade sharedManager] addPendingRequest:client];
+        }
+    }
+    self.sessionStartDate = [NSDate date];
+}
+
+- (void)logSessionEnd
+{
+    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:[self  sessionStartDate], @"started_at", [NSDate date], @"ended_at", [[AppBlade sharedManager] getCustomParams], @"custom_params", nil];
+    
+    NSMutableArray* pastSessions = nil;
+    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+        NSArray* sessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
+        pastSessions = [sessions mutableCopy] ;
+    }
+    else {
+        pastSessions = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    [pastSessions addObject:sessionDict];
+    
+    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
+    [sessionData writeToFile:sessionFilePath atomically:YES];    
+}
+
 
 @end

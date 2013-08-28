@@ -1102,20 +1102,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't startSession, SDK disabled");
         return;
     }
-    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-    ABDebugLog_internal(@"Checking Session Path: %@", sessionFilePath);
-
-    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
-        ABDebugLog_internal(@"%d Sessions Exist, posting them", [sessions count]);
-        
-        if(![self hasPendingSessions]){
-            AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
-            [client postSessions:sessions];
-            [self.pendingRequests addOperation:client];
-        }
-    }
-    self.sessionStartDate = [NSDate date];
+    [[self sessionTrackingManager] logSessionStart];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -1129,22 +1116,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't endSession, SDK disabled");
         return;
     }
-    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, @"started_at", [NSDate date], @"ended_at", [self getCustomParams], @"custom_params", nil];
-    
-    NSMutableArray* pastSessions = nil;
-    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-        NSArray* sessions = (NSArray*)[self readFile:sessionFilePath];
-        pastSessions = [sessions mutableCopy] ;
-    }
-    else {
-        pastSessions = [NSMutableArray arrayWithCapacity:1];
-    }
-    
-    [pastSessions addObject:sessionDict];
-    
-    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
-    [sessionData writeToFile:sessionFilePath atomically:YES];
+    [[self sessionTrackingManager] logSessionEnd];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
