@@ -7,6 +7,7 @@
 //
 
 #import "AppBladeUpdatesManager.h"
+#import "AppBlade+PrivateMethods.h"
 
 @implementation AppBladeUpdatesManager
 @synthesize delegate;
@@ -20,12 +21,15 @@
     
     return self;
 }
-//Suggested pragma structure (after implementing the required methods, which should always be first)
-#pragma mark - Web Request Generators
-//wherein you generate the unique web request for the SDK
-#pragma mark Stored Web Request Handling
-//wherein you implement any storage behavior for pending API calls.
-//...
-//then whatever else you feel like
+
+
+- (void)checkForUpdates
+{
+    ABDebugLog_internal(@"Checking for updates");
+    AppBladeWebOperation * client = [[AppBlade sharedManager] generateWebOperation];
+    [client checkForUpdates];
+    [[AppBlade sharedManager] addPendingRequest:client];
+}
+
 
 @end
