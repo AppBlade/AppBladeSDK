@@ -1394,6 +1394,19 @@ static AppBlade *s_sharedManager = nil;
     return returnObject;
 }
 
+
+- (AppBladeWebOperation *)generateWebOperation
+{
+    AppBladeWebOperation * webOperation = [[AppBladeWebOperation alloc] initWithDelegate:self];
+    return webOperation;
+}
+
+
+- (void)addPendingRequest:(AppBladeWebOperation *)webOperation
+{
+    [[self pendingRequests] addOperation:webOperation];
+}
+
 - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType {
     NSInteger amtToReturn = 0;
     

@@ -16,6 +16,9 @@
 - (BOOL)hasDeviceSecret;
 - (BOOL)isDeviceSecretBeingConfirmed;
 
+
+- (AppBladeWebOperation *)generateWebOperation;
+- (void)addPendingRequest:(AppBladeWebOperation *)webOperation;
 - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
 - (BOOL)isCurrentToken:(NSString *)token;
 
