@@ -514,10 +514,8 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't checkApproval, SDK disabled");
         return;
     }
-    [self validateProjectConfiguration];
-    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self] ;
-    [client checkPermissions];
-    [self.pendingRequests addOperation:client];
+    [self validateProjectConfiguration];    
+    [self.authenticationManager checkApproval];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
 #endif
@@ -533,10 +531,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't checkForUpdates, SDK disabled");
         return;
     }
-    ABDebugLog_internal(@"Checking for updates");
-    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self] ;
-    [client checkForUpdates];
-    [self.pendingRequests addOperation:client];
+    [self.updatesManager checkForUpdates];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
 #endif
