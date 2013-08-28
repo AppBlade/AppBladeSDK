@@ -7,6 +7,7 @@
 //
 
 #import "AppBladeAuthenticationManager.h"
+#import "AppBlade+PrivateMethods.h"
 
 @implementation AppBladeAuthenticationManager
 @synthesize delegate;
@@ -19,5 +20,14 @@
     
     return self;
 }
+
+
+-(void)checkApproval
+{
+    AppBladeWebOperation * client = [[AppBlade sharedManager] generateWebOperation] ;
+    [client checkPermissions];
+    [[AppBlade sharedManager] addPendingRequest:client];
+}
+
 
 @end
