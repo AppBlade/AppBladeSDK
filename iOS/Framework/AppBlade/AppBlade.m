@@ -1155,22 +1155,12 @@ static AppBlade *s_sharedManager = nil;
 -(NSDictionary *)getCustomParams
 {
     NSDictionary *toRet = [NSDictionary dictionary];
-
+#ifndef SKIP_CUSTOM_PARAMS
     if([[AppBlade sharedManager] isAllDisabled]){
         ABDebugLog_internal(@"Can't getCustomParams, SDK disabled");
         return toRet;
     }
-#ifndef SKIP_CUSTOM_PARAMS
-    NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
-        NSDictionary* currentFields = [NSDictionary dictionaryWithContentsOfFile:customFieldsPath];
-        toRet = currentFields;
-    }
-    else
-    {
-        ABDebugLog_internal(@"no file found, reinitializing");
-        [self setCustomParams:toRet];
-    }
+    [[self customParamsManager] getCustomParams];
     ABDebugLog_internal(@"getting %@", toRet);
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
@@ -1183,56 +1173,24 @@ static AppBlade *s_sharedManager = nil;
 {
 #ifndef SKIP_CUSTOM_PARAMS
     if([[AppBlade sharedManager] isAllDisabled]){
-        ABDebugLog_internal(@"Can't setCustomParams, SDK disabled");
+        ABDebugLog_internal(@"Can't %s, SDK disabled", __PRETTY_FUNCTION__);
         return;
     }
-    [self checkAndCreateAppBladeCacheDirectory];
-    NSString* customFieldsPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeCustomFieldsFile];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:customFieldsPath]) {
-        ABDebugLog_internal(@"WARNING: Overwriting all existing user params");
-    }
-    if(newFieldValues){
-        NSError *error = nil;
-        NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:newFieldValues format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-        if(!error){
-            [paramsData writeToFile:customFieldsPath atomically:YES];
-        }
-        else
-        {
-            ABErrorLog(@"Error parsing custom params %@", newFieldValues);
-        }
-    }
-    else
-    {
-        ABDebugLog_internal(@"clearing custom params, removing file");
-        [[NSFileManager defaultManager] removeItemAtPath:customFieldsPath error:nil];
-    }
+    [[self customParamsManager] setCustomParams:newFieldValues];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
     
 }
 
--(void)setCustomParam:(id)newObject withValue:(NSString*)key{
+-(void)setCustomParam:(id)newObject withValue:(NSString*)key
+{
 #ifndef SKIP_CUSTOM_PARAMS
-    NSDictionary* currentFields = [self getCustomParams];
-    if (currentFields == nil) {
-        currentFields = [NSDictionary dictionary];
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't %s, SDK disabled", __PRETTY_FUNCTION__);
+        return;
     }
-    NSMutableDictionary* mutableFields = [currentFields  mutableCopy];
-    if(key && newObject){
-        [mutableFields setObject:newObject forKey:key];
-    }
-    else if(key && !newObject){
-        [mutableFields removeObjectForKey:key];
-    }
-    else
-    {
-        ABErrorLog(@"AppBlade: invalid nil key when setting custom parameters");
-    }
-    ABDebugLog_internal(@"setting to %@", mutableFields);
-    currentFields = (NSDictionary *)mutableFields;
-    [self setCustomParams:currentFields];
+    [[self customParamsManager] setCustomParam:newObject withValue:key];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -1244,24 +1202,11 @@ static AppBlade *s_sharedManager = nil;
 -(void)setCustomParam:(id)object forKey:(NSString*)key
 {
 #ifndef SKIP_CUSTOM_PARAMS
-    NSDictionary* currentFields = [self getCustomParams];
-    if (currentFields == nil) {
-        currentFields = [NSDictionary dictionary];
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't %s, SDK disabled", __PRETTY_FUNCTION__);
+        return;
     }
-    NSMutableDictionary* mutableFields = [currentFields  mutableCopy] ;
-    if(key && object){
-        [mutableFields setObject:object forKey:key];
-    }
-    else if(key && !object){
-        [mutableFields removeObjectForKey:key];
-    }
-    else
-    {
-        ABErrorLog(@"invalid nil key");
-    }
-    ABDebugLog_internal(@"setting to %@", mutableFields);
-    currentFields = (NSDictionary *)mutableFields;
-    [self setCustomParams:currentFields];
+    [[self customParamsManager] setCustomParam:object forKey:key];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -1270,7 +1215,11 @@ static AppBlade *s_sharedManager = nil;
 -(void)clearAllCustomParams
 {
 #ifndef SKIP_CUSTOM_PARAMS
-    [self setCustomParams:nil];
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't %s, SDK disabled", __PRETTY_FUNCTION__);
+        return;
+    }
+    [[self customParamsManager] clearAllCustomParams];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
