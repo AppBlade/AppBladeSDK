@@ -62,7 +62,6 @@
 
 @property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
-@property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
 @property (nonatomic, strong) AppBladeDeviceSecretManager* deviceSecretManager;
 @property (nonatomic, strong) AppBladeTokenRequestManager* tokenRequestManager;
@@ -363,15 +362,10 @@ static AppBlade *s_sharedManager = nil;
 #pragma mark Pending Requests Queue
 
 -(NSOperationQueue *) tokenRequests {
-    if(!_tokenRequests){
-        _tokenRequests = [[NSOperationQueue alloc] init];
-        _tokenRequests.name = @"AppBlade Token Queue";
-        _tokenRequests.maxConcurrentOperationCount = 1;
-    }
-    return _tokenRequests;
+    return [self.tokenRequestManager tokenRequests];
 }
 
-//token requests are never pause or cancelled
+//token requests are never paused or cancelled
 
 -(NSOperationQueue *) pendingRequests {
     if(!_pendingRequests){
@@ -423,21 +417,7 @@ static AppBlade *s_sharedManager = nil;
         return;
     }
     
-
-    //ensure no other requests or confirms are already running.
-    if([self isDeviceSecretBeingConfirmed]) {
-        ABDebugLog_internal(@"Refresh already in queue. Ignoring.");
-        return;
-    }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
-        ABDebugLog_internal(@"Token not current, refresh token request is out of sync. Ignoring.");
-        return;
-    }
-    
-    //HOLD EVERYTHING. bubble the request to the top.
-    [self pauseCurrentPendingRequests];
-    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
-    [client refreshToken:[self appBladeDeviceSecret]];
-    [self.tokenRequests addOperation:client];
+    [self.tokenRequestManager refreshToken:tokenToConfirm];
 }
 
 - (void)confirmToken:(NSString *)tokenToConfirm
@@ -446,37 +426,20 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't confirmToken, SDK disabled");
         return;
     }
-    
-    //ensure no other requests or confirms are already running.
-    if([self isDeviceSecretBeingConfirmed]) {
-        ABDebugLog_internal(@"Confirm (or refresh) already in queue. Ignoring.");
-        return;
-    }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
-        ABDebugLog_internal(@"Token not current, confirm token request is out of sync. Ignoring.");
-        return;
-    }
-    
-    //HOLD EVERYTHING. bubble the request to the top.
-    [self pauseCurrentPendingRequests];
-    
-    AppBladeWebOperation * client = [[AppBladeWebOperation alloc] initWithDelegate:self];
-    [client confirmToken:[self appBladeDeviceSecret]];
-    [self.tokenRequests addOperation:client];
+    [self.tokenRequestManager confirmToken:tokenToConfirm];
 }
 
 
 - (BOOL)isCurrentToken:(NSString *)token {
-    return (nil != token) && [[self appBladeDeviceSecret] isEqualToString:token];
+    return [self.tokenRequestManager isCurrentToken:token];
 }
 
 - (BOOL)tokenConfirmRequestPending {
-    NSInteger confirmTokenRequests = [[self.tokenRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", AppBladeWebClientAPI_ConfirmToken]];
-    return confirmTokenRequests > 0;
+    return [self.tokenRequestManager tokenConfirmRequestPending];
 }
 
 - (BOOL)tokenRefreshRequestPending {
-    NSInteger confirmTokenRequests = [[self.tokenRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", AppBladeWebClientAPI_GenerateToken]];
-    return confirmTokenRequests > 0;
+    return [self.tokenRequestManager tokenRefreshRequestPending];
 }
 
 
