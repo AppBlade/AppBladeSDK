@@ -28,6 +28,9 @@
 
 #import "AppBladeBasicFeatureManager.h"
 
+//Core Managers
+#import "AppBladeDeviceSecretManager.h"
+
 //Feature List (with exclusion conditionals)
 #ifndef SKIP_AUTHENTICATION
     #import "AppBladeAuthenticationManager.h"
@@ -55,6 +58,9 @@
     , FeedbackDialogueDelegate
     #endif
     >
+
+
+@property (nonatomic, strong) AppBladeDeviceSecretManager* deviceSecretManager;
 
 
 #ifndef SKIP_AUTHENTICATION
@@ -86,9 +92,9 @@
 @end
 
 @implementation AppBlade
-@synthesize appBladeDeviceSecret = _appbladeDeviceSecret;
 @synthesize allDisabled = _allDisabled;
 
+@synthesize deviceSecretManager;
 
 #ifndef SKIP_AUTHENTICATION
 @synthesize authenticationManager;
@@ -196,7 +202,9 @@ static AppBlade *s_sharedManager = nil;
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         self.delegate = self;
-        //init the managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls
+        //init the core managers
+        self.deviceSecretManager = [[AppBladeDeviceSecretManager alloc] init];
+        //init the feature managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls
 #ifndef SKIP_AUTHENTICATION
         self.authenticationManager  = [[AppBladeAuthenticationManager alloc] initWithDelegate:self];
 #endif
@@ -1110,21 +1118,14 @@ static AppBlade *s_sharedManager = nil;
 
 #pragma mark - Helper Methods
 #pragma mark Device Secret Methods
+
 -(NSMutableDictionary*) appBladeDeviceSecrets
 {
     if(self.isAllDisabled){
         ABDebugLog_internal(@"Can't get appBladeDeviceSecrets, SDK disabled");
         return [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];;
     }
-
-    NSMutableDictionary* appBlade_deviceSecret_dict = (NSMutableDictionary* )[AppBladeSimpleKeychain load:kAppBladeKeychainDeviceSecretKey];
-    if(nil == appBlade_deviceSecret_dict)
-    {
-        appBlade_deviceSecret_dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];
-        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_deviceSecret_dict];
-        ABDebugLog_internal(@"Device Secrets were nil. Reinitialized.");
-    }
-    return appBlade_deviceSecret_dict;
+    return [self.deviceSecretManager appBladeDeviceSecrets];
 }
 
 
@@ -1135,20 +1136,7 @@ static AppBlade *s_sharedManager = nil;
         return @"";
     }
 
-    //get the last available device secret
-    NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
-    NSString* device_secret_stored = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyNew]; //assume we have the newest in new_secret key
-    NSString* device_secret_stored_old = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyOld];
-    if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
-    {
-        ABDebugLog_internal(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
-        _appbladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
-    }else
-    {
-        _appbladeDeviceSecret = (NSString*)[device_secret_stored copy];
-    }
-    
-    return _appbladeDeviceSecret;
+    return [self.deviceSecretManager appBladeDeviceSecret];
 }
 
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret
@@ -1157,18 +1145,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't get setAppBladeDeviceSecret, SDK disabled");
         return;
     }
-
-        //always store the last two device secrets
-        NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
-        NSString* device_secret_latest_stored = [appBlade_keychain_dict objectForKey:kAppBladeKeychainDeviceSecretKeyNew]; //get the newest key (to our knowledge)
-        if((nil != appBladeDeviceSecret) && ![device_secret_latest_stored isEqualToString:appBladeDeviceSecret]) //if we don't already have the "new" token as the newest token
-        {
-            [appBlade_keychain_dict setObject:[device_secret_latest_stored copy] forKey:kAppBladeKeychainDeviceSecretKeyOld]; //we don't care where the old key goes
-            [appBlade_keychain_dict setObject:[appBladeDeviceSecret copy] forKey:kAppBladeKeychainDeviceSecretKeyNew];
-                //update the newest key
-        }
-        //save the stored keychain
-        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
+    [self.deviceSecretManager setAppBladeDeviceSecret:appBladeDeviceSecret];
 }
 
 
@@ -1178,9 +1155,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't clearAppBladeKeychain, SDK disabled");
         return;
     }
-
-    NSMutableDictionary* appBlade_keychain_dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];
-    [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
+    [self.deviceSecretManager clearAppBladeKeychain];
 }
 
 - (void)clearStoredDeviceSecrets
@@ -1189,33 +1164,18 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't clearStoredDeviceSecrets, SDK disabled");
         return;
     }
-
-    
-    NSMutableDictionary* appBlade_keychain_dict = [self appBladeDeviceSecrets];
-    if(nil != appBlade_keychain_dict)
-    {
-        [appBlade_keychain_dict setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyNew];
-        [appBlade_keychain_dict setValue:@"" forKey:kAppBladeKeychainDeviceSecretKeyOld];
-        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBlade_keychain_dict];
-        ABDebugLog_internal(@"Cleared device secrets.");
-    }
+    [self.deviceSecretManager clearStoredDeviceSecrets];
 }
 
 
 -(BOOL)hasDeviceSecret
 {
-    return [[self appBladeDeviceSecret] length] == 0;
+    return [self.deviceSecretManager hasDeviceSecret];
 }
 
 - (BOOL)isDeviceSecretBeingConfirmed
 {
-    BOOL tokenRequestInProgress = ([[self tokenRequests] operationCount]) != 0;
-    BOOL processIsNotFinished = tokenRequestInProgress; //if we have a process, assume it's not finished, if we have one then of course it's finished
-    if(tokenRequestInProgress) { //the queue has a maximum concurrent process size of one, that's why we can do what comes next
-        AppBladeWebOperation *process = (AppBladeWebOperation *)[[[self tokenRequests] operations] objectAtIndex:0];
-        processIsNotFinished = ![process isFinished];
-    }
-    return tokenRequestInProgress && processIsNotFinished;
+    return [self.deviceSecretManager isDeviceSecretBeingConfirmed];
 }
 
 

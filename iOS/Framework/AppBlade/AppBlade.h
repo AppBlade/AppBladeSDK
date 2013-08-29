@@ -38,8 +38,8 @@
 // AppBlade API project-issued secret.
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
 // AppBlade API project-issued device secret.
-@property (nonatomic, retain) NSString* appBladeDeviceSecret;
--(void)setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
+-(NSString*) appBladeDeviceSecret;
+-(void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 
 // The AppBlade delegate receives messages regarding device authentication and other events.
 // See protocol declaration, above.
