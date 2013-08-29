@@ -69,10 +69,10 @@
 #ifndef SKIP_AUTO_UPDATING
 @property (nonatomic, strong) AppBladeUpdatesManager* updatesManager;
 #endif
-#ifndef SKIP_FEEDBACK
+#ifndef SKIP_CRASH_REPORTING
 @property (nonatomic, strong) CrashReportingManager* crashManager;
 #endif
-#ifndef SKIP_CRASH_REPORTING
+#ifndef SKIP_FEEDBACK
 @property (nonatomic, strong) FeedbackReportingManager* feedbackManager;
 #endif
 #ifndef SKIP_SESSIONS
@@ -102,10 +102,10 @@
 #ifndef SKIP_AUTO_UPDATING
 @synthesize updatesManager;
 #endif
-#ifndef SKIP_FEEDBACK
+#ifndef SKIP_CRASH_REPORTING
 @synthesize crashManager;
 #endif
-#ifndef SKIP_CRASH_REPORTING
+#ifndef SKIP_FEEDBACK
 @synthesize feedbackManager;
 #endif
 #ifndef SKIP_SESSIONS
@@ -1013,7 +1013,7 @@ static AppBlade *s_sharedManager = nil;
         else if(client.api == AppBladeWebClientAPI_ReportCrash)
         {
             ABErrorLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
-            #ifndef SKIP_AUTO_UPDATING
+            #ifndef SKIP_CRASH_REPORTING
                 [self.crashManager crashReportCallbackFailed:client withErrorString:errorString];
             #endif
         }
