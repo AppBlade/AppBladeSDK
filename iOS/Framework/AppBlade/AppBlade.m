@@ -59,6 +59,9 @@
     #endif
     >
 
+@property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
+@property (nonatomic, retain) NSOperationQueue* pendingRequests;
+@property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
 @property (nonatomic, strong) AppBladeDeviceSecretManager* deviceSecretManager;
 
@@ -71,6 +74,7 @@
 #endif
 #ifndef SKIP_CRASH_REPORTING
 @property (nonatomic, strong) CrashReportingManager* crashManager;
+void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 #endif
 #ifndef SKIP_FEEDBACK
 @property (nonatomic, strong) FeedbackReportingManager* feedbackManager;
@@ -82,13 +86,6 @@
 @property (nonatomic, strong) AppBladeCustomParametersManager* customParamsManager;
 #endif
 
-@property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
-@property (nonatomic, retain) NSOperationQueue* pendingRequests;
-@property (nonatomic, retain) NSOperationQueue* tokenRequests;
-
-
-
-    void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @end
 
 @implementation AppBlade
@@ -116,12 +113,14 @@
 #endif
 
 
+#ifndef SKIP_CRASH_REPORTING
 /* A custom post-crash callback */
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 #ifndef SKIP_SESSIONS
     [AppBlade endSession];
 #endif
 }
+#endif
 
 
 /* The encryption info struct and constants are missing from the iPhoneSimulator SDK, but not from the iPhoneOS or
