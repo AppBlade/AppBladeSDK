@@ -7,7 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AppBlade.h"
 
 @interface AppBladeTokenRequestManager : NSObject
+-(NSOperationQueue *) tokenRequests;
+-(NSOperationQueue *) addTokenRequest:(NSOperation *)request;
+
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
+- (BOOL)isCurrentToken:(NSString *)token;
+- (BOOL)tokenConfirmRequestPending;
+- (BOOL)tokenRefreshRequestPending;
 
 @end
