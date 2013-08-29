@@ -27,7 +27,6 @@ NSString *defaultURLScheme           = @"https";
 NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
 //NSString *tokenGenerateURLFormat     = @"%@/api/3/authorize/new";
 //NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these separate for readiblilty and possible editing later
-NSString *authorizeURLFormat         = @"%@/api/3/authorize";
 NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
 NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
@@ -52,7 +51,6 @@ NSString *deviceSecretHeaderField    = @"X-device-secret";
 @end
 
 @implementation AppBladeWebOperation
-
 
 const int kNonceRandomStringLength = 74;
 
@@ -396,32 +394,6 @@ const int kNonceRandomStringLength = 74;
 
 #pragma mark - AppBlade API calls
 
-- (void)checkPermissions
-{
-    [self setApi: AppBladeWebClientAPI_Permissions];
-    BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
-    if(hasFairplay){
-        //we're signed by apple, skip authentication. Go straight to delegate.
-        ABDebugLog_internal(@"Binary signed by Apple, skipping permissions check forever");
-        NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
-        AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegateReference appBladeWebClient:selfReference receivedPermissions:fairplayPermissions];
-        });
-    }
-    else
-    {
-        // Create the request.
-        NSString* urlString = [NSString stringWithFormat:authorizeURLFormat, [self.delegate appBladeHost]];
-        NSURL* projectUrl = [NSURL URLWithString:urlString];
-        NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
-        [apiRequest setHTTPMethod:@"GET"];
-        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
-        [self addSecurityToRequest:apiRequest];
-        //apiRequest is a retained reference to the _request ivar.
-    }
-}
 
 
 - (void)checkForUpdates

@@ -34,7 +34,7 @@ typedef enum {
 
 extern NSString *defaultURLScheme;
 extern NSString *defaultAppBladeHostURL;
-extern NSString *approvalURLFormat;
+extern NSString *authorizeURLFormat;
 extern NSString *reportCrashURLFormat;
 extern NSString *reportFeedbackURLFormat;
 extern NSString *sessionURLFormat;
@@ -97,7 +97,6 @@ extern NSString *deviceSecretHeaderField;
 
 // AppBlade API.
 
-- (void)checkPermissions;
 - (void)checkForUpdates;
 - (void)postSessions:(NSArray *)sessions;
 @end

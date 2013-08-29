@@ -32,3 +32,8 @@
 
 @end
 
+
+@interface AppBladeWebOperation (Authorization)
+- (void)checkPermissions;
+
+@end
