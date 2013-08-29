@@ -30,6 +30,7 @@
 
 //Core Managers
 #import "AppBladeDeviceSecretManager.h"
+#import "AppBladeTokenRequestManager.h"
 
 //Feature List (with exclusion conditionals)
 #ifndef SKIP_AUTHENTICATION
@@ -64,6 +65,7 @@
 @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 
 @property (nonatomic, strong) AppBladeDeviceSecretManager* deviceSecretManager;
+@property (nonatomic, strong) AppBladeTokenRequestManager* tokenRequestManager;
 
 
 #ifndef SKIP_AUTHENTICATION
@@ -92,6 +94,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @synthesize allDisabled = _allDisabled;
 
 @synthesize deviceSecretManager;
+@synthesize tokenRequestManager;
 
 #ifndef SKIP_AUTHENTICATION
 @synthesize authenticationManager;
@@ -203,6 +206,7 @@ static AppBlade *s_sharedManager = nil;
         self.delegate = self;
         //init the core managers
         self.deviceSecretManager = [[AppBladeDeviceSecretManager alloc] init];
+        self.tokenRequestManager = [[AppBladeTokenRequestManager alloc] init];
         //init the feature managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls
 #ifndef SKIP_AUTHENTICATION
         self.authenticationManager  = [[AppBladeAuthenticationManager alloc] initWithDelegate:self];

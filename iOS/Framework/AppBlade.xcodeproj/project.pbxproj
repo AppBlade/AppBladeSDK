@@ -121,6 +121,15 @@
 		318C22B517CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */; };
 		318C22B617CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */; };
 		318C22B717CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */; };
+		318C22BA17CFC0E50007FD5E /* AppBladeTokenRequestManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 318C22B817CFC0E50007FD5E /* AppBladeTokenRequestManager.h */; };
+		318C22BB17CFC0E50007FD5E /* AppBladeTokenRequestManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 318C22B817CFC0E50007FD5E /* AppBladeTokenRequestManager.h */; };
+		318C22BC17CFC0E50007FD5E /* AppBladeTokenRequestManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 318C22B817CFC0E50007FD5E /* AppBladeTokenRequestManager.h */; };
+		318C22BD17CFC0E50007FD5E /* AppBladeTokenRequestManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 318C22B817CFC0E50007FD5E /* AppBladeTokenRequestManager.h */; };
+		318C22BE17CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* AppBladeTokenRequestManager.m */; };
+		318C22BF17CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* AppBladeTokenRequestManager.m */; };
+		318C22C017CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* AppBladeTokenRequestManager.m */; };
+		318C22C117CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* AppBladeTokenRequestManager.m */; };
+		318C22C217CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* AppBladeTokenRequestManager.m */; };
 		31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881B17A9847000EA75E8 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
@@ -274,6 +283,8 @@
 		31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		318C22AD17CFB1180007FD5E /* AppBladeDeviceSecretManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeDeviceSecretManager.h; sourceTree = "<group>"; };
 		318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeDeviceSecretManager.m; sourceTree = "<group>"; };
+		318C22B817CFC0E50007FD5E /* AppBladeTokenRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeTokenRequestManager.h; sourceTree = "<group>"; };
+		318C22B917CFC0E50007FD5E /* AppBladeTokenRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeTokenRequestManager.m; sourceTree = "<group>"; };
 		31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestAppBladeKeys.plist; sourceTree = "<group>"; };
 		31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBlade+PrivateMethods.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -663,6 +674,8 @@
 			children = (
 				318C22AD17CFB1180007FD5E /* AppBladeDeviceSecretManager.h */,
 				318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */,
+				318C22B817CFC0E50007FD5E /* AppBladeTokenRequestManager.h */,
+				318C22B917CFC0E50007FD5E /* AppBladeTokenRequestManager.m */,
 			);
 			name = "Core Managers";
 			sourceTree = "<group>";
@@ -680,6 +693,7 @@
 				311A21551794C79F007BF879 /* FeedbackBackgroundView.h in Headers */,
 				31562C4E17A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
 				318C22B017CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */,
+				318C22BB17CFC0E50007FD5E /* AppBladeTokenRequestManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,6 +715,7 @@
 				31562C4D17A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
 				31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 				318C22AF17CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */,
+				318C22BA17CFC0E50007FD5E /* AppBladeTokenRequestManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -712,6 +727,7 @@
 				318189C9179E0343006EE07A /* AppBladeSharedConstants.h in Headers */,
 				31562C5017A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
 				318C22B217CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */,
+				318C22BD17CFC0E50007FD5E /* AppBladeTokenRequestManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -722,6 +738,7 @@
 				31562C4F17A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
 				31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 				318C22B117CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */,
+				318C22BC17CFC0E50007FD5E /* AppBladeTokenRequestManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -931,6 +948,7 @@
 				311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */,
 				311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */,
 				318C22B417CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
+				318C22BF17CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -978,6 +996,7 @@
 				311A22B71795D26E007BF879 /* AppBladeAuthenticationManager.m in Sources */,
 				311A22BE1795D313007BF879 /* AppBladeCustomParametersManager.m in Sources */,
 				318C22B317CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
+				318C22BE17CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -989,6 +1008,7 @@
 				3134653117A86D9A009DDC86 /* AppBladeSimpleKeychainTests.m in Sources */,
 				3134653417A86DC4009DDC86 /* AppBladeWebOperationTests.m in Sources */,
 				318C22B717CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
+				318C22C217CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1007,6 +1027,7 @@
 				318189D2179E039D006EE07A /* AppBladeWebOperation.m in Sources */,
 				318189D3179E039D006EE07A /* AppBladeSimpleKeychain.m in Sources */,
 				318C22B617CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
+				318C22C117CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1026,6 +1047,7 @@
 				3187321B179DE8C200E0D187 /* AppBladeAuthenticationManager.m in Sources */,
 				3187321C179DE8C200E0D187 /* AppBladeCustomParametersManager.m in Sources */,
 				318C22B517CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
+				318C22C017CFC0E50007FD5E /* AppBladeTokenRequestManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
