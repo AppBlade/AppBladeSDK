@@ -10,6 +10,9 @@
 #import "AppBlade+PrivateMethods.h"
 #import "AppBladeLogging.h"
 
+NSString *tokenGenerateURLFormat     = @"%@/api/3/authorize/new";
+NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these separate for readiblilty and possible editing later
+
 @interface AppBladeTokenRequestManager()
     @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 @end
@@ -90,6 +93,66 @@
     return confirmTokenRequests > 0;
 }
 
+
+
+@end
+
+@implementation AppBladeWebOperation (AppBladeTokenRequestManager)
+
+
+- (void)refreshToken:(NSString *)tokenToConfirm
+{
+    [self setApi:  AppBladeWebClientAPI_GenerateToken];
+    BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
+    if(hasFairplay){
+        //we're signed by apple, skip tokens. Go straight to delegate.
+        ABDebugLog_internal(@"Binary signed by Apple, skipping token generation");
+    }
+    else
+    {
+        // Create the request.
+        NSString* urlString = [NSString stringWithFormat:tokenGenerateURLFormat, [self.delegate appBladeHost]];
+        NSURL* projectUrl = [NSURL URLWithString:urlString];
+        NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
+        [apiRequest setHTTPMethod:@"GET"];
+        [self addSecurityToRequest:apiRequest];
+        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
+    }
+}
+
+- (void)confirmToken:(NSString *)tokenToConfirm
+{
+    ABDebugLog_internal(@"confirming token (client)");
+    [self setApi: AppBladeWebClientAPI_ConfirmToken];
+    BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
+    if(hasFairplay){
+        //we're signed by apple, skip authentication. Go straight to delegate.
+        ABDebugLog_internal(@"Binary signed by Apple, skipping token confirmation");
+        //        [self.delegate appBladeWebClient:self receivedPermissions: ];
+    }
+    else
+    {
+        //NSString *storedSecret = [[AppBlade sharedManager] appBladeDeviceSecret];
+        //ABDebugLog_internal(@"storedSecret %@", storedSecret);
+        ABDebugLog_internal(@"tokenToConfirm %@", tokenToConfirm);
+        
+        
+        if(nil != tokenToConfirm && ![tokenToConfirm isEqualToString:@""]){
+            // Create the request.
+            NSString* urlString = [NSString stringWithFormat:tokenConfirmURLFormat, [self.delegate appBladeHost]];
+            NSURL* projectUrl = [NSURL URLWithString:urlString];
+            NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
+            [apiRequest setHTTPMethod:@"POST"];
+            [self addSecurityToRequest:apiRequest];
+            [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
+            //apiRequest is a retained reference to the _request ivar.
+        }
+        else
+        {
+            ABDebugLog_internal(@"We have no stored secret");
+        }
+    }
+}
 
 
 @end

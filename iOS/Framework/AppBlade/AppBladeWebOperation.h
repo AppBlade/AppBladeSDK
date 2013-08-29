@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+
 @class AppBladeWebOperation;
 
 
@@ -95,8 +96,6 @@ extern NSString *deviceSecretHeaderField;
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request;
 
 // AppBlade API.
-- (void)refreshToken:(NSString *)tokenToConfirm;
-- (void)confirmToken:(NSString *)tokenToConfirm;
 
 - (void)checkPermissions;
 - (void)checkForUpdates;

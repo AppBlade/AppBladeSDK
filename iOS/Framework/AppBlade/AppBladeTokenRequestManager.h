@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "AppBlade.h"
+#import "AppBladeWebOperation.h"
+#import "AppBladeLogging.h"
 
 @interface AppBladeTokenRequestManager : NSObject
 -(NSOperationQueue *) tokenRequests;
@@ -18,5 +20,11 @@
 - (BOOL)isCurrentToken:(NSString *)token;
 - (BOOL)tokenConfirmRequestPending;
 - (BOOL)tokenRefreshRequestPending;
+
+@end
+
+@interface AppBladeWebOperation (AppBladeTokenRequestManager)
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
 
 @end
