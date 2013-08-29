@@ -22,6 +22,7 @@
 - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
 - (BOOL)isCurrentToken:(NSString *)token;
 
+- (void) pauseCurrentPendingRequests;
 - (void) cancelAllPendingRequests;
 - (void) cancelPendingRequestsByToken:(NSString *)token;
 
