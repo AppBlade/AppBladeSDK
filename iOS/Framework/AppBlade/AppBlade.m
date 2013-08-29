@@ -1012,43 +1012,16 @@ static AppBlade *s_sharedManager = nil;
         }
         
         if (client.api == AppBladeWebClientAPI_Permissions)  {
-            // if the connection failed, see if the application is still within the previous TTL window.
-            // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
-            // prevent the app from running until the request completes successfully. This will prevent
-            // users from unlocking an app by simply changing their clock.
-            if ([self withinStoredTTL]) {
-                if(canSignalDelegate) {
-                    [self.delegate appBlade:self applicationApproved:YES error:nil];
-                }
-            }
-            else {
-                [self closeTTLWindow];
-                if(canSignalDelegate) {
-                    NSDictionary* errorDictionary = nil;
-                    NSError* error = nil;
-                    if(errorString){
-                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                           NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                           NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
-                        
-                    }
-                    else
-                    {
-                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
-                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
-                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
-                    }
-                    [self.delegate appBlade:self applicationApproved:NO error:error];
-                }
-                
-            }
+            ABErrorLog(@"ERROR receiving permissions %s", errorString);
+            #ifndef SKIP_AUTHENTICATION
+            [self.authenticationManager permissionCallbackFailed:client withErrorString:errorString];
+            #endif
         }
         else if (client.api == AppBladeWebClientAPI_Feedback) {
+            ABErrorLog(@"ERROR sending feedback %s", errorString);
         }
         else if(client.api == AppBladeWebClientAPI_Sessions){
-            ABErrorLog(@"ERROR sending sessions");
+            ABErrorLog(@"ERROR sending sessions %s", errorString);
         }
         else if(client.api == AppBladeWebClientAPI_ReportCrash)
         {
@@ -1114,31 +1087,9 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions
 {
-    NSString *errorString = [permissions objectForKey:@"error"];
-    BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
-    
-    if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
-        [self closeTTLWindow];
-        NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                         NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-        NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
-        
-        if (signalApproval) {
-            [self.delegate appBlade:self applicationApproved:NO error:error];
-        }
-    }
-    else {
-        NSNumber *ttl = [permissions objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
-        if (ttl) {
-            [self updateTTL:ttl];
-        }
-        
-        // tell the client the application was approved.
-        if (signalApproval) {
-            [self.delegate appBlade:self applicationApproved:YES error:nil];
-        }
-    }
-    
+#ifndef SKIP_AUTHENTICATION
+    [self.authenticationManager handleWebClient:client receivedPermissions:permissions];
+#endif
 }
 
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData
@@ -1196,47 +1147,6 @@ static AppBlade *s_sharedManager = nil;
 
 
 #pragma mark - Helper Methods
-
-#pragma mark TTL (Time To Live) Methods
-
-- (void)closeTTLWindow
-{
-    [AppBladeSimpleKeychain delete:kAppBladeKeychainTtlKey];
-}
-
-- (void)updateTTL:(NSNumber*)ttl
-{
-    NSDate* ttlDate = [NSDate date];
-    NSDictionary* appBlade = [NSDictionary dictionaryWithObjectsAndKeys:ttlDate, @"ttlDate",ttl, @"ttlInterval", nil];
-    [AppBladeSimpleKeychain save:kAppBladeKeychainTtlKey data:appBlade];
-}
-
-// determine if we are within the range of the stored TTL for this application
-- (BOOL)withinStoredTTL
-{
-    NSDictionary* appBlade_ttl = [AppBladeSimpleKeychain load:kAppBladeKeychainTtlKey];
-    NSDate* ttlDate = [appBlade_ttl objectForKey:@"ttlDate"];
-    NSNumber* ttlInterval = [appBlade_ttl objectForKey:@"ttlInterval"];
-    
-    // if we don't have either value, we're definitely not within a stored TTL
-    if(nil == ttlInterval || nil == ttlDate)
-        return NO;
-    
-    // if the current date is earlier than our last ttl date, the user has turned their clock back. Invalidate.
-    NSDate* currentDate = [NSDate date];
-    if ([currentDate compare:ttlDate] == NSOrderedAscending) {
-        return NO;
-    }
-    
-    // if the current date is later than the ttl date adjusted with the TTL, the window has expired
-    NSDate* adjustedTTLDate = [ttlDate dateByAddingTimeInterval:[ttlInterval integerValue]];
-    if ([currentDate compare:adjustedTTLDate] == NSOrderedDescending) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 #pragma mark Device Secret Methods
 -(NSMutableDictionary*) appBladeDeviceSecrets
 {
