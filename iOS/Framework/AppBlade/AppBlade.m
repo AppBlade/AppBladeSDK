@@ -1118,6 +1118,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
 #ifndef SKIP_FEEDBACK
+    [self.feedbackManager handleWebClientSentFeedback:client withSuccess:success];
 #endif
 }
 

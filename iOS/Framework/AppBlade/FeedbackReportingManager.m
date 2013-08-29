@@ -80,6 +80,16 @@
     }    
 }
 
+- (void)handleWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
+{
+    if (success) {
+        ABDebugLog_internal(@"Feedback succeeded!")
+    }else{
+        ABDebugLog_internal(@"Feedback failed!")
+    }
+}
+
+
 
 
 #pragma mark - Web Request Generators

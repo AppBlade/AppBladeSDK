@@ -23,7 +23,7 @@
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options;
 - (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options;
-
+- (void)handleWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
 
 #pragma mark - Web Request Generators
 - (AppBladeWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict;
