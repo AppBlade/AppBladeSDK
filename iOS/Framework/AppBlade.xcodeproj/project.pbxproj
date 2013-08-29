@@ -112,6 +112,15 @@
 		3187321E179DE8C200E0D187 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FC91794A146006DF03A /* UIKit.framework */; };
 		3187321F179DE8C200E0D187 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3130640D1794A3D8006DF03A /* Security.framework */; };
 		31873220179DE8C200E0D187 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31305FCB1794A146006DF03A /* Foundation.framework */; };
+		318C22AF17CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 318C22AD17CFB1180007FD5E /* AppBladeDeviceSecretManager.h */; };
+		318C22B017CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 318C22AD17CFB1180007FD5E /* AppBladeDeviceSecretManager.h */; };
+		318C22B117CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 318C22AD17CFB1180007FD5E /* AppBladeDeviceSecretManager.h */; };
+		318C22B217CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 318C22AD17CFB1180007FD5E /* AppBladeDeviceSecretManager.h */; };
+		318C22B317CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */; };
+		318C22B417CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */; };
+		318C22B517CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */; };
+		318C22B617CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */; };
+		318C22B717CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */; };
 		31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881B17A9847000EA75E8 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
@@ -263,6 +272,8 @@
 		31562C4B17A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBladeWebOperation+PrivateMethods.h"; sourceTree = "<group>"; };
 		318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrashUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		318C22AD17CFB1180007FD5E /* AppBladeDeviceSecretManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeDeviceSecretManager.h; sourceTree = "<group>"; };
+		318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeDeviceSecretManager.m; sourceTree = "<group>"; };
 		31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestAppBladeKeys.plist; sourceTree = "<group>"; };
 		31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBlade+PrivateMethods.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -463,12 +474,13 @@
 		313060811794A2A3006DF03A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				313060821794A2A3006DF03A /* AppBlade-Prefix.pch */,
+				311A22C01796072C007BF879 /* AppBladeSharedConstants.h */,
+				313060A21794A356006DF03A /* AppBladeLogging.h */,
+				318C22AC17CFB0E70007FD5E /* Core Managers */,
 				311A22AA1795D12F007BF879 /* AppBladeWebOperation */,
 				311A22A91795D121007BF879 /* AppBladeSimpleKeychain */,
 				3130640C1794A380006DF03A /* Hashing */,
-				313060A21794A356006DF03A /* AppBladeLogging.h */,
-				311A22C01796072C007BF879 /* AppBladeSharedConstants.h */,
+				313060821794A2A3006DF03A /* AppBlade-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -646,6 +658,15 @@
 			name = "Crash Reporting Tests";
 			sourceTree = "<group>";
 		};
+		318C22AC17CFB0E70007FD5E /* Core Managers */ = {
+			isa = PBXGroup;
+			children = (
+				318C22AD17CFB1180007FD5E /* AppBladeDeviceSecretManager.h */,
+				318C22AE17CFB1180007FD5E /* AppBladeDeviceSecretManager.m */,
+			);
+			name = "Core Managers";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -658,6 +679,7 @@
 				311A21541794C79F007BF879 /* FileMD5Hash.h in Headers */,
 				311A21551794C79F007BF879 /* FeedbackBackgroundView.h in Headers */,
 				31562C4E17A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
+				318C22B017CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -678,6 +700,7 @@
 				311A22CA1796DE3B007BF879 /* AppBladeBasicFeatureManager.h in Headers */,
 				31562C4D17A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
 				31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
+				318C22AF17CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,6 +711,7 @@
 				318189C8179E0337006EE07A /* AppBlade.h in Headers */,
 				318189C9179E0343006EE07A /* AppBladeSharedConstants.h in Headers */,
 				31562C5017A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
+				318C22B217CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -697,6 +721,7 @@
 			files = (
 				31562C4F17A95E7900090C81 /* AppBladeWebOperation+PrivateMethods.h in Headers */,
 				31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
+				318C22B117CFB1180007FD5E /* AppBladeDeviceSecretManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -905,6 +930,7 @@
 				311A215C1794C79F007BF879 /* FeedbackBackgroundView.m in Sources */,
 				311A215D1794C79F007BF879 /* FeedbackDialogue.m in Sources */,
 				311A215E1794C79F007BF879 /* FileMD5Hash.c in Sources */,
+				318C22B417CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -951,6 +977,7 @@
 				311A22B31795D259007BF879 /* AppBladeUpdatesManager.m in Sources */,
 				311A22B71795D26E007BF879 /* AppBladeAuthenticationManager.m in Sources */,
 				311A22BE1795D313007BF879 /* AppBladeCustomParametersManager.m in Sources */,
+				318C22B317CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -961,6 +988,7 @@
 				3134652017A865C7009DDC86 /* AppBladeTests.m in Sources */,
 				3134653117A86D9A009DDC86 /* AppBladeSimpleKeychainTests.m in Sources */,
 				3134653417A86DC4009DDC86 /* AppBladeWebOperationTests.m in Sources */,
+				318C22B717CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -978,6 +1006,7 @@
 				318189D1179E039D006EE07A /* AppBladeCustomParametersManager.m in Sources */,
 				318189D2179E039D006EE07A /* AppBladeWebOperation.m in Sources */,
 				318189D3179E039D006EE07A /* AppBladeSimpleKeychain.m in Sources */,
+				318C22B617CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -996,6 +1025,7 @@
 				3187321A179DE8C200E0D187 /* AppBladeUpdatesManager.m in Sources */,
 				3187321B179DE8C200E0D187 /* AppBladeAuthenticationManager.m in Sources */,
 				3187321C179DE8C200E0D187 /* AppBladeCustomParametersManager.m in Sources */,
+				318C22B517CFB1180007FD5E /* AppBladeDeviceSecretManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
