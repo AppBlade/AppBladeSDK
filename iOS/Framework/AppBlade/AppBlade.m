@@ -259,30 +259,6 @@ static AppBlade *s_sharedManager = nil;
     [[AppBlade sharedManager] setDisabled:YES];
 }
 
-
-#pragma mark AppBlade cache methods 
-+ (NSString*)cachesDirectoryPath
-{
-    NSString* cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
-}
-
-+ (void)clearCacheDirectory
-{
-    NSFileManager *fm = [NSFileManager defaultManager];
-    NSString *directory = [AppBlade cachesDirectoryPath];
-    NSError *error = nil;
-    for (NSString *file in [fm contentsOfDirectoryAtPath:directory error:&error]) {
-        BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
-        if (!success || error) {
-            // it failed.
-            ABErrorLog(@"AppBlade failed to remove the caches directory after receiving invalid credentials");
-        }
-    }
-    [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory]; //reinitialize the folder
-}
-
-
 #pragma mark SDK setup
 
 - (void)registerWithAppBladePlist
@@ -1243,7 +1219,28 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-#pragma mark File I/O
+
+#pragma mark AppBlade cache methods
++ (NSString*)cachesDirectoryPath
+{
+    NSString* cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
+}
+
++ (void)clearCacheDirectory
+{
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *directory = [AppBlade cachesDirectoryPath];
+    NSError *error = nil;
+    for (NSString *file in [fm contentsOfDirectoryAtPath:directory error:&error]) {
+        BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@%@", directory, file] error:&error];
+        if (!success || error) {
+            // it failed.
+            ABErrorLog(@"AppBlade failed to remove the caches directory after receiving invalid credentials");
+        }
+    }
+    [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory]; //reinitialize the folder
+}
 
 - (void)checkAndCreateAppBladeCacheDirectory
 {
@@ -1259,6 +1256,8 @@ static AppBlade *s_sharedManager = nil;
         }
     }
 }
+
+#pragma mark File I/O
 
 - (NSObject*)readFile:(NSString *)filePath
 {
