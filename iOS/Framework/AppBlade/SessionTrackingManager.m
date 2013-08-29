@@ -62,4 +62,31 @@
 }
 
 
+- (void)handleWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
+{
+    if(success){
+        //delete existing sessions, as we have reported them
+        NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+            NSError *deleteError = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
+            
+            if(deleteError){
+                ABErrorLog(@"Error deleting Session log: %@", deleteError.debugDescription);
+            }
+        }
+    }
+    else
+    {
+        ABErrorLog(@"Error sending Session log");
+    }
+}
+
+
+- (void)sessionTrackingCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString
+{
+    ABErrorLog(@"Failure sending Sessions");
+}
+
+
 @end

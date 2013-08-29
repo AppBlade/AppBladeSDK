@@ -17,7 +17,8 @@
 - (void)logSessionEnd;
 - (void)logSessionStart;
 
-
+- (void)handleWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
+- (void)sessionTrackingCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
 @end
 
 //Our additional requirements

@@ -1022,6 +1022,9 @@ static AppBlade *s_sharedManager = nil;
         }
         else if(client.api == AppBladeWebClientAPI_Sessions){
             ABErrorLog(@"ERROR sending sessions %s", errorString);
+            #ifndef SKIP_SESSIONS
+            [self.sessionTrackingManager sessionTrackingCallbackFailed:client withErrorString:errorString];
+            #endif
         }
         else if(client.api == AppBladeWebClientAPI_ReportCrash)
         {
@@ -1118,22 +1121,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
 #ifndef SKIP_SESSIONS
-    if(success){
-        //delete existing sessions, as we have reported them
-        NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-            NSError *deleteError = nil;
-            [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
-            
-            if(deleteError){
-                ABErrorLog(@"Error deleting Session log: %@", deleteError.debugDescription);
-            }
-        }
-    }
-    else
-    {
-        ABErrorLog(@"Error sending Session log");
-    }
+    [self.sessionTrackingManager handleWebClientSentSessions:client withSuccess:success];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
