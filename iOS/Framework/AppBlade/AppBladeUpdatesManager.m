@@ -32,4 +32,25 @@
 }
 
 
+-(void)handleWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary *)updateData
+{
+    // determine if there is an update available
+    NSDictionary* update = [updateData objectForKey:@"update"];
+    if(update)
+    {
+        NSString* updateMessage = [update objectForKey:@"message"];
+        NSString* updateURL = [update objectForKey:@"url"];
+        
+        if ([[[AppBlade sharedManager] delegate] respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
+            [[[AppBlade sharedManager] delegate] appBlade:[AppBlade sharedManager] updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
+        }
+    }
+}
+
+- (void)updateCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString
+{
+
+}
+
+
 @end

@@ -9,13 +9,15 @@
 #import <Foundation/Foundation.h>
 
 #import "AppBladeBasicFeatureManager.h"
+#import "AppBlade+PrivateMethods.h"
 
 @interface AppBladeUpdatesManager : NSObject<AppBladeBasicFeatureManager>
 @property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
 @property (nonatomic, retain) NSURL* upgradeLink;
 
 - (void)checkForUpdates;
-
+- (void)handleWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData;
+- (void)updateCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
 @end
 
 

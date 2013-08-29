@@ -1030,6 +1030,9 @@ static AppBlade *s_sharedManager = nil;
         else if(client.api == AppBladeWebClientAPI_UpdateCheck)
         {
             ABErrorLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
+        #ifndef SKIP_AUTO_UPDATING
+            [self.updatesManager updateCallbackFailed:client withErrorString:errorString];
+        #endif
         }
         else
         {
@@ -1094,18 +1097,9 @@ static AppBlade *s_sharedManager = nil;
 
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData
 {
-    // determine if there is an update available
-    NSDictionary* update = [updateData objectForKey:@"update"];
-    if(update)
-    {
-        NSString* updateMessage = [update objectForKey:@"message"];
-        NSString* updateURL = [update objectForKey:@"url"];
-        
-        if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
-            [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
-        }
-    }
-    
+#ifndef SKIP_AUTO_UPDATING
+    [self.updatesManager handleWebClient:client receivedUpdate:updateData];
+#endif
 }
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client
