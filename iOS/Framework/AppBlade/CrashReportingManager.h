@@ -16,7 +16,8 @@
 #pragma mark - Web Request Generators
 - (AppBladeWebOperation*) generateCrashReportFromDictionary:(NSDictionary *)crashDictionary withParams:(NSDictionary *)paramsDict;
 
-- (void) handleWebClientCrashReported:(AppBladeWebOperation *)client;
+- (void)handleWebClientCrashReported:(AppBladeWebOperation *)client;
+- (void)crashReportCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
 
 #pragma mark Stored Web Request Handling
 

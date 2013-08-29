@@ -1029,6 +1029,9 @@ static AppBlade *s_sharedManager = nil;
         else if(client.api == AppBladeWebClientAPI_ReportCrash)
         {
             ABErrorLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
+            #ifndef SKIP_AUTO_UPDATING
+                [self.crashManager crashReportCallbackFailed:client withErrorString:errorString];
+            #endif
         }
         else if(client.api == AppBladeWebClientAPI_UpdateCheck)
         {

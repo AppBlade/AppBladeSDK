@@ -124,7 +124,12 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
     }
 }
 
-
+- (void)crashReportCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString
+{
+    if(errorString){
+        ABErrorLog(@"ERROR sending crash %@", errorString);
+    }
+}
 
 #pragma mark Stored Crash Handling
 
