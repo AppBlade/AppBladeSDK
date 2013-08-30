@@ -83,6 +83,11 @@
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
         ABDebugLog_internal(@"Update call %@", urlString);
     }
+    
+    __block AppBladeWebOperation* blocksafeSelf = self;
+    [self setSuccessBlock:^(id data, NSError* error){
+        [[AppBlade sharedManager] appBladeWebClient:blocksafeSelf receivedUpdate:data];
+    }];
 }
 
 @end
