@@ -350,6 +350,10 @@ const int kNonceRandomStringLength = 74;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClient:selfReference receivedUpdate:json];
             });
+
+            if(self.successBlock){
+                self.successBlock(selfReference, error);
+            }
         }
         else
         {
