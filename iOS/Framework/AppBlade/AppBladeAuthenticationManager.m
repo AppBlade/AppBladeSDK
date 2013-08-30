@@ -173,5 +173,22 @@
     }
 }
 
+@end
+
+
+
+@implementation AppBlade (Authorization)
+@dynamic authenticationManager; //dynamic so the compiler won't create an overriding implementation
+
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions
+{
+    [self.authenticationManager handleWebClient:client receivedPermissions:permissions];
+}
+
+- (void)appBladeWebClient:(AppBladeWebOperation *)client failedPermissions:(NSString *)errorString
+{
+    [self.authenticationManager permissionCallbackFailed:client withErrorString:errorString];
+}
 
 @end
+
