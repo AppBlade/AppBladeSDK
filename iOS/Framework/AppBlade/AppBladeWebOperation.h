@@ -14,8 +14,8 @@
 
 
 typedef void (^AppBladeRequestPrepareBlock)(id preparationData);
-typedef void (^AppBladeRequestCompletionBlock)(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *error);
-
+typedef void (^AppBladeRequestCompletionBlock)(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError);
+//AppBladeRequestCompletionBlock is our main workhorse, most of the logic is actually in manager handle* calls. 
 typedef void (^AppBladeRequestSuccessBlock)(id data, NSError* error); //we can return an error and still be successful
 typedef void (^AppBladeRequestFailureBlock)(id data, NSError* error);
 
@@ -50,14 +50,11 @@ extern NSString *deviceSecretHeaderField;
 
 - (BOOL)containsOperationInPendingRequests:(AppBladeWebOperation *)webOperation;
 
-- (void)handleWebOperationDidFinishLoading:(AppBladeWebOperation *)webOperation withCallback:(SEL)callbackSelector;
-
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
 //Token
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response;
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;
-///Authenticate
 ///Update
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData;
 ///Crash Report

@@ -277,8 +277,11 @@ const int kNonceRandomStringLength = 74;
         return;
     }    
     
-    if(self.finishedLoadingCallback){
-        [[AppBlade sharedManager] performSelector:self.finishedLoadingCallback withObject:self.receivedData];
+    if(self.requestCompletionBlock){
+        AppBladeWebOperation *selfReference = self;
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+              self.requestCompletionBlock(selfReference.request, selfReference.sentDeviceSecret, selfReference.responseHeaders, selfReference.receivedData, nil);
+        });
     }
     
     if (self.api == AppBladeWebClientAPI_GenerateToken) {
@@ -302,29 +305,6 @@ const int kNonceRandomStringLength = 74;
         });
     }
     else if(self.api == AppBladeWebClientAPI_Permissions) {
-        NSError *error = nil;
-        NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
-        //BOOL showUpdatePrompt = [self.request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
-        
-        
-        if (plist && error == NULL) {
-            AppBladeWebOperation *selfReference = self;
-            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [delegateReference appBladeWebClient:selfReference receivedPermissions:plist];
-            });
-
-        }
-        else
-        {
-            ABErrorLog(@"Error parsing permisions json: %@", [error debugDescription]);
-            AppBladeWebOperation *selfReference = self;
-            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid response was received from AppBlade; please contact support"];
-            });
-
-        }
         
     }
     else if (self.api == AppBladeWebClientAPI_ReportCrash) {
