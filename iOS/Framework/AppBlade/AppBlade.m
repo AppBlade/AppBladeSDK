@@ -948,7 +948,7 @@ static AppBlade *s_sharedManager = nil;
         if (client.api == AppBladeWebClientAPI_Permissions)  {
             ABErrorLog(@"ERROR receiving permissions %s", errorString);
             #ifndef SKIP_AUTHENTICATION
-            [self.authenticationManager permissionCallbackFailed:client withErrorString:errorString];
+                [self.authenticationManager permissionCallbackFailed:client withErrorString:errorString];
             #endif
         }
         else if (client.api == AppBladeWebClientAPI_Feedback) {
@@ -957,7 +957,7 @@ static AppBlade *s_sharedManager = nil;
         else if(client.api == AppBladeWebClientAPI_Sessions){
             ABErrorLog(@"ERROR sending sessions %s", errorString);
             #ifndef SKIP_SESSIONS
-            [self.sessionTrackingManager sessionTrackingCallbackFailed:client withErrorString:errorString];
+                [self.sessionTrackingManager sessionTrackingCallbackFailed:client withErrorString:errorString];
             #endif
         }
         else if(client.api == AppBladeWebClientAPI_ReportCrash)
@@ -970,9 +970,9 @@ static AppBlade *s_sharedManager = nil;
         else if(client.api == AppBladeWebClientAPI_UpdateCheck)
         {
             ABErrorLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
-        #ifndef SKIP_AUTO_UPDATING
-            [self.updatesManager updateCallbackFailed:client withErrorString:errorString];
-        #endif
+            #ifndef SKIP_AUTO_UPDATING
+                [self.updatesManager updateCallbackFailed:client withErrorString:errorString];
+            #endif
         }
         else
         {
@@ -1028,13 +1028,6 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData
-{
-#ifndef SKIP_AUTO_UPDATING
-    [self.updatesManager handleWebClient:client receivedUpdate:updateData];
-#endif
-}
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client
 {
