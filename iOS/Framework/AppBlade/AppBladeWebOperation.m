@@ -359,6 +359,10 @@ const int kNonceRandomStringLength = 74;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
             });
+            
+            if(self.failBlock != nil){
+                self.failBlock(selfReference, error);
+            }
         }
     }
     else
