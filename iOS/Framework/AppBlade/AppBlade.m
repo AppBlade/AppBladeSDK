@@ -817,7 +817,7 @@ static AppBlade *s_sharedManager = nil;
 #pragma mark - AppBladeDelegate
 - (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
 {
-    if(!approved) {
+    if(!approved && ![self isAppStoreBuild]) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Permission Denied"
                                                         message:[error localizedDescription]
                                                        delegate:self
