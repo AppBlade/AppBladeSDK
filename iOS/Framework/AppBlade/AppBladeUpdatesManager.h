@@ -20,7 +20,7 @@
 - (void)updateCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
 @end
 
-@interface AppBladeWebOperation (SessionTracking)
+@interface AppBladeWebOperation (Updates)
     -(void) checkForUpdates;
 @end
 
