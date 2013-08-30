@@ -95,8 +95,4 @@ extern NSString *deviceSecretHeaderField;
 - (NSString *)genRandNumberLength:(int)len;
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request;
 
-// AppBlade API.
-
-- (void)checkForUpdates;
-- (void)postSessions:(NSArray *)sessions;
 @end
