@@ -38,6 +38,7 @@ extern NSString *authorizeURLFormat;
 extern NSString *reportCrashURLFormat;
 extern NSString *reportFeedbackURLFormat;
 extern NSString *sessionURLFormat;
+extern NSString *updateURLFormat;
 extern NSString *deviceSecretHeaderField;
 
 
