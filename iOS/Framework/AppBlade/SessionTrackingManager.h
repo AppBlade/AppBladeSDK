@@ -19,16 +19,17 @@
 
 - (void)handleWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
 - (void)sessionTrackingCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
+
+- (BOOL)hasPendingSessions;
+@end
+
+
+@interface AppBladeWebOperation (SessionTracking)
+-(void)postSessions:(NSArray *)sessions;
 @end
 
 //Our additional requirements
 @interface AppBlade (SessionTracking)
-
-@property (nonatomic, strong) SessionTrackingManager*        sessionTrackingManager;
-
-
-
-- (BOOL)hasPendingSessions;
-
+    @property (nonatomic, strong) SessionTrackingManager*        sessionTrackingManager;
 
 @end

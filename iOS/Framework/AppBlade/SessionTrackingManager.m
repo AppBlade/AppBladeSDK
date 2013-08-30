@@ -32,7 +32,7 @@
         NSArray* sessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
         ABDebugLog_internal(@"%d Sessions Exist, posting them", [sessions count]);
         
-        if(![[AppBlade sharedManager]  hasPendingSessions]){
+        if(![self hasPendingSessions]){
             AppBladeWebOperation * client = [[AppBlade sharedManager] generateWebOperation];
             [client postSessions:sessions];
             [[AppBlade sharedManager] addPendingRequest:client];
@@ -88,5 +88,75 @@
     ABErrorLog(@"Failure sending Sessions");
 }
 
+- (BOOL)hasPendingSessions {
+    //check active clients for API_Sessions
+    NSInteger sessionClients = [[AppBlade sharedManager] pendingRequestsOfType:AppBladeWebClientAPI_Sessions];
+    return sessionClients > 0;
+}
 
 @end
+
+
+@implementation AppBladeWebOperation (Sessiontracking)
+
+- (void)postSessions:(NSArray *)sessions
+{
+    [self setApi: AppBladeWebClientAPI_Sessions];
+    
+    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [self.delegate appBladeHost]];
+    NSURL* sessionURL = [NSURL URLWithString:sessionString];
+    
+    NSError* error = nil;
+    NSData* requestData = [NSPropertyListSerialization dataWithPropertyList:sessions format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    
+    if (requestData && error == nil) {
+        NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
+        
+        NSMutableURLRequest* request = [self requestForURL:sessionURL];
+        [request setHTTPMethod:@"PUT"];
+        [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
+        
+        NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"device_secret\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[[AppBlade sharedManager] appBladeDeviceSecret] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"project_secret\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[[AppBlade sharedManager] appBladeProjectSecret] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:requestData];
+        [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [request setHTTPBody:body];
+        [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+        
+        [self addSecurityToRequest:request];
+        //request is a retained reference to the _request ivar.
+    }
+    else {
+        ABErrorLog(@"Error parsing session data");
+        if(error)
+            ABErrorLog(@"Error %@", [error debugDescription]);
+        
+        //we may have to remove the sessions file in extreme cases
+        AppBladeWebOperation *selfReference = self;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegateReference appBladeWebClientFailed:selfReference];
+        });
+    }
+    
+}
+
+@end
+
+@implementation AppBlade (SessionTracking)
+    @dynamic sessionTrackingManager;
+
+
+@end
+
