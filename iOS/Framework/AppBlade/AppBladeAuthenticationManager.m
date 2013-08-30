@@ -162,15 +162,19 @@
     }
     else
     {
-        // Create the request.
-        NSString* urlString = [NSString stringWithFormat:authorizeURLFormat, [self.delegate appBladeHost]];
-        NSURL* projectUrl = [NSURL URLWithString:urlString];
-        NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
-        [apiRequest setHTTPMethod:@"GET"];
-        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
-        [self addSecurityToRequest:apiRequest];
         //SET THE BLOCKS
         __block AppBladeWebOperation *blocksafeSelf = self;
+        
+        // Create the request.
+        self.prepareBlock = ^(id preparationData){ //preparationData not used in this case
+            NSString* urlString = [NSString stringWithFormat:authorizeURLFormat, [blocksafeSelf.delegate appBladeHost]];
+            NSURL* projectUrl = [NSURL URLWithString:urlString];
+            NSMutableURLRequest* apiRequest = [blocksafeSelf requestForURL:projectUrl];
+            [apiRequest setHTTPMethod:@"GET"];
+            [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
+            [blocksafeSelf addSecurityToRequest:apiRequest];
+        };
+
         self.requestCompletionBlock = ^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
             NSError *parseError = nil;
             NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:receivedData options:nil error:&parseError];
@@ -190,8 +194,6 @@
                 });
             }
         };
-        
-        
     }
 }
 
