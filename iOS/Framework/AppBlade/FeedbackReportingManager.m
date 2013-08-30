@@ -5,10 +5,11 @@
 //  Created by AndrewTremblay on 7/15/13.
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
+#import <QuartzCore/QuartzCore.h>
 
 #import "FeedbackReportingManager.h"
 #import "AppBlade.h"
-#import <QuartzCore/QuartzCore.h>
+#import "AppBlade+PrivateMethods.h"
 
 
 @interface FeedbackReportingManager ()

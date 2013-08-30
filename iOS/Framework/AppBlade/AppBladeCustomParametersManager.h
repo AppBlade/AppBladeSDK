@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "AppBladeBasicFeatureManager.h"
+#import "AppBlade+PrivateMethods.h"
 
 @interface AppBladeCustomParametersManager : NSObject<AppBladeBasicFeatureManager>
 @property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
