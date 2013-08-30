@@ -58,6 +58,9 @@
     #ifndef SKIP_FEEDBACK
     , FeedbackDialogueDelegate
     #endif
+    #ifndef SKIP_AUTO_UPDATING
+    , AppBladeUpdatesManagerDelegate
+    #endif
     >
 
 @property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
