@@ -23,7 +23,8 @@ static NSString* const kAppBladeDefaultHost             = @"https://appblade.com
 static NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
 
 static const int kUpdateAlertTag                               = 316;
-static const int kTokenRefreshStatusCode                       = 401; 
+static const int kPermissionDeniedAlertTag                     = 613;
+static const int kTokenRefreshStatusCode                       = 401;
 //if the above status code is ever returned, that means the token is expired and needs renewing before the api can be called
 static const int kTokenInvalidStatusCode                       = 403;
 //if the above status code is ever returned, that means the app is being used illegally and should be closed

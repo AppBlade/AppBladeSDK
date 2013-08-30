@@ -818,23 +818,19 @@ static AppBlade *s_sharedManager = nil;
 - (void)appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError *)error
 {
     if(!approved) {
-        
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Permission Denied"
                                                         message:[error localizedDescription]
                                                        delegate:self
                                               cancelButtonTitle:@"Exit"
                                               otherButtonTitles: nil] ;
+        alert.tag = kPermissionDeniedAlertTag;
         [alert show];
     }
-    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (alertView.tag == kUpdateAlertTag) {
-    }
-    else
-    {
+    if (alertView.tag == kPermissionDeniedAlertTag) {
         exit(0);
     }
 }
