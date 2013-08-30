@@ -50,13 +50,14 @@ extern NSString *deviceSecretHeaderField;
 
 - (BOOL)containsOperationInPendingRequests:(AppBladeWebOperation *)webOperation;
 
+- (void)handleWebOperationDidFinishLoading:(AppBladeWebOperation *)webOperation withCallback:(SEL)callbackSelector;
+
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
 //Token
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response;
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;
 ///Authenticate
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions;
 ///Update
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData;
 ///Crash Report
@@ -74,6 +75,8 @@ extern NSString *deviceSecretHeaderField;
 
 @property (nonatomic, weak) id<AppBladeWebOperationDelegate> delegate;
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
+@property (nonatomic) SEL finishedLoadingCallback;
+
 
 @property (nonatomic, strong) NSDictionary* userInfo;
 @property (nonatomic, strong) NSMutableURLRequest* request;

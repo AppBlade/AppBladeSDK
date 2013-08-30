@@ -275,6 +275,10 @@ const int kNonceRandomStringLength = 74;
         self.finished = YES;
         [self didChangeValueForKey:@"isFinished"];
         return;
+    }    
+    
+    if(self.finishedLoadingCallback){
+        [[AppBlade sharedManager] performSelector:self.finishedLoadingCallback withObject:self.receivedData];
     }
     
     if (self.api == AppBladeWebClientAPI_GenerateToken) {
