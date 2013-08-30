@@ -25,8 +25,8 @@
 
 NSString *defaultURLScheme           = @"https";
 NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
-//NSString *tokenGenerateURLFormat     = @"%@/api/3/authorize/new";
-//NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these separate for readiblilty and possible editing later
+NSString *tokenGenerateURLFormat     = @"%@/api/3/authorize/new";
+NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these separate for readiblilty and possible editing later
 NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
 NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
@@ -278,6 +278,8 @@ const int kNonceRandomStringLength = 74;
     }    
     
     if(self.requestCompletionBlock){
+//        NSMutableURLRequest *requestLocal = [self.request copy];
+//        NSDictionary* responseHeadersLocal = [self.responseHeaders copy];
         AppBladeWebOperation *selfReference = self;
         dispatch_async(dispatch_get_main_queue(), ^(void){
               self.requestCompletionBlock(selfReference.request, selfReference.sentDeviceSecret, selfReference.responseHeaders, selfReference.receivedData, nil);
@@ -315,16 +317,6 @@ const int kNonceRandomStringLength = 74;
         });
     }
     else if (self.api == AppBladeWebClientAPI_Feedback) {
-        if(self.requestCompletionBlock != nil){
-            NSMutableURLRequest *requestLocal = [self.request copy];
-            NSDictionary* responseHeadersLocal = [self.responseHeaders copy];
-            self.requestCompletionBlock(requestLocal, nil, responseHeadersLocal, nil, nil);
-        }
-//        AppBladeWebOperation *selfReference = self;
-//        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [delegateReference appBladeWebClientSentFeedback:selfReference withSuccess:success];
-//        });        
     }
     else if (self.api == AppBladeWebClientAPI_Sessions) {
         //NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
@@ -384,92 +376,6 @@ const int kNonceRandomStringLength = 74;
 }
 
 
-#pragma mark - AppBlade API calls
-
-
-
-- (void)checkForUpdates
-{
-    BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
-    if(hasFairplay){
-        //we're signed by apple, skip updating. Go straight to delegate.
-        ABDebugLog_internal(@"Binary signed by Apple, skipping update check forever");
-        NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
-        AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegateReference appBladeWebClient:selfReference receivedUpdate:fairplayPermissions];
-        });
-    }
-    else
-    {
-        // Create the request.
-        [self setApi: AppBladeWebClientAPI_UpdateCheck];
-        NSString* urlString = [NSString stringWithFormat:updateURLFormat, [self.delegate appBladeHost]];
-        NSURL* projectUrl = [NSURL URLWithString:urlString];
-        NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
-        [apiRequest setHTTPMethod:@"GET"];
-        [apiRequest addValue:@"true" forHTTPHeaderField:@"USE_ANONYMOUS"];
-        [self addSecurityToRequest:apiRequest]; //don't need security, but we could do better with it.
-        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
-        ABDebugLog_internal(@"Update call %@", urlString);
-        //apiRequest is a retained reference to the _request ivar.
-    }
-}
-
-
-- (void)postSessions:(NSArray *)sessions
-{
-    [self setApi: AppBladeWebClientAPI_Sessions];
-    
-    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [self.delegate appBladeHost]];
-    NSURL* sessionURL = [NSURL URLWithString:sessionString];
-    
-    NSError* error = nil;
-    NSData* requestData = [NSPropertyListSerialization dataWithPropertyList:sessions format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-    
-    if (requestData && error == nil) {
-        NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
-        
-        NSMutableURLRequest* request = [self requestForURL:sessionURL];
-        [request setHTTPMethod:@"PUT"];
-        [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
-        
-        NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Disposition: form-data; name=\"device_secret\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[[AppBlade sharedManager] appBladeDeviceSecret] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Disposition: form-data; name=\"project_secret\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[[AppBlade sharedManager] appBladeProjectSecret] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-    
-        [body appendData:requestData];
-        [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        [request setHTTPBody:body];
-        [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
-
-        [self addSecurityToRequest:request];
-        //request is a retained reference to the _request ivar.
-    }
-    else {
-        ABErrorLog(@"Error parsing session data");
-        if(error)
-            ABErrorLog(@"Error %@", [error debugDescription]);
-        
-        //we may have to remove the sessions file in extreme cases
-        AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-        [delegateReference appBladeWebClientFailed:selfReference];
-        });
-    }
-    
-}
 
 
 #pragma mark - Request helper methods.
