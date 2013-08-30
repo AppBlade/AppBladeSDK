@@ -169,7 +169,29 @@
         [apiRequest setHTTPMethod:@"GET"];
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
         [self addSecurityToRequest:apiRequest];
-        //apiRequest is a retained reference to the _request ivar.
+        //SET THE BLOCKS
+        __block AppBladeWebOperation *blocksafeSelf = self;
+        self.requestCompletionBlock = ^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
+            NSError *parseError = nil;
+            NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:receivedData options:nil error:&parseError];
+            //BOOL showUpdatePrompt = [self.request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
+            if (plist && parseError == NULL) {
+                AppBladeWebOperation *selfReference = blocksafeSelf;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[AppBlade sharedManager] appBladeWebClient:selfReference receivedPermissions:plist];
+                });
+            }
+            else
+            {
+                ABErrorLog(@"Error parsing permisions json: %@", [parseError debugDescription]);
+                AppBladeWebOperation *selfReference = blocksafeSelf;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[AppBlade sharedManager] appBladeWebClient:selfReference failedPermissions:@"An invalid response was received from AppBlade; please contact support"];
+                });
+            }
+        };
+        
+        
     }
 }
 
