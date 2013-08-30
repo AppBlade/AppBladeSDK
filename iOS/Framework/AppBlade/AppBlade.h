@@ -120,28 +120,24 @@
 /******************************
  OTHER SDK METHODS
  ******************************/
-- (void)checkAndCreateAppBladeCacheDirectory;
-
 //Checks the app binary for Apple's Signature, if true, then this build was signed by apple.
 -(BOOL)isAppStoreBuild;
-
-// Returns SDK Version
-+ (NSString*)sdkVersion;
-// Log SDK Version
-+ (void)logSDKVersion;
 
 //Path to the AppBlade cache directory. Useful for direct modificaion of stored requests.
 + (NSString*)cachesDirectoryPath;
 + (void)clearCacheDirectory;
 
-//Keychain 
--(void)clearAppBladeKeychain;
-
 //Creates a random string of a specified length
 - (NSString*)randomString:(int)length;
 
-
+//Keychain methods
+-(void)clearAppBladeKeychain;
 -(void)sanitizeKeychain;
 -(void)cleanOutKeychain;
 
+
+// Returns SDK Version
++ (NSString*)sdkVersion;
+// Log SDK Version
++ (void)logSDKVersion;
 @end

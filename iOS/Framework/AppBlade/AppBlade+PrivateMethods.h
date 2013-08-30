@@ -29,6 +29,7 @@
 - (NSObject*)readFile:(NSString *)filePath;
 - (NSString*)hashFileOfPlist:(NSString *)filePath;
 - (void)registerWithAppBladeDictionary:(NSDictionary*)appbladeVariables atPlistPath:(NSString*)plistPath;
+- (void)checkAndCreateAppBladeCacheDirectory;
 
 
 
