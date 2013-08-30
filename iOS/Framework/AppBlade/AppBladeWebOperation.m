@@ -338,11 +338,6 @@ const int kNonceRandomStringLength = 74;
         
         if (json && error == NULL) {
             AppBladeWebOperation *selfReference = self;
-            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [delegateReference appBladeWebClient:selfReference receivedUpdate:json];
-            });
-
             if(self.successBlock){
                 self.successBlock(selfReference, error);
             }
