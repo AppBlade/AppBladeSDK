@@ -27,6 +27,7 @@ NSString *defaultURLScheme           = @"https";
 NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
 NSString *tokenGenerateURLFormat     = @"%@/api/3/authorize/new";
 NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these separate for readiblilty and possible editing later
+NSString *authorizeURLFormat         = @"%@/api/3/authorize";
 NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
 NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
