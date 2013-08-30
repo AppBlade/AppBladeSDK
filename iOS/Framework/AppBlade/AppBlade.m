@@ -679,22 +679,6 @@ static AppBlade *s_sharedManager = nil;
 
 
 #pragma mark - Session Reporting
-- (BOOL)hasPendingSessions
-{
-    if(self.isAllDisabled){
-        ABDebugLog_internal(@"Can't check hasPendingSessions, SDK disabled");
-        return NO;
-    }
-#ifndef SKIP_SESSIONS
-    //check active clients for API_Sessions
-    NSInteger sessionClients = [self pendingRequestsOfType:AppBladeWebClientAPI_Sessions];
-    return sessionClients > 0;
-#else
-    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
-    return NO;
-#endif
-}
-
 
 + (void)startSession
 {

@@ -120,7 +120,6 @@
 /******************************
  OTHER SDK METHODS
  ******************************/
-//
 - (void)checkAndCreateAppBladeCacheDirectory;
 
 //Checks the app binary for Apple's Signature, if true, then this build was signed by apple.

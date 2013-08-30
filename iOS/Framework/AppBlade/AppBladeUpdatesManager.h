@@ -20,11 +20,15 @@
 - (void)updateCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
 @end
 
+@interface AppBladeWebOperation (SessionTracking)
+    -(void) checkForUpdates;
+@end
 
 //Our additional requirements
 @interface AppBlade (Updates)
 
 @property (nonatomic, strong) AppBladeUpdatesManager*        updatesManager;
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData;
 
 
 @end
