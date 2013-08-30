@@ -58,9 +58,6 @@
     #ifndef SKIP_FEEDBACK
     , FeedbackDialogueDelegate
     #endif
-    #ifndef SKIP_AUTO_UPDATING
-    , AppBladeUpdatesManagerDelegate
-    #endif
     >
 
 @property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
@@ -832,32 +829,9 @@ static AppBlade *s_sharedManager = nil;
     
 }
 
-
--(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
-{
-    if (update && self.updatesManager != nil) {
-        
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Update Available"
-                                                        message:message
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles: @"Upgrade", nil] ;
-        alert.tag = kUpdateAlertTag;
-        self.updatesManager.upgradeLink = [NSURL URLWithString:url];
-        
-        [alert show];
-        
-    }
-}
-
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == kUpdateAlertTag) {
-        if (buttonIndex == 1  && self.updatesManager != nil && self.updatesManager.upgradeLink != nil) {
-            [[UIApplication sharedApplication] openURL:self.updatesManager.upgradeLink];
-            self.updatesManager.upgradeLink = nil;
-            exit(0);
-        }
     }
     else
     {

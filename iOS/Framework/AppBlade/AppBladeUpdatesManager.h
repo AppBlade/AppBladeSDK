@@ -12,15 +12,14 @@
 #import "AppBlade+PrivateMethods.h"
 
 
-@protocol AppBladeUpdatesManagerDelegate <NSObject>
-
+@protocol AppBladeUpdatesManagerDelegate <UIAlertViewDelegate>
 // Is there an update of this application available?
 -(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url;
 
 @end
 
 
-@interface AppBladeUpdatesManager : NSObject<AppBladeBasicFeatureManager>
+@interface AppBladeUpdatesManager : NSObject<AppBladeBasicFeatureManager, AppBladeUpdatesManagerDelegate>
 @property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
 @property (nonatomic, retain) NSURL* upgradeLink;
 

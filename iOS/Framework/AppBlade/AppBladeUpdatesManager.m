@@ -41,8 +41,8 @@
         NSString* updateMessage = [update objectForKey:@"message"];
         NSString* updateURL = [update objectForKey:@"url"];
         
-        if ([[[AppBlade sharedManager] delegate] respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
-            [[[AppBlade sharedManager] delegate] appBlade:[AppBlade sharedManager] updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
+        if ([[[AppBlade sharedManager] updatesManager] respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
+            [[[AppBlade sharedManager] updatesManager] appBlade:[AppBlade sharedManager] updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
         }
     }
 }
@@ -52,6 +52,32 @@
 
 }
 
+#pragma AppBladeUpdatesManagerDelegate
+
+-(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
+{
+    if (update) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Update Available"
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Upgrade", nil];
+        alert.tag = kUpdateAlertTag;
+        self.upgradeLink = [NSURL URLWithString:url];
+        [alert show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kUpdateAlertTag) {
+        if (buttonIndex == 1  && self.upgradeLink != nil) {
+            [[UIApplication sharedApplication] openURL:self.upgradeLink];
+            self.upgradeLink = nil;
+            exit(0);
+        }
+    }
+}
 
 @end
 
@@ -102,5 +128,6 @@
     [self.updatesManager handleWebClient:client receivedUpdate:updateData];
 #endif
 }
+
 
 @end
