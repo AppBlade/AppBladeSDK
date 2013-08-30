@@ -1044,12 +1044,6 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions
-{
-#ifndef SKIP_AUTHENTICATION
-    [self.authenticationManager handleWebClient:client receivedPermissions:permissions];
-#endif
-}
 
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedUpdate:(NSDictionary*)updateData
 {

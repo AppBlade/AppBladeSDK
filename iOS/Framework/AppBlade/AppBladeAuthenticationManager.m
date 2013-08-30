@@ -156,10 +156,7 @@
         ABDebugLog_internal(@"Binary signed by Apple, skipping permissions check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegateReference appBladeWebClient:selfReference receivedPermissions:fairplayPermissions];
-        });
+        [[AppBlade sharedManager] appBladeWebClient:selfReference receivedPermissions:fairplayPermissions];
     }
     else
     {

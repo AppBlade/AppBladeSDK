@@ -26,10 +26,13 @@
 @end
 
 
+
 //Our additional requirements
 @interface AppBlade (Authorization)
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions;
+@property (nonatomic, strong) AppBladeAuthenticationManager* authenticationManager; //declared here too so the compiler doesn't cry
 
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedPermissions:(NSDictionary *)permissions;
+- (void)appBladeWebClient:(AppBladeWebOperation *)client failedPermissions:(NSString *)errorString;
 @end
 
 
