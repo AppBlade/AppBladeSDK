@@ -122,15 +122,9 @@
     }
     else {
         ABErrorLog(@"Error parsing session data");
-        if(error)
+        if(error){
             ABErrorLog(@"Error %@", [error debugDescription]);
-        
-        //we may have to remove the sessions file in extreme cases
-        AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegateReference appBladeWebClientFailed:selfReference];
-        });
+        }
     }
     
     AppBladeWebOperation *selfReference = self;
@@ -140,17 +134,10 @@
     }];
     
     [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
-        //NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        //ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString);
+        NSString* receivedDataString = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
+        if(receivedDataString){ ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString); }
         int status = [[responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
-//        AppBladeWebOperation *blockSafeReference = selfReference;
-//        id<AppBladeWebOperationDelegate> delegateReference = blockSafeReference.delegate;
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [delegateReference appBladeWebClientSentSessions:blockSafeReference withSuccess:success];
-//            
-//            
-//        });
         if(success){
             selfReference.successBlock(nil, nil);
         }

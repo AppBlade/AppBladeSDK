@@ -250,11 +250,6 @@ const int kNonceRandomStringLength = 74;
         [delegateReference appBladeWebClientFailed:selfReference];
     });
 
-    
-    if(self.failBlock != nil){
-        self.failBlock(selfReference, error);
-    }
-    
     [self willChangeValueForKey:@"isFinished"];
     self.executing = NO;
     [self didChangeValueForKey:@"isExecuting"];
