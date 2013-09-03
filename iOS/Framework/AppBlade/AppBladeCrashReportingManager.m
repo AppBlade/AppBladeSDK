@@ -93,17 +93,42 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
         
         [client addSecurityToRequest:apiRequest];
         
-        
+        __block AppBladeWebOperation *blocksafeClient = client;
         [client setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
-            
+            // purge the crash report that was just reported.
+            int status = [[responseHeaders valueForKey:@"statusCode"] intValue];
+            BOOL success = (status == 201 || status == 200);
+            if(success){ //we don't need to hold onto this crash.
+                blocksafeClient.successBlock(nil, nil);
+            }
+            else
+            {
+                blocksafeClient.failBlock(nil, nil);
+            }
+
         }];
         
         [client setSuccessBlock:^(id data, NSError* error){
+            ABDebugLog_internal(@"Appblade: success sending crash report, response status code: %d", status);
+            [[PLCrashReporter sharedReporter] purgePendingCrashReport];
+            NSString *pathOfCrashReport = [blocksafeClient.userInfo valueForKey:kAppBladeCrashReportKeyFilePath];
+            [[NSFileManager defaultManager] removeItemAtPath:pathOfCrashReport error:nil];
+            ABDebugLog_internal(@"Appblade: removed crash report, %@", pathOfCrashReport);
             
+            if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
+                ABDebugLog_internal(@"Appblade: PLCrashReporter has more crash reports");
+                [[AppBlade sharedManager] handleCrashReport];
+            }
+            else
+            {
+                ABDebugLog_internal(@"Appblade: PLCrashReporter has no more crash reports");
+            }
+
         }];
         
         [client setFailBlock:^(id data, NSError* error){
-            
+            ABErrorLog(@"Appblade: error sending crash report, response status code: %d", status);
+            //No more crash reports for now. We might have bad internet access.
         }];
 
         
@@ -113,30 +138,6 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
 
 - (void)handleWebClientCrashReported:(AppBladeWebOperation *)client
 {
-    // purge the crash report that was just reported.
-    int status = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
-    BOOL success = (status == 201 || status == 200);
-    if(success){ //we don't need to hold onto this crash.
-        ABDebugLog_internal(@"Appblade: success sending crash report, response status code: %d", status);
-        [[PLCrashReporter sharedReporter] purgePendingCrashReport];
-        NSString *pathOfCrashReport = [client.userInfo valueForKey:kAppBladeCrashReportKeyFilePath];
-        [[NSFileManager defaultManager] removeItemAtPath:pathOfCrashReport error:nil];
-        ABDebugLog_internal(@"Appblade: removed crash report, %@", pathOfCrashReport);
-        
-        if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
-            ABDebugLog_internal(@"Appblade: PLCrashReporter has more crash reports");
-            [[AppBlade sharedManager] handleCrashReport];
-        }
-        else
-        {
-            ABDebugLog_internal(@"Appblade: PLCrashReporter has no more crash reports");
-        }
-    }
-    else
-    {
-        ABErrorLog(@"Appblade: error sending crash report, response status code: %d", status);
-        //No more crash reports for now. We might have bad internet access.
-    }
 }
 
 - (void)crashReportCallbackFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString

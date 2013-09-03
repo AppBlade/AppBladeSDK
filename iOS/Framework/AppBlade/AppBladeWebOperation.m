@@ -306,14 +306,8 @@ const int kNonceRandomStringLength = 74;
         });
     }
     else if(self.api == AppBladeWebClientAPI_Permissions) {
-        
     }
     else if (self.api == AppBladeWebClientAPI_ReportCrash) {
-        AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegateReference appBladeWebClientCrashReported:selfReference];
-        });
     }
     else if (self.api == AppBladeWebClientAPI_Feedback) {
     }
