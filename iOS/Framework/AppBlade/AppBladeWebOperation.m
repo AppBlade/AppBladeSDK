@@ -281,24 +281,8 @@ const int kNonceRandomStringLength = 74;
     }
     
     if (self.api == AppBladeWebClientAPI_GenerateToken) {
-        NSError *error = nil;
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
-        ABDebugLog_internal(@"Parsed JSON: %@", json);
-        AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegateReference appBladeWebClient:selfReference receivedGenerateTokenResponse:json];
-        });
     }
     else if (self.api == AppBladeWebClientAPI_ConfirmToken) {
-        NSError *error = nil;
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
-        self.receivedData = nil;
-        AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegateReference appBladeWebClient:selfReference receivedConfirmTokenResponse:json];
-        });
     }
     else if(self.api == AppBladeWebClientAPI_Permissions) {
         ABDebugLog_internal(@"API Permissions handled in completion block.");
