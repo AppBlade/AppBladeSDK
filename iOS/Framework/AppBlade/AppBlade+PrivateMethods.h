@@ -5,7 +5,7 @@
 //  Created by AndrewTremblay on 7/31/13.
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
-#import "AppBladeWebOperation.h"
+#import "APBWebOperation.h"
 
 @interface AppBlade (PrivateMethods)
 
@@ -17,8 +17,8 @@
 - (BOOL)isDeviceSecretBeingConfirmed;
 
 
-- (AppBladeWebOperation *)generateWebOperation;
-- (void)addPendingRequest:(AppBladeWebOperation *)webOperation;
+- (APBWebOperation *)generateWebOperation;
+- (void)addPendingRequest:(APBWebOperation *)webOperation;
 - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
 - (BOOL)isCurrentToken:(NSString *)token;
 

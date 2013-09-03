@@ -9,14 +9,14 @@
 #import "AppBlade.h"
 #import "AppBlade+PrivateMethods.h"
 #import "AppBladeLogging.h"
-#import "AppBladeSimpleKeychain.h"
+#import "APBSimpleKeychain.h"
 
-#import "AppBladeWebOperation.h"
+#import "APBWebOperation.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
 
 #import <CommonCrypto/CommonHMAC.h>
-#include "FileMD5Hash.h"
+#include "APBFileMD5Hash.h"
 #import <dlfcn.h>
 #import <mach-o/dyld.h>
 #import <TargetConditionals.h>
@@ -24,67 +24,66 @@
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
-#include "FileMD5Hash.h"
 
-#import "AppBladeBasicFeatureManager.h"
+#import "APBBasicFeatureManager.h"
 
 //Core Managers
-#import "AppBladeDeviceSecretManager.h"
-#import "AppBladeTokenRequestManager.h"
+#import "APBDeviceSecretManager.h"
+#import "APBTokenRequestManager.h"
 
 //Feature List (with exclusion conditionals)
 #ifndef SKIP_AUTHENTICATION
-    #import "AppBladeAuthenticationManager.h"
+    #import "APBAuthenticationManager.h"
     #endif
 #ifndef SKIP_AUTO_UPDATING
-    #import "AppBladeUpdatesManager.h"
+    #import "APBUpdatesManager.h"
     #endif
 #ifndef SKIP_FEEDBACK
-    #import "AppBladeFeedbackReportingManager.h"
+    #import "APBFeedbackReportingManager.h"
     #endif
 #ifndef SKIP_CRASH_REPORTING
-    #import "AppBladeCrashReportingManager.h"
+    #import "APBCrashReportingManager.h"
     #endif
 #ifndef SKIP_SESSIONS
-    #import "AppBladeSessionTrackingManager.h"
+    #import "APBSessionTrackingManager.h"
     #endif
 #ifndef SKIP_CUSTOM_PARAMS
-    #import "AppBladeCustomParametersManager.h"
+    #import "APBCustomParametersManager.h"
     #endif
 
 
 
-@interface AppBlade ()<AppBladeWebOperationDelegate
+@interface AppBlade ()<APBWebOperationDelegate
     #ifndef SKIP_FEEDBACK
-    , FeedbackDialogueDelegate
+    , APBFeedbackDialogueDelegate
     #endif
     >
 
 @property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 
-@property (nonatomic, strong) AppBladeDeviceSecretManager* deviceSecretManager;
-@property (nonatomic, strong) AppBladeTokenRequestManager* tokenRequestManager;
+@property (nonatomic, strong) APBDeviceSecretManager* deviceSecretManager;
+@property (nonatomic, strong) APBTokenRequestManager* tokenRequestManager;
 
 
 #ifndef SKIP_AUTHENTICATION
-@property (nonatomic, strong) AppBladeAuthenticationManager* authenticationManager;
+@property (nonatomic, strong) APBAuthenticationManager* authenticationManager;
 #endif
 #ifndef SKIP_AUTO_UPDATING
-@property (nonatomic, strong) AppBladeUpdatesManager* updatesManager;
+@property (nonatomic, strong) APBUpdatesManager* updatesManager;
 #endif
 #ifndef SKIP_CRASH_REPORTING
-@property (nonatomic, strong) AppBladeCrashReportingManager* crashManager;
+@property (nonatomic, strong) APBCrashReportingManager* crashManager;
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 #endif
 #ifndef SKIP_FEEDBACK
-@property (nonatomic, strong) AppBladeFeedbackReportingManager* feedbackManager;
+@property (nonatomic, strong) APBFeedbackReportingManager* feedbackManager;
 #endif
 #ifndef SKIP_SESSIONS
-@property (nonatomic, strong) AppBladeSessionTrackingManager* sessionTrackingManager;
+@property (nonatomic, strong) APBSessionTrackingManager* sessionTrackingManager;
 #endif
 #ifndef SKIP_CUSTOM_PARAMS
-@property (nonatomic, strong) AppBladeCustomParametersManager* customParamsManager;
+@property (nonatomic, strong) APBCustomParametersManager* customParamsManager;
 #endif
 
 @end
@@ -119,7 +118,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 /* A custom post-crash callback */
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context) {
 #ifndef SKIP_SESSIONS
-    [AppBlade endSession];
+    [[AppBlade sharedManager] logSessionEnd];
 #endif
 }
 #endif
@@ -204,26 +203,26 @@ static AppBlade *s_sharedManager = nil;
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         self.delegate = self;
         //init the core managers
-        self.deviceSecretManager = [[AppBladeDeviceSecretManager alloc] init];
-        self.tokenRequestManager = [[AppBladeTokenRequestManager alloc] init];
+        self.deviceSecretManager = [[APBDeviceSecretManager alloc] init];
+        self.tokenRequestManager = [[APBTokenRequestManager alloc] init];
         //init the feature managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls
 #ifndef SKIP_AUTHENTICATION
-        self.authenticationManager  = [[AppBladeAuthenticationManager alloc] initWithDelegate:self];
+        self.authenticationManager  = [[APBAuthenticationManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_AUTO_UPDATING
-        self.updatesManager         = [[AppBladeUpdatesManager alloc] initWithDelegate:self];
+        self.updatesManager         = [[APBUpdatesManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_FEEDBACK
-        self.feedbackManager        = [[AppBladeFeedbackReportingManager alloc] initWithDelegate:self];
+        self.feedbackManager        = [[APBFeedbackReportingManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_CRASH_REPORTING
-        self.crashManager           = [[AppBladeCrashReportingManager alloc] initWithDelegate:self];
+        self.crashManager           = [[APBCrashReportingManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_SESSIONS
-        self.sessionTrackingManager = [[AppBladeSessionTrackingManager alloc] initWithDelegate:self];
+        self.sessionTrackingManager = [[APBSessionTrackingManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_CUSTOM_PARAMS
-        self.customParamsManager    = [[AppBladeCustomParametersManager alloc] initWithDelegate:self];
+        self.customParamsManager    = [[APBCustomParametersManager alloc] initWithDelegate:self];
 #endif
     }
     return self;
@@ -252,7 +251,7 @@ static AppBlade *s_sharedManager = nil;
     NSString *configurationExceptionMessage = [NSString stringWithFormat:exceptionMissingMessageFormat, missingElement];
     
     //we have the data, now check the keychain
-    if(![AppBladeSimpleKeychain hasKeychainAccess]){
+    if(![APBSimpleKeychain hasKeychainAccess]){
         configurationExceptionMessage = @"AppBlade cannot be enabled on this build because it cannot access the keychain. The build was likely signed improperly.";
     }
     
@@ -282,7 +281,7 @@ static AppBlade *s_sharedManager = nil;
     ABDebugLog_internal(@"Kicking off AppBlade Registration");
     [self pauseCurrentPendingRequests]; //while registering, pause all requests that might rely on the token.
     
-    if (![AppBladeSimpleKeychain hasKeychainAccess]){
+    if (![APBSimpleKeychain hasKeychainAccess]){
         [[AppBlade sharedManager] setDisabled:YES];
         ABDebugLog_internal(@"AppBlade must disable due to missing keychain permissions.");
     }
@@ -320,7 +319,7 @@ static AppBlade *s_sharedManager = nil;
             [self clearStoredDeviceSecrets]; //we have to clear our device secrets, it's the only way
         }
     }
-    self.appBladeHost =  [AppBladeWebOperation buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
+    self.appBladeHost =  [APBWebOperation buildHostURL:[appBladePlistStoredKeys valueForKey:kAppBladePlistEndpointKey]];
     self.appBladeProjectSecret = [appBladePlistStoredKeys valueForKey:kAppBladePlistProjectSecretKey];
     if(self.appBladeProjectSecret == nil)
     {
@@ -334,7 +333,7 @@ static AppBlade *s_sharedManager = nil;
         [self setAppBladeDeviceSecret:storedDeviceSecret];
         appBladeKeychainKeys = [self appBladeDeviceSecrets];
         [appBladeKeychainKeys setValue:md5 forKey:kAppBladeKeychainPlistHashKey];
-        [AppBladeSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBladeKeychainKeys]; //update our md5 as well. We JUST updated.
+        [APBSimpleKeychain save:kAppBladeKeychainDeviceSecretKey data:appBladeKeychainKeys]; //update our md5 as well. We JUST updated.
         ABDebugLog_internal(@"Our device secret is currently:%@.", [self appBladeDeviceSecret]);
     }
     [self validateProjectConfiguration];
@@ -352,11 +351,11 @@ static AppBlade *s_sharedManager = nil;
 }
 
 -(void)cleanOutKeychain {
-    [AppBladeSimpleKeychain deleteLocalKeychain];
+    [APBSimpleKeychain deleteLocalKeychain];
 }
 
 -(void)sanitizeKeychain {
-    [AppBladeSimpleKeychain sanitizeKeychain];
+    [APBSimpleKeychain sanitizeKeychain];
 }
 
 #pragma mark Pending Requests Queue
@@ -397,7 +396,7 @@ static AppBlade *s_sharedManager = nil;
     
     NSArray *currentOperations = [[self pendingRequests] operations];
     for (int i = 0; i < [currentOperations count]; i++) {
-        AppBladeWebOperation *op = (AppBladeWebOperation *)[currentOperations objectAtIndex:i];
+        APBWebOperation *op = (APBWebOperation *)[currentOperations objectAtIndex:i];
         if(nil == op.sentDeviceSecret || ![tokenToCheckAgainst isEqualToString:op.sentDeviceSecret]) {
             [op cancel];
         }
@@ -528,7 +527,7 @@ static AppBlade *s_sharedManager = nil;
 
     NSDictionary *crashDict = [self.crashManager handleCrashReportAsDictionary];
     if(crashDict != nil){
-        AppBladeWebOperation * client = [self.crashManager generateCrashReportFromDictionary:crashDict withParams:[self getCustomParams]];
+        APBWebOperation * client = [self.crashManager generateCrashReportFromDictionary:crashDict withParams:[self getCustomParams]];
         [self.pendingRequests addOperation:client];
     }
 #else
@@ -836,15 +835,15 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-#pragma mark - AppBladeWebOperationDelegate
-- (AppBladeWebOperation *)generateWebOperation
+#pragma mark - APBWebOperationDelegate
+- (APBWebOperation *)generateWebOperation
 {
-    AppBladeWebOperation * webOperation = [[AppBladeWebOperation alloc] initWithDelegate:self];
+    APBWebOperation * webOperation = [[APBWebOperation alloc] initWithDelegate:self];
     return webOperation;
 }
 
 
-- (void)addPendingRequest:(AppBladeWebOperation *)webOperation
+- (void)addPendingRequest:(APBWebOperation *)webOperation
 {
     [[self pendingRequests] addOperation:webOperation];
 }
@@ -864,19 +863,19 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-- (BOOL)containsOperationInPendingRequests:(AppBladeWebOperation *)webOperation
+- (BOOL)containsOperationInPendingRequests:(APBWebOperation *)webOperation
 {
     return [[self.pendingRequests operations] containsObject:webOperation];
 }
 
 
 
--(void) appBladeWebClientFailed:(AppBladeWebOperation *)client
+-(void) appBladeWebClientFailed:(APBWebOperation *)client
 {
     [self appBladeWebClientFailed:client withErrorString:NULL];
 }
 
-- (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString
+- (void)appBladeWebClientFailed:(APBWebOperation *)client withErrorString:(NSString*)errorString
 {
     if (nil == client) {
         return;
@@ -946,7 +945,7 @@ static AppBlade *s_sharedManager = nil;
             }
         }
         
-        AppBladeWebOperation *blocksafeClient = client;
+        APBWebOperation *blocksafeClient = client;
         if(client.failBlock != nil){
             client.failBlock(blocksafeClient, nil);
         }
@@ -1080,7 +1079,7 @@ static AppBlade *s_sharedManager = nil;
 {
     NSString* returnString = nil;
     CFStringRef executableFileMD5Hash =
-    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
+    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), APBFileHashDefaultChunkSizeForReadingData);
     if (executableFileMD5Hash) {
         returnString = (__bridge NSString *)(executableFileMD5Hash);
         // CFRelease(executableFileMD5Hash);
