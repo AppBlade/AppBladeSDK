@@ -111,9 +111,17 @@
     }
     
     __block AppBladeWebOperation* blocksafeSelf = self;
+    
+    [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
+        
+    }];
     [self setSuccessBlock:^(id data, NSError* error){
         [[AppBlade sharedManager] appBladeWebClient:blocksafeSelf receivedUpdate:data];
     }];
+    [self setFailBlock:^(id data, NSError* error){
+
+    }];
+
 }
 
 @end

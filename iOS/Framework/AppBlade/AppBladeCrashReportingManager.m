@@ -92,6 +92,21 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
         [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
         
         [client addSecurityToRequest:apiRequest];
+        
+        
+        [client setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
+            
+        }];
+        
+        [client setSuccessBlock:^(id data, NSError* error){
+            
+        }];
+        
+        [client setFailBlock:^(id data, NSError* error){
+            
+        }];
+
+        
     }
     return client;
 }
