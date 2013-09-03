@@ -306,14 +306,19 @@ const int kNonceRandomStringLength = 74;
         });
     }
     else if(self.api == AppBladeWebClientAPI_Permissions) {
+        ABDebugLog_internal(@"API Permissions handled in completion block.");
     }
     else if (self.api == AppBladeWebClientAPI_ReportCrash) {
+        ABDebugLog_internal(@"API ReportCrash handled in completion block.");
     }
     else if (self.api == AppBladeWebClientAPI_Feedback) {
+        ABDebugLog_internal(@"API FeedBack handled in completion block.");
     }
     else if (self.api == AppBladeWebClientAPI_Sessions) {
+        ABDebugLog_internal(@"API Sessions handled in completion block.");
     }
     else if(self.api == AppBladeWebClientAPI_UpdateCheck) {
+        ABDebugLog_internal(@"API UpdateCheck handled in completion block.");
     }
     else
     {
