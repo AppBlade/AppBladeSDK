@@ -105,12 +105,15 @@
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
         [apiRequest addValue:@"true" forHTTPHeaderField:@"USE_ANONYMOUS"];
-        [self addSecurityToRequest:apiRequest]; //don't need security, but we could do better with it.
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
         ABDebugLog_internal(@"Update call %@", urlString);
     }
     
     __block AppBladeWebOperation* blocksafeSelf = self;
+
+    [self setPrepareBlock:^(NSMutableURLRequest *request){
+        [blocksafeSelf addSecurityToRequest:request]; 
+    }];
     
     [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
         NSError *error = nil;

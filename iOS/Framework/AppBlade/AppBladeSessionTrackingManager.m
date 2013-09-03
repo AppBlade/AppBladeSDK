@@ -118,7 +118,6 @@
         [request setHTTPBody:body];
         [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
         
-        [self addSecurityToRequest:request];
         //request is a retained reference to the _request ivar.
     }
     else {
@@ -135,6 +134,11 @@
     }
     
     AppBladeWebOperation *selfReference = self;
+    
+    [self setPrepareBlock:^(NSMutableURLRequest *request){
+        [selfReference addSecurityToRequest:request];
+    }];
+    
     [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
         //NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
         //ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString);

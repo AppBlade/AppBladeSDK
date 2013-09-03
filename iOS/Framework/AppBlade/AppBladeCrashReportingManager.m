@@ -91,9 +91,14 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
         [apiRequest setHTTPBody:body];
         [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
         
-        [client addSecurityToRequest:apiRequest];
+        
         
         __block AppBladeWebOperation *blocksafeClient = client;
+        [client setPrepareBlock:^(id preparationData){
+            NSMutableURLRequest* castRequest = (NSMutableURLRequest*)preparationData;
+            [blocksafeClient addSecurityToRequest:castRequest];
+        }];
+
         [client setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
             // purge the crash report that was just reported.
             int status = [[responseHeaders valueForKey:@"statusCode"] intValue];
