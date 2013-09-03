@@ -918,39 +918,11 @@ static AppBlade *s_sharedManager = nil;
             }
         }
         
-        if (client.api == AppBladeWebClientAPI_Permissions)  {
-            ABErrorLog(@"ERROR receiving permissions %s", errorString);
-            #ifndef SKIP_AUTHENTICATION
-                [self.authenticationManager permissionCallbackFailed:client withErrorString:errorString];
-            #endif
+        AppBladeWebOperation *blocksafeClient = client;
+        if(client.failBlock != nil){
+            client.failBlock(blocksafeClient, nil);
         }
-        else if (client.api == AppBladeWebClientAPI_Feedback) {
-            ABErrorLog(@"ERROR sending feedback %s", errorString);
-        }
-        else if(client.api == AppBladeWebClientAPI_Sessions){
-            ABErrorLog(@"ERROR sending sessions %s", errorString);
-            #ifndef SKIP_SESSIONS
-                [self.AppBladeSessionTrackingManager sessionTrackingCallbackFailed:client withErrorString:errorString];
-            #endif
-        }
-        else if(client.api == AppBladeWebClientAPI_ReportCrash)
-        {
-            ABErrorLog(@"ERROR sending crash %@, keeping crashes until they are sent", client.userInfo);
-            #ifndef SKIP_CRASH_REPORTING
-                [self.crashManager crashReportCallbackFailed:client withErrorString:errorString];
-            #endif
-        }
-        else if(client.api == AppBladeWebClientAPI_UpdateCheck)
-        {
-            ABErrorLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
-            #ifndef SKIP_AUTO_UPDATING
-                [self.updatesManager updateCallbackFailed:client withErrorString:errorString];
-            #endif
-        }
-        else
-        {
-            ABErrorLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
-        }
+        
     }
 }
 
