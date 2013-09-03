@@ -102,7 +102,7 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
 
 - (void)refreshToken:(NSString *)tokenToConfirm
 {
-    [self setApi:  AppBladeWebClientAPI_GenerateToken];
+    [self setApi: AppBladeWebClientAPI_GenerateToken];
     BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
     if(hasFairplay){
         //we're signed by apple, skip tokens. Go straight to delegate.
@@ -115,8 +115,32 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
         [apiRequest setHTTPMethod:@"GET"];
-        [self addSecurityToRequest:apiRequest];
         [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
+        
+        //THE BLOCKS
+        AppBladeWebOperation *selfReference = self;
+        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
+
+        [self setPrepareBlock:^(id preparationData){
+            [selfReference addSecurityToRequest:apiRequest];
+        }];
+        
+        [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
+            NSError *error = nil;
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:receivedData options:nil error:&error];
+            ABDebugLog_internal(@"Parsed JSON: %@", json);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [delegateReference appBladeWebClient:selfReference receivedGenerateTokenResponse:json];
+            });
+        }];
+        
+        [self setSuccessBlock:^(id data, NSError* error){
+            
+        }];
+        
+        [self setFailBlock:^(id data, NSError* error){
+            
+        }];
     }
 }
 
@@ -143,9 +167,31 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
             NSURL* projectUrl = [NSURL URLWithString:urlString];
             NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
             [apiRequest setHTTPMethod:@"POST"];
-            [self addSecurityToRequest:apiRequest];
             [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
-            //apiRequest is a retained reference to the _request ivar.
+          
+            //THE BLOCKS
+            AppBladeWebOperation *selfReference = self;
+            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
+            
+            [self setPrepareBlock:^(id preparationData){
+                [selfReference addSecurityToRequest:apiRequest];
+            }];
+
+            [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
+                NSError *error = nil;
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:receivedData options:nil error:&error];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [delegateReference appBladeWebClient:selfReference receivedConfirmTokenResponse:json];
+                });
+            }];
+            
+            [self setSuccessBlock:^(id data, NSError* error){
+                
+            }];
+            
+            [self setFailBlock:^(id data, NSError* error){
+                
+            }];
         }
         else
         {
