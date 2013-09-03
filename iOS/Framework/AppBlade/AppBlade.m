@@ -81,7 +81,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @property (nonatomic, strong) AppBladeFeedbackReportingManager* feedbackManager;
 #endif
 #ifndef SKIP_SESSIONS
-@property (nonatomic, strong) AppBladeSessionTrackingManager* AppBladeSessionTrackingManager;
+@property (nonatomic, strong) AppBladeSessionTrackingManager* sessionTrackingManager;
 #endif
 #ifndef SKIP_CUSTOM_PARAMS
 @property (nonatomic, strong) AppBladeCustomParametersManager* customParamsManager;
@@ -108,7 +108,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @synthesize feedbackManager;
 #endif
 #ifndef SKIP_SESSIONS
-@synthesize AppBladeSessionTrackingManager;
+@synthesize sessionTrackingManager;
 #endif
 #ifndef SKIP_CUSTOM_PARAMS
 @synthesize customParamsManager;
@@ -220,7 +220,7 @@ static AppBlade *s_sharedManager = nil;
         self.crashManager           = [[AppBladeCrashReportingManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_SESSIONS
-        self.AppBladeSessionTrackingManager = [[AppBladeSessionTrackingManager alloc] initWithDelegate:self];
+        self.sessionTrackingManager = [[AppBladeSessionTrackingManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_CUSTOM_PARAMS
         self.customParamsManager    = [[AppBladeCustomParametersManager alloc] initWithDelegate:self];
@@ -717,7 +717,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't startSession, SDK disabled");
         return;
     }
-    [[self AppBladeSessionTrackingManager] logSessionStart];
+    [[self sessionTrackingManager] logSessionStart];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -731,7 +731,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't endSession, SDK disabled");
         return;
     }
-    [[self AppBladeSessionTrackingManager] logSessionEnd];
+    [[self sessionTrackingManager] logSessionEnd];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
