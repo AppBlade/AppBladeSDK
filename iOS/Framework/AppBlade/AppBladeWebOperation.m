@@ -279,8 +279,6 @@ const int kNonceRandomStringLength = 74;
     }    
     
     if(self.requestCompletionBlock){
-//        NSMutableURLRequest *requestLocal = [self.request copy];
-//        NSDictionary* responseHeadersLocal = [self.responseHeaders copy];
         AppBladeWebOperation *selfReference = self;
         dispatch_async(dispatch_get_main_queue(), ^(void){
               self.requestCompletionBlock(selfReference.request, selfReference.sentDeviceSecret, selfReference.responseHeaders, selfReference.receivedData, nil);
@@ -331,31 +329,6 @@ const int kNonceRandomStringLength = 74;
         });
     }
     else if(self.api == AppBladeWebClientAPI_UpdateCheck) {
-        NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        //ABDebugLog_internal(@"Received Update Response from AppBlade: %@", string);
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:_receivedData options:nil error:&error];
-        self.receivedData = nil;
-        
-        if (json && error == NULL) {
-            AppBladeWebOperation *selfReference = self;
-            if(self.successBlock){
-                self.successBlock(selfReference, error);
-            }
-        }
-        else
-        {
-            ABErrorLog(@"Error parsing update plist: %@", [error debugDescription]);
-            AppBladeWebOperation *selfReference = self;
-            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
-            });
-            
-            if(self.failBlock != nil){
-                self.failBlock(selfReference, error);
-            }
-        }
     }
     else
     {

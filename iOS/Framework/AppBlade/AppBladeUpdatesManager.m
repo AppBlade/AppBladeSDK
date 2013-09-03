@@ -113,12 +113,37 @@
     __block AppBladeWebOperation* blocksafeSelf = self;
     
     [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
-        
+        NSError *error = nil;
+        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
+        //ABDebugLog_internal(@"Received Update Response from AppBlade: %@", string);
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:receivedData options:nil error:&error];
+        AppBladeWebOperation *selfReference = blocksafeSelf;
+
+        if (json && error == NULL) {
+            if(blocksafeSelf.successBlock){
+                blocksafeSelf.successBlock(selfReference, error);
+            }
+        }
+        else
+        {
+            if(blocksafeSelf.failBlock != nil){
+                blocksafeSelf.failBlock(selfReference, error);
+            }
+        }
     }];
+    
     [self setSuccessBlock:^(id data, NSError* error){
         [[AppBlade sharedManager] appBladeWebClient:blocksafeSelf receivedUpdate:data];
     }];
+    
     [self setFailBlock:^(id data, NSError* error){
+        ABErrorLog(@"Error parsing update plist: %@", [error debugDescription]);
+        AppBladeWebOperation *selfReference = blocksafeSelf;
+        id<AppBladeWebOperationDelegate> delegateReference = blocksafeSelf.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
+        });
+        
 
     }];
 
