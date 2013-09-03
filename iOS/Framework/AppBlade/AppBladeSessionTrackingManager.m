@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
 
-#import "SessionTrackingManager.h"
+#import "AppBladeSessionTrackingManager.h"
 #import "AppBlade+PrivateMethods.h"
 
-@implementation SessionTrackingManager
+@implementation AppBladeSessionTrackingManager
 @synthesize delegate;
 @synthesize sessionStartDate;
 
@@ -155,7 +155,7 @@
 @end
 
 @implementation AppBlade (SessionTracking)
-    @dynamic sessionTrackingManager;
+    @dynamic AppBladeSessionTrackingManager;
 
 
 @end

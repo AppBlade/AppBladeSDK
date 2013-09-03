@@ -40,13 +40,13 @@
     #import "AppBladeUpdatesManager.h"
     #endif
 #ifndef SKIP_FEEDBACK
-    #import "FeedbackReportingManager.h"
+    #import "AppBladeFeedbackReportingManager.h"
     #endif
 #ifndef SKIP_CRASH_REPORTING
-    #import "CrashReportingManager.h"
+    #import "AppBladeCrashReportingManager.h"
     #endif
 #ifndef SKIP_SESSIONS
-    #import "SessionTrackingManager.h"
+    #import "AppBladeSessionTrackingManager.h"
     #endif
 #ifndef SKIP_CUSTOM_PARAMS
     #import "AppBladeCustomParametersManager.h"
@@ -74,14 +74,14 @@
 @property (nonatomic, strong) AppBladeUpdatesManager* updatesManager;
 #endif
 #ifndef SKIP_CRASH_REPORTING
-@property (nonatomic, strong) CrashReportingManager* crashManager;
+@property (nonatomic, strong) AppBladeCrashReportingManager* crashManager;
 void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 #endif
 #ifndef SKIP_FEEDBACK
-@property (nonatomic, strong) FeedbackReportingManager* feedbackManager;
+@property (nonatomic, strong) AppBladeFeedbackReportingManager* feedbackManager;
 #endif
 #ifndef SKIP_SESSIONS
-@property (nonatomic, strong) SessionTrackingManager* sessionTrackingManager;
+@property (nonatomic, strong) AppBladeSessionTrackingManager* AppBladeSessionTrackingManager;
 #endif
 #ifndef SKIP_CUSTOM_PARAMS
 @property (nonatomic, strong) AppBladeCustomParametersManager* customParamsManager;
@@ -108,7 +108,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @synthesize feedbackManager;
 #endif
 #ifndef SKIP_SESSIONS
-@synthesize sessionTrackingManager;
+@synthesize AppBladeSessionTrackingManager;
 #endif
 #ifndef SKIP_CUSTOM_PARAMS
 @synthesize customParamsManager;
@@ -214,13 +214,13 @@ static AppBlade *s_sharedManager = nil;
         self.updatesManager         = [[AppBladeUpdatesManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_FEEDBACK
-        self.feedbackManager        = [[FeedbackReportingManager alloc] initWithDelegate:self];
+        self.feedbackManager        = [[AppBladeFeedbackReportingManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_CRASH_REPORTING
-        self.crashManager           = [[CrashReportingManager alloc] initWithDelegate:self];
+        self.crashManager           = [[AppBladeCrashReportingManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_SESSIONS
-        self.sessionTrackingManager = [[SessionTrackingManager alloc] initWithDelegate:self];
+        self.AppBladeSessionTrackingManager = [[AppBladeSessionTrackingManager alloc] initWithDelegate:self];
 #endif
 #ifndef SKIP_CUSTOM_PARAMS
         self.customParamsManager    = [[AppBladeCustomParametersManager alloc] initWithDelegate:self];
@@ -717,7 +717,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't startSession, SDK disabled");
         return;
     }
-    [[self sessionTrackingManager] logSessionStart];
+    [[self AppBladeSessionTrackingManager] logSessionStart];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -731,7 +731,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't endSession, SDK disabled");
         return;
     }
-    [[self sessionTrackingManager] logSessionEnd];
+    [[self AppBladeSessionTrackingManager] logSessionEnd];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -930,7 +930,7 @@ static AppBlade *s_sharedManager = nil;
         else if(client.api == AppBladeWebClientAPI_Sessions){
             ABErrorLog(@"ERROR sending sessions %s", errorString);
             #ifndef SKIP_SESSIONS
-                [self.sessionTrackingManager sessionTrackingCallbackFailed:client withErrorString:errorString];
+                [self.AppBladeSessionTrackingManager sessionTrackingCallbackFailed:client withErrorString:errorString];
             #endif
         }
         else if(client.api == AppBladeWebClientAPI_ReportCrash)
@@ -1019,7 +1019,7 @@ static AppBlade *s_sharedManager = nil;
 - (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
 #ifndef SKIP_SESSIONS
-    [self.sessionTrackingManager handleWebClientSentSessions:client withSuccess:success];
+    [self.AppBladeSessionTrackingManager handleWebClientSentSessions:client withSuccess:success];
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif

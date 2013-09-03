@@ -12,7 +12,7 @@
 #import "AppBladeBasicFeatureManager.h"
 
 
-@interface FeedbackReportingManager : NSObject<AppBladeBasicFeatureManager>
+@interface AppBladeFeedbackReportingManager : NSObject<AppBladeBasicFeatureManager>
     @property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
 
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
@@ -40,7 +40,7 @@
 //Our additional requirements
 @interface AppBlade (FeedbackReporting)  <AppBladeWebOperationDelegate, FeedbackDialogueDelegate>
 
-@property (nonatomic, retain) FeedbackReportingManager* feedbackManager;
+@property (nonatomic, retain) AppBladeFeedbackReportingManager* feedbackManager;
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;//we want references to these private properties
 
 - (void)promptFeedbackDialogue;

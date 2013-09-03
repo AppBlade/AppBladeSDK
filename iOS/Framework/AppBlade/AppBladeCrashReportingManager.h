@@ -10,7 +10,7 @@
 
 #import "AppBladeBasicFeatureManager.h"
 
-@interface CrashReportingManager : NSObject<AppBladeBasicFeatureManager>
+@interface AppBladeCrashReportingManager : NSObject<AppBladeBasicFeatureManager>
 @property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
 
 #pragma mark - Web Request Generators
@@ -32,7 +32,7 @@
 //Our additional requirements
 @interface AppBlade (CrashReporting)
 
-@property (nonatomic, strong) CrashReportingManager*         crashManager;
+@property (nonatomic, strong) AppBladeCrashReportingManager*         crashManager;
 //hasPendingCrashReport in PLCrashReporter
 
 

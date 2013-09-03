@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
 
-#import "CrashReportingManager.h"
+#import "AppBladeCrashReportingManager.h"
 #import "AppBlade.h"
 
 
@@ -16,12 +16,12 @@
 
 static NSString* const kCrashDictCrashReportString  = @"_crashReportString";
 static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
-@interface CrashReportingManager ()
+@interface AppBladeCrashReportingManager ()
 - (AppBladeWebOperation*) generateCrashReport:(NSString *)crashReport withParams:(NSDictionary *)paramsDict;
 @end
 
 
-@implementation CrashReportingManager
+@implementation AppBladeCrashReportingManager
 @synthesize delegate;
 
 - (id)initWithDelegate:(id<AppBladeWebOperationDelegate>)webOpDelegate

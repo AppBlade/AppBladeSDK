@@ -7,15 +7,15 @@
 //
 #import <QuartzCore/QuartzCore.h>
 
-#import "FeedbackReportingManager.h"
+#import "AppBladeFeedbackReportingManager.h"
 #import "AppBlade.h"
 #import "AppBlade+PrivateMethods.h"
 
 
-@interface FeedbackReportingManager ()
+@interface AppBladeFeedbackReportingManager ()
 @end
 
-@implementation FeedbackReportingManager
+@implementation AppBladeFeedbackReportingManager
 @synthesize delegate;
 
 @synthesize feedbackDictionary;

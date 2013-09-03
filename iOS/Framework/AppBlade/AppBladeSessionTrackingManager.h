@@ -10,7 +10,7 @@
 
 #import "AppBladeBasicFeatureManager.h"
 
-@interface SessionTrackingManager : NSObject<AppBladeBasicFeatureManager>
+@interface AppBladeSessionTrackingManager : NSObject<AppBladeBasicFeatureManager>
 @property (nonatomic, strong) id<AppBladeWebOperationDelegate> delegate;
 @property (nonatomic, retain) NSDate *sessionStartDate;
 
@@ -30,6 +30,6 @@
 
 //Our additional requirements
 @interface AppBlade (SessionTracking)
-    @property (nonatomic, strong) SessionTrackingManager*        sessionTrackingManager;
+    @property (nonatomic, strong) AppBladeSessionTrackingManager*        AppBladeSessionTrackingManager;
 
 @end
