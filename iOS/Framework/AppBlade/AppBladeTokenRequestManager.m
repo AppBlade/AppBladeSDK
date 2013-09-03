@@ -119,8 +119,6 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
         
         //THE BLOCKS
         AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-
         [self setPrepareBlock:^(id preparationData){
             [selfReference addSecurityToRequest:apiRequest];
         }];
@@ -130,7 +128,7 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
             NSDictionary *json = [NSJSONSerialization JSONObjectWithData:receivedData options:nil error:&error];
             ABDebugLog_internal(@"Parsed JSON: %@", json);
             dispatch_async(dispatch_get_main_queue(), ^{
-                [delegateReference appBladeWebClient:selfReference receivedGenerateTokenResponse:json];
+                [[AppBlade sharedManager] appBladeWebClient:selfReference receivedGenerateTokenResponse:json];
             });
         }];
         
@@ -171,8 +169,6 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
           
             //THE BLOCKS
             AppBladeWebOperation *selfReference = self;
-            id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-            
             [self setPrepareBlock:^(id preparationData){
                 [selfReference addSecurityToRequest:apiRequest];
             }];
@@ -181,7 +177,7 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
                 NSError *error = nil;
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:receivedData options:nil error:&error];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [delegateReference appBladeWebClient:selfReference receivedConfirmTokenResponse:json];
+                    [[AppBlade sharedManager] appBladeWebClient:selfReference receivedConfirmTokenResponse:json];
                 });
             }];
             
@@ -199,6 +195,58 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
         }
     }
 }
+@end
+
+
+@implementation AppBlade (AppBladeTokenRequestManager)
+
+
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response
+{
+    NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
+    if(deviceSecretString != nil) {
+        ABDebugLog_internal(@"Updating token ");
+        [self setAppBladeDeviceSecret:deviceSecretString]; //updating new device secret
+        //immediately confirm we have a new token stored
+        ABDebugLog_internal(@"token from request %@", [client sentDeviceSecret]);
+        ABDebugLog_internal(@"confirming new token %@", [self appBladeDeviceSecret]);
+        [self confirmToken:[self appBladeDeviceSecret]];
+    }
+    else {
+        ABDebugLog_internal(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
+        int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+        ABDebugLog_internal(@"token refresh response status code %d", statusCode);
+        if(statusCode == kTokenInvalidStatusCode){
+            [self.delegate appBlade:self applicationApproved:NO error:nil];
+        }else if (statusCode == kTokenRefreshStatusCode){
+            [self refreshToken:[self appBladeDeviceSecret]];
+        }else{
+            [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
+        }
+    }
+}
+
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response
+{
+    NSString *deviceSecretTimeout = [response objectForKey:kAppBladeApiTokenResponseTimeToLiveKey];
+    if(deviceSecretTimeout != nil) {
+        ABDebugLog_internal(@"Token confirmed. Business as usual.");
+        [self resumeCurrentPendingRequests]; //continue requests that we could have had pending. they will be ignored if they fail with the old token.
+    }
+    else {
+        ABDebugLog_internal(@"ERROR parsing token confirm response, keeping last valid token %@", self.appBladeDeviceSecret);
+        int statusCode = [[client.responseHeaders valueForKey:@"statusCode"] intValue];
+        ABDebugLog_internal(@"token confirm response status code %d", statusCode);
+        if(statusCode == kTokenInvalidStatusCode){
+            [self.delegate appBlade:self applicationApproved:NO error:nil];
+        }else if (statusCode == kTokenRefreshStatusCode){
+            [self refreshToken:[self appBladeDeviceSecret]];
+        }else{
+            [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
+        }
+    }
+}
+
 
 
 @end

@@ -28,3 +28,10 @@
 - (void)confirmToken:(NSString *)tokenToConfirm;
 
 @end
+
+@interface AppBlade (AppBladeTokenRequestManager)
+
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response;
+- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;
+
+@end

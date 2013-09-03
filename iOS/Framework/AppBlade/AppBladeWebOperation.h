@@ -53,9 +53,7 @@ extern NSString *deviceSecretHeaderField;
 
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;
-//Token
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response;
-- (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;
+
 
 @end
 
