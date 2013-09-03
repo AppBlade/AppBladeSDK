@@ -474,6 +474,7 @@
 			isa = PBXGroup;
 			children = (
 				313060831794A2A3006DF03A /* AppBlade.h */,
+				311A22C01796072C007BF879 /* AppBladeSharedConstants.h */,
 				313060851794A2A3006DF03A /* AppBlade.m */,
 				31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */,
 				311A228F1794E58E007BF879 /* Features */,
@@ -485,7 +486,6 @@
 		313060811794A2A3006DF03A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				311A22C01796072C007BF879 /* AppBladeSharedConstants.h */,
 				313060A21794A356006DF03A /* AppBladeLogging.h */,
 				318C22AC17CFB0E70007FD5E /* Core Managers */,
 				311A22AA1795D12F007BF879 /* AppBladeWebOperation */,

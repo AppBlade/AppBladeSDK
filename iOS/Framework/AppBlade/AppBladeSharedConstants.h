@@ -20,7 +20,7 @@
 
 static NSString* const s_sdkVersion                     = @"0.5.0";
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
-static NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
+static NSString* const kAppBladeErrorDomain             = @"com.appblade.sdk";
 
 static const int kUpdateAlertTag                               = 316;
 static const int kPermissionDeniedAlertTag                     = 613;
