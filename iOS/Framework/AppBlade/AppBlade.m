@@ -974,20 +974,6 @@ static AppBlade *s_sharedManager = nil;
 
 
 
-- (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client
-{
-#ifndef SKIP_CRASH_REPORTING
-    [self.crashManager handleWebClientCrashReported:client];
-#endif
-}
-
-- (void)appBladeWebClientSentFeedback:(AppBladeWebOperation *)client withSuccess:(BOOL)success
-{
-#ifndef SKIP_FEEDBACK
-    [self.feedbackManager handleWebClientSentFeedback:client withSuccess:success];
-#endif
-}
-
 
 
 #pragma mark - Helper Methods

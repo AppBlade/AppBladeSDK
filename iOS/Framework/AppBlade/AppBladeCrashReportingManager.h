@@ -34,6 +34,7 @@
 
 @property (nonatomic, strong) AppBladeCrashReportingManager*         crashManager;
 //hasPendingCrashReport in PLCrashReporter
+- (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client;
 
 
 @end

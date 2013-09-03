@@ -224,7 +224,18 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
     }
 }
 
+@end
 
+
+@implementation AppBlade (CrashReporting)
+@dynamic crashManager;
+
+- (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client
+{
+#ifndef SKIP_CRASH_REPORTING
+    [self.crashManager handleWebClientCrashReported:client];
+#endif
+}
 
 
 @end
