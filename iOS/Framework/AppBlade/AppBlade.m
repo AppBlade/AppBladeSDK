@@ -988,14 +988,6 @@ static AppBlade *s_sharedManager = nil;
 #endif
 }
 
-- (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
-{
-#ifndef SKIP_SESSIONS
-    [self.AppBladeSessionTrackingManager handleWebClientSentSessions:client withSuccess:success];
-#else
-    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
-#endif
-}
 
 
 #pragma mark - Helper Methods

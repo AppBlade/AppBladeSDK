@@ -170,8 +170,11 @@
 @end
 
 @implementation AppBlade (SessionTracking)
-    @dynamic AppBladeSessionTrackingManager;
+    @dynamic sessionTrackingManager;
 
-
+    - (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
+    {
+        [self.sessionTrackingManager handleWebClientSentSessions:client withSuccess:success];
+    }
 @end
 

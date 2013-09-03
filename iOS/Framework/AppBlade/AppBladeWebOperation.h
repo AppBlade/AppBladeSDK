@@ -58,8 +58,6 @@ extern NSString *deviceSecretHeaderField;
 - (void)appBladeWebClient:(AppBladeWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;
 ///Crash Report
 - (void)appBladeWebClientCrashReported:(AppBladeWebOperation *)client;
-///Session Report
-- (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
 
 @end
 

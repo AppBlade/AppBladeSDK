@@ -30,6 +30,7 @@
 
 //Our additional requirements
 @interface AppBlade (SessionTracking)
-    @property (nonatomic, strong) AppBladeSessionTrackingManager*        AppBladeSessionTrackingManager;
+    @property (nonatomic, strong) AppBladeSessionTrackingManager* sessionTrackingManager;
+    - (void)appBladeWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success;
 
 @end
