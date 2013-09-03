@@ -13,6 +13,9 @@
 #import "AppBladeLogging.h"
 #import "APBWebOperation+PrivateMethods.h"
 
+#import "APBDeviceInfoManager.h"
+#import "APBApplicationInfoManager.h"
+
 #import <CommonCrypto/CommonHMAC.h>
 #include "APBFileMD5Hash.h"
 #import <dlfcn.h>
@@ -37,9 +40,6 @@ NSString *deviceSecretHeaderField    = @"X-device-secret";
 
 @interface APBWebOperation ()
 
-@property (nonatomic, strong) NSString* osVersionBuild;
-@property (nonatomic, strong) NSString* platform;
-@property (nonatomic, strong) NSString *executableUUID;
 @property (nonatomic, strong) NSURLConnection *activeConnection;
 
 //NSOperation related
@@ -309,17 +309,6 @@ const int kNonceRandomStringLength = 74;
 
 
 #pragma mark - Request helper methods.
-- (NSString *)ios_version_sanitized
-{
-    NSMutableString *asciiCharacters = [NSMutableString string];
-    for (NSInteger i = 32; i < 127; i++)  {
-        [asciiCharacters appendFormat:@"%c", i];
-    }
-    NSCharacterSet *nonAsciiCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:asciiCharacters] invertedSet];
-    NSString *rawVersionString = [self osVersionBuild];
-    return [[rawVersionString componentsSeparatedByCharactersInSet:nonAsciiCharacterSet] componentsJoinedByString:@""];
-}
-
 
 // Creates a preformatted request with appblade headers.
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url
@@ -330,18 +319,18 @@ const int kNonceRandomStringLength = 74;
     // set up various headers on the request.
     [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"X-bundle-identifier"];
     [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"X-bundle-version"];
-    [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"X-ios-release"];
+    [apiRequest addValue:[[AppBlade sharedManager] iosVersionSanitized] forHTTPHeaderField:@"X-ios-release"];
 
-    [apiRequest addValue:[self platform] forHTTPHeaderField:@"X-device-model"];
+    [apiRequest addValue:[[AppBlade sharedManager] platform] forHTTPHeaderField:@"X-device-model"];
     [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"X-sdk-version"];
     if([[[AppBlade sharedManager] appBladeDeviceSecret] length] == 0) {
         [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"X-project-secret"];
     }
     [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:deviceSecretHeaderField]; //@"X-device-secret"
     
-    [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"X-executable-UUID"];
-    [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"X-bundle-executable-hash"];
-    [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"X-info-plist-hash"];
+    [apiRequest addValue:[[AppBlade sharedManager] executableUUID] forHTTPHeaderField:@"X-executable-UUID"];
+    [apiRequest addValue:[[AppBlade sharedManager] hashExecutable] forHTTPHeaderField:@"X-bundle-executable-hash"];
+    [apiRequest addValue:[[AppBlade sharedManager] hashInfoPlist] forHTTPHeaderField:@"X-info-plist-hash"];
     
     BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
     [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"X-fairplay-encrypted"];
@@ -517,34 +506,6 @@ const int kNonceRandomStringLength = 74;
     return [randomString copy];
 }
 
-#pragma mark - MD5 Hashing
-
-- (NSString*)hashFile:(NSString *)filePath
-{
-    
-    NSString* returnString = nil;
-    CFStringRef executableFileMD5Hash =
-    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), APBFileHashDefaultChunkSizeForReadingData);
-    if (executableFileMD5Hash) {
-        returnString = (__bridge NSString *)(executableFileMD5Hash);
-         CFRelease(executableFileMD5Hash);
-    }
-    return returnString ;
-}
-
-- (NSString*)hashExecutable
-{
-    NSString *executablePath = [[NSBundle mainBundle] executablePath];
-    return [self hashFile:executablePath];
-}
-
-- (NSString*)hashInfoPlist
-{
-    NSString *plistPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Info.plist"];
-    return [self hashFile:plistPath];
-}
-
-
 #pragma mark - receivedStatusCode
 -(int)getReceivedStatusCode
 {
@@ -591,88 +552,5 @@ const int kNonceRandomStringLength = 74;
     ABDebugLog_internal(@"built host URL: %@", preparedHostName);
     return preparedHostName;
 }
-
-#pragma mark ExecutableUUID
-
-
-- (NSString *)executable_uuid
-{
-#if TARGET_IPHONE_SIMULATOR
-    return @"00000-0000-0000-0000-00000000";
-#else
-    return [self genExecutableUUID];
-#endif
-}
-
-
-//_mh_execute_header is declared in mach-o/ldsyms.h (and not an iVar as you might have thought).
--(NSString *)genExecutableUUID //will break in simulator, please be careful
-{
-#if TARGET_IPHONE_SIMULATOR
-    return @"00000-0000-0000-0000-00000000";
-#else
-    if(_executableUUID == nil){
-        const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
-        for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx) {
-            if (((const struct load_command *)command)->cmd == LC_UUID) {
-                command += sizeof(struct load_command);
-                _executableUUID = [NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
-                                    command[0], command[1], command[2], command[3],
-                                    command[4], command[5],
-                                    command[6], command[7],
-                                    command[8], command[9],
-                                    command[10], command[11], command[12], command[13], command[14], command[15]];
-                break;
-            }
-            else
-            {
-                command += ((const struct load_command *)command)->cmdsize;
-            }
-        }
-    }
-    return _executableUUID;
-#endif
-}
-
-
-
-#pragma mark - Fairplay
-
-// From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
-- (NSString *)osVersionBuild {
-    if(_osVersionBuild == nil){
-        int mib[2] = {CTL_KERN, KERN_OSVERSION};
-        u_int namelen = sizeof(mib) / sizeof(mib[0]);
-        size_t bufferSize = 0;
-        
-        NSString *osBuildVersion = nil;
-        
-        // Get the size for the buffer
-        sysctl(mib, namelen, NULL, &bufferSize, NULL, 0);
-        
-        u_char buildBuffer[bufferSize];
-        int result = sysctl(mib, namelen, buildBuffer, &bufferSize, NULL, 0);
-        
-        if (result >= 0) {
-            osBuildVersion = [[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding];
-        }
-        _osVersionBuild = osBuildVersion;
-    }
-    return _osVersionBuild;
-}
-
-- (NSString *) platform{
-    if(_platform == nil){
-        size_t size;
-        sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-        char *machine = malloc(size);
-        sysctlbyname("hw.machine", machine, &size, NULL, 0);
-        self.platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
-        free(machine);
-    }
-    return _platform;
-}
-
-
 
 @end

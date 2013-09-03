@@ -23,9 +23,5 @@
 - (NSString *)hashFile:(NSString*)filePath;
 - (NSString *)hashExecutable;
 - (NSString *)hashInfoPlist;
-//Device info
-- (NSString *)genExecutableUUID;
-- (NSString *)executable_uuid;
-- (NSString *)ios_version_sanitized;
 
 @end
