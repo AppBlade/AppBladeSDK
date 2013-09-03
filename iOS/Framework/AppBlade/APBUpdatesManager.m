@@ -7,6 +7,8 @@
 //
 
 #import "APBUpdatesManager.h"
+#import "APBApplicationInfoManager.h" //for isAppStoreBuild
+
 #import "AppBlade+PrivateMethods.h"
 
 @implementation APBUpdatesManager

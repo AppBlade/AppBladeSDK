@@ -7,6 +7,8 @@
 //
 
 #import "APBTokenRequestManager.h"
+#import "APBApplicationInfoManager.h" //for isAppStoreBuild
+
 #import "AppBlade+PrivateMethods.h"
 #import "AppBladeLogging.h"
 
