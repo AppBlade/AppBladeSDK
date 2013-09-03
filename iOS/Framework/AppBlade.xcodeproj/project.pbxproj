@@ -7,6 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		311711B817D687B5004170B7 /* APBApplicationInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711B617D687B4004170B7 /* APBApplicationInfoManager.h */; };
+		311711B917D687B5004170B7 /* APBApplicationInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711B617D687B4004170B7 /* APBApplicationInfoManager.h */; };
+		311711BA17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711B617D687B4004170B7 /* APBApplicationInfoManager.h */; };
+		311711BB17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711B617D687B4004170B7 /* APBApplicationInfoManager.h */; };
+		311711BC17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711B717D687B5004170B7 /* APBApplicationInfoManager.m */; };
+		311711BD17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711B717D687B5004170B7 /* APBApplicationInfoManager.m */; };
+		311711BE17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711B717D687B5004170B7 /* APBApplicationInfoManager.m */; };
+		311711BF17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711B717D687B5004170B7 /* APBApplicationInfoManager.m */; };
+		311711C017D687B5004170B7 /* APBApplicationInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711B717D687B5004170B7 /* APBApplicationInfoManager.m */; };
+		311711C317D687FA004170B7 /* APBDeviceInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711C117D687F9004170B7 /* APBDeviceInfoManager.h */; };
+		311711C417D687FA004170B7 /* APBDeviceInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711C117D687F9004170B7 /* APBDeviceInfoManager.h */; };
+		311711C517D687FA004170B7 /* APBDeviceInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711C117D687F9004170B7 /* APBDeviceInfoManager.h */; };
+		311711C617D687FA004170B7 /* APBDeviceInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711C117D687F9004170B7 /* APBDeviceInfoManager.h */; };
+		311711C717D687FA004170B7 /* APBDeviceInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711C217D687F9004170B7 /* APBDeviceInfoManager.m */; };
+		311711C817D687FA004170B7 /* APBDeviceInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711C217D687F9004170B7 /* APBDeviceInfoManager.m */; };
+		311711C917D687FA004170B7 /* APBDeviceInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711C217D687F9004170B7 /* APBDeviceInfoManager.m */; };
+		311711CA17D687FA004170B7 /* APBDeviceInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711C217D687F9004170B7 /* APBDeviceInfoManager.m */; };
+		311711CB17D687FA004170B7 /* APBDeviceInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711C217D687F9004170B7 /* APBDeviceInfoManager.m */; };
 		311A21531794C79F007BF879 /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060831794A2A3006DF03A /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		311A21541794C79F007BF879 /* APBFileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061FD1794A357006DF03A /* APBFileMD5Hash.h */; };
 		311A21551794C79F007BF879 /* APBFeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* APBFeedbackBackgroundView.h */; };
@@ -174,6 +192,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		311711B617D687B4004170B7 /* APBApplicationInfoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBApplicationInfoManager.h; sourceTree = "<group>"; };
+		311711B717D687B5004170B7 /* APBApplicationInfoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBApplicationInfoManager.m; sourceTree = "<group>"; };
+		311711C117D687F9004170B7 /* APBDeviceInfoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDeviceInfoManager.h; sourceTree = "<group>"; };
+		311711C217D687F9004170B7 /* APBDeviceInfoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDeviceInfoManager.m; sourceTree = "<group>"; };
 		311A21801794C79F007BF879 /* libAppBladeUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		311A22961794E633007BF879 /* APBFeedbackReportingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = APBFeedbackReportingManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		311A22971794E633007BF879 /* APBFeedbackReportingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = APBFeedbackReportingManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -676,6 +698,10 @@
 				318C22AE17CFB1180007FD5E /* APBDeviceSecretManager.m */,
 				318C22B817CFC0E50007FD5E /* APBTokenRequestManager.h */,
 				318C22B917CFC0E50007FD5E /* APBTokenRequestManager.m */,
+				311711B617D687B4004170B7 /* APBApplicationInfoManager.h */,
+				311711B717D687B5004170B7 /* APBApplicationInfoManager.m */,
+				311711C117D687F9004170B7 /* APBDeviceInfoManager.h */,
+				311711C217D687F9004170B7 /* APBDeviceInfoManager.m */,
 			);
 			name = "Core Managers";
 			sourceTree = "<group>";
@@ -694,6 +720,8 @@
 				31562C4E17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				318C22B017CFB1180007FD5E /* APBDeviceSecretManager.h in Headers */,
 				318C22BB17CFC0E50007FD5E /* APBTokenRequestManager.h in Headers */,
+				311711B917D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
+				311711C417D687FA004170B7 /* APBDeviceInfoManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -716,6 +744,8 @@
 				31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 				318C22AF17CFB1180007FD5E /* APBDeviceSecretManager.h in Headers */,
 				318C22BA17CFC0E50007FD5E /* APBTokenRequestManager.h in Headers */,
+				311711B817D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
+				311711C317D687FA004170B7 /* APBDeviceInfoManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -728,6 +758,8 @@
 				31562C5017A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				318C22B217CFB1180007FD5E /* APBDeviceSecretManager.h in Headers */,
 				318C22BD17CFC0E50007FD5E /* APBTokenRequestManager.h in Headers */,
+				311711BB17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
+				311711C617D687FA004170B7 /* APBDeviceInfoManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -739,6 +771,8 @@
 				31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 				318C22B117CFB1180007FD5E /* APBDeviceSecretManager.h in Headers */,
 				318C22BC17CFC0E50007FD5E /* APBTokenRequestManager.h in Headers */,
+				311711BA17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
+				311711C517D687FA004170B7 /* APBDeviceInfoManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -949,6 +983,8 @@
 				311A215E1794C79F007BF879 /* APBFileMD5Hash.c in Sources */,
 				318C22B417CFB1180007FD5E /* APBDeviceSecretManager.m in Sources */,
 				318C22BF17CFC0E50007FD5E /* APBTokenRequestManager.m in Sources */,
+				311711BD17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
+				311711C817D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -997,6 +1033,8 @@
 				311A22BE1795D313007BF879 /* APBCustomParametersManager.m in Sources */,
 				318C22B317CFB1180007FD5E /* APBDeviceSecretManager.m in Sources */,
 				318C22BE17CFC0E50007FD5E /* APBTokenRequestManager.m in Sources */,
+				311711BC17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
+				311711C717D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1009,6 +1047,8 @@
 				3134653417A86DC4009DDC86 /* APBWebOperationTests.m in Sources */,
 				318C22B717CFB1180007FD5E /* APBDeviceSecretManager.m in Sources */,
 				318C22C217CFC0E50007FD5E /* APBTokenRequestManager.m in Sources */,
+				311711C017D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
+				311711CB17D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1028,6 +1068,8 @@
 				318189D3179E039D006EE07A /* APBSimpleKeychain.m in Sources */,
 				318C22B617CFB1180007FD5E /* APBDeviceSecretManager.m in Sources */,
 				318C22C117CFC0E50007FD5E /* APBTokenRequestManager.m in Sources */,
+				311711BF17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
+				311711CA17D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1048,6 +1090,8 @@
 				3187321C179DE8C200E0D187 /* APBCustomParametersManager.m in Sources */,
 				318C22B517CFB1180007FD5E /* APBDeviceSecretManager.m in Sources */,
 				318C22C017CFC0E50007FD5E /* APBTokenRequestManager.m in Sources */,
+				311711BE17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
+				311711C917D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
