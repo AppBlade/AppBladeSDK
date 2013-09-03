@@ -64,22 +64,6 @@
 
 - (void)handleWebClientSentSessions:(AppBladeWebOperation *)client withSuccess:(BOOL)success
 {
-    if(success){
-        //delete existing sessions, as we have reported them
-        NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-            NSError *deleteError = nil;
-            [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
-            
-            if(deleteError){
-                ABErrorLog(@"Error deleting Session log: %@", deleteError.debugDescription);
-            }
-        }
-    }
-    else
-    {
-        ABErrorLog(@"Error sending Session log");
-    }
 }
 
 
@@ -149,17 +133,45 @@
             [delegateReference appBladeWebClientFailed:selfReference];
         });
     }
-
-    [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
     
+    AppBladeWebOperation *selfReference = self;
+    [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
+        //NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
+        //ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString);
+        int status = [[responseHeaders valueForKey:@"statusCode"] intValue];
+        BOOL success = (status == 201 || status == 200);
+//        AppBladeWebOperation *blockSafeReference = selfReference;
+//        id<AppBladeWebOperationDelegate> delegateReference = blockSafeReference.delegate;
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [delegateReference appBladeWebClientSentSessions:blockSafeReference withSuccess:success];
+//            
+//            
+//        });
+        if(success){
+            selfReference.successBlock(nil, nil);
+        }
+        else
+        {
+            selfReference.failBlock(nil, nil);
+        }
+
     }];
     
     [self setSuccessBlock:^(id data, NSError* error){
-        
+        //delete existing sessions, as we have reported them
+        NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+            NSError *deleteError = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
+            
+            if(deleteError){
+                ABErrorLog(@"Error deleting Session log: %@", deleteError.debugDescription);
+            }
+        }
     }];
 
     [self setFailBlock:^(id data, NSError* error){
-        
+        ABErrorLog(@"Error sending Session log");
     }];
 
 }

@@ -318,15 +318,6 @@ const int kNonceRandomStringLength = 74;
     else if (self.api == AppBladeWebClientAPI_Feedback) {
     }
     else if (self.api == AppBladeWebClientAPI_Sessions) {
-        //NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        //ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString);
-        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
-        BOOL success = (status == 201 || status == 200);
-        AppBladeWebOperation *selfReference = self;
-        id<AppBladeWebOperationDelegate> delegateReference = self.delegate;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegateReference appBladeWebClientSentSessions:selfReference withSuccess:success];
-        });
     }
     else if(self.api == AppBladeWebClientAPI_UpdateCheck) {
     }
