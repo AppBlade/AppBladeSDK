@@ -32,6 +32,6 @@
 - (void)checkAndCreateAppBladeCacheDirectory;
 
 
-
+-(void) resumeCurrentPendingRequests;
 
 @end
