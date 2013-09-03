@@ -31,7 +31,7 @@
 
 
 
-static NSString* const s_sdkVersion                     = @"0.5.0";
+static NSString* const s_sdkVersion                     = @"0.5.1";
 
 NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
 const int kAppBladeOfflineError                         = 1200;
@@ -318,11 +318,14 @@ static BOOL is_encrypted () {
         return;
     }
     
+    
+    ABDebugLog_internal(@"bundles found! %d %@", [[NSBundle allBundles] count], [NSBundle allBundles]);
+    
     NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
     NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     if(appbladeVariables != nil)
     {
-        
+        ABDebugLog_internal(@"Variables found! %@", appbladeVariables);
         NSDictionary* appBladePlistStoredKeys = (NSDictionary*)[appbladeVariables valueForKey:kAppBladePlistApiDictionaryKey];
         NSMutableDictionary* appBladeKeychainKeys = [self appBladeDeviceSecrets]; //keychain persists across updates, we need to be careful
         
@@ -450,8 +453,8 @@ static BOOL is_encrypted () {
     if([self isDeviceSecretBeingConfirmed]) {
         ABDebugLog_internal(@"Refresh already in queue. Ignoring.");
         return;
-    }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
-        ABDebugLog_internal(@"Token not current, refresh token request is out of sync. Ignoring.");
+    }else if (tokenToConfirm == nil || ![self isCurrentToken:tokenToConfirm]){
+        ABDebugLog_internal(@"Token not current/invalid, refresh token request is out of sync. Ignoring.");
         return;
     }
     
@@ -473,8 +476,8 @@ static BOOL is_encrypted () {
     if([self isDeviceSecretBeingConfirmed]) {
         ABDebugLog_internal(@"Confirm (or refresh) already in queue. Ignoring.");
         return;
-    }else if (tokenToConfirm != nil && ![self isCurrentToken:tokenToConfirm]){
-        ABDebugLog_internal(@"Token not current, confirm token request is out of sync. Ignoring.");
+    }else if (tokenToConfirm == nil || ![self isCurrentToken:tokenToConfirm]){
+        ABDebugLog_internal(@"Token not current/invalid, confirm token request is out of sync. Ignoring.");
         return;
     }
     
@@ -692,7 +695,7 @@ static BOOL is_encrypted () {
     }
     else {
         //non-token related api failures all attempt a token refresh when given a refresh status code,
-        if([self isCurrentToken:[client sentDeviceSecret]]){
+        if([self isCurrentToken:[client sentDeviceSecret]] || [client sentDeviceSecret] == NULL){  //token isn't current if null, so the first auth call will fail on this. we need to catch that.
             if(status == kTokenRefreshStatusCode)
             {
                 [[AppBlade  sharedManager] refreshToken:[client sentDeviceSecret]]; //refresh the token
@@ -706,7 +709,9 @@ static BOOL is_encrypted () {
             // If it is, then let the application run. Otherwise, ensure that the TTL window is closed and
             // prevent the app from running until the request completes successfully. This will prevent
             // users from unlocking an app by simply changing their clock.
-            if ([self withinStoredTTL]) {
+            ABDebugLog_internal(@"Permissions callback : %@", client.sentDeviceSecret);
+
+            if ([self withinStoredTTL] || (client.sentDeviceSecret == nil)) {
                 if(canSignalDelegate) {
                     [self.delegate appBlade:self applicationApproved:YES error:nil];
                 }
@@ -836,6 +841,7 @@ static BOOL is_encrypted () {
     BOOL signalApproval = [self.delegate respondsToSelector:@selector(appBlade:applicationApproved:error:)];
     
     if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
+        ABDebugLog_internal(@"token confirm response invalid for %@", client.sentDeviceSecret);
         [self closeTTLWindow];
         NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
                                          NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
