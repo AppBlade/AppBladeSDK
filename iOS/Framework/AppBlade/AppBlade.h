@@ -120,8 +120,6 @@
 /******************************
  OTHER SDK METHODS
  ******************************/
-//Checks the app binary for Apple's Signature, if true, then this build was signed by apple.
--(BOOL)isAppStoreBuild;
 
 //Path to the AppBlade cache directory. Useful for direct modificaion of stored requests.
 + (NSString*)cachesDirectoryPath;
