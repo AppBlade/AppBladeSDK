@@ -49,7 +49,12 @@ extern NSString *deviceSecretHeaderField;
 - (NSString *)appBladeProjectSecret;
 - (NSString *)appBladeDeviceSecret;
 
+- (AppBladeWebOperation *)generateWebOperation;
+- (void)addPendingRequest:(AppBladeWebOperation *)webOperation;
+- (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
+
 - (BOOL)containsOperationInPendingRequests:(AppBladeWebOperation *)webOperation;
+
 
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client;
 - (void)appBladeWebClientFailed:(AppBladeWebOperation *)client withErrorString:(NSString*)errorString;

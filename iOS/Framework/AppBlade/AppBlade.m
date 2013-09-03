@@ -836,13 +836,41 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
+#pragma mark - AppBladeWebOperationDelegate
+- (AppBladeWebOperation *)generateWebOperation
+{
+    AppBladeWebOperation * webOperation = [[AppBladeWebOperation alloc] initWithDelegate:self];
+    return webOperation;
+}
+
+
+- (void)addPendingRequest:(AppBladeWebOperation *)webOperation
+{
+    [[self pendingRequests] addOperation:webOperation];
+}
+
+- (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType {
+    NSInteger amtToReturn = 0;
+    
+    if(clientType == AppBladeWebClientAPI_AllTypes){
+        amtToReturn = [self.pendingRequests operationCount];
+    }
+    else
+    {
+        NSArray* clientsOfType = [[self.pendingRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", clientType ]];
+        amtToReturn = clientsOfType.count;
+    }
+    return amtToReturn;
+}
+
+
 - (BOOL)containsOperationInPendingRequests:(AppBladeWebOperation *)webOperation
 {
     return [[self.pendingRequests operations] containsObject:webOperation];
 }
 
 
-#pragma mark - AppBladeWebOperation
+
 -(void) appBladeWebClientFailed:(AppBladeWebOperation *)client
 {
     [self appBladeWebClientFailed:client withErrorString:NULL];
@@ -1061,33 +1089,6 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-#pragma mark AppBladeWebOperation 
-
-- (AppBladeWebOperation *)generateWebOperation
-{
-    AppBladeWebOperation * webOperation = [[AppBladeWebOperation alloc] initWithDelegate:self];
-    return webOperation;
-}
-
-
-- (void)addPendingRequest:(AppBladeWebOperation *)webOperation
-{
-    [[self pendingRequests] addOperation:webOperation];
-}
-
-- (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType {
-    NSInteger amtToReturn = 0;
-    
-    if(clientType == AppBladeWebClientAPI_AllTypes){
-        amtToReturn = [self.pendingRequests operationCount];
-    }
-    else
-    {
-        NSArray* clientsOfType = [[self.pendingRequests operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", clientType ]];
-        amtToReturn = clientsOfType.count;
-    }
-    return amtToReturn;
-}
 
 #pragma mark Assorted Other
 
