@@ -28,7 +28,6 @@
 #import "APBBasicFeatureManager.h"
 
 //Core Managers
-#import "APBDeviceSecretManager.h"
 #import "APBTokenManager.h"
 #import "APBApplicationInfoManager.h"
 #import "APBDeviceInfoManager.h"
@@ -64,7 +63,6 @@
 @property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 
-@property (nonatomic, strong) APBDeviceSecretManager* deviceSecretManager;
 @property (nonatomic, strong) APBTokenManager* tokenManager;
 @property (nonatomic, strong) APBApplicationInfoManager* applicationInfoManager;
 @property (nonatomic, strong) APBDeviceInfoManager*      deviceInfoManager;
@@ -95,7 +93,6 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @implementation AppBlade
 @synthesize allDisabled = _allDisabled;
 
-@synthesize deviceSecretManager;
 @synthesize tokenManager;
 @synthesize applicationInfoManager;
 @synthesize deviceInfoManager;
@@ -157,7 +154,6 @@ static AppBlade *s_sharedManager = nil;
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         self.delegate = self;
         //init the core managers
-        self.deviceSecretManager = [[APBDeviceSecretManager alloc] init];
         self.tokenManager = [[APBTokenManager alloc] init];
         self.applicationInfoManager = [[APBApplicationInfoManager alloc] init];
         self.deviceInfoManager = [[APBDeviceInfoManager alloc] init];
