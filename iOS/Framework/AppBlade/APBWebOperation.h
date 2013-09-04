@@ -19,8 +19,6 @@ typedef void (^AppBladeRequestCompletionBlock)(NSMutableURLRequest *request, id 
 typedef void (^AppBladeRequestSuccessBlock)(id data, NSError* error); //we can return an error and still be successful
 typedef void (^AppBladeRequestFailureBlock)(id data, NSError* error);
 
-
-
 typedef enum {
     AppBladeWebClientAPI_GenerateToken,
     AppBladeWebClientAPI_ConfirmToken,
@@ -63,8 +61,6 @@ extern NSString *deviceSecretHeaderField;
 
 @property (nonatomic, weak) id<APBWebOperationDelegate> delegate;
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
-@property (nonatomic) SEL finishedLoadingCallback;
-
 
 @property (nonatomic, strong) NSDictionary* userInfo;
 @property (nonatomic, strong) NSMutableURLRequest* request;
