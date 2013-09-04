@@ -152,10 +152,8 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
     __weak APBWebOperation *weakClient = client;
     //set our blocks
     [client setPrepareBlock:^(NSMutableURLRequest * apiRequest){
-        NSLog(@"WOO WE'RE IN A BLOCK %@", apiRequest);
         [weakClient addSecurityToRequest:apiRequest];
     }];
- 
     
     NSDictionary *blockFeedbackDictionary = [[[NSDictionary alloc] initWithObjectsAndKeys:note, kAppBladeFeedbackKeyNotes, screenshot, kAppBladeFeedbackKeyScreenshot, nil] copy];
     [client setSuccessBlock:^(id data, NSError* error){
@@ -218,7 +216,7 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
                 }
             }
             else {
-                
+                ABDebugLog_internal(@"Unsuccesful feedback not found in backLog");
             }
         }
 
@@ -230,9 +228,7 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
         
         BOOL isBacklog = [[weakClient delegate] containsOperationInPendingRequests:weakClient];
         if (succeeded){
-            NSLog(@"Success!");
             if(weakClient.successBlock != nil) {
-                NSLog(@"successBlock!");
                 weakClient.successBlock(receivedData, nil);
             }
         }
