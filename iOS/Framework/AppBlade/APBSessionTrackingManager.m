@@ -170,13 +170,16 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
         //delete existing sessions, as we have reported them
         NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
         if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-            NSArray* sessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
-            NSMutableArray* freshSessions = [sessions mutableCopy]; //most we'll have is all sessions
-            for(NSDictionary *sentSession in data){
+            //only keep our fresh, unsent sessions
+            NSArray* sentSessions = (NSArray*)data;
+            NSArray* allSessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
+            NSMutableArray* freshSessions = [allSessions mutableCopy]; //most we'll have is all sessions
+            for(NSDictionary *sentSession in sentSessions){
                 for (int i = freshSessions.count-1; i >= 0; i--) {
                     NSDictionary* session = (NSDictionary *)[freshSessions objectAtIndex:i];
                     if ([session isEqualToDictionary:sentSession]) {
                         [freshSessions removeObjectAtIndex:i];
+                        //just in case there are duplicates, remove all matches
                     }
                 }
             }
