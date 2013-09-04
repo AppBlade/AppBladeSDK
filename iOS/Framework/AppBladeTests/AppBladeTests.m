@@ -14,6 +14,7 @@
 
 #define kAppBladeTestPlistName @"TestAppBladeKeys"
 #define kAppBladeTestNonExistentPlistName @"TestAppBladeKeysDoesNotExist"
+#define kNetworkPatience 5.0
 
 
 @implementation AppBladeTests
@@ -65,7 +66,7 @@
     [[AppBlade sharedManager] registerWithAppBladeDictionary:testDictionary atPlistPath:nil];
     NSLog(@"Waiting until we get a registration back from AppBlade.");
     STAssertTrue([[AppBlade sharedManager] hasDeviceSecret], @"No Device Secret after registration.");
-    WAIT_WHILE([[[AppBlade  sharedManager] tokenManager] isDeviceSecretBeingConfirmed], 5.0);
+    APB_WAIT_WHILE([[[AppBlade  sharedManager] tokenManager] isDeviceSecretBeingConfirmed], kNetworkPatience);
     NSString *deviceString = [[AppBlade sharedManager] appBladeDeviceSecret];
     STAssertTrue(([deviceString length] > 0), @"We could not retrieve a device secret:\n %@", [[AppBlade sharedManager] appBladeDeviceSecrets]);
 }
