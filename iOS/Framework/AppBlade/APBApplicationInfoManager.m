@@ -10,11 +10,11 @@
 #import "AppBladeLogging.h"
 
 #import <CommonCrypto/CommonHMAC.h>
-#include "APBFileMD5Hash.h"
 #import <mach-o/ldsyms.h>
 #import <mach-o/dyld.h>
 #import <dlfcn.h>
 #import <TargetConditionals.h>
+#include "APBFileMD5Hash.h"
 
 @implementation APBApplicationInfoManager
 

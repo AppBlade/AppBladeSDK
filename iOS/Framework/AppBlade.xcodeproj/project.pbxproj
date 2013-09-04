@@ -15,7 +15,6 @@
 		311711BD17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711B717D687B5004170B7 /* APBApplicationInfoManager.m */; };
 		311711BE17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711B717D687B5004170B7 /* APBApplicationInfoManager.m */; };
 		311711BF17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711B717D687B5004170B7 /* APBApplicationInfoManager.m */; };
-		311711C017D687B5004170B7 /* APBApplicationInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711B717D687B5004170B7 /* APBApplicationInfoManager.m */; };
 		311711C317D687FA004170B7 /* APBDeviceInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711C117D687F9004170B7 /* APBDeviceInfoManager.h */; };
 		311711C417D687FA004170B7 /* APBDeviceInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711C117D687F9004170B7 /* APBDeviceInfoManager.h */; };
 		311711C517D687FA004170B7 /* APBDeviceInfoManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 311711C117D687F9004170B7 /* APBDeviceInfoManager.h */; };
@@ -24,7 +23,6 @@
 		311711C817D687FA004170B7 /* APBDeviceInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711C217D687F9004170B7 /* APBDeviceInfoManager.m */; };
 		311711C917D687FA004170B7 /* APBDeviceInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711C217D687F9004170B7 /* APBDeviceInfoManager.m */; };
 		311711CA17D687FA004170B7 /* APBDeviceInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711C217D687F9004170B7 /* APBDeviceInfoManager.m */; };
-		311711CB17D687FA004170B7 /* APBDeviceInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 311711C217D687F9004170B7 /* APBDeviceInfoManager.m */; };
 		311A21531794C79F007BF879 /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060831794A2A3006DF03A /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		311A21541794C79F007BF879 /* APBFileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061FD1794A357006DF03A /* APBFileMD5Hash.h */; };
 		311A21551794C79F007BF879 /* APBFeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* APBFeedbackBackgroundView.h */; };
@@ -138,7 +136,6 @@
 		318C22BF17CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
 		318C22C017CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
 		318C22C117CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
-		318C22C217CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
 		31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881B17A9847000EA75E8 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
@@ -1042,9 +1039,6 @@
 				3134652017A865C7009DDC86 /* AppBladeTests.m in Sources */,
 				3134653117A86D9A009DDC86 /* APBSimpleKeychainTests.m in Sources */,
 				3134653417A86DC4009DDC86 /* APBWebOperationTests.m in Sources */,
-				318C22C217CFC0E50007FD5E /* APBTokenManager.m in Sources */,
-				311711C017D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
-				311711CB17D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

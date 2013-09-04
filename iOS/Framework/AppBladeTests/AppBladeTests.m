@@ -9,6 +9,7 @@
 #import "AppBladeTests.h"
 #import <UIKit/UIKit.h>
 #import "AppBlade.h"
+#import "AppBlade+PrivateMethods.h"
 
 #define kAppBladeTestPlistName @"TestAppBladeKeys"
 #define kAppBladeTestNonExistentPlistName @"TestAppBladeKeysDoesNotExist"
@@ -19,7 +20,8 @@
 - (void)setUp
 {
     [super setUp];
-    // Set-up code here.
+
+    [[AppBlade sharedManager] registerWithAppBladePlist];
 }
 
 - (void)tearDown
@@ -37,11 +39,21 @@
 
 - (void)test02CacheDirectoryCreates
 {
-    [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory];
     BOOL isDirectory = YES;
     STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[AppBlade cachesDirectoryPath] isDirectory:&isDirectory], @"Could not create cache directory.");
+    STAssertTrue(isDirectory, @"Cache directory was created but is not a directory.");
+
+    [[AppBlade sharedManager] checkAndCreateAppBladeCacheDirectory];
+    isDirectory = YES;
+    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[AppBlade cachesDirectoryPath] isDirectory:&isDirectory], @"Could not keep cache directory.");
     STAssertTrue(isDirectory, @"Cache directory exists but is not a directory.");
 }
+
+#pragma mark Dev Tests (no codesign)
+
+#pragma mark ENT Tests (codesign)
+
+#pragma mark AppStore Tests (codesigned, fairplay encrypted)
 
 - (void)test03NonExistentPlistDisablesSDK
 {

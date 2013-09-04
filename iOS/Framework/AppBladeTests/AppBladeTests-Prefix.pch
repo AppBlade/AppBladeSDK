@@ -6,3 +6,11 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+// Extern
+#if defined(__cplusplus)
+#define FILEMD5HASH_EXTERN extern "C"
+#else
+#define FILEMD5HASH_EXTERN extern
+#endif
+
