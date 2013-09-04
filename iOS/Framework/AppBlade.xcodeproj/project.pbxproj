@@ -295,6 +295,7 @@
 		318C22B917CFC0E50007FD5E /* APBTokenManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBTokenManager.m; sourceTree = "<group>"; };
 		31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestAppBladeKeys.plist; sourceTree = "<group>"; };
 		31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBlade+PrivateMethods.h"; sourceTree = "<group>"; };
+		31D5361417D7B61C0011B9A1 /* AsyncTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AsyncTestMacros.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -620,6 +621,7 @@
 				3134652F17A86D9A009DDC86 /* APBSimpleKeychainTests.h */,
 				3134653017A86D9A009DDC86 /* APBSimpleKeychainTests.m */,
 				3134651917A865C7009DDC86 /* Supporting Files */,
+				31D5361417D7B61C0011B9A1 /* AsyncTestMacros.h */,
 			);
 			path = AppBladeTests;
 			sourceTree = "<group>";
