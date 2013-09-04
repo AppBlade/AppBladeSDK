@@ -9,6 +9,8 @@
 #import "APBSessionTrackingManager.h"
 #import "AppBlade+PrivateMethods.h"
 
+NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
+
 @implementation APBSessionTrackingManager
 @synthesize delegate;
 @synthesize sessionStartDate;

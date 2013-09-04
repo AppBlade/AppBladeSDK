@@ -12,6 +12,8 @@
 #import "AppBlade+PrivateMethods.h"
 #import "APBSimpleKeychain.h"
 
+NSString *authorizeURLFormat         = @"%@/api/3/authorize"; //GET  request
+
 
 @implementation APBAuthenticationManager
 @synthesize delegate;

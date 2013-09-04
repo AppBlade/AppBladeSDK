@@ -8,8 +8,9 @@
 
 #import "APBUpdatesManager.h"
 #import "APBApplicationInfoManager.h" //for isAppStoreBuild
-
 #import "AppBlade+PrivateMethods.h"
+
+NSString *updateURLFormat            = @"%@/api/3/updates";
 
 @implementation APBUpdatesManager
 @synthesize delegate;

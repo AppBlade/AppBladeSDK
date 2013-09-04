@@ -11,6 +11,7 @@
 #import "AppBlade.h"
 #import "AppBlade+PrivateMethods.h"
 
+NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 
 @interface APBFeedbackReportingManager ()
 @end

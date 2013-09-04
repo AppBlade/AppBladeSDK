@@ -14,6 +14,8 @@
 #import "PLCrashReport.h"
 #import "PLCrashReportTextFormatter.h"
 
+NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
+
 static NSString* const kCrashDictCrashReportString  = @"_crashReportString";
 static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
 @interface APBCrashReportingManager ()
