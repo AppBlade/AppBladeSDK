@@ -64,6 +64,8 @@
         [self throwNSException];
     }else if(sender == self.crashButtonSigsev){
         [self sigsegv];
+    }else if(sender == self.crashOptionsListButton){
+        [self sigsegv];
     }else {
         NSLog(@"Error causing error: Unknown sender.");
     }
@@ -84,11 +86,11 @@
 -(IBAction)customParamButtonPressed:(id)sender
 {
     if(sender == self.seeCurrentParamsButton){
-    
+        //TODO: prompt custom params view controller
     }else if(sender == self.setNewParameterButton){
-    
+        [[AppBlade sharedManager] setCustomParam:@"Test" forKey:@"SimpleTestVar"];
     }else if(sender == self.clearAllParamsButton){
-        
+        [[AppBlade sharedManager] clearAllCustomParams];
     }else{
         NSLog(@"Error triggering custom Params function: Unknown sender.");
     }

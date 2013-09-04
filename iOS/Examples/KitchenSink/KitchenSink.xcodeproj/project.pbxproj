@@ -205,7 +205,6 @@
 		311A21B41794DC1B007BF879 /* KitchenSink */ = {
 			isa = PBXGroup;
 			children = (
-				31D535FF17D74FFC0011B9A1 /* Secondary ViewControllers */,
 				3148A16117983D52000332D4 /* Resources */,
 				311A21BD1794DC1B007BF879 /* AppDelegate.h */,
 				311A21BE1794DC1B007BF879 /* AppDelegate.m */,
@@ -213,6 +212,7 @@
 				311A21C71794DC1B007BF879 /* ViewController.m */,
 				311A21C91794DC1B007BF879 /* ViewController_iPhone.xib */,
 				311A21CC1794DC1B007BF879 /* ViewController_iPad.xib */,
+				31D535FF17D74FFC0011B9A1 /* Secondary ViewControllers */,
 				311A21B51794DC1B007BF879 /* Supporting Files */,
 			);
 			path = KitchenSink;

@@ -24,6 +24,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *crashButtonSigabrt;
 @property (strong, nonatomic) IBOutlet UIButton *crashButtonCustomException;
 @property (strong, nonatomic) IBOutlet UIButton *crashButtonSigsev;
+@property (strong, nonatomic) IBOutlet UIButton *crashOptionsListButton;
 - (IBAction)crashButtonPressed:(id)sender;
 
 #pragma mark - Session Tracking
