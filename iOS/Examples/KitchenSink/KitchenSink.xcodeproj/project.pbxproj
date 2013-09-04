@@ -28,6 +28,10 @@
 		311A22A11795859D007BF879 /* ResourceRules.plist in Resources */ = {isa = PBXBuildFile; fileRef = 311A229F1795859D007BF879 /* ResourceRules.plist */; };
 		311A22A317959E2C007BF879 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A22A217959E2C007BF879 /* Security.framework */; };
 		311A22A417959E2F007BF879 /* libAppBlade.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21F21794DC2B007BF879 /* libAppBlade.a */; };
+		312E174D17D6BC64003AD6DD /* card-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E174C17D6BC64003AD6DD /* card-bg@2x.png */; };
+		312E175A17D6DC0C003AD6DD /* card-btn-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */; };
+		312E175B17D6DC0C003AD6DD /* card-btn-pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */; };
+		312E175D17D6DF1A003AD6DD /* appblade@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175C17D6DF1A003AD6DD /* appblade@2x.png */; };
 		3148A166179844FB000332D4 /* appblade_rough_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A165179844FB000332D4 /* appblade_rough_icon.png */; };
 		3148A16917984505000332D4 /* appblade_red_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16717984505000332D4 /* appblade_red_logo.png */; };
 		3148A16A17984505000332D4 /* status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* status_bar_icon.png */; };
@@ -64,6 +68,27 @@
 			remoteGlobalIDString = 3130607D1794A2A3006DF03A;
 			remoteInfo = AppBlade;
 		};
+		312E175217D6BC64003AD6DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 311A21EC1794DC2B007BF879 /* AppBlade.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 31873225179DE8C200E0D187;
+			remoteInfo = AppBladeNoCrash;
+		};
+		312E175417D6BC64003AD6DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 311A21EC1794DC2B007BF879 /* AppBlade.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 318731E7179DE03300E0D187;
+			remoteInfo = AppBladeNoCrashUniversal;
+		};
+		312E175617D6BC64003AD6DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 311A21EC1794DC2B007BF879 /* AppBlade.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3134651417A865C7009DDC86;
+			remoteInfo = AppBladeTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -94,6 +119,10 @@
 		311A229E1795859D007BF879 /* AppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppBladeKeys.plist; sourceTree = "<group>"; };
 		311A229F1795859D007BF879 /* ResourceRules.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ResourceRules.plist; sourceTree = "<group>"; };
 		311A22A217959E2C007BF879 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		312E174C17D6BC64003AD6DD /* card-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card-bg@2x.png"; sourceTree = "<group>"; };
+		312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card-btn-normal@2x.png"; sourceTree = "<group>"; };
+		312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card-btn-pressed@2x.png"; sourceTree = "<group>"; };
+		312E175C17D6DF1A003AD6DD /* appblade@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade@2x.png"; sourceTree = "<group>"; };
 		3148A165179844FB000332D4 /* appblade_rough_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_rough_icon.png; sourceTree = "<group>"; };
 		3148A16717984505000332D4 /* appblade_red_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_red_logo.png; sourceTree = "<group>"; };
 		3148A16817984505000332D4 /* status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_bar_icon.png; sourceTree = "<group>"; };
@@ -214,6 +243,9 @@
 			children = (
 				311A21F21794DC2B007BF879 /* libAppBlade.a */,
 				311A21F41794DC2B007BF879 /* libAppBladeUniversal.a */,
+				312E175317D6BC64003AD6DD /* libAppBladeNoCrash.a */,
+				312E175517D6BC64003AD6DD /* libAppBladeNoCrashUniversal.a */,
+				312E175717D6BC64003AD6DD /* AppBladeTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -221,6 +253,10 @@
 		3148A16117983D52000332D4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */,
+				312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */,
+				312E174C17D6BC64003AD6DD /* card-bg@2x.png */,
+				312E175C17D6DF1A003AD6DD /* appblade@2x.png */,
 				3148A16D1798457F000332D4 /* appblade_icon.png */,
 				3148A171179845BB000332D4 /* appblade_icon@2x.png */,
 				3148A165179844FB000332D4 /* appblade_rough_icon.png */,
@@ -318,6 +354,27 @@
 			remoteRef = 311A21F31794DC2B007BF879 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		312E175317D6BC64003AD6DD /* libAppBladeNoCrash.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAppBladeNoCrash.a;
+			remoteRef = 312E175217D6BC64003AD6DD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		312E175517D6BC64003AD6DD /* libAppBladeNoCrashUniversal.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAppBladeNoCrashUniversal.a;
+			remoteRef = 312E175417D6BC64003AD6DD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		312E175717D6BC64003AD6DD /* AppBladeTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = AppBladeTests.octest;
+			remoteRef = 312E175617D6BC64003AD6DD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -338,6 +395,10 @@
 				3148A16A17984505000332D4 /* status_bar_icon.png in Resources */,
 				3148A16E1798457F000332D4 /* appblade_icon.png in Resources */,
 				3148A172179845BB000332D4 /* appblade_icon@2x.png in Resources */,
+				312E174D17D6BC64003AD6DD /* card-bg@2x.png in Resources */,
+				312E175A17D6DC0C003AD6DD /* card-btn-normal@2x.png in Resources */,
+				312E175B17D6DC0C003AD6DD /* card-btn-pressed@2x.png in Resources */,
+				312E175D17D6DF1A003AD6DD /* appblade@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
