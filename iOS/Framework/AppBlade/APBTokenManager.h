@@ -11,7 +11,7 @@
 #import "APBWebOperation.h"
 #import "AppBladeLogging.h"
 
-@interface APBTokenRequestManager : NSObject
+@interface APBTokenManager : NSObject
 -(NSOperationQueue *) tokenRequests;
 -(NSOperationQueue *) addTokenRequest:(NSOperation *)request;
 

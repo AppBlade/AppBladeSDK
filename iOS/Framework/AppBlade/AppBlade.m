@@ -29,7 +29,7 @@
 
 //Core Managers
 #import "APBDeviceSecretManager.h"
-#import "APBTokenRequestManager.h"
+#import "APBTokenManager.h"
 #import "APBApplicationInfoManager.h"
 #import "APBDeviceInfoManager.h"
 
@@ -65,7 +65,7 @@
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 
 @property (nonatomic, strong) APBDeviceSecretManager* deviceSecretManager;
-@property (nonatomic, strong) APBTokenRequestManager* tokenRequestManager;
+@property (nonatomic, strong) APBTokenManager* tokenRequestManager;
 @property (nonatomic, strong) APBApplicationInfoManager* applicationInfoManager;
 @property (nonatomic, strong) APBDeviceInfoManager*      deviceInfoManager;
 
@@ -158,7 +158,7 @@ static AppBlade *s_sharedManager = nil;
         self.delegate = self;
         //init the core managers
         self.deviceSecretManager = [[APBDeviceSecretManager alloc] init];
-        self.tokenRequestManager = [[APBTokenRequestManager alloc] init];
+        self.tokenRequestManager = [[APBTokenManager alloc] init];
         self.applicationInfoManager = [[APBApplicationInfoManager alloc] init];
         self.deviceInfoManager = [[APBDeviceInfoManager alloc] init];
         //init the feature managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls

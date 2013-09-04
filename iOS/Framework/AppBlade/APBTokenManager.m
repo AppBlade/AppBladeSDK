@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
 
-#import "APBTokenRequestManager.h"
+#import "APBTokenManager.h"
 #import "APBApplicationInfoManager.h" //for isAppStoreBuild
 
 #import "AppBlade+PrivateMethods.h"
@@ -15,12 +15,12 @@
 NSString *tokenGenerateURLFormat     = @"%@/api/3/authorize/new";
 NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these separate for readiblilty and possible editing later
 
-@interface APBTokenRequestManager()
+@interface APBTokenManager()
     @property (nonatomic, retain) NSOperationQueue* tokenRequests;
 @end
 
 
-@implementation APBTokenRequestManager
+@implementation APBTokenManager
     @synthesize tokenRequests = _tokenRequests;
 
 -(NSOperationQueue *) tokenRequests {
