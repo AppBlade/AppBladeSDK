@@ -106,17 +106,20 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
             int status = [[responseHeaders valueForKey:@"statusCode"] intValue];
             BOOL success = (status == 201 || status == 200);
             if(success){ //we don't need to hold onto this crash.
+                ABDebugLog_internal(@"Appblade: success sending crash report, response status code: %d", status);
+
                 blocksafeClient.successBlock(nil, nil);
             }
             else
             {
+                ABErrorLog(@"Appblade: error sending crash report, response status code: %d", status);
+
                 blocksafeClient.failBlock(nil, nil);
             }
 
         }];
         
         [client setSuccessBlock:^(id data, NSError* error){
-            ABDebugLog_internal(@"Appblade: success sending crash report, response status code: %d", status);
             [[PLCrashReporter sharedReporter] purgePendingCrashReport];
             NSString *pathOfCrashReport = [blocksafeClient.userInfo valueForKey:kAppBladeCrashReportKeyFilePath];
             [[NSFileManager defaultManager] removeItemAtPath:pathOfCrashReport error:nil];
@@ -134,7 +137,6 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
         }];
         
         [client setFailBlock:^(id data, NSError* error){
-            ABErrorLog(@"Appblade: error sending crash report, response status code: %d", status);
             //No more crash reports for now. We might have bad internet access.
         }];
 
