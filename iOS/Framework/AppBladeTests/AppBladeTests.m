@@ -62,8 +62,9 @@
 
 -(void)test05AppBladeRegistersDeviceSecret
 {
-    NSDictionary *testDictionary = @{ @"api_keys" : @{ @"host" : @"https://appblade.com" , @"project_secret" : @"7e01bc91e97a93367d6cb2eebde3d922" }  };
-    [[AppBlade sharedManager] registerWithAppBladeDictionary:testDictionary atPlistPath:nil];
+    NSString *plistPath = [[NSBundle bundleForClass:[self class]] pathForResource:kAppBladeTestPlistName ofType:@"plist"];
+    NSDictionary* testDictionary = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    [[AppBlade sharedManager] registerWithAppBladeDictionary:testDictionary atPlistPath:plistPath];
     NSLog(@"Waiting until we get a registration back from AppBlade.");
     STAssertFalse([[AppBlade sharedManager] hasDeviceSecret], @"We shouldn't have a Device Secret yet.");
     APB_WAIT_WHILE([[[AppBlade  sharedManager] tokenManager] isDeviceSecretBeingConfirmed], kNetworkPatience);
