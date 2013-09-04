@@ -31,10 +31,9 @@
 		312E174D17D6BC64003AD6DD /* card-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E174C17D6BC64003AD6DD /* card-bg@2x.png */; };
 		312E175A17D6DC0C003AD6DD /* card-btn-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */; };
 		312E175B17D6DC0C003AD6DD /* card-btn-pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */; };
-		312E175D17D6DF1A003AD6DD /* appblade@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175C17D6DF1A003AD6DD /* appblade@2x.png */; };
-		3148A166179844FB000332D4 /* appblade_rough_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A165179844FB000332D4 /* appblade_rough_icon.png */; };
-		3148A16917984505000332D4 /* appblade_red_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16717984505000332D4 /* appblade_red_logo.png */; };
-		3148A16A17984505000332D4 /* status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* status_bar_icon.png */; };
+		312E175D17D6DF1A003AD6DD /* appblade_logo_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */; };
+		3148A16917984505000332D4 /* appblade_logo_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16717984505000332D4 /* appblade_logo_red@2x.png */; };
+		3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* appblade_status_bar_icon.png */; };
 		3148A16E1798457F000332D4 /* appblade_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16D1798457F000332D4 /* appblade_icon.png */; };
 		3148A172179845BB000332D4 /* appblade_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A171179845BB000332D4 /* appblade_icon@2x.png */; };
 		31D5360717D750350011B9A1 /* CrashReportingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5360517D750350011B9A1 /* CrashReportingViewController.m */; };
@@ -130,10 +129,9 @@
 		312E174C17D6BC64003AD6DD /* card-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card-bg@2x.png"; sourceTree = "<group>"; };
 		312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card-btn-normal@2x.png"; sourceTree = "<group>"; };
 		312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card-btn-pressed@2x.png"; sourceTree = "<group>"; };
-		312E175C17D6DF1A003AD6DD /* appblade@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade@2x.png"; sourceTree = "<group>"; };
-		3148A165179844FB000332D4 /* appblade_rough_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_rough_icon.png; sourceTree = "<group>"; };
-		3148A16717984505000332D4 /* appblade_red_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_red_logo.png; sourceTree = "<group>"; };
-		3148A16817984505000332D4 /* status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_bar_icon.png; sourceTree = "<group>"; };
+		312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_white@2x.png"; sourceTree = "<group>"; };
+		3148A16717984505000332D4 /* appblade_logo_red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_red@2x.png"; sourceTree = "<group>"; };
+		3148A16817984505000332D4 /* appblade_status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_status_bar_icon.png; sourceTree = "<group>"; };
 		3148A16D1798457F000332D4 /* appblade_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appblade_icon.png; path = ../appblade_icon.png; sourceTree = "<group>"; };
 		3148A171179845BB000332D4 /* appblade_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appblade_icon@2x.png"; path = "../appblade_icon@2x.png"; sourceTree = "<group>"; };
 		31D5360417D750350011B9A1 /* CrashReportingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportingViewController.h; sourceTree = "<group>"; };
@@ -271,12 +269,11 @@
 				312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */,
 				312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */,
 				312E174C17D6BC64003AD6DD /* card-bg@2x.png */,
-				312E175C17D6DF1A003AD6DD /* appblade@2x.png */,
 				3148A16D1798457F000332D4 /* appblade_icon.png */,
 				3148A171179845BB000332D4 /* appblade_icon@2x.png */,
-				3148A165179844FB000332D4 /* appblade_rough_icon.png */,
-				3148A16717984505000332D4 /* appblade_red_logo.png */,
-				3148A16817984505000332D4 /* status_bar_icon.png */,
+				312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */,
+				3148A16717984505000332D4 /* appblade_logo_red@2x.png */,
+				3148A16817984505000332D4 /* appblade_status_bar_icon.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -418,15 +415,14 @@
 				311A21CE1794DC1B007BF879 /* ViewController_iPad.xib in Resources */,
 				311A22A01795859D007BF879 /* AppBladeKeys.plist in Resources */,
 				311A22A11795859D007BF879 /* ResourceRules.plist in Resources */,
-				3148A166179844FB000332D4 /* appblade_rough_icon.png in Resources */,
-				3148A16917984505000332D4 /* appblade_red_logo.png in Resources */,
-				3148A16A17984505000332D4 /* status_bar_icon.png in Resources */,
+				3148A16917984505000332D4 /* appblade_logo_red@2x.png in Resources */,
+				3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */,
 				3148A16E1798457F000332D4 /* appblade_icon.png in Resources */,
 				3148A172179845BB000332D4 /* appblade_icon@2x.png in Resources */,
 				312E174D17D6BC64003AD6DD /* card-bg@2x.png in Resources */,
 				312E175A17D6DC0C003AD6DD /* card-btn-normal@2x.png in Resources */,
 				312E175B17D6DC0C003AD6DD /* card-btn-pressed@2x.png in Resources */,
-				312E175D17D6DF1A003AD6DD /* appblade@2x.png in Resources */,
+				312E175D17D6DF1A003AD6DD /* appblade_logo_white@2x.png in Resources */,
 				31D5360917D750350011B9A1 /* CrashReportingViewController.xib in Resources */,
 				31D5361017D750530011B9A1 /* CustomParametersViewController.xib in Resources */,
 			);
