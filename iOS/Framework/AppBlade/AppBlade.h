@@ -47,14 +47,12 @@
 + (AppBlade *)sharedManager;
 
 /******************************
- INITIAL API REGISTRATION CALLS
+ INITIAL REGISTRATION
  ******************************/
 // Uses the AppBlade plist that you embedded
+//  required before anything else
 - (void)registerWithAppBladePlist;
 - (void)registerWithAppBladePlistNamed:(NSString*)plistName;
-
-- (void)refreshToken:(NSString *)tokenToConfirm;
-- (void)confirmToken:(NSString *)tokenToConfirm;
 
 /******************************
  APPBLADE AUTHENTICATION / KILLSWITCH

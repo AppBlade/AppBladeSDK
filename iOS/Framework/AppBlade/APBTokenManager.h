@@ -46,6 +46,9 @@
 @interface AppBlade (TokenManager)
 @property (nonatomic, strong) APBTokenManager* tokenManager;
 
+- (void)refreshToken:(NSString *)tokenToConfirm;
+- (void)confirmToken:(NSString *)tokenToConfirm;
+
 - (void)appBladeWebClient:(APBWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response;
 - (void)appBladeWebClient:(APBWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;
 
