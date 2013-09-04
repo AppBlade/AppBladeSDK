@@ -67,7 +67,9 @@
     NSLog(@"Waiting until we get a registration back from AppBlade.");
     [[[[AppBlade sharedManager] tokenManager] tokenRequests] waitUntilAllOperationsAreFinished];
     STAssertTrue([[AppBlade sharedManager] hasDeviceSecret], @"No Device Secret after registration.");
-    STAssertEquals([[[AppBlade sharedManager] appBladeDeviceSecrets] count], 1, @"We expect only one device secret to be stored after project secret registration");
+    
+    int numDeviceSecrets = [[[AppBlade sharedManager] appBladeDeviceSecrets] count];
+    STAssertTrue((numDeviceSecrets == 1), @"We expect only one device secret to be stored after project secret registration, found %d \n %@", numDeviceSecrets, [[AppBlade sharedManager] appBladeDeviceSecrets]);
 }
 
 #pragma mark Dev Tests (no codesign)
