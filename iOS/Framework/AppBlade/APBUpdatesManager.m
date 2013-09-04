@@ -127,13 +127,13 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 
         if (json && error == NULL) {
             if(blocksafeSelf.successBlock){
-                blocksafeSelf.successBlock(selfReference, error);
+                blocksafeSelf.successBlock(json, error);
             }
         }
         else
         {
             if(blocksafeSelf.failBlock != nil){
-                blocksafeSelf.failBlock(selfReference, error);
+                blocksafeSelf.failBlock(json, error);
             }
         }
     }];
