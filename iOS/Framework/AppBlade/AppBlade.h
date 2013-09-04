@@ -121,10 +121,6 @@
  OTHER SDK METHODS
  ******************************/
 
-//Path to the AppBlade cache directory. Useful for direct modificaion of stored requests.
-+ (NSString*)cachesDirectoryPath;
-+ (void)clearCacheDirectory;
-
 //Creates a random string of a specified length
 - (NSString*)randomString:(int)length;
 

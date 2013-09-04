@@ -837,7 +837,7 @@ static AppBlade *s_sharedManager = nil;
         if(status == kTokenInvalidStatusCode)
         {  //the token we used to generate a new token is no longer valid
             ABErrorLog(@"Token refresh failed because current token had its access revoked.");
-            [AppBlade clearCacheDirectory];//all of the pending data is to be considered invlid, don't let it clutter the app.
+            [[AppBlade sharedManager] clearCacheDirectory];//all of the pending data is to be considered invlid, don't let it clutter the app.
             NSDictionary*errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                                             NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
                                             NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
@@ -974,7 +974,7 @@ static AppBlade *s_sharedManager = nil;
     return [cacheDirectory stringByAppendingPathComponent:kAppBladeCacheDirectory];
 }
 
-+ (void)clearCacheDirectory
+- (void)clearCacheDirectory
 {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSString *directory = [AppBlade cachesDirectoryPath];
