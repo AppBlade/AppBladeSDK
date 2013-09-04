@@ -291,6 +291,8 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
 @implementation AppBlade (TokenManager)
 @dynamic tokenManager;
 
+
+
 - (void)appBladeWebClient:(APBWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response
 {
     NSString *deviceSecretString = [response objectForKey:kAppBladeApiTokenResponseDeviceSecretKey];
@@ -300,7 +302,7 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
         //immediately confirm we have a new token stored
         ABDebugLog_internal(@"token from request %@", [client sentDeviceSecret]);
         ABDebugLog_internal(@"confirming new token %@", [self appBladeDeviceSecret]);
-        [self confirmToken:[self appBladeDeviceSecret]];
+        [self.tokenManager confirmToken:[self appBladeDeviceSecret]];
     }
     else {
         ABDebugLog_internal(@"ERROR parsing token refresh response, keeping last valid token %@", self.appBladeDeviceSecret);
@@ -309,7 +311,7 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
         if(statusCode == kTokenInvalidStatusCode){
             [self.delegate appBlade:self applicationApproved:NO error:nil];
         }else if (statusCode == kTokenRefreshStatusCode){
-            [self refreshToken:[self appBladeDeviceSecret]];
+            [self.tokenManager refreshToken:[self appBladeDeviceSecret]];
         }else{
             [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
         }
@@ -330,7 +332,7 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
         if(statusCode == kTokenInvalidStatusCode){
             [self.delegate appBlade:self applicationApproved:NO error:nil];
         }else if (statusCode == kTokenRefreshStatusCode){
-            [self refreshToken:[self appBladeDeviceSecret]];
+            [self.tokenManager refreshToken:[self appBladeDeviceSecret]];
         }else{
             [self resumeCurrentPendingRequests]; //resume requests (in case it went through.)
         }

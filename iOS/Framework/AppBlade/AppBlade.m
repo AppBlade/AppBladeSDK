@@ -240,7 +240,7 @@ static AppBlade *s_sharedManager = nil;
     
     NSString * plistPath = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
     NSDictionary* appbladeVariables = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-    if(appbladeVariables != nil)
+    if(appbladeVariables != nil && ![[AppBlade sharedManager] isAllDisabled])
     {
         [self registerWithAppBladeDictionary:appbladeVariables atPlistPath:plistPath];
     }
@@ -291,9 +291,9 @@ static AppBlade *s_sharedManager = nil;
     [self validateProjectConfiguration];
     
     if(self.appBladeProjectSecret.length > 0) {
-        [[AppBlade  sharedManager] refreshToken:[self appBladeDeviceSecret]];
+        [[[AppBlade  sharedManager] tokenManager] refreshToken:[self appBladeDeviceSecret]];
     } else {
-        [[AppBlade  sharedManager] confirmToken:[self appBladeDeviceSecret]]; //confirm our existing device_secret immediately
+        [[[AppBlade  sharedManager] tokenManager] confirmToken:[self appBladeDeviceSecret]]; //confirm our existing device_secret immediately
     }
 }
 
@@ -355,25 +355,6 @@ static AppBlade *s_sharedManager = nil;
 #pragma mark API Token Calls
 
 //Eventually these will help enable/disable our appBladeDisabled value. It gives us the ability to condemn/redeem the device.
-
-- (void)refreshToken:(NSString *)tokenToConfirm
-{
-    if(self.isAllDisabled){
-        ABDebugLog_internal(@"Can't refreshToken, SDK disabled");
-        return;
-    }
-    
-    [self.tokenManager refreshToken:tokenToConfirm];
-}
-
-- (void)confirmToken:(NSString *)tokenToConfirm
-{
-    if(self.isAllDisabled){
-        ABDebugLog_internal(@"Can't confirmToken, SDK disabled");
-        return;
-    }
-    [self.tokenManager confirmToken:tokenToConfirm];
-}
 
 
 - (BOOL)isCurrentToken:(NSString *)token {
@@ -857,7 +838,7 @@ static AppBlade *s_sharedManager = nil;
         //schedule a token refresh or deactivate based on status
         if(status == kTokenRefreshStatusCode)
         {
-            [[AppBlade  sharedManager] refreshToken:[client sentDeviceSecret]];
+            [[[AppBlade  sharedManager] tokenManager] refreshToken:[client sentDeviceSecret]];
         }
         else if(status == kTokenInvalidStatusCode)
         {
@@ -877,7 +858,7 @@ static AppBlade *s_sharedManager = nil;
             double delayInSeconds = 30.0;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                [[AppBlade  sharedManager] confirmToken:[client sentDeviceSecret]];
+                [[[AppBlade  sharedManager] tokenManager] confirmToken:[client sentDeviceSecret]];
             });
         }
     }
@@ -886,9 +867,9 @@ static AppBlade *s_sharedManager = nil;
         if([self isCurrentToken:[client sentDeviceSecret]]){
             if(status == kTokenRefreshStatusCode)
             {
-                [[AppBlade  sharedManager] refreshToken:[client sentDeviceSecret]]; //refresh the token
+                [[[AppBlade  sharedManager] tokenManager] refreshToken:[client sentDeviceSecret]]; //refresh the token
             }else if(status == kTokenInvalidStatusCode) { //we think the response was invlaid?
-                [[AppBlade  sharedManager] confirmToken:[client sentDeviceSecret]]; //one more confirm, just to be safe.
+                [[[AppBlade  sharedManager] tokenManager] confirmToken:[client sentDeviceSecret]]; //one more confirm, just to be safe.
             }
         }
         
