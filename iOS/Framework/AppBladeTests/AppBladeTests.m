@@ -65,7 +65,7 @@
     NSDictionary *testDictionary = @{ @"api_keys" : @{ @"host" : @"https://appblade.com" , @"project_secret" : @"7e01bc91e97a93367d6cb2eebde3d922" }  };
     [[AppBlade sharedManager] registerWithAppBladeDictionary:testDictionary atPlistPath:nil];
     NSLog(@"Waiting until we get a registration back from AppBlade.");
-    STAssertTrue([[AppBlade sharedManager] hasDeviceSecret], @"No Device Secret after registration.");
+    STAssertFalse([[AppBlade sharedManager] hasDeviceSecret], @"We shouldn't have a Device Secret yet.");
     APB_WAIT_WHILE([[[AppBlade  sharedManager] tokenManager] isDeviceSecretBeingConfirmed], kNetworkPatience);
     NSString *deviceString = [[AppBlade sharedManager] appBladeDeviceSecret];
     STAssertTrue(([deviceString length] > 0), @"We could not retrieve a device secret:\n %@", [[AppBlade sharedManager] appBladeDeviceSecrets]);

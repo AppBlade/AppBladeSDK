@@ -121,7 +121,7 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
     NSString* device_secret_stored_old = (NSString*)[appBlade_keychain_dict valueForKey:kAppBladeKeychainDeviceSecretKeyOld];
     if(nil == device_secret_stored || [device_secret_stored isEqualToString:@""])
     {
-        ABDebugLog_internal(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"null" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"null" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
+        ABDebugLog_internal(@"Device Secret from storage:%@, falling back to old value:(%@).", (device_secret_stored == nil  ? @"nil" : ( [device_secret_stored isEqualToString:@""] ? @"empty" : device_secret_stored) ), (device_secret_stored_old == nil  ? @"nil" : ( [device_secret_stored_old isEqualToString:@""] ? @"empty" : device_secret_stored_old) ));
         _appbladeDeviceSecret = (NSString*)[device_secret_stored_old copy];     //if we have no stored keys, returns default empty string
     }else
     {
@@ -168,7 +168,7 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
 
 -(BOOL)hasDeviceSecret
 {
-    return [[self appBladeDeviceSecret] length] == 0;
+    return [self appBladeDeviceSecret] != nil && [[self appBladeDeviceSecret] length] != 0;
 }
 
 - (BOOL)isDeviceSecretBeingConfirmed
