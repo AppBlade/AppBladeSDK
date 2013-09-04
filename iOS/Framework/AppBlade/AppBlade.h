@@ -123,10 +123,9 @@
 - (NSString*)randomString:(int)length;
 
 //Keychain methods
--(void)clearAppBladeKeychain;
--(void)sanitizeKeychain;
--(void)cleanOutKeychain;
-
+- (void)clearAppBladeKeychain;
+- (void)sanitizeKeychain;
+- (void)cleanOutKeychain;
 
 // Returns SDK Version
 + (NSString*)sdkVersion;
