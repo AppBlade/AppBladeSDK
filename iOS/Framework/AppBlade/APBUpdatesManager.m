@@ -120,11 +120,10 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
     
     [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
         NSError *error = nil;
-        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
-        //ABDebugLog_internal(@"Received Update Response from AppBlade: %@", string);
+        NSString* receivedString = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
+        if(receivedString)
+            ABDebugLog_internal(@"Received Update Response from AppBlade: %@", receivedString);
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:receivedData options:nil error:&error];
-        APBWebOperation *selfReference = blocksafeSelf;
-
         if (json && error == NULL) {
             if(blocksafeSelf.successBlock){
                 blocksafeSelf.successBlock(json, error);
