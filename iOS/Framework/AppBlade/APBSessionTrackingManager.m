@@ -70,7 +70,7 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 {
     NSDictionary *toRet = nil;
     if (self.sessionStartDate != nil) { //check first if we even HAVE a session
-        toRet = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, kSessionStartDate, self.sessionStartDate.timeIntervalSinceNow, kSessionTimeElapsed, nil];
+        toRet = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, kSessionStartDate, nil];
     }
     return toRet;
 }
