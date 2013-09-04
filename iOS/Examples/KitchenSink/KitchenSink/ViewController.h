@@ -8,14 +8,47 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-//form display button
+@interface ViewController : UIViewController <UIScrollViewDelegate>
+
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+
+@property (strong, nonatomic) IBOutlet UIView *headerWrapperView;
+
+#pragma mark - Feedback Report
+@property (strong, nonatomic) IBOutlet UIView *feedbackWrapperView;
 @property (strong, nonatomic) IBOutlet UIButton *showFormButton;
 - (IBAction)showFormButtonPressed:(id)sender;
-//crash buttons
+
+#pragma mark - Crash Report
+@property (strong, nonatomic) IBOutlet UIView *crashReportWrapperView;
 @property (strong, nonatomic) IBOutlet UIButton *crashButtonSigabrt;
 @property (strong, nonatomic) IBOutlet UIButton *crashButtonCustomException;
 @property (strong, nonatomic) IBOutlet UIButton *crashButtonSigsev;
 - (IBAction)crashButtonPressed:(id)sender;
+
+#pragma mark - Session Tracking
+@property (strong, nonatomic) IBOutlet UIView *sessiontrackingWrapperView;
+@property (strong, nonatomic) IBOutlet UIButton *startSessionButton;
+@property (strong, nonatomic) IBOutlet UIButton *endSessionButton;
+- (IBAction)sessionButtonPressed:(id)sender;
+
+#pragma mark - Custom Params
+@property (strong, nonatomic) IBOutlet UIView *customParamsWrapperView;
+@property (strong, nonatomic) IBOutlet UIButton *seeCurrentParamsButton;
+@property (strong, nonatomic) IBOutlet UIButton *setNewParameterButton;
+@property (strong, nonatomic) IBOutlet UIButton *clearAllParamsButton;
+- (IBAction)customParamButtonPressed:(id)sender;
+
+#pragma mark - Automatic Updating
+@property (strong, nonatomic) IBOutlet UIView *updateCheckingWrapperView;
+@property (strong, nonatomic) IBOutlet UIButton *checkUpdatesButton;
+-(IBAction)updateCheckButtonPressed:(id)sender;
+
+
+
+#pragma mark - Authentication & Killswitch
+@property (strong, nonatomic) IBOutlet UIView *authenticationWrapperView;
+@property (strong, nonatomic) IBOutlet UIButton *authenticationButton;
+- (IBAction)authenticationButtonPressed:(id)sender;
 
 @end

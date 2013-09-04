@@ -19,7 +19,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+	//Build the cards in the scroll view
+    CGFloat totalHeight = 0.0f;
+    totalHeight = [self addView:self.headerWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
+    totalHeight = [self addView:self.feedbackWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
+    totalHeight = [self addView:self.crashReportWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
+    totalHeight = [self addView:self.sessiontrackingWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
+    totalHeight = [self addView:self.customParamsWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
+    
+    totalHeight = [self addView:self.updateCheckingWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
+    totalHeight = [self addView:self.authenticationWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
+    
+    [self.scrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
+}
+
+-(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height {
+    [scrollView addSubview:view];
+    CGRect viewFrame = view.frame;
+    viewFrame.origin.y = height;
+    [view setFrame:viewFrame];
+    return height + viewFrame.size.height;
 }
 
 - (void)didReceiveMemoryWarning
@@ -28,9 +47,15 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+
+
+#pragma mark - Button Handling
+
 - (IBAction)showFormButtonPressed:(id)sender {
     [[AppBlade sharedManager] showFeedbackDialogue];
 }
+
 
 - (IBAction)crashButtonPressed:(id)sender {
     if(sender == self.crashButtonSigabrt){
@@ -44,8 +69,56 @@
     }
 }
 
+- (IBAction)sessionButtonPressed:(id)sender
+{
+    if(sender == self.startSessionButton){
+        [[AppBlade sharedManager] logSessionStart];
+    }else if(sender == self.endSessionButton){
+        [[AppBlade sharedManager] logSessionEnd];
+    }else{
+        NSLog(@"Error triggering session: Unknown sender.");
+    }
+}
 
-#pragma mark - crashes
+
+-(IBAction)customParamButtonPressed:(id)sender
+{
+    if(sender == self.seeCurrentParamsButton){
+    
+    }else if(sender == self.setNewParameterButton){
+    
+    }else if(sender == self.clearAllParamsButton){
+        
+    }else{
+        NSLog(@"Error triggering custom Params function: Unknown sender.");
+    }
+}
+
+
+-(IBAction)updateCheckButtonPressed:(id)sender
+{
+    if(sender == self.checkUpdatesButton){
+        [[AppBlade sharedManager] checkForUpdates];
+    }else{
+        NSLog(@"Error triggering update check: Unknown sender.");
+    }
+}
+
+
+-(IBAction)authenticationButtonPressed:(id)sender
+{
+    if(sender == self.authenticationButton)
+    {
+        [[AppBlade sharedManager] checkApproval];
+    }else{
+        NSLog(@"Error triggering authentication: Unknown sender.");
+    }
+}
+
+
+
+
+#pragma mark - Crash "Helpers"
 // credit to CrashKit for these .
 //https://github.com/kaler/CrashKit
 - (void)sigabrt
