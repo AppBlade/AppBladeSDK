@@ -37,6 +37,14 @@
 		3148A16A17984505000332D4 /* status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* status_bar_icon.png */; };
 		3148A16E1798457F000332D4 /* appblade_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16D1798457F000332D4 /* appblade_icon.png */; };
 		3148A172179845BB000332D4 /* appblade_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A171179845BB000332D4 /* appblade_icon@2x.png */; };
+		31D5360717D750350011B9A1 /* CrashReportingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5360517D750350011B9A1 /* CrashReportingViewController.m */; };
+		31D5360817D750350011B9A1 /* CrashReportingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5360517D750350011B9A1 /* CrashReportingViewController.m */; };
+		31D5360917D750350011B9A1 /* CrashReportingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D5360617D750350011B9A1 /* CrashReportingViewController.xib */; };
+		31D5360A17D750350011B9A1 /* CrashReportingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D5360617D750350011B9A1 /* CrashReportingViewController.xib */; };
+		31D5360E17D750530011B9A1 /* CustomParametersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5360C17D750530011B9A1 /* CustomParametersViewController.m */; };
+		31D5360F17D750530011B9A1 /* CustomParametersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5360C17D750530011B9A1 /* CustomParametersViewController.m */; };
+		31D5361017D750530011B9A1 /* CustomParametersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D5360D17D750530011B9A1 /* CustomParametersViewController.xib */; };
+		31D5361117D750530011B9A1 /* CustomParametersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D5360D17D750530011B9A1 /* CustomParametersViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +136,12 @@
 		3148A16817984505000332D4 /* status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_bar_icon.png; sourceTree = "<group>"; };
 		3148A16D1798457F000332D4 /* appblade_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appblade_icon.png; path = ../appblade_icon.png; sourceTree = "<group>"; };
 		3148A171179845BB000332D4 /* appblade_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appblade_icon@2x.png"; path = "../appblade_icon@2x.png"; sourceTree = "<group>"; };
+		31D5360417D750350011B9A1 /* CrashReportingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportingViewController.h; sourceTree = "<group>"; };
+		31D5360517D750350011B9A1 /* CrashReportingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReportingViewController.m; sourceTree = "<group>"; };
+		31D5360617D750350011B9A1 /* CrashReportingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrashReportingViewController.xib; sourceTree = "<group>"; };
+		31D5360B17D750530011B9A1 /* CustomParametersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomParametersViewController.h; sourceTree = "<group>"; };
+		31D5360C17D750530011B9A1 /* CustomParametersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomParametersViewController.m; sourceTree = "<group>"; };
+		31D5360D17D750530011B9A1 /* CustomParametersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomParametersViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +205,7 @@
 		311A21B41794DC1B007BF879 /* KitchenSink */ = {
 			isa = PBXGroup;
 			children = (
+				31D535FF17D74FFC0011B9A1 /* Secondary ViewControllers */,
 				3148A16117983D52000332D4 /* Resources */,
 				311A21BD1794DC1B007BF879 /* AppDelegate.h */,
 				311A21BE1794DC1B007BF879 /* AppDelegate.m */,
@@ -264,6 +279,19 @@
 				3148A16817984505000332D4 /* status_bar_icon.png */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		31D535FF17D74FFC0011B9A1 /* Secondary ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				31D5360417D750350011B9A1 /* CrashReportingViewController.h */,
+				31D5360517D750350011B9A1 /* CrashReportingViewController.m */,
+				31D5360617D750350011B9A1 /* CrashReportingViewController.xib */,
+				31D5360B17D750530011B9A1 /* CustomParametersViewController.h */,
+				31D5360C17D750530011B9A1 /* CustomParametersViewController.m */,
+				31D5360D17D750530011B9A1 /* CustomParametersViewController.xib */,
+			);
+			name = "Secondary ViewControllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -399,6 +427,8 @@
 				312E175A17D6DC0C003AD6DD /* card-btn-normal@2x.png in Resources */,
 				312E175B17D6DC0C003AD6DD /* card-btn-pressed@2x.png in Resources */,
 				312E175D17D6DF1A003AD6DD /* appblade@2x.png in Resources */,
+				31D5360917D750350011B9A1 /* CrashReportingViewController.xib in Resources */,
+				31D5361017D750530011B9A1 /* CustomParametersViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +437,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				311A21E01794DC1B007BF879 /* InfoPlist.strings in Resources */,
+				31D5360A17D750350011B9A1 /* CrashReportingViewController.xib in Resources */,
+				31D5361117D750530011B9A1 /* CustomParametersViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +468,8 @@
 				311A21BB1794DC1B007BF879 /* main.m in Sources */,
 				311A21BF1794DC1B007BF879 /* AppDelegate.m in Sources */,
 				311A21C81794DC1B007BF879 /* ViewController.m in Sources */,
+				31D5360717D750350011B9A1 /* CrashReportingViewController.m in Sources */,
+				31D5360E17D750530011B9A1 /* CustomParametersViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,6 +478,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				311A21E31794DC1B007BF879 /* KitchenSinkTests.m in Sources */,
+				31D5360817D750350011B9A1 /* CrashReportingViewController.m in Sources */,
+				31D5360F17D750530011B9A1 /* CustomParametersViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
