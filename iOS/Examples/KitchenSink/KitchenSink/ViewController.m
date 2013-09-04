@@ -9,6 +9,8 @@
 #import "ViewController.h"
 
 #import "AppBlade.h"
+#import "APBSessionTrackingManager.h"
+
 
 @interface ViewController ()
 
@@ -47,6 +49,10 @@
     totalHeight = [self addView:self.updateCheckingWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
     totalHeight = [self addView:self.authenticationWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];    
     [self.scrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
+    
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.1 target:self
+                                   selector:@selector(updateCurrentSessionDisplay) userInfo:nil repeats:YES];
 }
 
 -(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height {
@@ -142,6 +148,24 @@
 }
 
 
+-(void)updateCurrentSessionDisplay
+{
+    
+    NSMutableString *currentSessionStatus = [NSMutableString stringWithString:@"Current Session Status:\n"];
+    NSDictionary *currentSession = [[AppBlade sharedManager] currentSession];
+    if (currentSession == nil) {
+        [currentSessionStatus appendString:@"No Current Session"];
+    }else{
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateStyle:NSDateFormatterNoStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+        
+        NSDate *sessionStartDate =[currentSession objectForKey:kSessionStartDate];
+        [currentSessionStatus appendFormat:@"Started: %@ \nElapsed:%f", [dateFormatter stringFromDate:sessionStartDate], [sessionStartDate timeIntervalSinceNow]];
+    }
+    
+    [self.currentSessionDisplay setText:currentSessionStatus];
+}
 
 
 #pragma mark - Crash "Helpers"

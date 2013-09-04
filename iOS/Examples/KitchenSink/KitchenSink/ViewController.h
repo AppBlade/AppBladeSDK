@@ -32,6 +32,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *startSessionButton;
 @property (strong, nonatomic) IBOutlet UIButton *endSessionButton;
 - (IBAction)sessionButtonPressed:(id)sender;
+@property (strong, nonatomic) IBOutlet UILabel *currentSessionDisplay;
+-(void)updateCurrentSessionDisplay;
 
 #pragma mark - Custom Params
 @property (strong, nonatomic) IBOutlet UIView *customParamsWrapperView;
