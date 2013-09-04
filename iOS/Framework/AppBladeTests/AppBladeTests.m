@@ -61,15 +61,13 @@
 
 -(void)test05AppBladeRegistersDeviceSecret
 {
-    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:kAppBladeTestPlistName ofType:@"plist"];
     NSDictionary *testDictionary = @{ @"api_keys" : @{ @"host" : @"https://appblade.com" , @"project_secret" : @"7e01bc91e97a93367d6cb2eebde3d922" }  };
-    [[AppBlade sharedManager] registerWithAppBladeDictionary:testDictionary atPlistPath:path];
+    [[AppBlade sharedManager] registerWithAppBladeDictionary:testDictionary atPlistPath:nil];
     NSLog(@"Waiting until we get a registration back from AppBlade.");
-    [[[[AppBlade sharedManager] tokenManager] tokenRequests] waitUntilAllOperationsAreFinished];
     STAssertTrue([[AppBlade sharedManager] hasDeviceSecret], @"No Device Secret after registration.");
-    
-    int numDeviceSecrets = [[[AppBlade sharedManager] appBladeDeviceSecrets] count];
-    STAssertTrue((numDeviceSecrets == 1), @"We expect only one device secret to be stored after project secret registration, found %d \n %@", numDeviceSecrets, [[AppBlade sharedManager] appBladeDeviceSecrets]);
+    WAIT_WHILE([[[AppBlade  sharedManager] tokenManager] isDeviceSecretBeingConfirmed], 5.0);
+    NSString *deviceString = [[AppBlade sharedManager] appBladeDeviceSecret];
+    STAssertTrue(([deviceString length] > 0), @"We could not retrieve a device secret:\n %@", [[AppBlade sharedManager] appBladeDeviceSecrets]);
 }
 
 #pragma mark Dev Tests (no codesign)
