@@ -22,19 +22,20 @@ extern NSString *kSessionTimeElapsed;
 
 - (void)logSessionEnd;
 - (void)logSessionStart;
-
 - (NSDictionary*)currentSession;
 
 
+- (BOOL)hasPendingSessions;
 - (void)handleWebClientSentSessions:(APBWebOperation *)client withSuccess:(BOOL)success;
 - (void)sessionTrackingCallbackFailed:(APBWebOperation *)client withErrorString:(NSString*)errorString;
 
-- (BOOL)hasPendingSessions;
 @end
 
 
 @interface APBWebOperation (SessionTracking)
+
 -(void)postSessions:(NSArray *)sessions;
+
 @end
 
 //Our additional requirements

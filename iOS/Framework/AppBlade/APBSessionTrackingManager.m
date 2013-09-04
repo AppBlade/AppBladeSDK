@@ -9,6 +9,7 @@
 #import "APBSessionTrackingManager.h"
 #import "AppBlade+PrivateMethods.h"
 
+
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
 NSString *kSessionStartDate           = @"session_started_at";
 NSString *kSessionTimeElapsed         = @"session_time_elapsed";
@@ -65,7 +66,8 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
     [sessionData writeToFile:sessionFilePath atomically:YES];    
 }
 
-- (NSDictionary*)currentSession{
+- (NSDictionary*)currentSession
+{
     NSDictionary *toRet = nil;
     if (self.sessionStartDate != nil) { //check first if we even HAVE a session
         toRet = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, kSessionStartDate, self.sessionStartDate.timeIntervalSinceNow, kSessionTimeElapsed, nil];
@@ -77,6 +79,8 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 
 - (void)handleWebClientSentSessions:(APBWebOperation *)client withSuccess:(BOOL)success
 {
+    ABDebugLog_internal(@"Success sending Sessions");
+    //clean up sessions handled in the success block, let's not pass the buck too much here.
 }
 
 
@@ -141,18 +145,19 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
     }
     
     APBWebOperation *selfReference = self;
-    
     [self setPrepareBlock:^(NSMutableURLRequest *request){
         [selfReference addSecurityToRequest:request];
+        
     }];
     
+    __block NSArray* sessionsReference = sessions;
     [self setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *webError){
         NSString* receivedDataString = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
         if(receivedDataString){ ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString); }
         int status = [[responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL success = (status == 201 || status == 200);
         if(success){
-            selfReference.successBlock(nil, nil);
+            selfReference.successBlock(sessionsReference, nil);
         }
         else
         {
@@ -165,12 +170,26 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
         //delete existing sessions, as we have reported them
         NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
         if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+            NSArray* sessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
+            NSMutableArray* freshSessions = [sessions mutableCopy]; //most we'll have is all sessions
+            for(NSDictionary *sentSession in data){
+                for (int i = freshSessions.count-1; i >= 0; i--) {
+                    NSDictionary* session = (NSDictionary *)[freshSessions objectAtIndex:i];
+                    if ([session isEqualToDictionary:sentSession]) {
+                        [freshSessions removeObjectAtIndex:i];
+                    }
+                }
+            }
+
             NSError *deleteError = nil;
             [[NSFileManager defaultManager] removeItemAtPath:sessionFilePath error:&deleteError];
-            
             if(deleteError){
                 ABErrorLog(@"Error deleting Session log: %@", deleteError.debugDescription);
+                //oh well, keep going I guess
             }
+            
+            NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:freshSessions];
+            [sessionData writeToFile:sessionFilePath atomically:YES];
         }
     }];
 
