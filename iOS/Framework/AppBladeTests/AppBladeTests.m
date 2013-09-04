@@ -78,10 +78,6 @@
 
 #pragma mark AppStore Tests (codesigned, fairplay encrypted)
 
-- (void)test03NonExistentPlistDisablesSDK
-{
-    
-}
 
 
 @end
