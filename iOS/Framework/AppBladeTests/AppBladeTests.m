@@ -50,12 +50,13 @@
 {
     [[AppBlade sharedManager] clearCacheDirectory];
     NSArray *listOfFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[AppBlade cachesDirectoryPath] error:nil];
-    STAssertEquals([listOfFiles count], 0, @"Could not remove files in cache directory.");
+    STAssertTrue(([listOfFiles count] == 0), @"Could not remove files in cache directory.");
 }
 
 -(void)test04AppBladePlistsExist
 {
-
+    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:kAppBladeTestPlistName ofType:@"plist"];
+    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:path], @"Could not find keys plist.");
 }
 
 -(void)test05AppBladeRegistersDeviceSecret
