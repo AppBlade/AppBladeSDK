@@ -240,12 +240,14 @@
 //Returns true on success
 + (BOOL)save:(NSString *)service data:(id)data
 {
+    
     BOOL wasSuccessful = YES;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
     [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(__bridge id)kSecValueData];
     resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
     if(resultCode != noErr){
+        NSLog(@"Attempting to store %@ failed", data);
         NSLog(@"Error storing to keychain: %ld : %@", resultCode, [APBSimpleKeychain errorMessageFromCode:resultCode]);
         if(resultCode == errSecDuplicateItem){
             id dataExistenceCheck = [APBSimpleKeychain load:service];
