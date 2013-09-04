@@ -44,6 +44,7 @@
 @end
 
 @interface AppBlade (TokenManager)
+@property (nonatomic, strong) APBTokenManager* tokenManager;
 
 - (void)appBladeWebClient:(APBWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response;
 - (void)appBladeWebClient:(APBWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;

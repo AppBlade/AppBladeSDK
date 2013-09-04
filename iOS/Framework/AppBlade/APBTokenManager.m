@@ -289,7 +289,7 @@ NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //keeping these se
 
 
 @implementation AppBlade (TokenManager)
-
+@dynamic tokenManager;
 
 - (void)appBladeWebClient:(APBWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response
 {
