@@ -428,7 +428,7 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 #ifndef SKIP_FEEDBACK
     [self.feedbackManager.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     
-    ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackDictionary);
+    ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackManager.feedbackDictionary);
     
     //store the feedback in the cache director in the event of a termination
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
