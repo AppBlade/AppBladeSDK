@@ -85,9 +85,9 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 - (void)handleWebClientSentFeedback:(APBWebOperation *)client withSuccess:(BOOL)success
 {
     if (success) {
-        ABDebugLog_internal(@"Feedback succeeded!")
+        ABDebugLog_internal(@"Feedback succeeded!");
     }else{
-        ABDebugLog_internal(@"Feedback failed!")
+        ABDebugLog_internal(@"Feedback failed!");
     }
 }
 
