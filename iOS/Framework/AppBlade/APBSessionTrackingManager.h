@@ -7,8 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import "APBBasicFeatureManager.h"
+
+
+
+extern NSString *sessionURLFormat;
+extern NSString *kSessionStartDate;
+extern NSString *kSessionTimeElapsed;
+
 
 @interface APBSessionTrackingManager : NSObject<APBBasicFeatureManager>
 @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
@@ -16,6 +22,9 @@
 
 - (void)logSessionEnd;
 - (void)logSessionStart;
+
+- (NSDictionary*)currentSession;
+
 
 - (void)handleWebClientSentSessions:(APBWebOperation *)client withSuccess:(BOOL)success;
 - (void)sessionTrackingCallbackFailed:(APBWebOperation *)client withErrorString:(NSString*)errorString;

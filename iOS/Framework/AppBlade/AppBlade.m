@@ -665,6 +665,22 @@ static AppBlade *s_sharedManager = nil;
 
 }
 
+- (NSDictionary*)currentSession
+{
+    NSDictionary *toRet = nil;
+#ifndef SKIP_SESSIONS
+    if(self.isAllDisabled){
+        ABDebugLog_internal(@"Can't endSession, SDK disabled");
+        return toRet;
+    }
+    return self.sessionTrackingManager.currentSession;
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+    return toRet;
+}
+
+
 #pragma mark - AppBlade Custom Params
 -(NSDictionary *)getCustomParams
 {

@@ -10,6 +10,8 @@
 #import "AppBlade+PrivateMethods.h"
 
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
+NSString *kSessionStartDate           = @"session_started_at";
+NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 
 @implementation APBSessionTrackingManager
 @synthesize delegate;
@@ -62,6 +64,15 @@ NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
     NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
     [sessionData writeToFile:sessionFilePath atomically:YES];    
 }
+
+- (NSDictionary*)currentSession{
+    NSDictionary *toRet = nil;
+    if (self.sessionStartDate != nil) { //check first if we even HAVE a session
+        toRet = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, kSessionStartDate, self.sessionStartDate.timeIntervalSinceNow, kSessionTimeElapsed, nil];
+    }
+    return toRet;
+}
+
 
 
 - (void)handleWebClientSentSessions:(APBWebOperation *)client withSuccess:(BOOL)success

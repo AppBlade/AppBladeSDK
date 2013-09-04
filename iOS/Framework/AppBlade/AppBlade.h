@@ -97,10 +97,11 @@
  SESSION TRACKING
  ******************************/
 + (void)startSession __attribute__((deprecated("use method -(void)logSessionStart instead")));
--(void)logSessionStart;
-
 + (void)endSession __attribute__((deprecated("use method -(void)logSessionEnd instead")));
+
+- (void)logSessionStart;
 - (void)logSessionEnd;
+- (NSDictionary*)currentSession;
 
 
 /******************************
