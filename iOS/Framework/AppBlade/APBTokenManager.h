@@ -21,15 +21,29 @@
 - (BOOL)tokenConfirmRequestPending;
 - (BOOL)tokenRefreshRequestPending;
 
+//"Device Secret" = Stored and Usable Token
+- (NSMutableDictionary*) appBladeDeviceSecrets;
+- (NSString *)appBladeDeviceSecret;
+- (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
+
+- (void)clearAppBladeKeychain;
+- (void)clearStoredDeviceSecrets;
+
+- (BOOL)hasDeviceSecret;
+- (BOOL)isDeviceSecretBeingConfirmed;
+
+@property (nonatomic, retain) NSString* appBladeDeviceSecret;
+
+
 @end
 
-@interface APBWebOperation (AppBladeTokenRequestManager)
+@interface APBWebOperation (TokenManager)
 - (void)refreshToken:(NSString *)tokenToConfirm;
 - (void)confirmToken:(NSString *)tokenToConfirm;
 
 @end
 
-@interface AppBlade (AppBladeTokenRequestManager)
+@interface AppBlade (TokenManager)
 
 - (void)appBladeWebClient:(APBWebOperation *)client receivedGenerateTokenResponse:(NSDictionary *)response;
 - (void)appBladeWebClient:(APBWebOperation *)client receivedConfirmTokenResponse:(NSDictionary *)response;

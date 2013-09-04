@@ -10,17 +10,6 @@
 #import "AppBlade.h"
 
 @interface APBDeviceSecretManager : NSObject
-- (NSMutableDictionary*) appBladeDeviceSecrets;
-- (NSString *)appBladeDeviceSecret;
-- (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
-
-- (void)clearAppBladeKeychain;
-- (void)clearStoredDeviceSecrets;
-
-- (BOOL)hasDeviceSecret;
-- (BOOL)isDeviceSecretBeingConfirmed;
-
-@property (nonatomic, retain) NSString* appBladeDeviceSecret;
 
 
 @end
@@ -28,6 +17,5 @@
 
 @interface AppBlade (AppBladeDeviceSecretManager)
 
-- (NSOperationQueue*)tokenRequests;
 
 @end

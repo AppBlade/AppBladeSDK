@@ -65,7 +65,7 @@
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 
 @property (nonatomic, strong) APBDeviceSecretManager* deviceSecretManager;
-@property (nonatomic, strong) APBTokenManager* tokenRequestManager;
+@property (nonatomic, strong) APBTokenManager* tokenManager;
 @property (nonatomic, strong) APBApplicationInfoManager* applicationInfoManager;
 @property (nonatomic, strong) APBDeviceInfoManager*      deviceInfoManager;
 
@@ -96,7 +96,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @synthesize allDisabled = _allDisabled;
 
 @synthesize deviceSecretManager;
-@synthesize tokenRequestManager;
+@synthesize tokenManager;
 @synthesize applicationInfoManager;
 @synthesize deviceInfoManager;
 
@@ -158,7 +158,7 @@ static AppBlade *s_sharedManager = nil;
         self.delegate = self;
         //init the core managers
         self.deviceSecretManager = [[APBDeviceSecretManager alloc] init];
-        self.tokenRequestManager = [[APBTokenManager alloc] init];
+        self.tokenManager = [[APBTokenManager alloc] init];
         self.applicationInfoManager = [[APBApplicationInfoManager alloc] init];
         self.deviceInfoManager = [[APBDeviceInfoManager alloc] init];
         //init the feature managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls
@@ -312,7 +312,7 @@ static AppBlade *s_sharedManager = nil;
 #pragma mark Pending Requests Queue
 
 -(NSOperationQueue *) tokenRequests {
-    return [self.tokenRequestManager tokenRequests];
+    return [self.tokenManager tokenRequests];
 }
 
 //token requests are never paused or cancelled
@@ -367,7 +367,7 @@ static AppBlade *s_sharedManager = nil;
         return;
     }
     
-    [self.tokenRequestManager refreshToken:tokenToConfirm];
+    [self.tokenManager refreshToken:tokenToConfirm];
 }
 
 - (void)confirmToken:(NSString *)tokenToConfirm
@@ -376,20 +376,20 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't confirmToken, SDK disabled");
         return;
     }
-    [self.tokenRequestManager confirmToken:tokenToConfirm];
+    [self.tokenManager confirmToken:tokenToConfirm];
 }
 
 
 - (BOOL)isCurrentToken:(NSString *)token {
-    return [self.tokenRequestManager isCurrentToken:token];
+    return [self.tokenManager isCurrentToken:token];
 }
 
 - (BOOL)tokenConfirmRequestPending {
-    return [self.tokenRequestManager tokenConfirmRequestPending];
+    return [self.tokenManager tokenConfirmRequestPending];
 }
 
 - (BOOL)tokenRefreshRequestPending {
-    return [self.tokenRequestManager tokenRefreshRequestPending];
+    return [self.tokenManager tokenRefreshRequestPending];
 }
 
 
@@ -916,7 +916,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't get appBladeDeviceSecrets, SDK disabled");
         return [NSMutableDictionary dictionaryWithObjectsAndKeys:@"", kAppBladeKeychainDeviceSecretKeyNew, @"", kAppBladeKeychainDeviceSecretKeyOld, @"", kAppBladeKeychainPlistHashKey, nil];;
     }
-    return [self.deviceSecretManager appBladeDeviceSecrets];
+    return [self.tokenManager appBladeDeviceSecrets];
 }
 
 
@@ -927,7 +927,7 @@ static AppBlade *s_sharedManager = nil;
         return @"";
     }
 
-    return [self.deviceSecretManager appBladeDeviceSecret];
+    return [self.tokenManager appBladeDeviceSecret];
 }
 
 - (void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret
@@ -936,7 +936,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't get setAppBladeDeviceSecret, SDK disabled");
         return;
     }
-    [self.deviceSecretManager setAppBladeDeviceSecret:appBladeDeviceSecret];
+    [self.tokenManager setAppBladeDeviceSecret:appBladeDeviceSecret];
 }
 
 
@@ -946,7 +946,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't clearAppBladeKeychain, SDK disabled");
         return;
     }
-    [self.deviceSecretManager clearAppBladeKeychain];
+    [self.tokenManager clearAppBladeKeychain];
 }
 
 - (void)clearStoredDeviceSecrets
@@ -955,18 +955,18 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't clearStoredDeviceSecrets, SDK disabled");
         return;
     }
-    [self.deviceSecretManager clearStoredDeviceSecrets];
+    [self.tokenManager clearStoredDeviceSecrets];
 }
 
 
 -(BOOL)hasDeviceSecret
 {
-    return [self.deviceSecretManager hasDeviceSecret];
+    return [self.tokenManager hasDeviceSecret];
 }
 
 - (BOOL)isDeviceSecretBeingConfirmed
 {
-    return [self.deviceSecretManager isDeviceSecretBeingConfirmed];
+    return [self.tokenManager isDeviceSecretBeingConfirmed];
 }
 
 
