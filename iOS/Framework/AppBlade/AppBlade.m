@@ -156,7 +156,7 @@ static AppBlade *s_sharedManager = nil;
         //init the core managers
         self.tokenManager = [[APBTokenManager alloc] init];
         self.applicationInfoManager = [[APBApplicationInfoManager alloc] init];
-        self.deviceInfoManager = [[APBDeviceInfoManager alloc] init];
+        self.deviceInfoManager      = [[APBDeviceInfoManager alloc] init];
         //init the feature managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls
 #ifndef SKIP_AUTHENTICATION
         self.authenticationManager  = [[APBAuthenticationManager alloc] initWithDelegate:self];

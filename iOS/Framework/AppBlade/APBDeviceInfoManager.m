@@ -60,7 +60,12 @@
 }
 
 
-
+-(BOOL) simpleJailBreakCheck
+{
+    return ([[NSFileManager defaultManager] fileExistsAtPath:@"/bin/bash"] ||
+            [[NSFileManager defaultManager] fileExistsAtPath:@"/Applications/Cydia.app"] ||
+            [[NSFileManager defaultManager] fileExistsAtPath:@"/private/var/lib/apt"]);
+}
 
 @end
 
@@ -82,6 +87,11 @@
 -(NSString*) platform
 {
     return self.deviceInfoManager.platform;
+}
+
+-(BOOL) simpleJailBreakCheck
+{
+    return [self.deviceInfoManager simpleJailBreakCheck];
 }
 
 @end
