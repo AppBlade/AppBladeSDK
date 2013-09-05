@@ -1,13 +1,15 @@
-//
-//  AppBlade.h
-//  AppBlade iOS SDK v0.5.0
-//
-//  Created by Craig Spitzkoff on 6/1/11.
-//  Copyright 2011 AppBlade. All rights reserved.
-//
-//  For instructions on how to use this library, please look at the README.
-//
-//  Support and FAQ can be found at http://support.appblade.com
+/*
+ *  AppBlade.h
+ *  AppBlade iOS SDK v0.5.0
+ *
+ *  Created by Craig Spitzkoff on 6/1/11.
+ *  Documented by Andrew Tremblay
+ *  Copyright 2011 AppBlade. All rights reserved.
+ *
+ *  For instructions on how to use this library, please look at the README.
+ *
+ *  Support and FAQ can be found at http://support.appblade.com
+ */
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -16,110 +18,142 @@
 
 @class AppBlade;
 
-/******************************
- APPBLADE DELEGATE PROTOCOL
- ******************************/
+ #pragma mark - APPBLADE DELEGATE PROTOCOL
+/** Protocol to receive messages regarding device authentication and other events. */
 @protocol AppBladeDelegate <NSObject>
 
-// Was the application approved to run?
+/**
+ This method is called when the delegate is notified of whether the Application was approved to run.
+ @param    appBlade    The specific appblade reference the delegate is observing.
+ @param    approved    The boolean of whether the application is approved or not.
+ @param    error       An optional error parameter.
+
+ @result This method returns nothing. If \c false is passed to the approved parameter, A \c kill() will be sent to the main thread and the app will terminate.
+ */
 -(void) appBlade:(AppBlade *)appBlade applicationApproved:(BOOL)approved error:(NSError*)error;
 
 @end
 
-@interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate> 
-/******************************
- API KEYS
- ******************************/
-// AppBlade host name, or custom endpoint.
-@property (nonatomic, retain) NSString* appBladeHost;
-// AppBlade API project-issued secret.
-@property (nonatomic, retain) NSString* appBladeProjectSecret;
-// AppBlade API project-issued device secret.
--(NSString*) appBladeDeviceSecret;
--(void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
+#pragma mark - APPBLADE
+/** Our main class. It contains our singleton and all public methods, which are used as entrypoints for the lower level managers. */
+@interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate>
 
-// The AppBlade delegate receives messages regarding device authentication and other events.
-// See protocol declaration, above.
+#pragma mark  API KEYS
+
+@property (nonatomic, retain) NSString* appBladeHost; /*!< Our endpoint. Usually the AppBlade host name, but it can be custom */
+@property (nonatomic, retain) NSString* appBladeProjectSecret;/*!< AppBlade API project-issued secret. */
+
+// Device Secret
+-(NSString*) appBladeDeviceSecret; /*!<  Our AppBlade-issued device secret. Used in API calls. */
+-(void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret; /*!< Setter method for the device secret. Used in API calls */
+
+/** Delegate to receive messages regarding device authentication and other events */
 @property (nonatomic, assign) id<AppBladeDelegate> delegate;
-/******************************
- SINGLETON
- ******************************/
+
+#pragma mark SINGLETON
+/** Our singleton reference, and the only way that AppBlade shoud be referenced. */
 + (AppBlade *)sharedManager;
 
-/******************************
- INITIAL REGISTRATION
- ******************************/
-// Uses the AppBlade plist that you embedded
-//  required before anything else
+
+#pragma mark INITIAL REGISTRATION
+/**
+ Initial registration method that uses the AppBlade.plist that you embedded on setup
+ required before anything else in AppBlade can be used.
+ */
 - (void)registerWithAppBladePlist;
+
+/**
+ Initial registration method that takes a custom parameter for the plist name that you embedded on setup
+ This special plist must exist in your main bundle.
+ */
 - (void)registerWithAppBladePlistNamed:(NSString*)plistName;
 
-/******************************
- APPBLADE AUTHENTICATION / KILLSWITCH
- ******************************/
-// Checks with AppBlade to see if the app is allowed to run on this device.
+/** @defgroup Features */
+#pragma mark APPBLADE AUTHENTICATION / KILLSWITCH
+/** @defgroup authentication Authentication & Killswitch
+    @ingroup Features
+    @{
+ */
+/** Checks with AppBlade to see if the app is allowed to run on this device. */
 - (void)checkApproval;
+/** @} */
 
-/******************************
- AUTO UPDATING
- ******************************/
-// Checks with AppBlade anonymously to see if the app can be updated with a new build.
+
+#pragma mark AUTO UPDATING
+/** @defgroup autoupdating Auto Updating
+ @ingroup Features
+ @{
+ */
+/** Checks with AppBlade anonymously to see if the app can be updated with a new build. */
 - (void)checkForUpdates;
+/** @} */
 
-/******************************
- CRASH REPORTING
- ******************************/
-// Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade.
+
+#pragma mark CRASH REPORTING
+/** @defgroup crash Crash Reporting
+ @ingroup Features
+ @{
+ */
+/** Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade. */
 - (void)catchAndReportCrashes;
 
-//method to call if you want to attempt to send crash reports more often than ususal
+/** Method to call if you want to attempt to send crash reports more often than ususal */
 - (void)checkForExistingCrashReports;
 
 - (void)handleCrashReport;
+/** @} */
 
 
-/******************************
- FEEDBACK REPORTING
- ******************************/
+#pragma mark FEEDBACK REPORTING
+/** @defgroup feedback Feedback Reporting
+ @ingroup Features
+ @{
+ */
 - (void)allowFeedbackReporting;
 - (void)allowFeedbackReportingForWindow:(UIWindow*)window withOptions:(AppBladeFeedbackSetupOptions)options;
 
-// Shows a feedback dialogue and handles screenshot
+/** Shows a feedback dialogue and handles screenshot */
 - (void)showFeedbackDialogue;
 - (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options;
 
-//other feedback methods and functions
+/** Helper function to manually trigger a feedback check. */
 - (void)handleBackloggedFeedback;
+/** @} */
 
 
 
-/******************************
- SESSION TRACKING
- ******************************/
-+ (void)startSession __attribute__((deprecated("use method -(void)logSessionStart instead")));
-+ (void)endSession __attribute__((deprecated("use method -(void)logSessionEnd instead")));
-
+#pragma mark SESSION TRACKING
+/** @defgroup sessionTracking Session Tracking
+ @ingroup Features
+ @{
+ */
 - (void)logSessionStart;
 - (void)logSessionEnd;
 - (NSDictionary*)currentSession;
+/** @} */
 
 
-/******************************
- CUSTOM PARAMETERS
- ******************************/
-//Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports
+
+#pragma mark CUSTOM PARAMETERS
+/** @defgroup customparams Custom Parameters
+ @ingroup Features
+ @{
+ */
+/** Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports */
 -(void)setCustomParam:(id)object forKey:(NSString*)key;
 
-//Other params
+/** Getter function for all current stored params */
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newCustomParams;
 -(void)clearAllCustomParams;
+/** @} */
 
 
-/******************************
- OTHER SDK METHODS
- ******************************/
-
+#pragma mark OTHER SDK METHODS
+/** @defgroup mainhelpers Helper Methods
+ @ingroup Features
+ @{
+ */
 //Creates a random string of a specified length
 - (NSString*)randomString:(int)length;
 
@@ -128,8 +162,10 @@
 - (void)sanitizeKeychain;
 - (void)cleanOutKeychain;
 
-// Returns SDK Version
+/**  Returns SDK Version */
 + (NSString*)sdkVersion;
-// Log SDK Version
+/**  Log SDK Version to NSLog */
 + (void)logSDKVersion;
+
+/** @} */
 @end

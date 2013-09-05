@@ -6,9 +6,14 @@
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
 #import "APBWebOperation.h"
-
+/**
+ @defgroup appbladeprivatemethods AppBlade Private Methods
+ */
 @interface AppBlade (PrivateMethods)
 
+/** @ingroup appbladeprivatemethods
+  @{
+ */
 - (void)validateProjectConfiguration;
 - (void)raiseConfigurationExceptionWithMessage:(NSString *)name;
 
@@ -36,5 +41,7 @@
 - (void)checkAndCreateAppBladeCacheDirectory;
 
 - (void) resumeCurrentPendingRequests;
-
+/**
+ @} 
+ */
 @end

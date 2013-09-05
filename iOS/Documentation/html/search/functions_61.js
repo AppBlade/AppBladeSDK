@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['addpendingrequest_3a',['addPendingRequest:',['../protocol_a_p_b_web_operation_delegate-p.html#a07810b8302bed1ea550d6b75dcd4e4e4',1,'APBWebOperationDelegate-p']]],
+  ['addsecuritytorequest_3a',['addSecurityToRequest:',['../interface_a_p_b_web_operation.html#a51b44d4605f62a70fc3e2d4d42f7adeb',1,'APBWebOperation']]],
+  ['addtokenrequest_3a',['addTokenRequest:',['../interface_a_p_b_token_manager.html#ada7218ddeeba537315dbfd3bb2d3e864',1,'APBTokenManager']]],
+  ['allowfeedbackreporting',['allowFeedbackReporting',['../group__feedback.html#gad78d706a6cbd0403f6ccb71b04c0ce86',1,'AppBlade']]],
+  ['allowfeedbackreportingforwindow_3awithoptions_3a',['allowFeedbackReportingForWindow:withOptions:',['../interface_a_p_b_feedback_reporting_manager.html#a9d61e6f50c62f7ff17cb735665efbc4c',1,'APBFeedbackReportingManager::allowFeedbackReportingForWindow:withOptions:()'],['../group__feedback.html#ga7d8d746bf2dcf1ecba2eb88a221ec165',1,'AppBlade::allowFeedbackReportingForWindow:withOptions:()']]],
+  ['appblade_3aapplicationapproved_3aerror_3a',['appBlade:applicationApproved:error:',['../protocol_app_blade_delegate-p.html#a0bfc677d74a6095fcead79bd8ad5f85a',1,'AppBladeDelegate-p']]],
+  ['appblade_3aupdateavailable_3aupdatemessage_3aupdateurl_3a',['appBlade:updateAvailable:updateMessage:updateURL:',['../protocol_a_p_b_updates_manager_delegate-p.html#a951cb7acc816cce8aab114a11a8c2ff8',1,'APBUpdatesManagerDelegate-p']]],
+  ['appbladedevicesecret',['appBladeDeviceSecret',['../interface_a_p_b_token_manager.html#acdc6efe7ae75c0b96b21f40488c582c6',1,'APBTokenManager::appBladeDeviceSecret()'],['../protocol_a_p_b_web_operation_delegate-p.html#a2e6c623a97956f9b52c973914c224dd7',1,'APBWebOperationDelegate-p::appBladeDeviceSecret()'],['../interface_app_blade.html#aae658dbf197ce44d893e99934539b766',1,'AppBlade::appBladeDeviceSecret()']]],
+  ['appbladedevicesecrets',['appBladeDeviceSecrets',['../interface_a_p_b_token_manager.html#a954e397892ffc7ac35f364e67184ab9b',1,'APBTokenManager']]],
+  ['appbladehost',['appBladeHost',['../protocol_a_p_b_web_operation_delegate-p.html#a6598ee223088d5fd364a800e27c54566',1,'APBWebOperationDelegate-p']]],
+  ['appbladeprojectsecret',['appBladeProjectSecret',['../protocol_a_p_b_web_operation_delegate-p.html#aa94d74660deac7e65ae4bf3bdb8b722a',1,'APBWebOperationDelegate-p']]],
+  ['appbladewebclient_3afailedpermissions_3a',['appBladeWebClient:failedPermissions:',['../category_app_blade_07_authorization_08.html#a835f490e0e25b7eb6e6b5f8580fe63f6',1,'AppBlade(Authorization)::appBladeWebClient:failedPermissions:()'],['../interface_app_blade.html#a835f490e0e25b7eb6e6b5f8580fe63f6',1,'AppBlade::appBladeWebClient:failedPermissions:()']]],
+  ['appbladewebclient_3areceivedpermissions_3a',['appBladeWebClient:receivedPermissions:',['../category_app_blade_07_authorization_08.html#a61f479de10180a33e0ab6dc86b1d0058',1,'AppBlade(Authorization)::appBladeWebClient:receivedPermissions:()'],['../interface_app_blade.html#a61f479de10180a33e0ab6dc86b1d0058',1,'AppBlade::appBladeWebClient:receivedPermissions:()']]],
+  ['appbladewebclient_3areceivedupdate_3a',['appBladeWebClient:receivedUpdate:',['../category_app_blade_07_updates_08.html#aa0c2a3bff1ed0d064f7198d623fa5dde',1,'AppBlade(Updates)::appBladeWebClient:receivedUpdate:()'],['../interface_app_blade.html#aa0c2a3bff1ed0d064f7198d623fa5dde',1,'AppBlade::appBladeWebClient:receivedUpdate:()']]],
+  ['appbladewebclientfailed_3a',['appBladeWebClientFailed:',['../protocol_a_p_b_web_operation_delegate-p.html#aaf48f9a84414800b974ae63f3d0ab0f1',1,'APBWebOperationDelegate-p']]],
+  ['appbladewebclientfailed_3awitherrorstring_3a',['appBladeWebClientFailed:withErrorString:',['../protocol_a_p_b_web_operation_delegate-p.html#ab2d687faeb66531bcad25b11301a9238',1,'APBWebOperationDelegate-p']]]
+];
