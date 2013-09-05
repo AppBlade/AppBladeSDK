@@ -22,6 +22,15 @@
 {
     [super viewDidLoad];
     
+    self.crashVC = [[CrashReportingViewController alloc] init];
+    self.customParamsVC = [[CustomParametersViewController alloc] init];
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.1 target:self
+                                   selector:@selector(updateCurrentSessionDisplay) userInfo:nil repeats:YES];
+}
+
+-(void)viewWillLayoutSubviews
+{
     //Set Button Image insets
     UIEdgeInsets insetsExample = UIEdgeInsetsMake(12, 12, 12, 12);
     [self setBackgroundImageInsets:insetsExample forButton:self.showFormButton];
@@ -45,14 +54,10 @@
     totalHeight = [self addView:self.crashReportWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
     totalHeight = [self addView:self.sessiontrackingWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
     totalHeight = [self addView:self.customParamsWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
-    
     totalHeight = [self addView:self.updateCheckingWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.authenticationWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];    
+    totalHeight = [self addView:self.authenticationWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
     [self.scrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
-    
-    
-    [NSTimer scheduledTimerWithTimeInterval:0.1 target:self
-                                   selector:@selector(updateCurrentSessionDisplay) userInfo:nil repeats:YES];
+
 }
 
 -(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height {
@@ -89,13 +94,13 @@
 
 - (IBAction)crashButtonPressed:(id)sender {
     if(sender == self.crashButtonSigabrt){
-        [self sigabrt];
+        [self.crashVC sigabrt];
     }else if(sender == self.crashButtonCustomException){
-        [self throwNSException];
+        [self.crashVC throwDefaultNSException];
     }else if(sender == self.crashButtonSigsev){
-        [self sigsegv];
+        [self.crashVC sigsegv];
     }else if(sender == self.crashOptionsListButton){
-        [self sigsegv];
+        [self.crashVC sigsegv];
     }else {
         NSLog(@"Error causing error: Unknown sender.");
     }
@@ -165,57 +170,6 @@
     }
     
     [self.currentSessionDisplay setText:currentSessionStatus];
-}
-
-
-#pragma mark - Crash "Helpers"
-// credit to CrashKit for these .
-//https://github.com/kaler/CrashKit
-- (void)sigabrt
-{
-    abort();
-}
-
-- (void)sigbus
-{
-    void (*func)() = 0;
-    func();
-}
-
-- (void)sigfpe
-{
-    int zero = 0;  // LLVM is smart and actually catches divide by zero if it is constant
-    int i = 10/zero;
-    NSLog(@"Int: %i", i);
-}
-
-- (void)sigill
-{
-    typedef void(*FUNC)(void);
-    const static unsigned char insn[4] = { 0xff, 0xff, 0xff, 0xff };
-    void (*func)() = (FUNC)insn;
-    func();
-}
-
-- (void)sigpipe
-{
-    // Hmm, can't actually generate a SIGPIPE.
-    FILE *f = popen("ls", "r");
-    const char *buf[128];
-    pwrite(fileno(f), buf, 128, 0);
-}
-
-- (void)sigsegv
-{
-    // This actually raises a SIGBUS.
-    NSException *e = [NSException exceptionWithName:@"SIGSEGV" reason:@"Dummy SIGSEGV Reason" userInfo:nil];
-    @throw e;
-}
-
-- (void)throwNSException
-{
-    NSException *e = [NSException exceptionWithName:@"TestException" reason:@"Testing AppBlade Crash" userInfo:nil];
-    @throw e;
 }
 
 

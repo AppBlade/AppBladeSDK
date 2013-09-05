@@ -10,4 +10,18 @@
 
 @interface CrashReportingViewController : UIViewController
 
+
+#pragma mark - Crash "Helpers"
+// credit to CrashKit for these .
+//https://github.com/kaler/CrashKit
+- (void)sigabrt;
+- (void)sigbus;
+- (void)sigfpe;
+- (void)sigill;
+- (void)sigpipe;
+- (void)sigsegv;
+- (void)throwDefaultNSException;
+- (void)throwCustomTestNSException:(NSString *)reason;
+
+
 @end

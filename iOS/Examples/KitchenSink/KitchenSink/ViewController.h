@@ -8,7 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+#import "CrashReportingViewController.h"
+#import "CustomParametersViewController.h"
+
 @interface ViewController : UIViewController <UIScrollViewDelegate>
+
+@property (strong, nonatomic) CrashReportingViewController *crashVC;
+@property (strong, nonatomic) CustomParametersViewController *customParamsVC;
+
 
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
