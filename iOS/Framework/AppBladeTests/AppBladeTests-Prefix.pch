@@ -1,10 +1,9 @@
 //
-// Prefix header for all source files of the 'AppBlade' target in the 'AppBlade' project
+// Prefix header for all source files of the 'AppBladeTests' target in the 'AppBladeTests' project
 //
 
-#include <TargetConditionals.h>
-
 #ifdef __OBJC__
+    #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
 

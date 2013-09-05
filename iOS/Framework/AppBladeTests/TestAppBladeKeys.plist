@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>api_keys</key>
+	<dict>
+		<key>host</key>
+		<string>https://appblade.com</string>
+		<key>project_secret</key>
+		<string>7e01bc91e97a93367d6cb2eebde3d922</string>
+	</dict>
+</dict>
+</plist>
