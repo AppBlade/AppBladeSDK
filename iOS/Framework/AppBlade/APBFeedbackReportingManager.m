@@ -477,10 +477,13 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 
 - (UIImage*)getContentBelowView
 {
-    UIWindow* keyWindow = [[UIApplication sharedApplication] keyWindow];
+    
+    UIWindow* keyWindow = self.feedbackManager.feedbackWindow;
+    if(keyWindow == nil){
+        keyWindow = [[UIApplication sharedApplication] keyWindow];
+    }
     UIGraphicsBeginImageContext(keyWindow.bounds.size);
     [keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
-    
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
