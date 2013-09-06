@@ -1,28 +1,27 @@
-/*
- *  AppBlade.h
- *  AppBlade iOS SDK v0.5.0
- *
- *  Created by Craig Spitzkoff on 6/1/11.
- *  Documented by Andrew Tremblay
- *  Copyright 2011 AppBlade. All rights reserved.
- *
- *  For instructions on how to use this library, please look at the README.
- *
- *  Support and FAQ can be found at http://support.appblade.com
+/*!
+ @header AppBlade
+ @abstract AppBlade iOS SDK v0.5.0
+ 
+   Created by Craig Spitzkoff on 6/1/11.
+   Documented by Andrew Tremblay
+   Copyright 2011 AppBlade. All rights reserved.
+ 
+   For instructions on how to use this library, please look at the README.
+ 
+   Support and FAQ can be found at http://support.appblade.com
  */
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
 #import "AppBladeSharedConstants.h"
 
 @class AppBlade;
 
  #pragma mark - APPBLADE DELEGATE PROTOCOL
-/** Protocol to receive messages regarding device authentication and other events. */
+/*! Protocol to receive messages regarding device authentication and other events. */
 @protocol AppBladeDelegate <NSObject>
 
-/**
+/*!
  This method is called when the delegate is notified of whether the Application was approved to run.
  @param    appBlade    The specific appblade reference the delegate is observing.
  @param    approved    The boolean of whether the application is approved or not.
@@ -35,17 +34,21 @@
 @end
 
 #pragma mark - APPBLADE
-/** Our main class. It contains our singleton and all public methods, which are used as entrypoints for the lower level managers. */
+/*! Our main class. It contains our singleton and all public methods, which are used as entrypoints for the lower level managers. */
 @interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate>
 
 #pragma mark  API KEYS
 
-@property (nonatomic, retain) NSString* appBladeHost; /*!< Our endpoint. Usually the AppBlade host name, but it can be custom */
-@property (nonatomic, retain) NSString* appBladeProjectSecret;/*!< AppBlade API project-issued secret. */
+/*! Our endpoint. Usually the AppBlade host name, but it can be custom */
+@property (nonatomic, retain) NSString* appBladeHost;
+/*! AppBlade API project-issued secret. */
+@property (nonatomic, retain) NSString* appBladeProjectSecret;
 
 // Device Secret
--(NSString*) appBladeDeviceSecret; /*!<  Our AppBlade-issued device secret. Used in API calls. */
--(void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret; /*!< Setter method for the device secret. Used in API calls */
+/*! Our AppBlade-issued device secret. Used in API calls. */
+-(NSString*) appBladeDeviceSecret;
+/*! Setter method for the device secret. Used in API calls */
+-(void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 
 /** Delegate to receive messages regarding device authentication and other events */
 @property (nonatomic, assign) id<AppBladeDelegate> delegate;
