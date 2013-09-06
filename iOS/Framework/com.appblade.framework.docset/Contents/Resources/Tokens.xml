@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0"> <!-- Root element -->
+<!-- The File element groups symbols that are documented in a common HTML file--!>
+<File path="documentation/Cocoa/Reference/NSArray.html">
+  <Token>
+    <TokenIdentifier>//apple_ref/occ/cl/NSArray</TokenIdentifier>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>arrayWithContentsOfFile:</Name>
+      <Type>clm</Type>
+      <Scope>NSArray</Scope>
+      <APILanguage>occ</APILanguage>
+    </TokenIdentifier>
+  </Token>
+  <Token>
+    <TokenIdentifier>//apple_ref/occ/instm/NSArray/count</TokenIdentifier>
+    <Abstract>Returns the number of objects in the array.</Abstract>
+    <Declaration>- (unsigned)count;</Declaration>
+    <DeclaredIn>
+	<HeaderPath>/System/Library/Frameworks/Foundation.framework/Headers/NSArray.h</HeaderPath>
+      <FrameworkName>Foundation</FrameworkName>
+    </DeclaredIn>
+    <Availability distribution="iOS">
+      <IntroducedInVersion>10.0</IntroducedInVersion>
+      <DeprecatedInVersion>11.7</DeprecatedInVersion>
+      <RemovedAfterVersion>11.9</RemovedAfterVersion>
+      <DeprecationSummary>Replaced by newCount method.</DeprecationSummary>
+    </Availability>
+    <RelatedTokens>
+      <TokenIdentifier>//apple_ref/occ/instm/NSArray/capacity</TokenIdentifier>
+      <TokenIdentifier>
+        <Name>objectAtIndex:</Name>
+        <Scope>NSArray</Scope>
+      </TokenIdentifier>
+    </RelatedTokens>
+    <RelatedDocuments>
+      <NodeRef refid="17" />
+    </RelatedDocuments>
+    <RelatedSampleCode>
+      <NodeRef refid="25" />
+    </RelatedSampleCode>
+  </Token>
+</File>
+<!-- You can also list token definitions individually, specifying a location for each --!>
+<Token>
+  <TokenIdentifier>//apple_ref/occ/instm/NSArray/initWithArray:copyItems:</TokenIdentifier>
+  <Path>documentation/Cocoa/Reference/NSArray.html</Path>
+  <Abstract>Initializes an instance from an array, optionally creating copies of the objects.</Abstract>
+  <Availability distribution="OS X">
+    <IntroducedInVersion>10.2</IntroducedInVersion>
+  </Availability>
+</Token>
+<Token>
+  <TokenIdentifier>//apple_ref/occ/instm/NSArray/initWithContentsOfFile:</TokenIdentifier>
+  <NodeRef refid="22">
+  <Availability distribution="OS X">
+    <IntroducedInVersion>10.0</IntroducedInVersion/>
+    <RemovedAfterVersion cputype="ppc">11.8</RemovedAfterVersion>
+    <RemovedAfterVersion cputype="i386">11.9</RemovedAfterVersion>
+  </Availability>
+</Token>
+<!-- If the same token identifier is used multiple times, the information in the token definition is merged together --!>
+<Token>
+  <TokenIdentifier>//apple_ref/occ/clm/NSArray/arrayWithContentsOfFile:</TokenIdentifier>
+  <Availability distribution="OS X">
+    <IntroducedInVersion>10.0</IntroducedInVersion>
+  </Availability>
+</Token>
+<!-- Instead of defining related symbols for each individual token, use the RelatedTokens element at the root level to define a set of interrelated symbols --!>
+<RelatedTokens title="Array Creation">
+  <TokenIdentifier>//apple_ref/occ/instm/NSArray/initWithArray:copyItems:</TokenIdentifier>
+  <TokenIdentifier>//apple_ref/occ/clm/NSArray/arrayWithContentsOfFile:</TokenIdentifier>
+</RelatedTokens>
+</Tokens>

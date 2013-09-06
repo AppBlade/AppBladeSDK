@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DocSetNodes version="1.0">     <!-- Root element -->
+    <TOC>
+        <Node type="folder">    <!-- Root node -->
+            <Name>Root</Name>
+            <Path>index.html</Path>
+        </Node>
+    </TOC>
+</DocSetNodes>
