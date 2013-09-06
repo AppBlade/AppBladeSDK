@@ -996,7 +996,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n#/Applications/Doxygen.app/Contents/Resources/doxygen\n/Applications/Xcode.app/Contents/Developer/usr/bin/headerdoc2html -o ~/Desktop/Test ~/Development/Appblade-Clean-SDK/iOS/Framework/AppBlade/\n/Applications/Xcode.app/Contents/Developer/usr/bin/gatherheaderdoc ~/Desktop/Test\n\n\n\ntell application \"Xcode\"\nload documentation set with path\n\"/Users/$USER/Library/Developer/Shared/Documentation/DocSets/${APPLICATION_IDENTIFIER}\"\nend tell\n\necho \"loaded documentation set with path \\\"/Users/$USER/Library/Developer/Shared/Documentation/DocSets/${APPLICATION_IDENTIFIER}\\\"\"\n";
+			shellScript = "export LANG=en_US.US-ASCII\n\n/Applications/Xcode.app/Contents/Developer/usr/bin/headerdoc2html -o ~/Desktop/Test ~/Development/Appblade-Clean-SDK/iOS/Framework/AppBlade/\n/Applications/Xcode.app/Contents/Developer/usr/bin/gatherheaderdoc ~/Desktop/Test\n\n\n\ntell application \"Xcode\"\nload documentation set with path\n\"/Users/$USER/Library/Developer/Shared/Documentation/DocSets/${APPLICATION_IDENTIFIER}\"\nend tell\n\necho \"loaded documentation set with path \\\"/Users/$USER/Library/Developer/Shared/Documentation/DocSets/${APPLICATION_IDENTIFIER}\\\"\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1555,6 +1555,8 @@
 		31B288D217D9713B00F1F7FA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1562,6 +1564,8 @@
 		31B288D317D9713B00F1F7FA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
