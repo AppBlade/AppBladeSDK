@@ -3,7 +3,7 @@
     <TOC>
         <Node type="folder">    <!-- Root node -->
             <Name>Root</Name>
-            <Path>index.html</Path>
+            <Path>masterTOC.html</Path>
         </Node>
     </TOC>
 </DocSetNodes>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0"> <!-- Root element -->
-<!-- The File element groups symbols that are documented in a common HTML file--!>
+<!-- The File element groups symbols that are documented in a common HTML file -->
 <File path="documentation/Cocoa/Reference/NSArray.html">
   <Token>
     <TokenIdentifier>//apple_ref/occ/cl/NSArray</TokenIdentifier>
@@ -42,7 +42,7 @@
     </RelatedSampleCode>
   </Token>
 </File>
-<!-- You can also list token definitions individually, specifying a location for each --!>
+<!-- You can also list token definitions individually, specifying a location for each -->
 <Token>
   <TokenIdentifier>//apple_ref/occ/instm/NSArray/initWithArray:copyItems:</TokenIdentifier>
   <Path>documentation/Cocoa/Reference/NSArray.html</Path>
@@ -53,21 +53,21 @@
 </Token>
 <Token>
   <TokenIdentifier>//apple_ref/occ/instm/NSArray/initWithContentsOfFile:</TokenIdentifier>
-  <NodeRef refid="22">
+  <NodeRef refid="22"/>
   <Availability distribution="OS X">
-    <IntroducedInVersion>10.0</IntroducedInVersion/>
+    <IntroducedInVersion>10.0</IntroducedInVersion>
     <RemovedAfterVersion cputype="ppc">11.8</RemovedAfterVersion>
     <RemovedAfterVersion cputype="i386">11.9</RemovedAfterVersion>
   </Availability>
 </Token>
-<!-- If the same token identifier is used multiple times, the information in the token definition is merged together --!>
+<!-- If the same token identifier is used multiple times, the information in the token definition is merged together -->
 <Token>
   <TokenIdentifier>//apple_ref/occ/clm/NSArray/arrayWithContentsOfFile:</TokenIdentifier>
   <Availability distribution="OS X">
     <IntroducedInVersion>10.0</IntroducedInVersion>
   </Availability>
 </Token>
-<!-- Instead of defining related symbols for each individual token, use the RelatedTokens element at the root level to define a set of interrelated symbols --!>
+<!-- Instead of defining related symbols for each individual token, use the RelatedTokens element at the root level to define a set of interrelated symbols -->
 <RelatedTokens title="Array Creation">
   <TokenIdentifier>//apple_ref/occ/instm/NSArray/initWithArray:copyItems:</TokenIdentifier>
   <TokenIdentifier>//apple_ref/occ/clm/NSArray/arrayWithContentsOfFile:</TokenIdentifier>
