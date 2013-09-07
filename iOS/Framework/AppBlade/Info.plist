@@ -12,10 +12,14 @@
 	<string>0.9</string>
 	<key>CFBundleVersion</key>
 	<string>0.9</string>
-	<key>DocSetFeedName</key>
-	<string>AppBlade SDK for iOS</string>
+
 	<key>DocSetMinimumXcodeVersion</key>
 	<string>3.0</string>
+
+	<key>DocSetFeedName</key>
+	<string>AppBlade SDK for iOS</string>
+
+
 	<key>DashDocSetFamily</key>
 	<string>appledoc</string>
 	<key>DocSetPublisherIdentifier</key>
