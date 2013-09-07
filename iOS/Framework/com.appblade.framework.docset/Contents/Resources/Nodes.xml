@@ -1,9 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DocSetNodes version="1.0">     <!-- Root element -->
-    <TOC>
-        <Node type="folder">    <!-- Root node -->
-            <Name>Root</Name>
-            <Path>masterTOC.html</Path>
-        </Node>
-    </TOC>
+<TOC>
+  <Node>
+    <Name>AppBlade SDK</Name>
+    <File>masterTOC.html</File>
+    <Subnodes>
+		<Node>
+			<Name>Singleton</Name>
+			<Path></Path>
+			<File>masterTOC.html</File>
+			<Subnodes>
+				<NodeRef refid="1"/>
+				<NodeRef refid="2"/>
+				<NodeRef refid="7"/>
+			</Subnodes>
+		</Node>
+		<Node>
+			<Name>Core Managers</Name>
+			<Path></Path>
+			<File>masterTOC.html</File>
+			<Subnodes>
+			  <NodeRef refid="3"/>
+			  <NodeRef refid="4"/>
+			  <NodeRef refid="5"/>
+			</Subnodes>
+      </Node>
+    </Subnodes>
+    <Name>Example Projects</Name>
+    <File>masterTOC.html</File>
+    <Subnodes>
+		<Node>
+			<Name>KitchenSink</Name>
+			<Path></Path>
+			<File>masterTOC.html</File>
+			<Subnodes>
+				<NodeRef refid="6"/>
+				<NodeRef refid="1"/>
+				<NodeRef refid="2"/>
+			</Subnodes>
+		</Node>
+    </Subnodes>
+  </Node>
+</TOC>
+<Library>
+		<Node id="1">
+			<Name>AppBlade.h</Name>
+			<Path>AppBlade_h</Path>
+			<File>index.html</File>
+		</Node>
+		<Node id="2">
+			<Name>AppBlade+PrivateMethods.h</Name>
+			<Path>AppBlade_h</Path>
+			<File>index.html</File>
+		</Node>
+		<Node id="7">
+			<Name>AppBladeSharedConstants.h</Name>
+			<Path>AppBlade_h</Path>
+			<File>index.html</File>
+		</Node>
+		<Node id="6">
+			<Name>World Domination Plans</Name>
+			<Path>AppBlade_h</Path>
+			<File>index.html</File>
+		</Node>
+		<Node id="3">
+			<Name>APBTokenManager</Name>
+			<Path>AppBlade_h</Path>
+			<File>index.html</File>
+		</Node>
+		<Node id="4">
+			<Name>APBDeviceInfoManager</Name>
+			<Path>Documents/AppBlade_h</Path>
+			<File>index.html</File>
+		</Node>
+		<Node id="5">
+			<Name>APBApplicationInfoManager</Name>
+			<Path>AppBlade_h</Path>
+			<File>index.html</File>
+		</Node>
+	</Library>
+
 </DocSetNodes>
