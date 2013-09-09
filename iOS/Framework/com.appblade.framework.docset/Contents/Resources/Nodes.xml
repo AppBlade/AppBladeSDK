@@ -3,7 +3,7 @@
 <TOC>
   <Node>
     <Name>AppBlade SDK for iOS</Name>
-    <File>masterTOC.html</File>
+    <File>AppBlade_hdoc/index.html</File>
     <Subnodes>
 		<Node>
     	<Name>AppBlade Architecture Overview</Name>
@@ -194,6 +194,13 @@
 			<Path>AppBlade_h</Path>
 			<File>index.html</File>
 		</Node>
+		<Node id="100">
+			<Name>AppBlade</Name>
+			<Path>AppBlade_hdoc</Path>
+			<File>index.html</File>
+		</Node>
+		
 	</Library>
+	
 
 </DocSetNodes>
