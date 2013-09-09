@@ -15,6 +15,8 @@
 <!-- You can also list token definitions individually, specifying a location for each -->
 <Token>
   <TokenIdentifier>//apple_ref/occ/instm/AppBlade/catchAndReportCrashes</TokenIdentifier>
-  <NodeRef refid="1"/>
+  <RelatedDocuments>
+  	<NodeRef refid="1"/>
+  </RelatedDocuments>
 </Token>
 </Tokens>
