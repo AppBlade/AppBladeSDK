@@ -1,16 +1,9 @@
 /*!
   @header AppBlade
-  @abstract AppBlade iOS SDK v0.5.0
- 
-   Created by Craig Spitzkoff on 6/1/11.
-
-   Copyright 2011 AppBlade. All rights reserved.
- 
-   For instructions on how to use this library, please look at the README.
- 
-   Support and FAQ can be found at http://support.appblade.com
+  @brief Class containing the AppBlade sharedManager singleton and entrypoint methods to AppBlade functions
+  @discussion Support and FAQ can be found at http://support.appblade.com
+  @namespace AppBlade
  */
-
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "AppBladeSharedConstants.h"
@@ -18,11 +11,11 @@
 @class AppBlade;
 
  #pragma mark - APPBLADE DELEGATE PROTOCOL
-/*! Protocol to receive messages regarding device authentication and other events. */
+/*! @brief Protocol to receive messages regarding device authentication and other events. */
 @protocol AppBladeDelegate <NSObject>
 
 /*!
- This method is called when the delegate is notified of whether the Application was approved to run.
+ @brief This method is called when the delegate is notified of whether the Application was approved to run.
  @param    appBlade    The specific appblade reference the delegate is observing.
  @param    approved    The boolean of whether the application is approved or not.
  @param    error       An optional error parameter.
@@ -34,46 +27,48 @@
 @end
 
 #pragma mark - APPBLADE
-/*! Our main class. AppBlade contains our singleton and all public methods, which are used as entrypoints for the lower level managers. */
+/*! @brief Our main class. AppBlade contains our singleton and all public methods, which are used as entrypoints for the lower level managers. */
 @interface AppBlade : NSObject <AppBladeDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate>
 
 #pragma mark  API KEYS
 
-/*! Our endpoint. Usually the AppBlade host name, but it can be custom */
+/*! @brief Our endpoint. Usually the AppBlade host name, but it can be custom */
 @property (nonatomic, retain) NSString* appBladeHost;
-/*! AppBlade API project-issued secret. */
+/*! @brief AppBlade API project-issued secret. */
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
 
 // Device Secret
-/*! Our AppBlade-issued device secret. Used in API calls. */
+/*! @brief Our AppBlade-issued device secret. Used in API calls. */
 -(NSString*) appBladeDeviceSecret;
-/*! Setter method for the device secret. Used in API calls */
+/*! @brief Setter method for the device secret. Used in API calls */
 -(void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 
-/*! Delegate to receive messages regarding device authentication and other events */
+/*! @brief Delegate to receive messages regarding device authentication and other events */
 @property (nonatomic, assign) id<AppBladeDelegate> delegate;
 
 #pragma mark SINGLETON
-/*! Our singleton reference, and the only way that AppBlade shoud be referenced. */
+/*! @brief Our singleton reference, and the only way that AppBlade shoud be referenced. */
 + (AppBlade *)sharedManager;
 
 
 #pragma mark INITIAL REGISTRATION
 /*!
- Initial registration method that uses the AppBlade.plist that you embedded on setup
- required before anything else in AppBlade can be used.
+ @brief Initial registration method, use before enything else. 
+ @discussion AppBlade registration that uses the AppBlade.plist that you embedded on setup.
+ It's required that you register before anything else in AppBlade can be used.
  */
 - (void)registerWithAppBladePlist;
 
 /*!
- Initial registration method that takes a custom parameter for the plist name that you embedded on setup
- This special plist must exist in your main bundle.
+ @brief Initial registration method, use before enything else.
+ @discussion AppBlade registration that takes a custom parameter for the plist name that you embedded on setup.
+ This special plist must exist in your main bundle. Note that AppBlade will not find the plist and inject it with tokens if you do this, so this call is not advised.
  */
 - (void)registerWithAppBladePlistNamed:(NSString*)plistName;
 
 #pragma mark APPBLADE AUTHENTICATION / KILLSWITCH
 // Authentication & Killswitch
-/*! Checks with AppBlade to see if the app is allowed to run on this device. */
+/*! @brief Checks with AppBlade to see if the app is allowed to run on this device. */
 - (void)checkApproval;
 
 
