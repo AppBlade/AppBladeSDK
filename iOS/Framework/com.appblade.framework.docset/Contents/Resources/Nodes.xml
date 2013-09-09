@@ -3,86 +3,87 @@
 <TOC>
   <Node>
     <Name>AppBlade SDK for iOS</Name>
-    <File>AppBlade_hdoc/index.html</File>
+	<Path></Path>
+	<File>masterTOC.html</File>
     <Subnodes>
 		<Node>
-    	<Name>AppBlade Architecture Overview</Name>
-    	<File>masterTOC.html</File>
+			<Name>AppBlade Architecture Overview</Name>
+			<File>masterTOC.html</File>
   		</Node>
   		<Node>
-  		<Name>AppBlade SDK</Name>
-	    <File>masterTOC.html</File>
-    	<Subnodes>
-		<Node>
-			<Name>Singleton</Name>
-			<Path></Path>
-			<File>masterTOC.html</File>
+			<Name>AppBlade SDK</Name>
+			<File><NodeRef refid="100"/></File>
 			<Subnodes>
-				<NodeRef refid="1"/>
-				<NodeRef refid="2"/>
-				<NodeRef refid="3"/>
-			</Subnodes>
-		</Node>
-		<Node>
-			<Name>Feature Managers</Name>
-			<Path></Path>
-			<File>masterTOC.html</File>
-			<Subnodes>
-			  <NodeRef refid="7"/>
-			  <NodeRef refid="8"/>
-			  <NodeRef refid="9"/>
-			  <NodeRef refid="10"/>
-			  <NodeRef refid="11"/>
-			  <NodeRef refid="12"/>
-			</Subnodes>
-		</Node>
-		<Node>
-			<Name>Supporting Files</Name>
-			<File>masterTOC.html</File>
-			<Subnodes>
-				<Node>
-					<Name>Core Managers</Name>
-					<File>masterTOC.html</File>
-					<Subnodes>
-					  <NodeRef refid="4"/>
-					  <NodeRef refid="5"/>
-					  <NodeRef refid="6"/>
-					</Subnodes>
-			    </Node>
-				<Node>
-					<Name>AppBlade Web Operations</Name>
-					<File>masterTOC.html</File>
-					<Subnodes>
-					  <NodeRef refid="13"/>
-					  <NodeRef refid="131"/>
-					  <NodeRef refid="132"/>
-					</Subnodes>
-			    </Node>
-				<Node>
-					<Name>AppBlade Simple Keychain</Name>
-					<File>masterTOC.html</File>
-					<Subnodes>
-					  <NodeRef refid="14"/>
-					  <NodeRef refid="141"/>
-					</Subnodes>
-			    </Node>
-				<Node>
-					<Name>File Hashing</Name>
-					<Path></Path>
-					<File>masterTOC.html</File>
-					<Subnodes>
-					  <NodeRef refid="15"/>
-					  <NodeRef refid="151"/>
-					</Subnodes>
-			    </Node>
-			</Subnodes>
-      	</Node>
-      </Subnodes>
-	  </Node>
-        <Node>
-    	<Name>Example Projects</Name>
-    	<File>masterTOC.html</File>
-    	<Subnodes>
+			<Node>
+				<Name>Singleton</Name>
+				<Path></Path>
+				<File>masterTOC.html</File>
+				<Subnodes>
+					<NodeRef refid="1"/>
+					<NodeRef refid="2"/>
+					<NodeRef refid="3"/>
+				</Subnodes>
+			</Node>
+			<Node>
+				<Name>Feature Managers</Name>
+				<Path></Path>
+				<File>masterTOC.html</File>
+				<Subnodes>
+				  <NodeRef refid="7"/>
+				  <NodeRef refid="8"/>
+				  <NodeRef refid="9"/>
+				  <NodeRef refid="10"/>
+				  <NodeRef refid="11"/>
+				  <NodeRef refid="12"/>
+				</Subnodes>
+			</Node>
+			<Node>
+				<Name>Supporting Files</Name>
+				<File>masterTOC.html</File>
+				<Subnodes>
+					<Node>
+						<Name>Core Managers</Name>
+						<File>masterTOC.html</File>
+						<Subnodes>
+						  <NodeRef refid="4"/>
+						  <NodeRef refid="5"/>
+						  <NodeRef refid="6"/>
+						</Subnodes>
+					</Node>
+					<Node>
+						<Name>AppBlade Web Operations</Name>
+						<File>masterTOC.html</File>
+						<Subnodes>
+						  <NodeRef refid="13"/>
+						  <NodeRef refid="131"/>
+						  <NodeRef refid="132"/>
+						</Subnodes>
+					</Node>
+					<Node>
+						<Name>AppBlade Simple Keychain</Name>
+						<File>masterTOC.html</File>
+						<Subnodes>
+						  <NodeRef refid="14"/>
+						  <NodeRef refid="141"/>
+						</Subnodes>
+					</Node>
+					<Node>
+						<Name>File Hashing</Name>
+						<Path></Path>
+						<File>masterTOC.html</File>
+						<Subnodes>
+						  <NodeRef refid="15"/>
+						  <NodeRef refid="151"/>
+						</Subnodes>
+					</Node>
+				</Subnodes>
+			</Node>
+    </Subnodes>
+  </Node>
+  <Node>
+    <Name>Example Projects</Name>
+    <File>masterTOC.html</File>
+    <Subnodes>
 		<Node>
 			<Name>KitchenSink</Name>
 			<Path></Path>
@@ -99,6 +100,12 @@
   </Node>
 </TOC>
 <Library>
+		<Node id="100">
+			<Name>AppBlade Framework</Name>
+			<Path>AppBlade_hdoc</Path>
+			<File>index.html</File>
+		</Node>
+
 		<Node id="1">
 			<Name>AppBlade.h</Name>
 			<Path>AppBlade_h</Path>
@@ -194,13 +201,7 @@
 			<Path>AppBlade_h</Path>
 			<File>index.html</File>
 		</Node>
-		<Node id="100">
-			<Name>AppBlade</Name>
-			<Path>AppBlade_hdoc</Path>
-			<File>index.html</File>
-		</Node>
-		
-	</Library>
+</Library>
 	
 
 </DocSetNodes>
