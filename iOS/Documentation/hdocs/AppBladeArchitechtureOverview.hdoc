@@ -4,20 +4,27 @@
   @discussion This document provides a broad look on the AppBlade SDK code structure. It describes the intention of the current design and gives suggestions about its possible expansion.  
 
   @attributeblock A Birds Eye View
+
     A Birds Eye View Goes here
 
   @attributeblock The Singleton
+
      Here's a Singleton
 
   @attributeblock The Core Managers
+
      Core Managers Whaaaat
 
   @attributeblock The Function Managers
+
      Where everything happens
 
   @attributeblock Extending the SDK
+
 	Like you would
   
-  @security Everything is fine. Nothing is wrong.
+  @attributeblock Security 
+  
+  	Everything is fine. Nothing is wrong.
   
  */
