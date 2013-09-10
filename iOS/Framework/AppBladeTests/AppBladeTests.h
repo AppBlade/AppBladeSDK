@@ -8,6 +8,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "AsyncTestMacros.h"
+#import "AppBladeTestConstants.h"
 
 @interface AppBladeTests : SenTestCase
 

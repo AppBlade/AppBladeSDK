@@ -12,11 +12,6 @@
 #import "AppBlade+PrivateMethods.h"
 #import "APBTokenManager.h" //need this for the tokens queue
 
-#define kAppBladeTestPlistName @"TestAppBladeKeys"
-#define kAppBladeTestNonExistentPlistName @"TestAppBladeKeysDoesNotExist"
-#define kNetworkPatience 5.0
-
-
 @implementation AppBladeTests
 
 - (void)setUp
