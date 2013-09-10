@@ -91,7 +91,11 @@
 
 -(BOOL) simpleJailBreakCheck
 {
+#ifdef APPBLADE_TEST_JAILBROKEN
+    return true;
+#else
     return [self.deviceInfoManager simpleJailBreakCheck];
+#endif
 }
 
 @end
