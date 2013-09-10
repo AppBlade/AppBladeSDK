@@ -38,95 +38,163 @@
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
 
 // Device Secret
-/*! @brief Our AppBlade-issued device secret. Used in API calls. */
+/*! Our AppBlade-issued device secret. Used in API calls. */
 -(NSString*) appBladeDeviceSecret;
-/*! @brief Setter method for the device secret. Used in API calls */
+/*! Setter method for the device secret. Used in API calls */
 -(void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
 
-/*! @brief Delegate to receive messages regarding device authentication and other events */
+/*! Delegate to receive messages regarding device authentication and other events */
 @property (nonatomic, assign) id<AppBladeDelegate> delegate;
 
 #pragma mark SINGLETON
-/*! @brief Our singleton reference, and the only way that AppBlade shoud be referenced. */
+/*!  Our singleton reference, and the only way that AppBlade shoud be referenced. */
 + (AppBlade *)sharedManager;
 
 
 #pragma mark INITIAL REGISTRATION
 /*!
- @brief Initial registration method, use before enything else. 
+ @functiongroup INITIAL REGISTRATION
+ */
+/*!
+ @abstract Initial registration method, use before enything else. 
  @discussion AppBlade registration that uses the AppBlade.plist that you embedded on setup.
  It's required that you register before anything else in AppBlade can be used.
  */
 - (void)registerWithAppBladePlist;
 
 /*!
- @brief Initial registration method, use before enything else.
+ @abstract Initial registration method, use before enything else.
  @discussion AppBlade registration that takes a custom parameter for the plist name that you embedded on setup.
  This special plist must exist in your main bundle. Note that AppBlade will not find the plist and inject it with tokens if you do this, so this call is not advised.
  */
 - (void)registerWithAppBladePlistNamed:(NSString*)plistName;
 
 #pragma mark APPBLADE AUTHENTICATION / KILLSWITCH
-// Authentication & Killswitch
-/*! @brief Checks with AppBlade to see if the app is allowed to run on this device. */
+/*!
+ @functiongroup Authentication & Killswitch
+ */
+/*! @function checkApproval 
+ Checks with AppBlade to see if the app is allowed to run on this device. */
 - (void)checkApproval;
 
 
 #pragma mark AUTO UPDATING
-/*! Checks with AppBlade anonymously to see if the app can be updated with a new build. */
+/*!
+ @functiongroup AUTO UPDATING
+ */
+
+
+/*! @function checkForUpdates
+ Checks with AppBlade anonymously to see if the app can be updated with a new build. */
 - (void)checkForUpdates;
 
 
 #pragma mark CRASH REPORTING
-/*! Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade. */
+/*!
+ @functiongroup CRASH REPORTING
+ */
+
+/*! @function catchAndReportCrashes
+ Sets up variables & Checks if any crashes have ocurred, sends logs to AppBlade. */
 - (void)catchAndReportCrashes;
 
-/*! Method to call if you want to attempt to send crash reports more often than ususal */
+/*!  @function checkForExistingCrashReports 
+ Method to call if you want to attempt to send crash reports more often than ususal */
 - (void)checkForExistingCrashReports;
 
+/*!  @function handleCrashReport
+ Function called when app resumes from crash. */
 - (void)handleCrashReport;
 
 #pragma mark FEEDBACK REPORTING
-/*! Initializes the Feedback Reporting Feature */
+/*! 
+ @functiongroup FEEDBACK REPORTING
+ */
+
+/*!  @function allowFeedbackReporting
+ Initializes the Feedback Reporting Feature
+ */
 - (void)allowFeedbackReporting;
+/*!  @function allowFeedbackReportingForWindow:(UIWindow*)window withOptions:(AppBladeFeedbackSetupOptions)options
+ Initializes the Feedback Reporting Feature with additional options
+ */
 - (void)allowFeedbackReportingForWindow:(UIWindow*)window withOptions:(AppBladeFeedbackSetupOptions)options;
 
-/*! Shows a feedback dialogue and handles screenshot */
+/*! @function showFeedbackDialogue
+ Shows a feedback dialogue and handles screenshot */
 - (void)showFeedbackDialogue;
+/*! @function showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options
+ Shows a feedback dialogue and handles screenshot with additional options */
 - (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options;
 
-/*! Helper function to manually trigger a feedback check. */
+/*! @function handleBackloggedFeedback
+ Helper function to manually trigger a feedback check. */
 - (void)handleBackloggedFeedback;
 
 #pragma mark SESSION TRACKING
-/*! Starts a new Session Tracking session. */
+/*!
+ @functiongroup SESSION TRACKING
+ */
+
+/*! @function logSessionStart
+ Starts a new Session Tracking session. */
 - (void)logSessionStart;
+/*! @function logSessionEnd
+ Ends a the current Session Tracking session, if one exists. Does nothing otherwise. */
 - (void)logSessionEnd;
+
+/*! @function currentSession
+ Retrieves a copy of the current session data if one exists. The object returned does nothing to affect the actual session. */
 - (NSDictionary*)currentSession;
 
 
-
 #pragma mark CUSTOM PARAMETERS
-/*! Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports */
+/*!
+ @functiongroup CUSTOM PARAMETERS
+ */
+
+/*! @function setCustomParam:(id)object forKey:(NSString*)key
+ Define special custom fields to be sent back to Appblade in your Feedback reports or Crash reports */
 -(void)setCustomParam:(id)object forKey:(NSString*)key;
 
-/*! Getter function for all current stored params */
+/*! @function getCustomParams
+ Getter function for all current stored params */
 -(NSDictionary *)getCustomParams;
+
+/*! @function setCustomParams:(NSDictionary *)newCustomParams
+ Setter function for current stored params */
 -(void)setCustomParams:(NSDictionary *)newCustomParams;
+
+/*! @function clearAllCustomParams
+ Destructive function that clears all current stored params. */
 -(void)clearAllCustomParams;
 
 #pragma mark OTHER SDK METHODS
-// Creates a random string of a specified length
+/*!
+ @functiongroup OTHER SDK METHODS
+ */
+
+/*! @function randomString:(int)length
+ Creates a random string of a specified length
+ */
 - (NSString*)randomString:(int)length;
 
 //Keychain methods
-/*! Clears ALL keychains */
+/*!  @function clearAppBladeKeychain
+ Clears AppBlade Related keychains */
 - (void)clearAppBladeKeychain;
+/*!  @function sanitizeKeychain
+ Trie to intelligently clear keychains if we need it */
 - (void)sanitizeKeychain;
+
+/*!  @function cleanOutKeychain
+ Clears ALL reachable items in the keychain. Very dangerous. */
 - (void)cleanOutKeychain;
 
-/*!  Returns SDK Version */
+/*! @function sdkVersion
+ Returns SDK Version */
 + (NSString*)sdkVersion;
-/*!  Log SDK Version to NSLog */
+/*! @function logSDKVersion
+ Log SDK Version to NSLog */
 + (void)logSDKVersion;
 @end
