@@ -6,13 +6,16 @@
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
 #import "APBWebOperation.h"
-/**
- @defgroup appbladeprivatemethods AppBlade Private Methods
+/*!
+ @header AppBlade+PrivateMethods
+ @brief Header containing all the methods that we don't want to be publcaly used.
+ Do not rely on any of these methods, as they may disappear or change at any time. 
  */
+
 @interface AppBlade (PrivateMethods)
 
-/** @ingroup appbladeprivatemethods
-  @{
+/*! 
+ @methodgroup Appblade Private Methods
  */
 - (void)validateProjectConfiguration;
 - (void)raiseConfigurationExceptionWithMessage:(NSString *)name;
@@ -41,7 +44,4 @@
 - (void)checkAndCreateAppBladeCacheDirectory;
 
 - (void) resumeCurrentPendingRequests;
-/**
- @} 
- */
 @end

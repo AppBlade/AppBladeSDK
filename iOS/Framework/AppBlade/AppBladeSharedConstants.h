@@ -6,6 +6,10 @@
 //  Copyright (c) 2013 Raizlabs. All rights reserved.
 //
 
+/*!
+ @header AppBladeSharedConstants
+ @brief Header containing all the constants that are used throughout the SDK.
+ */
 
 #ifndef AppBlade_AppBladeSharedConstants_h
 #define AppBlade_AppBladeSharedConstants_h

@@ -6,6 +6,17 @@
 //  Copyright (c) 2013 Raizlabs Corporation. All rights reserved.
 //
 
+#import "APBWebOperation.h"
+/*!
+ @header AppBladeLogging
+ @brief Header containing the helper macro for our internal logging.
+ To enable the AppBlade internal logs, set the following:
+ #define APPBLADE_DEBUG_LOGGING 1
+ #define APPBLADE_ERROR_LOGGING 1
+*/
+
+
+
 #ifndef AppBlade_AppBladeLogging_h
 //Add
 //#define APPBLADE_DEBUG_LOGGING 1
