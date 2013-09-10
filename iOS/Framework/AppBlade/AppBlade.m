@@ -711,33 +711,37 @@ static BOOL is_encrypted () {
             // users from unlocking an app by simply changing their clock.
             ABDebugLog_internal(@"Permissions callback : %@", client.sentDeviceSecret);
 
-            if ([self withinStoredTTL] || (client.sentDeviceSecret == nil)) {
+            if ([self withinStoredTTL]) {
                 if(canSignalDelegate) {
                     [self.delegate appBlade:self applicationApproved:YES error:nil];
                 }
             }
             else {
-                [self closeTTLWindow];
-                if(canSignalDelegate) {
-                    NSDictionary* errorDictionary = nil;
-                    NSError* error = nil;
-                    if(errorString){
-                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                           NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                           NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
+                 if(![self isCurrentToken:client.sentDeviceSecret]){
+                     ABDebugLog_internal(@"Permissions callback failed, but device secret was changed in the interim : retry");
+                     [self checkApproval];
+                 }else{
+                    [self closeTTLWindow];
+                    if(canSignalDelegate) {
+                        NSDictionary* errorDictionary = nil;
+                        NSError* error = nil;
+                        if(errorString){
+                            errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                               NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                               NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+                            error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeParsingError userInfo:errorDictionary];
 
+                        }
+                        else
+                        {
+                            errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                               NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
+                                               NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
+                            error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
+                        }
+                        [self.delegate appBlade:self applicationApproved:NO error:error];
                     }
-                    else
-                    {
-                        errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil), NSLocalizedDescriptionKey,
-                                           NSLocalizedString(@"Please check your internet connection to gain access to this application", nil),  NSLocalizedFailureReasonErrorKey, nil];
-                        error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladeOfflineError userInfo:errorDictionary];
-                    }
-                    [self.delegate appBlade:self applicationApproved:NO error:error];
-                }
-                
+                 }
             }
         }
         else if (client.api == AppBladeWebClientAPI_Feedback) {
@@ -780,8 +784,11 @@ static BOOL is_encrypted () {
         else if(client.api == AppBladeWebClientAPI_UpdateCheck)
         {
             ABErrorLog(@"ERROR getting updates from AppBlade %@", client.userInfo);
-        }
-        else
+            if(![self isCurrentToken:client.sentDeviceSecret]){
+                ABDebugLog_internal(@"Permissions callback failed, but device secret was changed in the interim : retry");
+                [self checkForUpdates];
+            }
+        }else
         {
             ABErrorLog(@"Nonspecific AppBladeWebClient error: %i", client.api);
         }
@@ -842,13 +849,19 @@ static BOOL is_encrypted () {
     
     if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
         ABDebugLog_internal(@"token confirm response invalid for %@", client.sentDeviceSecret);
-        [self closeTTLWindow];
-        NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                         NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
-        NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
         
-        if (signalApproval) {
-            [self.delegate appBlade:self applicationApproved:NO error:error];
+        if(client.sentDeviceSecret == nil || ![[AppBlade sharedManager] isCurrentToken:client.sentDeviceSecret]){
+            ABDebugLog_internal(@"The sent device secret was changed since we got an invalid response. Retry.");
+            [[AppBlade sharedManager] checkApproval];
+        }else{
+            [self closeTTLWindow];
+            NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
+                                             NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+            NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
+            
+            if (signalApproval) {
+                [self.delegate appBlade:self applicationApproved:NO error:error];
+            }
         }
     }
     else {
@@ -877,8 +890,10 @@ static BOOL is_encrypted () {
         if ([self.delegate respondsToSelector:@selector(appBlade:updateAvailable:updateMessage:updateURL:)]) {
             [self.delegate appBlade:self updateAvailable:YES updateMessage:updateMessage updateURL:updateURL];
         }
+    }else if ([[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403 && ![[AppBlade sharedManager] isCurrentToken:client.sentDeviceSecret]){
+        ABDebugLog_internal(@"The sent device secret was changed since we got an invalid response. Retry.");
+        [self checkForUpdates];
     }
-    
 }
 
 - (void)appBladeWebClientCrashReported:(AppBladeWebClient *)client
