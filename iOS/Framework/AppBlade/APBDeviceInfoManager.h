@@ -27,4 +27,6 @@
 
 -(NSString*)  platform;
 
+-(BOOL) simpleJailBreakCheck;
+
 @end
