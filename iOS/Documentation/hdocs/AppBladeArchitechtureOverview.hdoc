@@ -1,31 +1,22 @@
-//
-//  AppBladeArchitectureOverview.hdoc
-//  AppBlade
-//
 /*!
   @framework AppBlade
   @author Andrew Tremblay on 9/9/13
   @discussion This document provides a broad look on the AppBlade SDK code structure. It describes the intention of the current design and gives suggestions about its possible expansion.  
 
+  @attributeblock A Birds Eye View
+    A Birds Eye View Goes here
 
-  @indexgroup A Birds Eye View
-    @discussion A Birds Eye View Goes here
+  @attributeblock The Singleton
+     Here's a Singleton
 
-  @indexgroup The Singleton
+  @attributeblock The Core Managers
+     Core Managers Whaaaat
 
-    @discussion Here's a Singleton
+  @attributeblock The Function Managers
+     Where everything happens
 
-  @indexgroup The Core Managers
-
-    @discussion Core Managers Whaaaat
-
-  @indexgroup The Function Managers
-
-    @discussion Where everything happens
-
-  @indexgroup Extending the SDK
-
-    @discussion Like you would
+  @attributeblock Extending the SDK
+	Like you would
   
   @security Everything is fine. Nothing is wrong.
   
