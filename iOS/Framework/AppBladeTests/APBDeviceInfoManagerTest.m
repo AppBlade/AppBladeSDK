@@ -46,8 +46,11 @@
 - (void)test03simpleJailBreakCheck
 {
     BOOL jailbreak = [[AppBlade sharedManager] simpleJailBreakCheck];
-    STAssertFalse(jailbreak, @"Could not retrieve an OS version.");
-    //none of our test devices will ever be jailbroken, since we don't support jailbroken devices (we only detect them)
+#ifdef APPBLADE_TEST_JAILBROKEN
+    STAssertTrue(jailbreak, @"Could not detect proper jailbreak value.");
+#else
+    STAssertFalse(jailbreak, @"Could not detect proper jailbreak value.");
+#endif
 }
 
 @end
