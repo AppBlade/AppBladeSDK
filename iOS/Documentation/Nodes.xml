@@ -13,67 +13,44 @@
 	</Subnodes>
   </Node>
 </TOC>
-
+<!-- Library Elements -->
 <Library>
-	<!-- Folder Nodes-->
 	<Node id="901">
 		<Name>AppBlade SDK</Name>
-		<Subnodes>
-		<Node>
-			<Name>Singleton</Name>
-			<Subnodes>
-				<NodeRef refid="1"/>
-				<NodeRef refid="2"/>
-				<NodeRef refid="3"/>
-			</Subnodes>
-		</Node>
-		<Node>
-			<Name>Feature Managers</Name>
-			<Subnodes>
-			  <NodeRef refid="7"/>
-			  <NodeRef refid="8"/>
-			  <NodeRef refid="9"/>
-			  <NodeRef refid="10"/>
-			  <NodeRef refid="11"/>
-			  <NodeRef refid="12"/>
-			</Subnodes>
-		</Node>
-		<Node>
-			<Name>Supporting Files</Name>
-			<Subnodes>
-				<Node>
-					<Name>Core Managers</Name>
-					<Subnodes>
-					  <NodeRef refid="4"/>
-					  <NodeRef refid="5"/>
-					  <NodeRef refid="6"/>
-					</Subnodes>
-				</Node>
-				<Node>
-					<Name>AppBlade Web Operations</Name>
-					<Subnodes>
-					  <NodeRef refid="13"/>
-					  <NodeRef refid="131"/>
-					  <NodeRef refid="132"/>
-					</Subnodes>
-				</Node>
-				<Node>
-					<Name>AppBlade Simple Keychain</Name>
-					<Subnodes>
-					  <NodeRef refid="14"/>
-					  <NodeRef refid="141"/>
-					</Subnodes>
-				</Node>
-				<Node>
-					<Name>File Hashing</Name>
-					<Subnodes>
-					  <NodeRef refid="15"/>
-					  <NodeRef refid="151"/>
-					</Subnodes>
-				</Node>
-			</Subnodes>
-		</Node>
-	</Subnodes>
+	    <Path>AppBladeSDK_hdoc</Path>
+	    <File>index.html</File>
+	    <Subnodes>
+			<Node id="90101">
+				<Name>Singleton</Name>
+				<Path>AppBlade_Singleton_hdoc</Path>
+				<File>index.html</File>
+				<Subnodes>
+					<NodeRef refid="1"/>
+					<NodeRef refid="2"/>
+					<NodeRef refid="3"/>
+				</Subnodes>
+			</Node>
+			<Node id="90102">
+				<Name>Feature Managers</Name>
+				<Path>AppBlade_Feature_Managers_hdoc</Path>
+				<File>index.html</File>
+				<Subnodes>
+					<NodeRef refid="7"/>
+					<NodeRef refid="8"/>
+					<NodeRef refid="9"/>
+				</Subnodes>
+			</Node>
+			<Node id="90103">
+				<Name>Core Managers</Name>
+				<Path>AppBlade_Core_Managers_hdoc</Path>
+				<File>index.html</File>
+				<Subnodes>
+					<NodeRef refid="4"/>
+					<NodeRef refid="5"/>
+					<NodeRef refid="6"/>
+				</Subnodes>
+			</Node>
+    	</Subnodes>
 	</Node>
 	<Node id="902">
 		<Name>AppBlade Architecture Overview</Name>
@@ -88,16 +65,13 @@
 		<Node>
 			<Name>KitchenSink</Name>
 			<Path>AppBladeExampleProjects_KitchenSink_hdoc</Path>
-			<File>masterTOC.html</File>
-			<Subnodes>
-				<NodeRef refid="6"/>
-				<NodeRef refid="1"/>
-				<NodeRef refid="2"/>
-			</Subnodes>
+			<File>index.html</File>
 		</Node>
     	</Subnodes>
 	</Node>
-	<!-- Non-Folder (Leaf) Nodes-->
+	
+	
+	
 	<Node id="1">
 		<Name>AppBlade Class</Name>
 		<Path>AppBlade_h/Classes/AppBlade</Path>
