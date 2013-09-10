@@ -32,7 +32,8 @@
 
 #pragma mark  API KEYS
 
-/*! @brief Our endpoint. Usually the AppBlade host name, but it can be custom */
+/*! @declaration NSString* appBladeHost
+ @brief Our endpoint. Usually the AppBlade host name, but it can be custom */
 @property (nonatomic, retain) NSString* appBladeHost;
 /*! @brief AppBlade API project-issued secret. */
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
@@ -53,7 +54,7 @@
 
 #pragma mark INITIAL REGISTRATION
 /*!
- @functiongroup INITIAL REGISTRATION
+ @functiongroup Initial Registration
  */
 /*!
  @abstract Initial registration method, use before enything else. 
@@ -80,7 +81,7 @@
 
 #pragma mark AUTO UPDATING
 /*!
- @functiongroup AUTO UPDATING
+ @functiongroup Auto Updating
  */
 
 
@@ -91,7 +92,7 @@
 
 #pragma mark CRASH REPORTING
 /*!
- @functiongroup CRASH REPORTING
+ @functiongroup Crash Reporting
  */
 
 /*! @function catchAndReportCrashes
@@ -108,7 +109,7 @@
 
 #pragma mark FEEDBACK REPORTING
 /*! 
- @functiongroup FEEDBACK REPORTING
+ @functiongroup Feedback Reporting
  */
 
 /*!  @function allowFeedbackReporting
@@ -133,7 +134,7 @@
 
 #pragma mark SESSION TRACKING
 /*!
- @functiongroup SESSION TRACKING
+ @functiongroup Session Tracking
  */
 
 /*! @function logSessionStart
@@ -150,7 +151,7 @@
 
 #pragma mark CUSTOM PARAMETERS
 /*!
- @functiongroup CUSTOM PARAMETERS
+ @functiongroup Custom Parameters
  */
 
 /*! @function setCustomParam:(id)object forKey:(NSString*)key
@@ -171,15 +172,8 @@
 
 #pragma mark OTHER SDK METHODS
 /*!
- @functiongroup OTHER SDK METHODS
+ @functiongroup Keychain Methods
  */
-
-/*! @function randomString:(int)length
- Creates a random string of a specified length
- */
-- (NSString*)randomString:(int)length;
-
-//Keychain methods
 /*!  @function clearAppBladeKeychain
  Clears AppBlade Related keychains */
 - (void)clearAppBladeKeychain;
@@ -190,6 +184,15 @@
 /*!  @function cleanOutKeychain
  Clears ALL reachable items in the keychain. Very dangerous. */
 - (void)cleanOutKeychain;
+
+/*!
+ @functiongroup Other SDK Methods
+ */
+
+/*! @function randomString:(int)length
+ Creates a random string of a specified length
+ */
+- (NSString*)randomString:(int)length;
 
 /*! @function sdkVersion
  Returns SDK Version */
