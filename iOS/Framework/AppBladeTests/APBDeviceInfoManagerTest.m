@@ -34,13 +34,13 @@
 - (void)test02iosVersionSanitizedExists
 {
     NSString* osVersionSanitized = [[AppBlade sharedManager] iosVersionSanitized];
-    STAssertNotNil(osVersionSanitized, @"Could not retrieve an OS version.");
+    STAssertNotNil(osVersionSanitized, @"Could not retrieve an iOS sanitized version.");
 }
 
 - (void)test03platformReadable
 {
     NSString* platform = [[AppBlade sharedManager] platform];
-    STAssertNotNil(platform, @"Could not retrieve an OS version.");
+    STAssertNotNil(platform, @"Could not retrieve a readable platform.");
 }
 
 - (void)test03simpleJailBreakCheck
