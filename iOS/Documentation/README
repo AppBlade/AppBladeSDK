@@ -1,0 +1,7 @@
+To generate this documentation yourself after changes (or additions), run the "Documentation" build target inside xcode.   
+
+File/Folder explanations : 
+
+/hdocs
+
+
