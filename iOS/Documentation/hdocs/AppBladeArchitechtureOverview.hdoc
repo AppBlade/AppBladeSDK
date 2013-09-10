@@ -3,28 +3,29 @@
   @author Andrew Tremblay on 9/9/13
   @discussion This document provides a broad look on the AppBlade SDK code structure. It describes the intention of the current design and gives suggestions about its possible expansion.  
 
-  @attributeblock A Birds Eye View
+	<h4>Contents:</h4>
+	<p class="blockquote">
+                <a href="#birds_eye_view">A Birds Eye View</a>
+            <br>
+                <a href="#the_singleton">The Singleton</a>
+            <br>
+                <a href="#core_manager">The Core Managers</a>
+            <br>
+                <a href="#function_manager">The Function Managers</a>
+            <br>
+                <a href="#extending_the_sdk">Extending the SDK</a>
+            <br>
+    </p>
+    <br>
 
-    A Birds Eye View Goes here
+<a name="birds_eye_view" title="A Birds Eye View"></a>
+<h2 class="jump">Get Up and Running</h2>
+<p>Read <span class="content_text">“The Event-Handling System”</span> in 
+<em><a href="../../../documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40007072" target="_self">iOS App Programming Guide</a></em> for an overview of event handling and read 
+<em><a href="../../../documentation/EventHandling/Conceptual/EventHandlingiPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009541" target="_self">Event Handling Guide for iOS</a></em> 
+for specific tasks. 
+<em><a href="../../../documentation/EventHandling/Conceptual/EventHandlingiPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009541" target="_self">Event Handling Guide for iOS</a></em> 
+describes how to handle user events including multitouch events, motion events—from device accelerometers—and events for controlling multimedia. At a minimum, every application should respond to orientation changes.
+</p>
 
-  @attributeblock The Singleton
-
-     Here's a Singleton
-
-  @attributeblock The Core Managers
-
-     Core Managers Whaaaat
-
-  @attributeblock The Function Managers
-
-     Where everything happens
-
-  @attributeblock Extending the SDK
-
-	Like you would
-  
-  @attributeblock Security 
-  
-  	Everything is fine. Nothing is wrong.
-  
  */
