@@ -9,135 +9,208 @@
     <TokenIdentifier>//apple_ref/occ/clm/AppBlade/logSDKVersion</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Log SDK Version to NSLog</Abstract>
-    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/logSDKVersion //apple_ref/occ/data/AppBlade/logSDKVersion //apple_ref/occ/data/logSDKVersion //apple_ref/occ/clconst/AppBlade/logSDKVersion " machineGenerated="true" --&gt;&lt;span class="var"&gt;logSDKVersion&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>+ (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;logSDKVersion&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/clm/AppBlade/sdkVersion</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Returns SDK Version</Abstract>
-    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/sdkVersion //apple_ref/occ/data/AppBlade/sdkVersion //apple_ref/occ/data/sdkVersion //apple_ref/occ/clconst/AppBlade/sdkVersion " machineGenerated="true" --&gt;&lt;span class="var"&gt;sdkVersion&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>+ (&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="var"&gt;sdkVersion&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/clm/AppBlade/sharedManager</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
-    <Abstract>Our singleton reference, and the only way that AppBlade shoud be referenced.</Abstract>
-    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/AppBlade //apple_ref/occ/tdef/AppBlade //apple_ref/occ/tag/AppBlade //apple_ref/occ/struct/AppBlade //apple_ref/occ/intf/AppBlade //apple_ref/doc/anysymbol/AppBlade" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBlade&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/sharedManager //apple_ref/occ/data/AppBlade/sharedManager //apple_ref/occ/data/sharedManager //apple_ref/occ/clconst/AppBlade/sharedManager " machineGenerated="true" --&gt;&lt;span class="var"&gt;sharedManager&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Abstract>Our singleton reference, and the only way that
+AppBlade shoud be referenced.</Abstract>
+    <Declaration>+ (&lt;span class="type"&gt;AppBlade&lt;/span&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="var"&gt;sharedManager&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/allowFeedbackReporting</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Initializes the Feedback Reporting Feature</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/allowFeedbackReporting //apple_ref/occ/data/AppBlade/allowFeedbackReporting //apple_ref/occ/data/allowFeedbackReporting //apple_ref/occ/clconst/AppBlade/allowFeedbackReporting " machineGenerated="true" --&gt;&lt;span class="var"&gt;allowFeedbackReporting&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;allowFeedbackReporting&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Initializes the Feedback Reporting Feature with
+additional options</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="function"&gt;allowFeedbackReportingForWindow&lt;/span&gt;:(&lt;span class="type"&gt;UIWindow&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="param"&gt;window&lt;/span&gt; 
+        &lt;span class="function"&gt;withOptions&lt;/span&gt;:(&lt;span class="type"&gt;AppBladeFeedbackSetupOptions&lt;/span&gt;)&lt;span class="var"&gt;options&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/appBladeDeviceSecret</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
-    <Abstract>Our AppBlade-issued device secret. Used in API calls.</Abstract>
-    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/econst/appBladeDeviceSecret //apple_ref/occ/data/AppBlade/appBladeDeviceSecret //apple_ref/occ/data/appBladeDeviceSecret //apple_ref/occ/clconst/AppBlade/appBladeDeviceSecret " machineGenerated="true" --&gt;&lt;span class="var"&gt;appBladeDeviceSecret&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Abstract>Our AppBlade-issued device secret. Used in API
+calls.</Abstract>
+    <Declaration>-(&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt;) &lt;span class="var"&gt;appBladeDeviceSecret&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/catchAndReportCrashes</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Sets up variables &amp; Checks if any crashes have
 ocurred, sends logs to AppBlade.</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/catchAndReportCrashes //apple_ref/occ/data/AppBlade/catchAndReportCrashes //apple_ref/occ/data/catchAndReportCrashes //apple_ref/occ/clconst/AppBlade/catchAndReportCrashes " machineGenerated="true" --&gt;&lt;span class="var"&gt;catchAndReportCrashes&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;catchAndReportCrashes&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/checkApproval</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
-    <Abstract>Checks with AppBlade to see if the app is allowed to run on this device.</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/checkApproval //apple_ref/occ/data/AppBlade/checkApproval //apple_ref/occ/data/checkApproval //apple_ref/occ/clconst/AppBlade/checkApproval " machineGenerated="true" --&gt;&lt;span class="var"&gt;checkApproval&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Abstract>Checks with AppBlade to see if the app is allowed
+to run on this device.</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;checkApproval&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/checkForExistingCrashReports</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Method to call if you want to attempt to send crash
 reports more often than ususal</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/checkForExistingCrashReports //apple_ref/occ/data/AppBlade/checkForExistingCrashReports //apple_ref/occ/data/checkForExistingCrashReports //apple_ref/occ/clconst/AppBlade/checkForExistingCrashReports " machineGenerated="true" --&gt;&lt;span class="var"&gt;checkForExistingCrashReports&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;checkForExistingCrashReports&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/checkForUpdates</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Checks with AppBlade anonymously to see if the app
 can be updated with a new build.</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/checkForUpdates //apple_ref/occ/data/AppBlade/checkForUpdates //apple_ref/occ/data/checkForUpdates //apple_ref/occ/clconst/AppBlade/checkForUpdates " machineGenerated="true" --&gt;&lt;span class="var"&gt;checkForUpdates&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;checkForUpdates&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/cleanOutKeychain</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Clears ALL reachable items in the keychain. Very
+dangerous.</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;cleanOutKeychain&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/clearAllCustomParams</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Destructive function that clears all current stored
+params.</Abstract>
+    <Declaration>-(&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;clearAllCustomParams&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/clearAppBladeKeychain</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
-    <Abstract>Clears ALL keychains</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/clearAppBladeKeychain //apple_ref/occ/data/AppBlade/clearAppBladeKeychain //apple_ref/occ/data/clearAppBladeKeychain //apple_ref/occ/clconst/AppBlade/clearAppBladeKeychain " machineGenerated="true" --&gt;&lt;span class="var"&gt;clearAppBladeKeychain&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Abstract>Clears AppBlade Related keychains</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;clearAppBladeKeychain&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/currentSession</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Retrieves a copy of the current session data if one
+exists. The object returned does nothing to affect
+the actual session.</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;NSDictionary&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="var"&gt;currentSession&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/getCustomParams</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Getter function for all current stored params</Abstract>
-    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSDictionary //apple_ref/occ/tdef/NSDictionary //apple_ref/occ/tag/NSDictionary //apple_ref/occ/struct/NSDictionary //apple_ref/occ/intf/NSDictionary //apple_ref/doc/anysymbol/NSDictionary" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSDictionary&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/getCustomParams //apple_ref/occ/data/AppBlade/getCustomParams //apple_ref/occ/data/getCustomParams //apple_ref/occ/clconst/AppBlade/getCustomParams " machineGenerated="true" --&gt;&lt;span class="var"&gt;getCustomParams&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>-(&lt;span class="type"&gt;NSDictionary&lt;/span&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="var"&gt;getCustomParams&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/handleBackloggedFeedback</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Helper function to manually trigger a feedback
 check.</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/handleBackloggedFeedback //apple_ref/occ/data/AppBlade/handleBackloggedFeedback //apple_ref/occ/data/handleBackloggedFeedback //apple_ref/occ/clconst/AppBlade/handleBackloggedFeedback " machineGenerated="true" --&gt;&lt;span class="var"&gt;handleBackloggedFeedback&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;handleBackloggedFeedback&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/handleCrashReport</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Function called when app resumes from crash.</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;handleCrashReport&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/logSessionEnd</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Ends a the current Session Tracking session, if one
+exists. Does nothing otherwise.</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;logSessionEnd&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/logSessionStart</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Starts a new Session Tracking session.</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/logSessionStart //apple_ref/occ/data/AppBlade/logSessionStart //apple_ref/occ/data/logSessionStart //apple_ref/occ/clconst/AppBlade/logSessionStart " machineGenerated="true" --&gt;&lt;span class="var"&gt;logSessionStart&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;logSessionStart&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/randomString:</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Creates a random string of a specified length</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="function"&gt;randomString&lt;/span&gt;:(&lt;span class="type"&gt;int&lt;/span&gt;)&lt;span class="var"&gt;length&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/registerWithAppBladePlist</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Initial registration method, use before enything else.</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/registerWithAppBladePlist //apple_ref/occ/data/AppBlade/registerWithAppBladePlist //apple_ref/occ/data/registerWithAppBladePlist //apple_ref/occ/clconst/AppBlade/registerWithAppBladePlist " machineGenerated="true" --&gt;&lt;span class="var"&gt;registerWithAppBladePlist&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;registerWithAppBladePlist&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/registerWithAppBladePlistNamed:</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Initial registration method, use before enything else.</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/AppBlade/registerWithAppBladePlistNamed //apple_ref/occ/clm/AppBlade/registerWithAppBladePlistNamed //apple_ref/occ/intfcm/AppBlade/registerWithAppBladePlistNamed //apple_ref/occ/intfm/AppBlade/registerWithAppBladePlistNamed //apple_ref/occ/func/registerWithAppBladePlistNamed //apple_ref/occ/ftmplt/AppBlade/registerWithAppBladePlistNamed //apple_ref/occ/defn/registerWithAppBladePlistNamed //apple_ref/occ/macro/registerWithAppBladePlistNamed //apple_ref/doc/anysymbol/registerWithAppBladePlistNamed" machineGenerated="true" --&gt;&lt;span class="function"&gt;registerWithAppBladePlistNamed&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/plistName //apple_ref/occ/data/AppBlade/plistName //apple_ref/occ/data/plistName //apple_ref/occ/clconst/AppBlade/plistName " machineGenerated="true" --&gt;&lt;span class="var"&gt;plistName&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="function"&gt;registerWithAppBladePlistNamed&lt;/span&gt;:(&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="var"&gt;plistName&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/sanitizeKeychain</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Trie to intelligently clear keychains if we need it</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;sanitizeKeychain&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/setAppBladeDeviceSecret:</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
-    <Abstract>Setter method for the device secret. Used in API calls</Abstract>
-    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;) &lt;!-- a logicalPath="//apple_ref/occ/instm/AppBlade/setAppBladeDeviceSecret //apple_ref/occ/clm/AppBlade/setAppBladeDeviceSecret //apple_ref/occ/intfcm/AppBlade/setAppBladeDeviceSecret //apple_ref/occ/intfm/AppBlade/setAppBladeDeviceSecret //apple_ref/occ/func/setAppBladeDeviceSecret //apple_ref/occ/ftmplt/AppBlade/setAppBladeDeviceSecret //apple_ref/occ/defn/setAppBladeDeviceSecret //apple_ref/occ/macro/setAppBladeDeviceSecret //apple_ref/doc/anysymbol/setAppBladeDeviceSecret" machineGenerated="true" --&gt;&lt;span class="function"&gt;setAppBladeDeviceSecret&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/appBladeDeviceSecret //apple_ref/occ/data/AppBlade/appBladeDeviceSecret //apple_ref/occ/data/appBladeDeviceSecret //apple_ref/occ/clconst/AppBlade/appBladeDeviceSecret " machineGenerated="true" --&gt;&lt;span class="var"&gt;appBladeDeviceSecret&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Abstract>Setter method for the device secret. Used in API
+calls</Abstract>
+    <Declaration>-(&lt;span class="type"&gt;void&lt;/span&gt;) &lt;span class="function"&gt;setAppBladeDeviceSecret&lt;/span&gt;:(&lt;span class="type"&gt;NSString&lt;/span&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="var"&gt;appBladeDeviceSecret&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/setCustomParam:forKey:</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Define special custom fields to be sent back to
 Appblade in your Feedback reports or Crash reports</Abstract>
-    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/AppBlade/setCustomParam //apple_ref/occ/clm/AppBlade/setCustomParam //apple_ref/occ/intfcm/AppBlade/setCustomParam //apple_ref/occ/intfm/AppBlade/setCustomParam //apple_ref/occ/func/setCustomParam //apple_ref/occ/ftmplt/AppBlade/setCustomParam //apple_ref/occ/defn/setCustomParam //apple_ref/occ/macro/setCustomParam //apple_ref/doc/anysymbol/setCustomParam" machineGenerated="true" --&gt;&lt;span class="function"&gt;setCustomParam&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt;)&lt;span class="param"&gt;object&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/occ/instm/AppBlade/forKey //apple_ref/occ/clm/AppBlade/forKey //apple_ref/occ/intfcm/AppBlade/forKey //apple_ref/occ/intfm/AppBlade/forKey //apple_ref/occ/func/forKey //apple_ref/occ/ftmplt/AppBlade/forKey //apple_ref/occ/defn/forKey //apple_ref/occ/macro/forKey //apple_ref/doc/anysymbol/forKey" machineGenerated="true" --&gt;&lt;span class="function"&gt;forKey&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/key //apple_ref/occ/data/AppBlade/key //apple_ref/occ/data/key //apple_ref/occ/clconst/AppBlade/key " machineGenerated="true" --&gt;&lt;span class="var"&gt;key&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>-(&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="function"&gt;setCustomParam&lt;/span&gt;:(&lt;span class="type"&gt;id&lt;/span&gt;)&lt;span class="param"&gt;object&lt;/span&gt; &lt;span class="function"&gt;forKey&lt;/span&gt;:(&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="var"&gt;key&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/setCustomParams:</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Setter function for current stored params</Abstract>
+    <Declaration>-(&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="function"&gt;setCustomParams&lt;/span&gt;:(&lt;span class="type"&gt;NSDictionary&lt;/span&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="var"&gt;newCustomParams&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/showFeedbackDialogue</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Shows a feedback dialogue and handles screenshot</Abstract>
-    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/showFeedbackDialogue //apple_ref/occ/data/AppBlade/showFeedbackDialogue //apple_ref/occ/data/showFeedbackDialogue //apple_ref/occ/clconst/AppBlade/showFeedbackDialogue " machineGenerated="true" --&gt;&lt;span class="var"&gt;showFeedbackDialogue&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="var"&gt;showFeedbackDialogue&lt;/span&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade/showFeedbackDialogueWithOptions:</TokenIdentifier>
+    <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
+    <Abstract>Shows a feedback dialogue and handles screenshot
+with additional options</Abstract>
+    <Declaration>- (&lt;span class="type"&gt;void&lt;/span&gt;)&lt;span class="function"&gt;showFeedbackDialogueWithOptions&lt;/span&gt;:(&lt;span class="type"&gt;AppBladeFeedbackDisplayOptions&lt;/span&gt;)&lt;span class="var"&gt;options&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instp/AppBlade/appBladeHost</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Our endpoint. Usually the AppBlade host name, but it can be custom</Abstract>
     <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
-    &lt;span class="param"&gt;retain&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/appBladeHost //apple_ref/occ/data/AppBlade/appBladeHost //apple_ref/occ/data/appBladeHost //apple_ref/occ/clconst/AppBlade/appBladeHost " machineGenerated="true" --&gt;&lt;span class="var"&gt;appBladeHost&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    &lt;span class="param"&gt;retain&lt;/span&gt;) &lt;span class="type"&gt;NSString&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="var"&gt;appBladeHost&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instp/AppBlade/appBladeProjectSecret</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>AppBlade API project-issued secret.</Abstract>
     <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
-    &lt;span class="param"&gt;retain&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/appBladeProjectSecret //apple_ref/occ/data/AppBlade/appBladeProjectSecret //apple_ref/occ/data/appBladeProjectSecret //apple_ref/occ/clconst/AppBlade/appBladeProjectSecret " machineGenerated="true" --&gt;&lt;span class="var"&gt;appBladeProjectSecret&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    &lt;span class="param"&gt;retain&lt;/span&gt;) &lt;span class="type"&gt;NSString&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="var"&gt;appBladeProjectSecret&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instp/AppBlade/delegate</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
-    <Abstract>Delegate to receive messages regarding device authentication and other events</Abstract>
+    <Abstract>Delegate to receive messages regarding device
+authentication and other events</Abstract>
     <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
-    &lt;span class="param"&gt;assign&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt;&amp;lt;&lt;span class="template"&gt;AppBladeDelegate&lt;/span&gt;&amp;gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/delegate //apple_ref/occ/data/AppBlade/delegate //apple_ref/occ/data/delegate //apple_ref/occ/clconst/AppBlade/delegate " machineGenerated="true" --&gt;&lt;span class="var"&gt;delegate&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    &lt;span class="param"&gt;assign&lt;/span&gt;) &lt;span class="type"&gt;id&lt;/span&gt;&amp;lt;&lt;span class="template"&gt;AppBladeDelegate&lt;/span&gt;&amp;gt; &lt;span class="var"&gt;delegate&lt;/span&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/intf/AppBladeDelegate</TokenIdentifier>
@@ -148,7 +221,7 @@ Appblade in your Feedback reports or Crash reports</Abstract>
     <TokenIdentifier>//apple_ref/occ/intfm/AppBladeDelegate/appBlade:applicationApproved:error:</TokenIdentifier>
     <Path>AppBlade_h/Protocols/AppBladeDelegate/index.html</Path>
     <Abstract>This method is called when the delegate is notified of whether the Application was approved to run.</Abstract>
-    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;) &lt;!-- a logicalPath="//apple_ref/occ/instm/AppBladeDelegate/appBlade //apple_ref/occ/clm/AppBladeDelegate/appBlade //apple_ref/occ/intfcm/AppBladeDelegate/appBlade //apple_ref/occ/intfm/AppBladeDelegate/appBlade //apple_ref/occ/func/appBlade //apple_ref/occ/ftmplt/AppBladeDelegate/appBlade //apple_ref/occ/defn/appBlade //apple_ref/occ/macro/appBlade //apple_ref/doc/anysymbol/appBlade" machineGenerated="true" --&gt;&lt;span class="function"&gt;appBlade&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/AppBlade //apple_ref/occ/tdef/AppBlade //apple_ref/occ/tag/AppBlade //apple_ref/occ/struct/AppBlade //apple_ref/occ/intf/AppBlade //apple_ref/doc/anysymbol/AppBlade" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBlade&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="param"&gt;appBlade&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/occ/instm/AppBladeDelegate/applicationApproved //apple_ref/occ/clm/AppBladeDelegate/applicationApproved //apple_ref/occ/intfcm/AppBladeDelegate/applicationApproved //apple_ref/occ/intfm/AppBladeDelegate/applicationApproved //apple_ref/occ/func/applicationApproved //apple_ref/occ/ftmplt/AppBladeDelegate/applicationApproved //apple_ref/occ/defn/applicationApproved //apple_ref/occ/macro/applicationApproved //apple_ref/doc/anysymbol/applicationApproved" machineGenerated="true" --&gt;&lt;span class="function"&gt;applicationApproved&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;span class="param"&gt;approved&lt;/span&gt; 
-        &lt;!-- a logicalPath="//apple_ref/occ/instm/AppBladeDelegate/error //apple_ref/occ/clm/AppBladeDelegate/error //apple_ref/occ/intfcm/AppBladeDelegate/error //apple_ref/occ/intfm/AppBladeDelegate/error //apple_ref/occ/func/error //apple_ref/occ/ftmplt/AppBladeDelegate/error //apple_ref/occ/defn/error //apple_ref/occ/macro/error //apple_ref/doc/anysymbol/error" machineGenerated="true" --&gt;&lt;span class="function"&gt;error&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSError //apple_ref/occ/tdef/NSError //apple_ref/occ/tag/NSError //apple_ref/occ/struct/NSError //apple_ref/occ/intf/NSError //apple_ref/doc/anysymbol/NSError" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSError&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/error //apple_ref/occ/data/AppBladeDelegate/error //apple_ref/occ/data/error //apple_ref/occ/clconst/AppBladeDelegate/error " machineGenerated="true" --&gt;&lt;span class="var"&gt;error&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+    <Declaration>-(&lt;span class="type"&gt;void&lt;/span&gt;) &lt;span class="function"&gt;appBlade&lt;/span&gt;:(&lt;span class="type"&gt;AppBlade&lt;/span&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="param"&gt;appBlade&lt;/span&gt; &lt;span class="function"&gt;applicationApproved&lt;/span&gt;:(&lt;span class="type"&gt;BOOL&lt;/span&gt;)&lt;span class="param"&gt;approved&lt;/span&gt; 
+        &lt;span class="function"&gt;error&lt;/span&gt;:(&lt;span class="type"&gt;NSError&lt;/span&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="var"&gt;error&lt;/span&gt;; </Declaration>
 </Token>
 </Tokens>
