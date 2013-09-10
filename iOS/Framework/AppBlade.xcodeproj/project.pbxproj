@@ -303,6 +303,7 @@
 		3134653217A86DC4009DDC86 /* APBWebOperationTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = APBWebOperationTests.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		3134653317A86DC4009DDC86 /* APBWebOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = APBWebOperationTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "APBWebOperation+PrivateMethods.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		316C245B17DFABF800F8196F /* AppBladeTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeTestConstants.h; sourceTree = "<group>"; };
 		318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrashUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		318C22B817CFC0E50007FD5E /* APBTokenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBTokenManager.h; sourceTree = "<group>"; };
@@ -627,6 +628,7 @@
 		3134651817A865C7009DDC86 /* AppBladeTests */ = {
 			isa = PBXGroup;
 			children = (
+				316C245B17DFABF800F8196F /* AppBladeTestConstants.h */,
 				3134651E17A865C7009DDC86 /* AppBladeTests.h */,
 				3134651F17A865C7009DDC86 /* AppBladeTests.m */,
 				313464BD17A8626A009DDC86 /* FeatureTests */,
