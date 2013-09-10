@@ -4,26 +4,23 @@
 <TOC>
   <Node>
     <Name>AppBlade SDK for iOS</Name>
-	<Path>AppBlade_hdoc</Path>
-	<File>index.html</File>
+	<Path></Path>
+	<File>masterTOC.html</File>
 	<Subnodes> 
 		<NodeRef refid="902"/> <!--AppBlade Architecture Overview -->
 		<NodeRef refid="901"/> <!--AppBlade SDK -->
 		<NodeRef refid="903"/> <!--Example Projects -->
 	</Subnodes>
-   </Node>
+  </Node>
 </TOC>
 
 <Library>
 	<!-- Folder Nodes-->
 	<Node id="901">
 		<Name>AppBlade SDK</Name>
-		<File>masterTOC.html</File>
 		<Subnodes>
 		<Node>
 			<Name>Singleton</Name>
-			<Path></Path>
-			<File>masterTOC.html</File>
 			<Subnodes>
 				<NodeRef refid="1"/>
 				<NodeRef refid="2"/>
@@ -32,8 +29,6 @@
 		</Node>
 		<Node>
 			<Name>Feature Managers</Name>
-			<Path></Path>
-			<File>masterTOC.html</File>
 			<Subnodes>
 			  <NodeRef refid="7"/>
 			  <NodeRef refid="8"/>
@@ -45,11 +40,9 @@
 		</Node>
 		<Node>
 			<Name>Supporting Files</Name>
-			<File>masterTOC.html</File>
 			<Subnodes>
 				<Node>
 					<Name>Core Managers</Name>
-					<File>masterTOC.html</File>
 					<Subnodes>
 					  <NodeRef refid="4"/>
 					  <NodeRef refid="5"/>
@@ -58,7 +51,6 @@
 				</Node>
 				<Node>
 					<Name>AppBlade Web Operations</Name>
-					<File>masterTOC.html</File>
 					<Subnodes>
 					  <NodeRef refid="13"/>
 					  <NodeRef refid="131"/>
@@ -67,7 +59,6 @@
 				</Node>
 				<Node>
 					<Name>AppBlade Simple Keychain</Name>
-					<File>masterTOC.html</File>
 					<Subnodes>
 					  <NodeRef refid="14"/>
 					  <NodeRef refid="141"/>
@@ -75,8 +66,6 @@
 				</Node>
 				<Node>
 					<Name>File Hashing</Name>
-					<Path></Path>
-					<File>masterTOC.html</File>
 					<Subnodes>
 					  <NodeRef refid="15"/>
 					  <NodeRef refid="151"/>
@@ -88,17 +77,17 @@
 	</Node>
 	<Node id="902">
 		<Name>AppBlade Architecture Overview</Name>
-		<Path>AppBlade_hdoc</Path>
+		<Path>AppBladeArchitechtureOverview_hdoc</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="903">
     <Name>Example Projects</Name>
-    <Path>AppBlade_hdoc</Path>
+    <Path>AppBladeExampleProjects_hdoc</Path>
     <File>index.html</File>
     <Subnodes>
 		<Node>
 			<Name>KitchenSink</Name>
-			<Path></Path>
+			<Path>AppBladeExampleProjects_KitchenSink_hdoc</Path>
 			<File>masterTOC.html</File>
 			<Subnodes>
 				<NodeRef refid="6"/>
@@ -121,92 +110,92 @@
 	</Node>
 	<Node id="2">
 		<Name>AppBlade+PrivateMethods.h</Name>
-		<Path>AppBlade_h</Path>
+		<Path>AppBlade+PrivateMethods_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="3">
 		<Name>AppBladeSharedConstants.h</Name>
-		<Path>AppBlade_h</Path>
+		<Path>AppBladeSharedConstants_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="4">
 		<Name>APBDeviceInfoManager</Name>
-		<Path>Documents/AppBlade_h</Path>
+		<Path>APBDeviceInfoManager_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="5">
 		<Name>APBApplicationInfoManager</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBApplicationInfoManager_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="6">
 		<Name>APBTokenManager</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBTokenManager_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="7">
 		<Name>Authentication</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBAuthenticationManager_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="8">
 		<Name>Auto Updating</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBCrashReportingManager_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="9">
 		<Name>Session Tracking</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBSessionTrackingManager_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="10">
 		<Name>Crash Reporting</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBCrashReportingManager_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="11">
 		<Name>Feedback Reporting</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBFeedbackReportingManager_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="12">
 		<Name>Custom Parameters</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBCustomParametersManager_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="13">
 		<Name>AppBladeWebOperation.h</Name>
-		<Path>AppBlade_h</Path>
+		<Path>AppBladeWebOperation_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="131">
 		<Name>AppBladeWebOperation.m</Name>
-		<Path>AppBlade_h</Path>
+		<Path>AppBladeWebOperation_m</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="132">
 		<Name>AppBladeWebOperation+PrivateMethods.h</Name>
-		<Path>AppBlade_h</Path>
+		<Path>AppBladeWebOperation+PrivateMethods_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="14">
 		<Name>AppBladeSimpleKeychain.h</Name>
-		<Path>AppBlade_h</Path>
+		<Path>AppBladeSimpleKeychain_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="141">
 		<Name>AppBladeSimpleKeychain.m</Name>
-		<Path>AppBlade_h</Path>
+		<Path>AppBladeSimpleKeychain_m</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="15">
 		<Name>APBFileMD5Hash.h</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBFileMD5Hash_h</Path>
 		<File>index.html</File>
 	</Node>
 	<Node id="151">
 		<Name>APBFileMD5Hash.c</Name>
-		<Path>AppBlade_h</Path>
+		<Path>APBFileMD5Hash_c</Path>
 		<File>index.html</File>
 	</Node>
 </Library>

@@ -35,7 +35,8 @@
 Certain Mobile Application Management features require that this framework be used. 
 This framework should be considered an extension (if not an independent entity) to the AppBlade MDM service.
 </p>
- </span></font></td>
+<p>For more information visit our github wiki : http://github.com/AppBlade/SDK/wiki   
+ </p></span></font></td>
 			</tr>
 <tr height="10">
 <td height="10" width="600"></td>
@@ -51,13 +52,26 @@ This framework should be considered an extension (if not an independent entity) 
 <h2>Headers</h2>
 				
       <blockquote class="groupindent">
-<table border="0" cellpadding="1" cellspacing="0" width="420"><tr>
+<table border="0" cellpadding="1" cellspacing="0" width="420">
+<tr>
 <td width="33%">
 <a name="group___header_AP" href="AppBlade_h/index.html">AppBlade</a><br>
 </td>
+<td width="33%">
+<a href="AppBladeLogging_h/index.html">AppBladeLogging</a><br>
+</td>
 <td width="33%"></td>
+</tr>
+<tr>
+<td width="33%">
+<a href="AppBlade+PrivateMethods_h/index.html">AppBlade+PrivateMethods</a><br>
+</td>
+<td width="33%">
+<a href="AppBladeSharedConstants_h/index.html">AppBladeSharedConstants</a><br>
+</td>
 <td width="33%"></td>
-</tr></table>
+</tr>
+</table>
 </blockquote>
 
 <h2>Functions</h2>
@@ -65,13 +79,24 @@ This framework should be considered an extension (if not an independent entity) 
 <table border="0" cellpadding="1" cellspacing="0" width="420">
 <tr>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/allowFeedbackReporting" name="group___function_AP" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/allowFeedbackReporting">-[ AppBlade allowFeedbackReporting ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade/allowFeedbackReporting" name="group___function_AP" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:">-[ AppBlade allowFeedbackReporting ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/currentSession" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/currentSession">-[ AppBlade currentSession ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/sanitizeKeychain" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/sanitizeKeychain">-[ AppBlade sanitizeKeychain ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:">-[ AppBlade allowFeedbackReportingForWindow:withOptions: ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/getCustomParams" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/getCustomParams">-[ AppBlade getCustomParams ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/setAppBladeDeviceSecret:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/setAppBladeDeviceSecret:">-[ AppBlade setAppBladeDeviceSecret: ]</a><br>
+<a logicalpath="//apple_ref/occ/clm/AppBlade/sdkVersion" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/clm/AppBlade/sdkVersion">+[ AppBlade sdkVersion ]</a><br>
 </td>
 </tr>
 <tr>
@@ -82,7 +107,7 @@ This framework should be considered an extension (if not an independent entity) 
 <a logicalpath="//apple_ref/occ/instm/AppBlade/handleBackloggedFeedback" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/handleBackloggedFeedback">-[ AppBlade handleBackloggedFeedback ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/setCustomParam:forKey:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/setCustomParam:forKey:">-[ AppBlade setCustomParam:forKey: ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade/setAppBladeDeviceSecret:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/setAppBladeDeviceSecret:">-[ AppBlade setAppBladeDeviceSecret: ]</a><br>
 </td>
 </tr>
 <tr>
@@ -90,7 +115,29 @@ This framework should be considered an extension (if not an independent entity) 
 <a logicalpath="//apple_ref/occ/instm/AppBlade/catchAndReportCrashes" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/catchAndReportCrashes">-[ AppBlade catchAndReportCrashes ]</a><br>
 </td>
 <td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/handleCrashReport" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/handleCrashReport">-[ AppBlade handleCrashReport ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/setCustomParam:forKey:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/setCustomParam:forKey:">-[ AppBlade setCustomParam:forKey: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/checkApproval" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkApproval">-[ AppBlade checkApproval ]</a><br>
+</td>
+<td width="33%">
 <a logicalpath="//apple_ref/occ/clm/AppBlade/logSDKVersion" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/clm/AppBlade/logSDKVersion">+[ AppBlade logSDKVersion ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/setCustomParams:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/setCustomParams:">-[ AppBlade setCustomParams: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/checkForExistingCrashReports" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkForExistingCrashReports">-[ AppBlade checkForExistingCrashReports ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/logSessionEnd" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/logSessionEnd">-[ AppBlade logSessionEnd ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/clm/AppBlade/sharedManager" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/clm/AppBlade/sharedManager">+[ AppBlade sharedManager ]</a><br>
@@ -98,7 +145,7 @@ This framework should be considered an extension (if not an independent entity) 
 </tr>
 <tr>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/checkApproval" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkApproval">-[ AppBlade checkApproval ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade/checkForUpdates" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkForUpdates">-[ AppBlade checkForUpdates ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/logSessionStart" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/logSessionStart">-[ AppBlade logSessionStart ]</a><br>
@@ -109,7 +156,18 @@ This framework should be considered an extension (if not an independent entity) 
 </tr>
 <tr>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/checkForExistingCrashReports" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkForExistingCrashReports">-[ AppBlade checkForExistingCrashReports ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade/cleanOutKeychain" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/cleanOutKeychain">-[ AppBlade cleanOutKeychain ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/randomString:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/randomString:">-[ AppBlade randomString: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/showFeedbackDialogueWithOptions:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/showFeedbackDialogueWithOptions:">-[ AppBlade showFeedbackDialogueWithOptions: ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/clearAllCustomParams" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/clearAllCustomParams">-[ AppBlade clearAllCustomParams ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/registerWithAppBladePlist" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/registerWithAppBladePlist">-[ AppBlade registerWithAppBladePlist ]</a><br>
@@ -120,19 +178,10 @@ This framework should be considered an extension (if not an independent entity) 
 </tr>
 <tr>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/checkForUpdates" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkForUpdates">-[ AppBlade checkForUpdates ]</a><br>
-</td>
-<td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/registerWithAppBladePlistNamed:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/registerWithAppBladePlistNamed:">-[ AppBlade registerWithAppBladePlistNamed: ]</a><br>
-</td>
-<td width="33%"></td>
-</tr>
-<tr>
-<td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/clearAppBladeKeychain" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/clearAppBladeKeychain">-[ AppBlade clearAppBladeKeychain ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/clm/AppBlade/sdkVersion" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/clm/AppBlade/sdkVersion">+[ AppBlade sdkVersion ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade/registerWithAppBladePlistNamed:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/registerWithAppBladePlistNamed:">-[ AppBlade registerWithAppBladePlistNamed: ]</a><br>
 </td>
 <td width="33%"></td>
 </tr>
