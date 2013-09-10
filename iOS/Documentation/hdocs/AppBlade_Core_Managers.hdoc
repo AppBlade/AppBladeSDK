@@ -1,0 +1,11 @@
+/*!
+  @framework AppBlade
+  @author Andrew Tremblay on 9/9/13
+  @discussion Core Managers provide complex but categorizable behavior that, without their inclusion, would cause AppBlade to not work. 
+
+		They mostly revolve around Device and Application information, and are separated for both readability and independent use. 
+
+		The Application and Device information that we retrieve could be useful for reasons specific to your project, feel free to use it through our managers.
+		
+		
+ */
