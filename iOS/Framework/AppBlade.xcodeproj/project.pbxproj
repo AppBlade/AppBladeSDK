@@ -99,6 +99,8 @@
 		313064141794A866006DF03A /* APBFeedbackBackgroundView.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061F81794A357006DF03A /* APBFeedbackBackgroundView.h */; };
 		313064151794A866006DF03A /* APBFileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 313061FD1794A357006DF03A /* APBFileMD5Hash.h */; };
 		313064171794B494006DF03A /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 313060D41794A356006DF03A /* protobuf-c.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3134457017DFC27500E5AF0B /* APBDeviceInfoManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3134456F17DFC27500E5AF0B /* APBDeviceInfoManagerTest.m */; };
+		3134457317DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3134457217DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m */; };
 		313464BA17A86241009DDC86 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313464B917A86241009DDC86 /* SenTestingKit.framework */; };
 		313464BB17A86248009DDC86 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313464B917A86241009DDC86 /* SenTestingKit.framework */; };
 		3134651517A865C7009DDC86 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 313464B917A86241009DDC86 /* SenTestingKit.framework */; };
@@ -287,6 +289,10 @@
 		313061FD1794A357006DF03A /* APBFileMD5Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = APBFileMD5Hash.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		313061FE1794A357006DF03A /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE.md; path = AppBlade/LICENSE.md; sourceTree = "<group>"; };
 		3130640D1794A3D8006DF03A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		3134456E17DFC27500E5AF0B /* APBDeviceInfoManagerTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDeviceInfoManagerTest.h; sourceTree = "<group>"; };
+		3134456F17DFC27500E5AF0B /* APBDeviceInfoManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDeviceInfoManagerTest.m; sourceTree = "<group>"; };
+		3134457117DFC2D800E5AF0B /* APBApplicationInfoManagerTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBApplicationInfoManagerTest.h; sourceTree = "<group>"; };
+		3134457217DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBApplicationInfoManagerTest.m; sourceTree = "<group>"; };
 		313464B917A86241009DDC86 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		313464CA17A8632B009DDC86 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		313464CB17A8632B009DDC86 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -638,6 +644,10 @@
 				3134653017A86D9A009DDC86 /* APBSimpleKeychainTests.m */,
 				3134651917A865C7009DDC86 /* Supporting Files */,
 				31D5361417D7B61C0011B9A1 /* AsyncTestMacros.h */,
+				3134456E17DFC27500E5AF0B /* APBDeviceInfoManagerTest.h */,
+				3134456F17DFC27500E5AF0B /* APBDeviceInfoManagerTest.m */,
+				3134457117DFC2D800E5AF0B /* APBApplicationInfoManagerTest.h */,
+				3134457217DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m */,
 			);
 			path = AppBladeTests;
 			sourceTree = "<group>";
@@ -1072,6 +1082,8 @@
 				3134652017A865C7009DDC86 /* AppBladeTests.m in Sources */,
 				3134653117A86D9A009DDC86 /* APBSimpleKeychainTests.m in Sources */,
 				3134653417A86DC4009DDC86 /* APBWebOperationTests.m in Sources */,
+				3134457017DFC27500E5AF0B /* APBDeviceInfoManagerTest.m in Sources */,
+				3134457317DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
