@@ -64,7 +64,6 @@
 
 - (NSString*)hashFile:(NSString *)filePath
 {
-    
     NSString* returnString = nil;
     CFStringRef executableFileMD5Hash =
     FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), APBFileHashDefaultChunkSizeForReadingData);
@@ -125,7 +124,11 @@ int main (int argc, char *argv[]);
 
 -(BOOL)isAppStoreBuild
 {
+#ifdef APPBLADE_TEST_FAIRPLAY_ENCRYPTED
+    return true;
+#else
     return is_encrypted();
+#endif
 }
 
 static BOOL is_encrypted () {
