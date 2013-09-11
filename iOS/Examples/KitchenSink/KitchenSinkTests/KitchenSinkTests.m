@@ -34,13 +34,29 @@
     [super tearDown];
 }
 
+// the special case init methods
+-(void)disableAllWithAssert
+{
+    [[AppBlade sharedManager] setDisabled:true];
+    STAssertTrue([[AppBlade sharedManager] isAllDisabled], @"Getter or setter doesn't work.");
+}
+
+-(void)assertNoPendingRequests:(NSString*)errorMessage
+{
+    NSInteger emptyCheck = [[AppBlade  sharedManager] pendingRequestsOfType:AppBladeWebClientAPI_AllTypes];
+    STAssertTrue((emptyCheck == 0),errorMessage);
+}
+
+
+//The tests
+
 - (void)test01AppDelegateExists
 {
     id appDelegate = [[UIApplication sharedApplication] delegate];
     STAssertNotNil(appDelegate, @"UIApplication failed to find the AppDelegate");
 }
 
-- (void)test01InAppRegister
+- (void)test02InAppRegister
 {
     [[AppBlade sharedManager] registerWithAppBladePlist];
     NSLog(@"Waiting until we get a registration back from AppBlade.");
@@ -60,6 +76,52 @@
     APB_WAIT_WHILE(([[AppBlade  sharedManager] pendingRequestsOfType:AppBladeWebClientAPI_Permissions] > 0), kNetworkPatience);
     NSString *deviceString = [[AppBlade sharedManager] appBladeDeviceSecret];
     STAssertTrue(([deviceString length] > 0), @"We could not retrieve a device secret:\n %@", [[AppBlade sharedManager] appBladeDeviceSecrets]);
+}
+
+
+-(void)test04isAllDisabledAffectsWebCalls
+{
+    [self disableAllWithAssert];
+//    [[AppBlade sharedManager] registerWithAppBladePlist]; would set isAllDisabled on an invalid call while fairplay encrypted
+    [[AppBlade sharedManager] checkApproval];
+    [self assertNoPendingRequests: @"checkApproval is not affected by isAllDisabled"];
+    
+    [[AppBlade sharedManager] checkForUpdates]; 
+    [self assertNoPendingRequests: @"checkForUpdates is not affected by isAllDisabled"];
+
+
+    [[AppBlade sharedManager] catchAndReportCrashes]; //TODO: start with a pending crash report
+    [self assertNoPendingRequests: @"catchAndReportCrashes is not affected by isAllDisabled"];
+
+    
+    [[AppBlade sharedManager] allowFeedbackReporting];  //TODO: start with a pending feedback report
+    [self assertNoPendingRequests:  @"allowFeedbackReporting is not affected by isAllDisabled"];
+
+
+    [[AppBlade sharedManager] logSessionStart];  //TODO: start with a pending session
+    //(for now though, let's just start/end/start. That'll kick off equivalent behavior)
+    [[AppBlade sharedManager] logSessionEnd];
+    [[AppBlade sharedManager] logSessionStart];
+    [self assertNoPendingRequests:  @"logSessionStart/End  is not affected by isAllDisabled"];
+}
+
+
+-(void)test05isAllDisabledAffectsFeedback
+{
+    [self disableAllWithAssert];
+
+}
+
+-(void)test06isAllDisabledAffectsSessionLogging
+{
+    [self disableAllWithAssert];
+
+}
+
+-(void)test07isAllDisabledAffectsCustomParams
+{
+    [self disableAllWithAssert];
+
 }
 
 @end
