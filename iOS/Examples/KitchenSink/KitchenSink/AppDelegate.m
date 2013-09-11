@@ -28,10 +28,14 @@
     } else {
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
     }
-    self.window.rootViewController = self.viewController;
+    
+    
+    // Configure Window
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+    [navigationController setNavigationBarHidden:YES animated:NO];
+    [self.window setRootViewController:navigationController];
     [self.window makeKeyAndVisible];
-    
-    
+
     /******************************************
      APPBLADE SETUP CALL
      ******************************************/
