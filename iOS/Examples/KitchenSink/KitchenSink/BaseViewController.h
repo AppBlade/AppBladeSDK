@@ -11,7 +11,7 @@
 @interface BaseViewController : UIViewController
 
 @property (nonatomic, strong) NSArray *viewList;
--(void)buildViewListForScrollView:(UIScrollView*)scrollView;
+-(CGFloat)buildViewListForScrollView:(UIScrollView*)scrollView;
 
 -(void)setBackgroundImageInsets:(UIEdgeInsets)insets forButton:(UIButton*)button;
 -(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height;

@@ -36,16 +36,24 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)buildViewListForScrollView:(UIScrollView*)scrollView
+-(CGFloat)buildViewListForScrollView:(UIScrollView*)scrollView
 {
-    if (self.viewList != nil) {
-        CGFloat totalHeight = 0.0f;
-        for(UIView *v in self.viewList){
+    return [self addViews:self.viewList toScrollView:scrollView atVertOffset:0.0f];
+}
+
+-(CGFloat)addViews:(NSArray *)views toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height
+{
+    CGFloat totalHeight = height;
+    if (views != nil) {
+        for(UIView *v in views){
             totalHeight = [self addView:v toScrollView:scrollView atVertOffset:totalHeight];
         }
         [scrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
-    }    
+    }
+    return totalHeight;
 }
+
+
 
 -(void)setBackgroundImageInsets:(UIEdgeInsets)insets forButton:(UIButton*)button
 {
