@@ -130,6 +130,8 @@
 		312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card-btn-normal@2x.png"; sourceTree = "<group>"; };
 		312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card-btn-pressed@2x.png"; sourceTree = "<group>"; };
 		312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_white@2x.png"; sourceTree = "<group>"; };
+		3133220717E0A865008C835C /* KitchenSinkTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KitchenSinkTestConstants.h; sourceTree = "<group>"; };
+		3133220817E0A8BA008C835C /* KitchenSinkTestMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KitchenSinkTestMacros.h; sourceTree = "<group>"; };
 		3148A16717984505000332D4 /* appblade_logo_red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_red@2x.png"; sourceTree = "<group>"; };
 		3148A16817984505000332D4 /* appblade_status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_status_bar_icon.png; sourceTree = "<group>"; };
 		3148A16D1798457F000332D4 /* appblade_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appblade_icon.png; path = ../appblade_icon.png; sourceTree = "<group>"; };
@@ -238,6 +240,8 @@
 				311A21E11794DC1B007BF879 /* KitchenSinkTests.h */,
 				311A21E21794DC1B007BF879 /* KitchenSinkTests.m */,
 				311A21DC1794DC1B007BF879 /* Supporting Files */,
+				3133220717E0A865008C835C /* KitchenSinkTestConstants.h */,
+				3133220817E0A8BA008C835C /* KitchenSinkTestMacros.h */,
 			);
 			path = KitchenSinkTests;
 			sourceTree = "<group>";
@@ -635,6 +639,7 @@
 				INFOPLIST_FILE = "KitchenSinkTests/KitchenSinkTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
+				USER_HEADER_SEARCH_PATHS = "\"../../Framework/AppBlade\"";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -652,6 +657,7 @@
 				INFOPLIST_FILE = "KitchenSinkTests/KitchenSinkTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
+				USER_HEADER_SEARCH_PATHS = "\"../../Framework/AppBlade\"";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
