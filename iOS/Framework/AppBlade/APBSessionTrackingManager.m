@@ -12,11 +12,14 @@
 
 NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
 NSString *kSessionStartDate           = @"session_started_at";
+NSString *kSessionEndDate             = @"session_ended_at";
 NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 
 @implementation APBSessionTrackingManager
 @synthesize delegate;
 @synthesize sessionStartDate;
+@synthesize sessionEndDate;
+
 
 
 - (id)initWithDelegate:(id<APBWebOperationDelegate>)webOpDelegate
@@ -29,6 +32,38 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 }
 
 - (void)logSessionStart
+{
+  [self checkForAndPostSessions];
+    
+    self.sessionStartDate = [NSDate date];
+    self.sessionEndDate = nil;
+}
+
+- (void)logSessionEnd
+{
+    if (self.sessionStartDate != nil) { //check first if we even HAVE a session
+        self.sessionEndDate = [NSDate date];
+        NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:[self sessionStartDate], @"started_at", [self sessionEndDate], @"ended_at", [[AppBlade sharedManager] getCustomParams], @"custom_params", nil];
+        NSMutableArray* pastSessions = nil;
+        NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
+            NSArray* sessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
+            pastSessions = [sessions mutableCopy] ;
+        }
+        else {
+            pastSessions = [NSMutableArray arrayWithCapacity:1];
+        }
+        
+        [pastSessions addObject:sessionDict];
+        
+        NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
+        [sessionData writeToFile:sessionFilePath atomically:YES];
+    }
+    
+    [self checkForAndPostSessions];
+}
+
+-(void)checkForAndPostSessions
 {
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     ABDebugLog_internal(@"Checking Session Path: %@", sessionFilePath);
@@ -43,34 +78,17 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
             [[AppBlade sharedManager] addPendingRequest:client];
         }
     }
-    self.sessionStartDate = [NSDate date];
 }
 
-- (void)logSessionEnd
-{
-    NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:[self  sessionStartDate], @"started_at", [NSDate date], @"ended_at", [[AppBlade sharedManager] getCustomParams], @"custom_params", nil];
-    
-    NSMutableArray* pastSessions = nil;
-    NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
-        NSArray* sessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
-        pastSessions = [sessions mutableCopy] ;
-    }
-    else {
-        pastSessions = [NSMutableArray arrayWithCapacity:1];
-    }
-    
-    [pastSessions addObject:sessionDict];
-    
-    NSData* sessionData = [NSKeyedArchiver archivedDataWithRootObject:pastSessions];
-    [sessionData writeToFile:sessionFilePath atomically:YES];    
-}
 
 - (NSDictionary*)currentSession
 {
-    NSDictionary *toRet = nil;
+    NSMutableDictionary *toRet = nil;
     if (self.sessionStartDate != nil) { //check first if we even HAVE a session
-        toRet = [NSDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, kSessionStartDate, nil];
+        toRet = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.sessionStartDate, kSessionStartDate, nil];
+    }
+    if (toRet != nil && self.sessionEndDate != nil) {
+        [toRet setObject:self.sessionEndDate forKey:kSessionEndDate];
     }
     return toRet;
 }
@@ -81,6 +99,8 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 {
     ABDebugLog_internal(@"Success sending Sessions");
     //clean up sessions handled in the success block, let's not pass the buck too much here.
+    self.sessionStartDate = nil;
+    self.sessionEndDate = nil;
 }
 
 
@@ -167,6 +187,7 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
     }];
     
     [self setSuccessBlock:^(id data, NSError* error){
+        [[AppBlade sharedManager] appBladeWebClientSentSessions:selfReference withSuccess:true];
         //delete existing sessions, as we have reported them
         NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
         if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {

@@ -13,18 +13,21 @@
 
 extern NSString *sessionURLFormat;
 extern NSString *kSessionStartDate;
+extern NSString *kSessionEndDate;
 extern NSString *kSessionTimeElapsed;
 
 
 @interface APBSessionTrackingManager : NSObject<APBBasicFeatureManager>
 @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
 @property (nonatomic, retain) NSDate *sessionStartDate;
+@property (nonatomic, retain) NSDate *sessionEndDate;
 
 - (void)logSessionEnd;
 - (void)logSessionStart;
 - (NSDictionary*)currentSession;
 
-
+-(void)checkForAndPostSessions
+;
 - (BOOL)hasPendingSessions;
 - (void)handleWebClientSentSessions:(APBWebOperation *)client withSuccess:(BOOL)success;
 - (void)sessionTrackingCallbackFailed:(APBWebOperation *)client withErrorString:(NSString*)errorString;
