@@ -44,4 +44,10 @@
 - (void)checkAndCreateAppBladeCacheDirectory;
 
 - (void) resumeCurrentPendingRequests;
+
+
+-(void)setDisabled:(BOOL)isDisabled;
+-(BOOL)isAllDisabled;
+
+
 @end
