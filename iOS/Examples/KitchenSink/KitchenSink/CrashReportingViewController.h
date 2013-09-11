@@ -9,6 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @interface CrashReportingViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UIScrollView *crashScrollView;
+@property (strong, nonatomic) IBOutlet UIView *headerWrapperView;
+
+@property (strong, nonatomic) IBOutlet UIView *crashChoiceView;
+
+@property (strong, nonatomic) IBOutlet UIView *crashDescriptionView;
+
 
 @property (strong, nonatomic) IBOutlet UIButton *backButton;
 - (IBAction)backButtonPressed:(id)sender;

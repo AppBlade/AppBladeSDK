@@ -35,6 +35,27 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)viewWillLayoutSubviews
+{
+    //Set Button Image insets
+    //    UIEdgeInsets insetsExample = UIEdgeInsetsMake(12, 12, 12, 12);
+    //    [self setBackgroundImageInsets:insetsExample forButton:self.showFormButton];
+    
+	//Build the cards in the scroll view
+    CGFloat totalHeight = 0.0f;
+    totalHeight = [self addView:self.headerWrapperView toScrollView:self.crashScrollView atVertOffset:totalHeight];
+    totalHeight = [self addView:self.crashDescriptionView toScrollView:self.crashScrollView atVertOffset:totalHeight];
+    totalHeight = [self addView:self.crashChoiceView toScrollView:self.crashScrollView atVertOffset:totalHeight];
+    [self.crashScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
+}
+
+-(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height {
+    [scrollView addSubview:view];
+    CGRect viewFrame = view.frame;
+    viewFrame.origin.y = height;
+    [view setFrame:viewFrame];
+    return height + viewFrame.size.height;
+}
 
 #pragma mark - Crash "Helpers"
 // credit to CrashKit for these .
