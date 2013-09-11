@@ -34,7 +34,7 @@
     [super tearDown];
 }
 
-// the special case init methods
+// the special case init methods/helpers
 -(void)disableAllWithAssert
 {
     [[AppBlade sharedManager] setDisabled:true];
