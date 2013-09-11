@@ -49,14 +49,6 @@
     [self.crashScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
 }
 
--(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height {
-    [scrollView addSubview:view];
-    CGRect viewFrame = view.frame;
-    viewFrame.origin.y = height;
-    [view setFrame:viewFrame];
-    return height + viewFrame.size.height;
-}
-
 #pragma mark - Crash "Helpers"
 // credit to CrashKit for these .
 //https://github.com/kaler/CrashKit

@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CustomParametersViewController : UIViewController
+#import "BaseViewController.h"
+
+@interface CustomParametersViewController : BaseViewController
 @property (strong, nonatomic) IBOutlet UIScrollView *customParamsScrollView;
 
 

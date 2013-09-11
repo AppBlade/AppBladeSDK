@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+#import "BaseViewController.h"
 #import "CrashReportingViewController.h"
 #import "CustomParametersViewController.h"
 
-@interface ViewController : UIViewController <UIScrollViewDelegate>
+@interface ViewController : BaseViewController <UIScrollViewDelegate>
 
 @property (strong, nonatomic) CrashReportingViewController *crashVC;
 @property (strong, nonatomic) CustomParametersViewController *customParamsVC;
@@ -51,8 +52,6 @@
 @property (strong, nonatomic) IBOutlet UIView *updateCheckingWrapperView;
 @property (strong, nonatomic) IBOutlet UIButton *checkUpdatesButton;
 -(IBAction)updateCheckButtonPressed:(id)sender;
-
-
 
 #pragma mark - Authentication & Killswitch
 @property (strong, nonatomic) IBOutlet UIView *authenticationWrapperView;

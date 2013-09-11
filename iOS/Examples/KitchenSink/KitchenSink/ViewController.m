@@ -58,22 +58,6 @@
 
 }
 
--(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height {
-    [scrollView addSubview:view];
-    CGRect viewFrame = view.frame;
-    viewFrame.origin.y = height;
-    [view setFrame:viewFrame];
-    return height + viewFrame.size.height;
-}
-
--(void)setBackgroundImageInsets:(UIEdgeInsets)insets forButton:(UIButton*)button
-{
-    UIImage *bgImageNormal = [UIImage imageNamed:@"card-btn-normal@2x.png"];
-    UIImage *bgImagePressed = [UIImage imageNamed:@"card-btn-pressed@2x.png"];
-    [button setBackgroundImage:[bgImageNormal resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
-    [button setBackgroundImage:[bgImagePressed resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch] forState:UIControlStateHighlighted];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -152,15 +136,23 @@
     
     NSMutableString *currentSessionStatus = [NSMutableString stringWithString:@"Current Session Status:\n"];
     NSDictionary *currentSession = [[AppBlade sharedManager] currentSession];
-    if (currentSession == nil) {
+    if (currentSession == nil || [currentSession objectForKey:kSessionStartDate] == nil) {
         [currentSessionStatus appendString:@"No Current Session"];
     }else{
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateStyle:NSDateFormatterNoStyle];
         [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
         
-        NSDate *sessionStartDate =[currentSession objectForKey:kSessionStartDate];
-        [currentSessionStatus appendFormat:@"Started: %@ \nElapsed:%f", [dateFormatter stringFromDate:sessionStartDate], [sessionStartDate timeIntervalSinceNow]];
+        NSDate *sessionStartDate = [currentSession objectForKey:kSessionStartDate];
+        NSDate *sessionEndDate = [currentSession objectForKey:kSessionEndDate];
+        float elapsedTimeSinceStart = 0.0f;
+        if (sessionEndDate == nil) {
+            elapsedTimeSinceStart = ([sessionStartDate timeIntervalSinceNow] * -1.0f);
+            [currentSessionStatus appendFormat:@"Started: %@ \nElapsed: %f", [dateFormatter stringFromDate:sessionStartDate], elapsedTimeSinceStart];
+        }else{
+//            elapsedTimeSinceStart = ([sessionEndDate timeIntervalSinceDate:sessionStartDate]);
+            [currentSessionStatus appendFormat:@"Started: %@ \nEnded: %@", [dateFormatter stringFromDate:sessionStartDate],[dateFormatter stringFromDate:sessionEndDate]];//], elapsedTimeSinceStart];
+        }
     }
     
     [self.currentSessionDisplay setText:currentSessionStatus];
