@@ -267,6 +267,26 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		3133220917E0E80C008C835C /* Custom Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				31D5360B17D750530011B9A1 /* CustomParametersViewController.h */,
+				31D5360C17D750530011B9A1 /* CustomParametersViewController.m */,
+				31D5360D17D750530011B9A1 /* CustomParametersViewController.xib */,
+			);
+			name = "Custom Parameters";
+			sourceTree = "<group>";
+		};
+		3133220A17E0E81B008C835C /* Crash Reporting */ = {
+			isa = PBXGroup;
+			children = (
+				31D5360417D750350011B9A1 /* CrashReportingViewController.h */,
+				31D5360517D750350011B9A1 /* CrashReportingViewController.m */,
+				31D5360617D750350011B9A1 /* CrashReportingViewController.xib */,
+			);
+			name = "Crash Reporting";
+			sourceTree = "<group>";
+		};
 		3148A16117983D52000332D4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,12 +305,8 @@
 		31D535FF17D74FFC0011B9A1 /* Secondary ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				31D5360417D750350011B9A1 /* CrashReportingViewController.h */,
-				31D5360517D750350011B9A1 /* CrashReportingViewController.m */,
-				31D5360617D750350011B9A1 /* CrashReportingViewController.xib */,
-				31D5360B17D750530011B9A1 /* CustomParametersViewController.h */,
-				31D5360C17D750530011B9A1 /* CustomParametersViewController.m */,
-				31D5360D17D750530011B9A1 /* CustomParametersViewController.xib */,
+				3133220A17E0E81B008C835C /* Crash Reporting */,
+				3133220917E0E80C008C835C /* Custom Parameters */,
 			);
 			name = "Secondary ViewControllers";
 			sourceTree = "<group>";
