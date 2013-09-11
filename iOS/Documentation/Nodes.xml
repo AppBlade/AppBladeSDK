@@ -50,6 +50,33 @@
 					<NodeRef refid="6"/>
 				</Subnodes>
 			</Node>
+			<Node id="90104">
+				<Name>Other Core Behavior</Name>
+				<Subnodes>
+					<Node>
+						<Name>AppBlade Web Operations</Name>
+						<Subnodes>
+						  <NodeRef refid="13"/>
+						  <NodeRef refid="131"/>
+						  <NodeRef refid="132"/>
+						</Subnodes>
+					</Node>
+					<Node>
+						<Name>AppBlade Simple Keychain</Name>
+						<Subnodes>
+						  <NodeRef refid="14"/>
+						  <NodeRef refid="141"/>
+						</Subnodes>
+					</Node>
+					<Node>
+						<Name>File Hashing</Name>
+						<Subnodes>
+						  <NodeRef refid="15"/>
+						  <NodeRef refid="151"/>
+						</Subnodes>
+					</Node>
+				</Subnodes>
+			</Node>
     	</Subnodes>
 	</Node>
 	<Node id="902">
@@ -70,8 +97,7 @@
     	</Subnodes>
 	</Node>
 	
-	
-	
+	<!-- The Grand Repository -->
 	<Node id="1">
 		<Name>AppBlade Class</Name>
 		<Path>AppBlade_h/Classes/AppBlade</Path>
