@@ -13,6 +13,7 @@
 @end
 
 @implementation BaseViewController
+@synthesize viewList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,6 +36,16 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)buildViewListForScrollView:(UIScrollView*)scrollView
+{
+    if (self.viewList != nil) {
+        CGFloat totalHeight = 0.0f;
+        for(UIView *v in self.viewList){
+            totalHeight = [self addView:v toScrollView:scrollView atVertOffset:totalHeight];
+        }
+        [scrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
+    }    
+}
 
 -(void)setBackgroundImageInsets:(UIEdgeInsets)insets forButton:(UIButton*)button
 {
