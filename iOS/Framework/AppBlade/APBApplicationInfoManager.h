@@ -27,5 +27,5 @@
 - (NSString *)hashExecutable;
 
 - (BOOL)isAppStoreBuild;
-
+- (BOOL)isBeingDebugged;
 @end
