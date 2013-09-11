@@ -32,6 +32,7 @@
 		312E175A17D6DC0C003AD6DD /* card-btn-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */; };
 		312E175B17D6DC0C003AD6DD /* card-btn-pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */; };
 		312E175D17D6DF1A003AD6DD /* appblade_logo_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */; };
+		3133221317E101B7008C835C /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3133221217E101B7008C835C /* BaseViewController.m */; };
 		3148A16917984505000332D4 /* appblade_logo_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16717984505000332D4 /* appblade_logo_red@2x.png */; };
 		3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* appblade_status_bar_icon.png */; };
 		3148A16E1798457F000332D4 /* appblade_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16D1798457F000332D4 /* appblade_icon.png */; };
@@ -132,6 +133,8 @@
 		312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_white@2x.png"; sourceTree = "<group>"; };
 		3133220717E0A865008C835C /* KitchenSinkTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KitchenSinkTestConstants.h; sourceTree = "<group>"; };
 		3133220817E0A8BA008C835C /* KitchenSinkTestMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KitchenSinkTestMacros.h; sourceTree = "<group>"; };
+		3133221117E101B7008C835C /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		3133221217E101B7008C835C /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		3148A16717984505000332D4 /* appblade_logo_red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_red@2x.png"; sourceTree = "<group>"; };
 		3148A16817984505000332D4 /* appblade_status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_status_bar_icon.png; sourceTree = "<group>"; };
 		3148A16D1798457F000332D4 /* appblade_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appblade_icon.png; path = ../appblade_icon.png; sourceTree = "<group>"; };
@@ -214,6 +217,8 @@
 				311A21CC1794DC1B007BF879 /* ViewController_iPad.xib */,
 				31D535FF17D74FFC0011B9A1 /* Secondary ViewControllers */,
 				311A21B51794DC1B007BF879 /* Supporting Files */,
+				3133221117E101B7008C835C /* BaseViewController.h */,
+				3133221217E101B7008C835C /* BaseViewController.m */,
 			);
 			path = KitchenSink;
 			sourceTree = "<group>";
@@ -486,6 +491,7 @@
 				311A21C81794DC1B007BF879 /* ViewController.m in Sources */,
 				31D5360717D750350011B9A1 /* CrashReportingViewController.m in Sources */,
 				31D5360E17D750530011B9A1 /* CustomParametersViewController.m in Sources */,
+				3133221317E101B7008C835C /* BaseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
