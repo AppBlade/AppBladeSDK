@@ -2,12 +2,11 @@
   @framework AppBlade
   @author Andrew Tremblay on 9/9/13
   @discussion This document provides a broad look on the AppBlade SDK code structure. It describes the intention of the current design and gives suggestions about its possible expansion.  
+  See also @link //apple_ref/occ/cl/AppBlade The AppBlade base class@/link for  
 
 	<h4>Contents:</h4>
 	<p class="blockquote">
-                <a href="#birds_eye_view">A Birds Eye View</a>
-            <br>
-                <a href="#the_singleton">The Singleton</a>
+                <a href="#the_singleton">The AppBlade Singleton</a>
             <br>
                 <a href="#core_manager">The Core Managers</a>
             <br>
@@ -17,15 +16,8 @@
             <br>
     </p>
     <br>
-
-<a name="birds_eye_view" title="A Birds Eye View"></a>
-<h2 class="jump">Get Up and Running</h2>
-<p>Read <span class="content_text">“The Event-Handling System”</span> in 
-<em><a href="../../../documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40007072" target="_self">iOS App Programming Guide</a></em> for an overview of event handling and read 
-<em><a href="../../../documentation/EventHandling/Conceptual/EventHandlingiPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009541" target="_self">Event Handling Guide for iOS</a></em> 
-for specific tasks. 
-<em><a href="../../../documentation/EventHandling/Conceptual/EventHandlingiPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40009541" target="_self">Event Handling Guide for iOS</a></em> 
-describes how to handle user events including multitouch events, motion events—from device accelerometers—and events for controlling multimedia. At a minimum, every application should respond to orientation changes.
-</p>
+    <a name="birds_eye_view" title="A Birds Eye View"></a>
+    <h2 class="jump">The AppBlade Singleton</h2>
+    <p>The AppBlade singleton is intended to be the sole entrypoint to the features of AppBlade.  </p>
 
  */
