@@ -82,10 +82,10 @@
 
 - (void)throwDefaultNSException
 {
-    [self throwCustomNSException:@"Testing AppBlade Crash"];
+    [self throwCustomTestNSException:@"Testing AppBlade Crash"];
 }
 
-- (void)throwCustomNSException:(NSString *)reason
+- (void)throwCustomTestNSException:(NSString *)reason
 {
     NSException *e = [NSException exceptionWithName:@"TestException" reason:reason userInfo:nil];
     @throw e;
