@@ -70,9 +70,9 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
         NSArray* sessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
-        ABDebugLog_internal(@"%d Sessions Exist, posting them", [sessions count]);
+        ABDebugLog_internal(@"%d stored Sessions Exist", [sessions count]);
         
-        if(![self hasPendingSessions]){
+        if(![self hasPendingSessions] && [sessions count] > 0){
             APBWebOperation * client = [[AppBlade sharedManager] generateWebOperation];
             [client postSessions:sessions];
             [[AppBlade sharedManager] addPendingRequest:client];
