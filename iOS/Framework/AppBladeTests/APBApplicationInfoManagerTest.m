@@ -31,21 +31,14 @@
     STAssertNotNil(executableUUID, @"Could not retrieve an executableUUID.");
 }
 
-
-- (void)test02hashInfoPlistExists
-{
-    NSString* hashInfoPlist = [[AppBlade sharedManager] hashInfoPlist];
-    STAssertNotNil(hashInfoPlist, @"Could not retrieve the hash info plist.");
-}
-
-- (void)test03hashExecutableExists
+- (void)test02hashExecutableExists
 {
     NSString* hashExecutable = [[AppBlade sharedManager] hashExecutable];
     STAssertNotNil(hashExecutable, @"Could not retrieve an executable hash.");
 }
 
 
-- (void)test04isAppStoreBuildReturns
+- (void)test03isAppStoreBuildReturns
 {
     BOOL executableUUID = [[AppBlade sharedManager] isAppStoreBuild];
 #ifdef APPBLADE_TEST_FAIRPLAY_ENCRYPTED
