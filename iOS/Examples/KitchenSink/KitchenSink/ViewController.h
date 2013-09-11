@@ -28,9 +28,7 @@
 
 #pragma mark - Crash Report
 @property (strong, nonatomic) IBOutlet UIView *crashReportWrapperView;
-@property (strong, nonatomic) IBOutlet UIButton *crashButtonSigabrt;
 @property (strong, nonatomic) IBOutlet UIButton *crashButtonCustomException;
-@property (strong, nonatomic) IBOutlet UIButton *crashButtonSigsev;
 @property (strong, nonatomic) IBOutlet UIButton *crashOptionsListButton;
 - (IBAction)crashButtonPressed:(id)sender;
 

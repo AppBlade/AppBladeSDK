@@ -34,9 +34,7 @@
     //Set Button Image insets
     UIEdgeInsets insetsExample = UIEdgeInsetsMake(12, 12, 12, 12);
     [self setBackgroundImageInsets:insetsExample forButton:self.showFormButton];
-    [self setBackgroundImageInsets:insetsExample forButton:self.crashButtonSigabrt];
     [self setBackgroundImageInsets:insetsExample forButton:self.crashButtonCustomException];
-    [self setBackgroundImageInsets:insetsExample forButton:self.crashButtonSigsev];
     [self setBackgroundImageInsets:insetsExample forButton:self.crashOptionsListButton];
     [self setBackgroundImageInsets:insetsExample forButton:self.startSessionButton];
     [self setBackgroundImageInsets:insetsExample forButton:self.endSessionButton];
@@ -93,14 +91,10 @@
 
 
 - (IBAction)crashButtonPressed:(id)sender {
-    if(sender == self.crashButtonSigabrt){
-        [self.crashVC sigabrt];
-    }else if(sender == self.crashButtonCustomException){
+    if(sender == self.crashButtonCustomException){
         [self.crashVC throwDefaultNSException];
-    }else if(sender == self.crashButtonSigsev){
-        [self.crashVC sigsegv];
     }else if(sender == self.crashOptionsListButton){
-        [self.crashVC sigsegv];
+        [[self navigationController] pushViewController:self.crashVC animated:true];
     }else {
         NSLog(@"Error causing error: Unknown sender.");
     }

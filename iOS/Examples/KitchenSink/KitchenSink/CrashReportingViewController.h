@@ -10,6 +10,9 @@
 
 @interface CrashReportingViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UIButton *backButton;
+- (IBAction)backButtonPressed:(id)sender;
+
 
 #pragma mark - Crash "Helpers"
 // credit to CrashKit for these .
