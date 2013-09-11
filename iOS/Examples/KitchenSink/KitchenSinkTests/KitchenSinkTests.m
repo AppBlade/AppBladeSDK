@@ -17,11 +17,13 @@
 #import "APBTokenManager.h" //need this for the tokens queue
 
 @implementation KitchenSinkTests
-
 - (void)setUp
 {
     [super setUp];
-    [[AppBlade sharedManager] clearAppBladeKeychain]; //start with nothing every time
+    [[AppBlade sharedManager] clearAppBladeKeychain]; //start with nothing every time (logic for this stuff is handled in the SDK test)
+    [[AppBlade sharedManager] clearCacheDirectory];
+    [[AppBlade sharedManager] setDisabled:false]; //also make sure we're enabled
+
     // Set-up code here.
 }
 
