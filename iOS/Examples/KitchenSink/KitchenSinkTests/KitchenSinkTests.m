@@ -48,4 +48,16 @@
     STAssertTrue(([deviceString length] > 0), @"We could not retrieve a device secret:\n %@", [[AppBlade sharedManager] appBladeDeviceSecrets]);
 }
 
+- (void)test03checkApprovalQueuesAndSucceeds
+{
+    [[AppBlade sharedManager] registerWithAppBladePlist];
+    [[AppBlade sharedManager] checkApproval];
+    NSInteger approvalCheck = [[AppBlade  sharedManager] pendingRequestsOfType:AppBladeWebClientAPI_Permissions];
+    NSString *errorString = [NSString stringWithFormat:@"Found %d queued aprovals", approvalCheck];
+    STAssertTrue((approvalCheck == 1), errorString);
+    APB_WAIT_WHILE(([[AppBlade  sharedManager] pendingRequestsOfType:AppBladeWebClientAPI_Permissions] > 0), kNetworkPatience);
+    NSString *deviceString = [[AppBlade sharedManager] appBladeDeviceSecret];
+    STAssertTrue(([deviceString length] > 0), @"We could not retrieve a device secret:\n %@", [[AppBlade sharedManager] appBladeDeviceSecrets]);
+}
+
 @end
