@@ -74,5 +74,10 @@
 
 
 - (IBAction)infoButtonPressed:(id)sender {
+
+}
+
+- (IBAction)backButtonPressed:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 @end

@@ -115,7 +115,7 @@
 -(IBAction)customParamButtonPressed:(id)sender
 {
     if(sender == self.seeCurrentParamsButton){
-        //TODO: prompt custom params view controller
+        [self.navigationController pushViewController:self.customParamsVC animated:YES];
     }else if(sender == self.setNewParameterButton){
         [[AppBlade sharedManager] setCustomParam:@"Test" forKey:@"SimpleTestVar"];
     }else if(sender == self.clearAllParamsButton){

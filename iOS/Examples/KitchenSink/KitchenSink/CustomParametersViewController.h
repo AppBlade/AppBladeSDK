@@ -13,6 +13,8 @@
 
 
 @property (strong, nonatomic) IBOutlet UIView *headerView;
+@property (strong, nonatomic) IBOutlet UIButton *backButton;
+- (IBAction)backButtonPressed:(id)sender;
 
 
 @property (strong, nonatomic) IBOutlet UIView *addParamView;
