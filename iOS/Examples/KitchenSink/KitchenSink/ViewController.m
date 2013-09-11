@@ -25,6 +25,18 @@
     self.crashVC = [[CrashReportingViewController alloc] init];
     self.customParamsVC = [[CustomParametersViewController alloc] init];
     
+    //the contents of our scrollview and the order of our cells
+    //edt this list to change the appearance of the list.
+    self.viewList = [[NSArray alloc] initWithObjects:
+                     self.headerWrapperView,
+                     self.feedbackWrapperView,
+                     self.crashReportWrapperView,
+                     self.sessiontrackingWrapperView,
+                     self.customParamsWrapperView,
+                     self.updateCheckingWrapperView,
+                     self.authenticationWrapperView,
+                     nil];
+    
     [NSTimer scheduledTimerWithTimeInterval:0.1 target:self
                                    selector:@selector(updateCurrentSessionDisplay) userInfo:nil repeats:YES];
 }
@@ -45,17 +57,8 @@
     [self setBackgroundImageInsets:insetsExample forButton:self.authenticationButton];
     
     
-	//Build the cards in the scroll view
-    CGFloat totalHeight = 0.0f;
-    totalHeight = [self addView:self.headerWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.feedbackWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.crashReportWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.sessiontrackingWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.customParamsWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.updateCheckingWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.authenticationWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
-    [self.scrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
-
+	//Build the cards in the scroll view.
+    [self buildViewListForScrollView:self.scrollView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,6 +79,7 @@
 
 - (IBAction)crashButtonPressed:(id)sender {
     if(sender == self.crashButtonCustomException){
+        
         [self.crashVC throwDefaultNSException];
     }else if(sender == self.crashOptionsListButton){
         [[self navigationController] pushViewController:self.crashVC animated:true];
