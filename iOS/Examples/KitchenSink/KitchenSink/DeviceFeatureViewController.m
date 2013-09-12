@@ -26,8 +26,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    self.viewList = [[NSArray alloc] initWithObjects:
+                     self.mdmDescriptionWrapperView,
+                     self.nsUserDefaultsWrapperView,
+                     self.kioskModeWrapperView,
+                     self.appblockingWrapperView,
+                     self.jailbreakDetectionWrapperView,
+                     self.remoteWipeWrapperView,
+                     self.batchDeviceControlView,
+                     nil];
 }
+
+-(void)viewWillLayoutSubviews
+{
+	//Build the cards in the scroll view.
+    [self buildViewListForScrollView:self.scrollView];
+}
+
+
 
 - (void)didReceiveMemoryWarning
 {
