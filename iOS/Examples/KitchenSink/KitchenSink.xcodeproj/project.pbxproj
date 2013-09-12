@@ -33,6 +33,8 @@
 		312E175B17D6DC0C003AD6DD /* card-btn-pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */; };
 		312E175D17D6DF1A003AD6DD /* appblade_logo_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */; };
 		3133221317E101B7008C835C /* BaseFeatureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3133221217E101B7008C835C /* BaseFeatureViewController.m */; };
+		3133221C17E2422D008C835C /* DeviceFeatureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3133221A17E2422D008C835C /* DeviceFeatureViewController.m */; };
+		3133221D17E2422D008C835C /* DeviceFeatureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3133221B17E2422D008C835C /* DeviceFeatureViewController.xib */; };
 		3148A16917984505000332D4 /* appblade_logo_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16717984505000332D4 /* appblade_logo_red@2x.png */; };
 		3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* appblade_status_bar_icon.png */; };
 		3148A16E1798457F000332D4 /* appblade_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16D1798457F000332D4 /* appblade_icon.png */; };
@@ -135,6 +137,9 @@
 		3133220817E0A8BA008C835C /* KitchenSinkTestMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KitchenSinkTestMacros.h; sourceTree = "<group>"; };
 		3133221117E101B7008C835C /* BaseFeatureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFeatureViewController.h; sourceTree = "<group>"; };
 		3133221217E101B7008C835C /* BaseFeatureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseFeatureViewController.m; sourceTree = "<group>"; };
+		3133221917E2422D008C835C /* DeviceFeatureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceFeatureViewController.h; sourceTree = "<group>"; };
+		3133221A17E2422D008C835C /* DeviceFeatureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceFeatureViewController.m; sourceTree = "<group>"; };
+		3133221B17E2422D008C835C /* DeviceFeatureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeviceFeatureViewController.xib; sourceTree = "<group>"; };
 		3148A16717984505000332D4 /* appblade_logo_red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_red@2x.png"; sourceTree = "<group>"; };
 		3148A16817984505000332D4 /* appblade_status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_status_bar_icon.png; sourceTree = "<group>"; };
 		3148A16D1798457F000332D4 /* appblade_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appblade_icon.png; path = ../appblade_icon.png; sourceTree = "<group>"; };
@@ -219,6 +224,9 @@
 				311A21B51794DC1B007BF879 /* Supporting Files */,
 				3133221117E101B7008C835C /* BaseFeatureViewController.h */,
 				3133221217E101B7008C835C /* BaseFeatureViewController.m */,
+				3133221917E2422D008C835C /* DeviceFeatureViewController.h */,
+				3133221A17E2422D008C835C /* DeviceFeatureViewController.m */,
+				3133221B17E2422D008C835C /* DeviceFeatureViewController.xib */,
 			);
 			path = KitchenSink;
 			sourceTree = "<group>";
@@ -292,6 +300,22 @@
 			name = "Crash Reporting";
 			sourceTree = "<group>";
 		};
+		3133221E17E24425008C835C /* Application Management Features */ = {
+			isa = PBXGroup;
+			children = (
+				3133220917E0E80C008C835C /* Custom Parameters */,
+				3133220A17E0E81B008C835C /* Crash Reporting */,
+			);
+			name = "Application Management Features";
+			sourceTree = "<group>";
+		};
+		3133221F17E24441008C835C /* Device Management Features */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Device Management Features";
+			sourceTree = "<group>";
+		};
 		3148A16117983D52000332D4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -310,8 +334,8 @@
 		31D535FF17D74FFC0011B9A1 /* Secondary ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				3133220A17E0E81B008C835C /* Crash Reporting */,
-				3133220917E0E80C008C835C /* Custom Parameters */,
+				3133221F17E24441008C835C /* Device Management Features */,
+				3133221E17E24425008C835C /* Application Management Features */,
 			);
 			name = "Secondary ViewControllers";
 			sourceTree = "<group>";
@@ -450,6 +474,7 @@
 				312E175D17D6DF1A003AD6DD /* appblade_logo_white@2x.png in Resources */,
 				31D5360917D750350011B9A1 /* CrashReportingViewController.xib in Resources */,
 				31D5361017D750530011B9A1 /* CustomParametersViewController.xib in Resources */,
+				3133221D17E2422D008C835C /* DeviceFeatureViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,6 +517,7 @@
 				31D5360717D750350011B9A1 /* CrashReportingViewController.m in Sources */,
 				31D5360E17D750530011B9A1 /* CustomParametersViewController.m in Sources */,
 				3133221317E101B7008C835C /* BaseFeatureViewController.m in Sources */,
+				3133221C17E2422D008C835C /* DeviceFeatureViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
