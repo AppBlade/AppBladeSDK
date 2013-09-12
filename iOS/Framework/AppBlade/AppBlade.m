@@ -690,7 +690,7 @@ static AppBlade *s_sharedManager = nil;
         ABDebugLog_internal(@"Can't getCustomParams, SDK disabled");
         return toRet;
     }
-    [[self customParamsManager] getCustomParams];
+    toRet = [[self customParamsManager] getCustomParams];
     ABDebugLog_internal(@"getting %@", toRet);
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
