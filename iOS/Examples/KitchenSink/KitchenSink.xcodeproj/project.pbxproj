@@ -35,6 +35,8 @@
 		3133221317E101B7008C835C /* BaseFeatureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3133221217E101B7008C835C /* BaseFeatureViewController.m */; };
 		3133221C17E2422D008C835C /* DeviceFeatureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3133221A17E2422D008C835C /* DeviceFeatureViewController.m */; };
 		3133221D17E2422D008C835C /* DeviceFeatureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3133221B17E2422D008C835C /* DeviceFeatureViewController.xib */; };
+		3133222317E252F8008C835C /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3133222117E252F7008C835C /* RootViewController.m */; };
+		3133222417E252F9008C835C /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3133222217E252F8008C835C /* RootViewController.xib */; };
 		3148A16917984505000332D4 /* appblade_logo_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16717984505000332D4 /* appblade_logo_red@2x.png */; };
 		3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* appblade_status_bar_icon.png */; };
 		3148A16E1798457F000332D4 /* appblade_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16D1798457F000332D4 /* appblade_icon.png */; };
@@ -140,6 +142,9 @@
 		3133221917E2422D008C835C /* DeviceFeatureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceFeatureViewController.h; sourceTree = "<group>"; };
 		3133221A17E2422D008C835C /* DeviceFeatureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceFeatureViewController.m; sourceTree = "<group>"; };
 		3133221B17E2422D008C835C /* DeviceFeatureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeviceFeatureViewController.xib; sourceTree = "<group>"; };
+		3133222017E252F7008C835C /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		3133222117E252F7008C835C /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		3133222217E252F8008C835C /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		3148A16717984505000332D4 /* appblade_logo_red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_red@2x.png"; sourceTree = "<group>"; };
 		3148A16817984505000332D4 /* appblade_status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_status_bar_icon.png; sourceTree = "<group>"; };
 		3148A16D1798457F000332D4 /* appblade_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appblade_icon.png; path = ../appblade_icon.png; sourceTree = "<group>"; };
@@ -227,6 +232,9 @@
 				311A21B51794DC1B007BF879 /* Supporting Files */,
 				3133221117E101B7008C835C /* BaseFeatureViewController.h */,
 				3133221217E101B7008C835C /* BaseFeatureViewController.m */,
+				3133222017E252F7008C835C /* RootViewController.h */,
+				3133222117E252F7008C835C /* RootViewController.m */,
+				3133222217E252F8008C835C /* RootViewController.xib */,
 			);
 			path = KitchenSink;
 			sourceTree = "<group>";
@@ -475,6 +483,7 @@
 				31D5360917D750350011B9A1 /* CrashReportingViewController.xib in Resources */,
 				31D5361017D750530011B9A1 /* CustomParametersViewController.xib in Resources */,
 				3133221D17E2422D008C835C /* DeviceFeatureViewController.xib in Resources */,
+				3133222417E252F9008C835C /* RootViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,6 +527,7 @@
 				31D5360E17D750530011B9A1 /* CustomParametersViewController.m in Sources */,
 				3133221317E101B7008C835C /* BaseFeatureViewController.m in Sources */,
 				3133221C17E2422D008C835C /* DeviceFeatureViewController.m in Sources */,
+				3133222317E252F8008C835C /* RootViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
