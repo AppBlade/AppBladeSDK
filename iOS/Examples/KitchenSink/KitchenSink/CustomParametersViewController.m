@@ -11,6 +11,8 @@
 #import "APBCustomParametersManager.h"
 
 NSString* kDefaultEmptyParamMessage = @"(you currently have no parameters)";
+NSInteger kMaxParamTextFieldHeight = 2000;
+NSInteger kMinParamTextFieldHeight = 113;
 
 @interface CustomParametersViewController ()
 
@@ -77,35 +79,60 @@ NSString* kDefaultEmptyParamMessage = @"(you currently have no parameters)";
 -(void)updateUiFromCurrentParams
 {
 //    self.currentParamView
+   BOOL centerText = true;
    NSString *textViewMessage = [NSString stringWithString:kDefaultEmptyParamMessage];
    NSDictionary *params = [[AppBlade sharedManager] getCustomParams];
     if([params count] != 0){
         NSError *error;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params
-                                                           options:NSJSONWritingPrettyPrinted
-                                                             error:&error];
-        if(!jsonData){
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:&error];
+        if(jsonData){
             textViewMessage = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            centerText = false;
         }
     }
     //set the content of the customParam text field
+    CGSize oldSize = self.currentParamsTextView.contentSize;//[self.currentParamsTextView.text sizeWithFont:self.currentParamsTextView.font constrainedToSize:CGSizeMake(self.currentParamsTextView.frame.size.width, kMaxParamTextFieldHeight)lineBreakMode:NSLineBreakByWordWrapping];
+    
     [self.currentParamsTextView setText:textViewMessage];
-    
+    [self.currentParamsTextView setTextAlignment:(centerText ? NSTextAlignmentCenter : NSTextAlignmentLeft)];
+    [self.currentParamsTextView sizeToFit];
     //update contentsize of customParamTextField
-//    self.currentParamsTextView
-    
+    CGSize newSize = self.currentParamsTextView.contentSize;//[textViewMessage sizeWithFont:self.currentParamsTextView.font constrainedToSize:CGSizeMake(oldSize.width, kMaxParamTextFieldHeight)lineBreakMode:NSLineBreakByWordWrapping];
     //update contentsize of the containing customParamWrapperView
-
-    //move any views beneath the customParamWrapperView
+    //and move any views beneath the customParamWrapperView
+    CGFloat newHeight = [self resizeSubView:self.currentParamsTextView ofViewListElement:self.currentParamView fromSize:oldSize toSize:newSize];
     
+
     //update ContentSize of scrollview
- //   [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width, [self getHeightOfViewList])];
+    [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width, newHeight)];
 }
 
 - (IBAction)submitNewCustomParam:(id)sender {
+    if(self.valueTextField.text.length == 0 ||     self.keyTextField.text.length == 0){
+        NSLog(@"Invalid input");
+        [self.valueTextField resignFirstResponder];
+        [self.keyTextField resignFirstResponder];
+
+    }else{
+        NSString *value = [NSString stringWithString:self.valueTextField.text];
+        NSString *key = [NSString stringWithString:self.keyTextField.text];
+        [self.valueTextField resignFirstResponder];
+        [self.keyTextField resignFirstResponder];
+
+        [[AppBlade sharedManager] setCustomParam:value forKey:key];
+        [self updateUiFromCurrentParams];
+    }
 }
 
+
+
 - (IBAction)actionButtonPressed:(id)sender {
+    if(sender == self.clearParamsButton){
+        [[AppBlade sharedManager] clearAllCustomParams];
+        [self updateUiFromCurrentParams];
+    }else if(sender == self.showFeedbackDialogButton){
+        [[AppBlade sharedManager] showFeedbackDialogue];
+    }
 }
 
 
