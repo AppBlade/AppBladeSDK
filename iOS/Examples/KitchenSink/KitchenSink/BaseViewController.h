@@ -23,4 +23,9 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
 - (void)textFieldDidEndEditing:(UITextField *)textField;
 
+
+
+-(CGFloat)resizeViewListElement:(UIView*)view toSize:(CGSize)newSize;
+-(CGFloat)resizeSubView:(UIView*)subView ofViewListElement:(UIView *)view fromSize:(CGSize)oldSize toSize:(CGSize)newSize;
+
 @end

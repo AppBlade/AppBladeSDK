@@ -79,6 +79,9 @@
 
 }
 
+/* 
+ Builders
+*/
 -(CGFloat)buildViewListForScrollView:(UIScrollView*)buildScrollView
 {
     return [self addViews:self.viewList toScrollView:scrollView atVertOffset:0.0f];
@@ -95,7 +98,6 @@
     }
     return totalHeight;
 }
-
 
 
 -(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)buildScrollView atVertOffset:(CGFloat)height
@@ -115,6 +117,67 @@
     [button setBackgroundImage:[bgImageNormal resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
     [button setBackgroundImage:[bgImagePressed resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch] forState:UIControlStateHighlighted];
 }
+
+
+/*
+ Resizers
+ Resizes currently only respect new heights, not new widths.
+ */
+
+//unknown behavior if subView is not really a direct child of view 
+-(CGFloat)resizeSubView:(UIView*)subView ofViewListElement:(UIView *)view fromSize:(CGSize)oldSize toSize:(CGSize)newSize
+{
+    NSLog(@"old subview size %f", oldSize.height);
+    NSLog(@"new subview height %f", newSize.height);
+
+    NSUInteger index = [self.viewList indexOfObject:view];
+    if(index != NSNotFound){
+        CGFloat heightDiff = newSize.height - oldSize.height ;
+        CGRect subF = subView.frame;
+        [subView setFrame:CGRectMake(subF.origin.x, subF.origin.y, subF.size.width, subF.size.height + heightDiff)];
+        NSLog(@"subview delta %f", heightDiff);        
+        CGRect viewF = view.frame;
+        NSLog(@"old height %f", viewF.size.height);
+        [view setFrame:CGRectMake(viewF.origin.x, viewF.origin.y, viewF.size.width, (viewF.size.height + heightDiff))];
+        NSLog(@"new height %f", view.frame.size.height);
+
+        [self resizeViewsFromIndex:index];
+    }else{
+        NSLog(@"ERROR: could not find view");
+    }
+    return [self getHeightOfViewList];
+}
+
+
+-(CGFloat)resizeViewListElement:(UIView*)view toSize:(CGSize)newSize
+{
+    NSUInteger index = [self.viewList indexOfObject:view];
+    if(index != NSNotFound){
+        CGRect r = view.frame;
+        NSLog(@"old height %f", view.frame.size.height);
+        [view setFrame:CGRectMake(r.origin.x, r.origin.y, newSize.width, newSize.height)];
+        NSLog(@"new height %f", view.frame.size.height);
+        [self resizeViewsFromIndex:index];
+    }else{
+        NSLog(@"ERROR: could not find view");
+    }
+    return [self getHeightOfViewList];
+}
+
+
+-(void)resizeViewsFromIndex:(NSUInteger) startIndex
+{
+    UIView *v = [self.viewList objectAtIndex:startIndex];
+    CGFloat offset = v.frame.origin.y + v.frame.size.height;
+    
+    for(NSUInteger i = (startIndex + 1); i < self.viewList.count; i++){
+        v = [self.viewList objectAtIndex:i];
+        CGRect r = v.frame;
+        v.frame = CGRectMake(r.origin.x, offset, r.size.width, r.size.height);
+        offset = v.frame.origin.y + v.frame.size.height;
+    }
+}
+
 
 
 #pragma mark - keyboard & textfield logic
