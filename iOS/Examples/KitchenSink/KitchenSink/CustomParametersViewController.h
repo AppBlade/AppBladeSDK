@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "BaseViewController.h"
+#import "BaseFeatureViewController.h"
 
-@interface CustomParametersViewController : BaseViewController
+@interface CustomParametersViewController : BaseFeatureViewController
 @property (strong, nonatomic) IBOutlet UIScrollView *customParamsScrollView;
 
 

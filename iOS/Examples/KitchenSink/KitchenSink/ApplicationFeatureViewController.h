@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import "BaseViewController.h"
+#import "BaseFeatureViewController.h"
 #import "CrashReportingViewController.h"
 #import "CustomParametersViewController.h"
 
-@interface ViewController : BaseViewController <UIScrollViewDelegate>
+@interface ApplicationFeatureViewController : BaseFeatureViewController <UIScrollViewDelegate>
 
 @property (strong, nonatomic) CrashReportingViewController *crashVC;
 @property (strong, nonatomic) CustomParametersViewController *customParamsVC;

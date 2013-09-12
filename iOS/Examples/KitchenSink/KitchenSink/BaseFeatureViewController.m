@@ -6,13 +6,13 @@
 //  Copyright (c) 2013 Raizlabs Corporation. All rights reserved.
 //
 
-#import "BaseViewController.h"
+#import "BaseFeatureViewController.h"
 
-@interface BaseViewController ()
+@interface BaseFeatureViewController ()
 
 @end
 
-@implementation BaseViewController
+@implementation BaseFeatureViewController
 @synthesize scrollView;
 @synthesize viewList;
 @synthesize activeField;

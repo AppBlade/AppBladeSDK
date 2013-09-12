@@ -6,17 +6,17 @@
 //  Copyright (c) 2013 Raizlabs Corporation. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "ApplicationFeatureViewController.h"
 
 #import "AppBlade.h"
 #import "APBSessionTrackingManager.h"
 
 
-@interface ViewController ()
+@interface ApplicationFeatureViewController ()
 
 @end
 
-@implementation ViewController
+@implementation ApplicationFeatureViewController
 
 - (void)viewDidLoad
 {

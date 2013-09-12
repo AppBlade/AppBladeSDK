@@ -16,9 +16,9 @@
 		311A21C11794DC1B007BF879 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 311A21C01794DC1B007BF879 /* Default.png */; };
 		311A21C31794DC1B007BF879 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 311A21C21794DC1B007BF879 /* Default@2x.png */; };
 		311A21C51794DC1B007BF879 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 311A21C41794DC1B007BF879 /* Default-568h@2x.png */; };
-		311A21C81794DC1B007BF879 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A21C71794DC1B007BF879 /* ViewController.m */; };
-		311A21CB1794DC1B007BF879 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 311A21C91794DC1B007BF879 /* ViewController_iPhone.xib */; };
-		311A21CE1794DC1B007BF879 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 311A21CC1794DC1B007BF879 /* ViewController_iPad.xib */; };
+		311A21C81794DC1B007BF879 /* ApplicationFeatureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 311A21C71794DC1B007BF879 /* ApplicationFeatureViewController.m */; };
+		311A21CB1794DC1B007BF879 /* ApplicationFeatureViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 311A21C91794DC1B007BF879 /* ApplicationFeatureViewController_iPhone.xib */; };
+		311A21CE1794DC1B007BF879 /* ApplicationFeatureViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 311A21CC1794DC1B007BF879 /* ApplicationFeatureViewController_iPad.xib */; };
 		311A21D61794DC1B007BF879 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21D51794DC1B007BF879 /* SenTestingKit.framework */; };
 		311A21D71794DC1B007BF879 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21AE1794DC1B007BF879 /* UIKit.framework */; };
 		311A21D81794DC1B007BF879 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21B01794DC1B007BF879 /* Foundation.framework */; };
@@ -32,7 +32,7 @@
 		312E175A17D6DC0C003AD6DD /* card-btn-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */; };
 		312E175B17D6DC0C003AD6DD /* card-btn-pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */; };
 		312E175D17D6DF1A003AD6DD /* appblade_logo_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */; };
-		3133221317E101B7008C835C /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3133221217E101B7008C835C /* BaseViewController.m */; };
+		3133221317E101B7008C835C /* BaseFeatureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3133221217E101B7008C835C /* BaseFeatureViewController.m */; };
 		3148A16917984505000332D4 /* appblade_logo_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16717984505000332D4 /* appblade_logo_red@2x.png */; };
 		3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* appblade_status_bar_icon.png */; };
 		3148A16E1798457F000332D4 /* appblade_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16D1798457F000332D4 /* appblade_icon.png */; };
@@ -113,10 +113,10 @@
 		311A21C01794DC1B007BF879 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		311A21C21794DC1B007BF879 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		311A21C41794DC1B007BF879 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		311A21C61794DC1B007BF879 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		311A21C71794DC1B007BF879 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		311A21CA1794DC1B007BF879 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
-		311A21CD1794DC1B007BF879 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
+		311A21C61794DC1B007BF879 /* ApplicationFeatureViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplicationFeatureViewController.h; sourceTree = "<group>"; };
+		311A21C71794DC1B007BF879 /* ApplicationFeatureViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplicationFeatureViewController.m; sourceTree = "<group>"; };
+		311A21CA1794DC1B007BF879 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ApplicationFeatureViewController_iPhone.xib; sourceTree = "<group>"; };
+		311A21CD1794DC1B007BF879 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ApplicationFeatureViewController_iPad.xib; sourceTree = "<group>"; };
 		311A21D41794DC1B007BF879 /* KitchenSinkTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KitchenSinkTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		311A21D51794DC1B007BF879 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		311A21DD1794DC1B007BF879 /* KitchenSinkTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KitchenSinkTests-Info.plist"; sourceTree = "<group>"; };
@@ -133,8 +133,8 @@
 		312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_white@2x.png"; sourceTree = "<group>"; };
 		3133220717E0A865008C835C /* KitchenSinkTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KitchenSinkTestConstants.h; sourceTree = "<group>"; };
 		3133220817E0A8BA008C835C /* KitchenSinkTestMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KitchenSinkTestMacros.h; sourceTree = "<group>"; };
-		3133221117E101B7008C835C /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
-		3133221217E101B7008C835C /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
+		3133221117E101B7008C835C /* BaseFeatureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFeatureViewController.h; sourceTree = "<group>"; };
+		3133221217E101B7008C835C /* BaseFeatureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseFeatureViewController.m; sourceTree = "<group>"; };
 		3148A16717984505000332D4 /* appblade_logo_red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_red@2x.png"; sourceTree = "<group>"; };
 		3148A16817984505000332D4 /* appblade_status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_status_bar_icon.png; sourceTree = "<group>"; };
 		3148A16D1798457F000332D4 /* appblade_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appblade_icon.png; path = ../appblade_icon.png; sourceTree = "<group>"; };
@@ -211,14 +211,14 @@
 				3148A16117983D52000332D4 /* Resources */,
 				311A21BD1794DC1B007BF879 /* AppDelegate.h */,
 				311A21BE1794DC1B007BF879 /* AppDelegate.m */,
-				311A21C61794DC1B007BF879 /* ViewController.h */,
-				311A21C71794DC1B007BF879 /* ViewController.m */,
-				311A21C91794DC1B007BF879 /* ViewController_iPhone.xib */,
-				311A21CC1794DC1B007BF879 /* ViewController_iPad.xib */,
+				311A21C61794DC1B007BF879 /* ApplicationFeatureViewController.h */,
+				311A21C71794DC1B007BF879 /* ApplicationFeatureViewController.m */,
+				311A21C91794DC1B007BF879 /* ApplicationFeatureViewController_iPhone.xib */,
+				311A21CC1794DC1B007BF879 /* ApplicationFeatureViewController_iPad.xib */,
 				31D535FF17D74FFC0011B9A1 /* Secondary ViewControllers */,
 				311A21B51794DC1B007BF879 /* Supporting Files */,
-				3133221117E101B7008C835C /* BaseViewController.h */,
-				3133221217E101B7008C835C /* BaseViewController.m */,
+				3133221117E101B7008C835C /* BaseFeatureViewController.h */,
+				3133221217E101B7008C835C /* BaseFeatureViewController.m */,
 			);
 			path = KitchenSink;
 			sourceTree = "<group>";
@@ -436,8 +436,8 @@
 				311A21C11794DC1B007BF879 /* Default.png in Resources */,
 				311A21C31794DC1B007BF879 /* Default@2x.png in Resources */,
 				311A21C51794DC1B007BF879 /* Default-568h@2x.png in Resources */,
-				311A21CB1794DC1B007BF879 /* ViewController_iPhone.xib in Resources */,
-				311A21CE1794DC1B007BF879 /* ViewController_iPad.xib in Resources */,
+				311A21CB1794DC1B007BF879 /* ApplicationFeatureViewController_iPhone.xib in Resources */,
+				311A21CE1794DC1B007BF879 /* ApplicationFeatureViewController_iPad.xib in Resources */,
 				311A22A01795859D007BF879 /* AppBladeKeys.plist in Resources */,
 				311A22A11795859D007BF879 /* ResourceRules.plist in Resources */,
 				3148A16917984505000332D4 /* appblade_logo_red@2x.png in Resources */,
@@ -488,10 +488,10 @@
 			files = (
 				311A21BB1794DC1B007BF879 /* main.m in Sources */,
 				311A21BF1794DC1B007BF879 /* AppDelegate.m in Sources */,
-				311A21C81794DC1B007BF879 /* ViewController.m in Sources */,
+				311A21C81794DC1B007BF879 /* ApplicationFeatureViewController.m in Sources */,
 				31D5360717D750350011B9A1 /* CrashReportingViewController.m in Sources */,
 				31D5360E17D750530011B9A1 /* CustomParametersViewController.m in Sources */,
-				3133221317E101B7008C835C /* BaseViewController.m in Sources */,
+				3133221317E101B7008C835C /* BaseFeatureViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,20 +529,20 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		311A21C91794DC1B007BF879 /* ViewController_iPhone.xib */ = {
+		311A21C91794DC1B007BF879 /* ApplicationFeatureViewController_iPhone.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				311A21CA1794DC1B007BF879 /* en */,
 			);
-			name = ViewController_iPhone.xib;
+			name = ApplicationFeatureViewController_iPhone.xib;
 			sourceTree = "<group>";
 		};
-		311A21CC1794DC1B007BF879 /* ViewController_iPad.xib */ = {
+		311A21CC1794DC1B007BF879 /* ApplicationFeatureViewController_iPad.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				311A21CD1794DC1B007BF879 /* en */,
 			);
-			name = ViewController_iPad.xib;
+			name = ApplicationFeatureViewController_iPad.xib;
 			sourceTree = "<group>";
 		};
 		311A21DE1794DC1B007BF879 /* InfoPlist.strings */ = {

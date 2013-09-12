@@ -10,12 +10,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class ViewController;
+@class ApplicationFeatureViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, nonatomic) ViewController *viewController;
+@property (strong, nonatomic) ApplicationFeatureViewController *viewController;
 
 @end

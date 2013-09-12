@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BaseViewController.h"
+#import "BaseFeatureViewController.h"
 
 
-@interface CrashReportingViewController : BaseViewController
+@interface CrashReportingViewController : BaseFeatureViewController
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *headerWrapperView;
 

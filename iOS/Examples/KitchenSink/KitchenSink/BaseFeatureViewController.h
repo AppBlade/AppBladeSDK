@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BaseViewController : UIViewController
+@interface BaseFeatureViewController : UIViewController
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) UITextField *activeField;
 @property (strong, nonatomic) NSArray *viewList;

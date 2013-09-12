@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "ApplicationFeatureViewController.h"
 
 //Use these defines to enable logging of internal AppBlade calls.
 //these calls are only recommended in the case that you think
@@ -22,7 +22,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
+    self.viewController = [[ApplicationFeatureViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
     // Override point for customization after application launch.
 //    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 //        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
