@@ -216,6 +216,9 @@
 				3148A16117983D52000332D4 /* Resources */,
 				311A21BD1794DC1B007BF879 /* AppDelegate.h */,
 				311A21BE1794DC1B007BF879 /* AppDelegate.m */,
+				3133221917E2422D008C835C /* DeviceFeatureViewController.h */,
+				3133221A17E2422D008C835C /* DeviceFeatureViewController.m */,
+				3133221B17E2422D008C835C /* DeviceFeatureViewController.xib */,
 				311A21C61794DC1B007BF879 /* ApplicationFeatureViewController.h */,
 				311A21C71794DC1B007BF879 /* ApplicationFeatureViewController.m */,
 				311A21C91794DC1B007BF879 /* ApplicationFeatureViewController_iPhone.xib */,
@@ -224,9 +227,6 @@
 				311A21B51794DC1B007BF879 /* Supporting Files */,
 				3133221117E101B7008C835C /* BaseFeatureViewController.h */,
 				3133221217E101B7008C835C /* BaseFeatureViewController.m */,
-				3133221917E2422D008C835C /* DeviceFeatureViewController.h */,
-				3133221A17E2422D008C835C /* DeviceFeatureViewController.m */,
-				3133221B17E2422D008C835C /* DeviceFeatureViewController.xib */,
 			);
 			path = KitchenSink;
 			sourceTree = "<group>";
