@@ -105,7 +105,10 @@
     if(sender == self.seeCurrentParamsButton){
         [self.navigationController pushViewController:self.customParamsVC animated:YES];
     }else if(sender == self.setNewParameterButton){
-        [[AppBlade sharedManager] setCustomParam:@"Test" forKey:@"SimpleTestVar"];
+        [[AppBlade sharedManager] setCustomParam:@"I was from the \"Set New Parameter\"" forKey:@"key_demo_val2"];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Demo" message:@"Parameter set! Now take a look at your parameters." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
     }else if(sender == self.clearAllParamsButton){
         [[AppBlade sharedManager] clearAllCustomParams];
     }else{
