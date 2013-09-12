@@ -45,6 +45,7 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrameSize">{320, 548}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -53,6 +54,7 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 548}}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="310685713"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -90,6 +92,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{16, 10}, {288, 21}}</string>
 						<reference key="NSSuperview" ref="256613380"/>
+						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -121,6 +124,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrameSize">{73, 44}</string>
 						<reference key="NSSuperview" ref="256613380"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="840875344"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -157,6 +161,7 @@
 				</array>
 				<string key="NSFrameSize">{320, 41}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="686542556"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -179,6 +184,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 19}, {148, 21}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="709840061"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -199,6 +205,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 12}, {79, 35}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="98143713"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -221,6 +228,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 62}, {148, 21}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="619717434"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -241,6 +249,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 56}, {79, 35}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="295274459"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -263,6 +272,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 108}, {148, 21}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="807570482"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -283,6 +293,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 102}, {79, 35}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="966581396"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -305,6 +316,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 149}, {148, 21}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="35148978"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -325,6 +337,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 144}, {79, 35}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="532833015"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -347,6 +360,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 190}, {148, 21}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="976198125"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -367,6 +381,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 186}, {79, 35}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="220158166"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -389,6 +404,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 234}, {148, 21}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="732753650"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -409,6 +425,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 228}, {79, 35}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="513623572"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -431,6 +448,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{105, 277}, {159, 21}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1062409424"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -451,6 +469,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 270}, {79, 35}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="502995343"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -473,6 +492,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 314}, {155, 21}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1039076048"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -493,6 +513,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 312}, {79, 62}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="485129509"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -515,6 +536,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 343}, {163, 30}}</string>
 						<reference key="NSSuperview" ref="671508927"/>
+						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -546,6 +568,7 @@
 				</array>
 				<string key="NSFrameSize">{320, 406}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="852983284"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -565,6 +588,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 0}, {280, 225}}</string>
 						<reference key="NSSuperview" ref="171351109"/>
+						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -646,6 +670,7 @@ IHdvcmtzIGluIGJvdGggZGV2ZWxvcG1lbnQgYW5kIEFwcCBTdG9yZSBidWlsZHMuCg</string>
 				</array>
 				<string key="NSFrameSize">{320, 235}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="318240744"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -706,6 +731,88 @@ IHdvcmtzIGluIGJvdGggZGV2ZWxvcG1lbnQgYW5kIEFwcCBTdG9yZSBidWlsZHMuCg</string>
 						<reference key="destination" ref="310685713"/>
 					</object>
 					<int key="connectionID">560</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sigabrtCrashBtn</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="852983284"/>
+					</object>
+					<int key="connectionID">565</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sigbusCrashBtn</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="709840061"/>
+					</object>
+					<int key="connectionID">568</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sigfpeCrashBtn</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="619717434"/>
+					</object>
+					<int key="connectionID">569</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sigillCrashBtn</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="807570482"/>
+					</object>
+					<int key="connectionID">570</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sigpipeCrashBtn</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="35148978"/>
+					</object>
+					<int key="connectionID">571</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">sigsegvCrashBtn</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="976198125"/>
+					</object>
+					<int key="connectionID">573</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">nsExDefaultCrashBtn</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="732753650"/>
+					</object>
+					<int key="connectionID">574</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">nsExCustomCrashBtn</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="1062409424"/>
+					</object>
+					<int key="connectionID">575</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">crashButtonPressed:</string>
+						<reference key="source" ref="852983284"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">566</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">crashButtonPressed:</string>
+						<reference key="source" ref="709840061"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">567</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -3050,9 +3157,145 @@ IHdvcmtzIGluIGJvdGggZGV2ZWxvcG1lbnQgYW5kIEFwcCBTdG9yZSBidWlsZHMuCg</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">564</int>
+			<int key="maxID">575</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">BaseViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">scrollView</string>
+						<string key="NS.object.0">UIScrollView</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">scrollView</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">scrollView</string>
+							<string key="candidateClassName">UIScrollView</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/BaseViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">CrashReportingViewController</string>
+					<string key="superclassName">BaseViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="backButtonPressed:">id</string>
+						<string key="crashButtonPressed:">id</string>
+						<string key="crashCustomBeganEditing:">id</string>
+						<string key="crashCustomEndedEditing:">id</string>
+						<string key="crashCustomNameChanged:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="backButtonPressed:">
+							<string key="name">backButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="crashButtonPressed:">
+							<string key="name">crashButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="crashCustomBeganEditing:">
+							<string key="name">crashCustomBeganEditing:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="crashCustomEndedEditing:">
+							<string key="name">crashCustomEndedEditing:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="crashCustomNameChanged:">
+							<string key="name">crashCustomNameChanged:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="backButton">UIButton</string>
+						<string key="crashChoiceView">UIView</string>
+						<string key="crashDescriptionView">UIView</string>
+						<string key="headerWrapperView">UIView</string>
+						<string key="nsExCustomCrashBtn">UIButton</string>
+						<string key="nsExDefaultCrashBtn">UIButton</string>
+						<string key="scrollView">UIScrollView</string>
+						<string key="sigabrtCrashBtn">UIButton</string>
+						<string key="sigbusCrashBtn">UIButton</string>
+						<string key="sigfpeCrashBtn">UIButton</string>
+						<string key="sigillCrashBtn">UIButton</string>
+						<string key="sigpipeCrashBtn">UIButton</string>
+						<string key="sigsegvCrashBtn">UIButton</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="backButton">
+							<string key="name">backButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="crashChoiceView">
+							<string key="name">crashChoiceView</string>
+							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="crashDescriptionView">
+							<string key="name">crashDescriptionView</string>
+							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="headerWrapperView">
+							<string key="name">headerWrapperView</string>
+							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="nsExCustomCrashBtn">
+							<string key="name">nsExCustomCrashBtn</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="nsExDefaultCrashBtn">
+							<string key="name">nsExDefaultCrashBtn</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="scrollView">
+							<string key="name">scrollView</string>
+							<string key="candidateClassName">UIScrollView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sigabrtCrashBtn">
+							<string key="name">sigabrtCrashBtn</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sigbusCrashBtn">
+							<string key="name">sigbusCrashBtn</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sigfpeCrashBtn">
+							<string key="name">sigfpeCrashBtn</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sigillCrashBtn">
+							<string key="name">sigillCrashBtn</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sigpipeCrashBtn">
+							<string key="name">sigpipeCrashBtn</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sigsegvCrashBtn">
+							<string key="name">sigsegvCrashBtn</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/CrashReportingViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSLayoutConstraint</string>
+					<string key="superclassName">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/NSLayoutConstraint.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>

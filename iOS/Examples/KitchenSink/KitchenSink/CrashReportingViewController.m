@@ -123,4 +123,6 @@
     [self textFieldDidEndEditing:sender];
 }
 
+- (IBAction)crashButtonPressed:(id)sender {
+}
 @end
