@@ -10,7 +10,7 @@
 #import "AppBlade.h"
 #import "APBCustomParametersManager.h"
 
-extern NSString* kDefaultEmptyParamMessage = @"(you currently have no parameters)";
+NSString* kDefaultEmptyParamMessage = @"(you currently have no parameters)";
 
 @interface CustomParametersViewController ()
 
@@ -80,7 +80,13 @@ extern NSString* kDefaultEmptyParamMessage = @"(you currently have no parameters
    NSString *textViewMessage = [NSString stringWithString:kDefaultEmptyParamMessage];
    NSDictionary *params = [[AppBlade sharedManager] getCustomParams];
     if([params count] != 0){
-    
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params
+                                                           options:NSJSONWritingPrettyPrinted
+                                                             error:&error];
+        if(!jsonData){
+            textViewMessage = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
     }
     //set the content of the customParam text field
     [self.currentParamsTextView setText:textViewMessage];
@@ -93,7 +99,7 @@ extern NSString* kDefaultEmptyParamMessage = @"(you currently have no parameters
     //move any views beneath the customParamWrapperView
     
     //update ContentSize of scrollview
-    [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width, [self getHeightOfViewList])];
+ //   [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width, [self getHeightOfViewList])];
 }
 
 - (IBAction)submitNewCustomParam:(id)sender {
