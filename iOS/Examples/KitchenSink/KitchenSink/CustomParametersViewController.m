@@ -7,6 +7,10 @@
 //
 
 #import "CustomParametersViewController.h"
+#import "AppBlade.h"
+#import "APBCustomParametersManager.h"
+
+extern NSString* kDefaultEmptyParamMessage = @"(you currently have no parameters)";
 
 @interface CustomParametersViewController ()
 
@@ -27,6 +31,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.viewList = [NSArray arrayWithObjects:
+                     self.headerView,
+                     self.addParamView,
+                     self.currentParamView,
+                     self.actionsView,
+                     nil];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -42,12 +53,8 @@
 //    [self setBackgroundImageInsets:insetsExample forButton:self.showFormButton];
     
 	//Build the cards in the scroll view
-    CGFloat totalHeight = 0.0f;
-    totalHeight = [self addView:self.headerView toScrollView:self.customParamsScrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.addParamView toScrollView:self.customParamsScrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.currentParamView toScrollView:self.customParamsScrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.actionsView toScrollView:self.customParamsScrollView atVertOffset:totalHeight];
-    [self.customParamsScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
+    [self buildViewListForScrollView:self.scrollView];
+    [self updateUiFromCurrentParams];
 }
 
 -(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height {
@@ -64,6 +71,29 @@
     UIImage *bgImagePressed = [UIImage imageNamed:@"card-btn-pressed@2x.png"];
     [button setBackgroundImage:[bgImageNormal resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
     [button setBackgroundImage:[bgImagePressed resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch] forState:UIControlStateHighlighted];
+}
+
+//update the parameter
+-(void)updateUiFromCurrentParams
+{
+//    self.currentParamView
+   NSString *textViewMessage = [NSString stringWithString:kDefaultEmptyParamMessage];
+   NSDictionary *params = [[AppBlade sharedManager] getCustomParams];
+    if([params count] != 0){
+    
+    }
+    //set the content of the customParam text field
+    [self.currentParamsTextView setText:textViewMessage];
+    
+    //update contentsize of customParamTextField
+//    self.currentParamsTextView
+    
+    //update contentsize of the containing customParamWrapperView
+
+    //move any views beneath the customParamWrapperView
+    
+    //update ContentSize of scrollview
+    [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width, [self getHeightOfViewList])];
 }
 
 - (IBAction)submitNewCustomParam:(id)sender {
