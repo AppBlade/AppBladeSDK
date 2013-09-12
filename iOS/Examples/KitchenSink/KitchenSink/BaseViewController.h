@@ -9,11 +9,18 @@
 #import <UIKit/UIKit.h>
 
 @interface BaseViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) UITextField *activeField;
+@property (strong, nonatomic) NSArray *viewList;
 
-@property (nonatomic, strong) NSArray *viewList;
 -(CGFloat)buildViewListForScrollView:(UIScrollView*)scrollView;
 
 -(void)setBackgroundImageInsets:(UIEdgeInsets)insets forButton:(UIButton*)button;
 -(CGFloat)addView:(UIView *)view toScrollView:(UIScrollView *)scrollView atVertOffset:(CGFloat)height;
+
+-(CGFloat)getHeightOfViewList;
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField;
+- (void)textFieldDidEndEditing:(UITextField *)textField;
 
 @end
