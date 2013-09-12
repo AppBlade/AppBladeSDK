@@ -11,13 +11,16 @@
 
 
 @interface CrashReportingViewController : BaseViewController
-@property (strong, nonatomic) IBOutlet UIScrollView *crashScrollView;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *headerWrapperView;
 
 @property (strong, nonatomic) IBOutlet UIView *crashChoiceView;
 
 @property (strong, nonatomic) IBOutlet UIView *crashDescriptionView;
 
+- (IBAction)crashCustomNameChanged:(id)sender;
+- (IBAction)crashCustomBeganEditing:(id)sender;
+- (IBAction)crashCustomEndedEditing:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIButton *backButton;
 - (IBAction)backButtonPressed:(id)sender;

@@ -43,10 +43,10 @@
     
 	//Build the cards in the scroll view
     CGFloat totalHeight = 0.0f;
-    totalHeight = [self addView:self.headerWrapperView toScrollView:self.crashScrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.crashDescriptionView toScrollView:self.crashScrollView atVertOffset:totalHeight];
-    totalHeight = [self addView:self.crashChoiceView toScrollView:self.crashScrollView atVertOffset:totalHeight];
-    [self.crashScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
+    totalHeight = [self addView:self.headerWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
+    totalHeight = [self addView:self.crashDescriptionView toScrollView:self.scrollView atVertOffset:totalHeight];
+    totalHeight = [self addView:self.crashChoiceView toScrollView:self.scrollView atVertOffset:totalHeight];
+    [self.scrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
 }
 
 #pragma mark - Crash "Helpers"
@@ -108,4 +108,19 @@
 - (IBAction)backButtonPressed:(id)sender {
     [self.navigationController popViewControllerAnimated:true];
 }
+
+- (IBAction)crashCustomNameChanged:(id)sender {
+//don't need to do much except maybe sanitize
+}
+
+- (IBAction)crashCustomBeganEditing:(id)sender
+{
+    [self textFieldDidBeginEditing:sender];
+}
+
+- (IBAction)crashCustomEndedEditing:(id)sender
+{
+    [self textFieldDidEndEditing:sender];
+}
+
 @end
