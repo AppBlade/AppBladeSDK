@@ -30,7 +30,6 @@
 //        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
 //    }
     
-    
     // Configure Window
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [navigationController setNavigationBarHidden:YES animated:NO];
@@ -59,6 +58,12 @@
     //[blade showFeedbackDialogue];
     //[blade showFeedbackDialogue:takeScreenshot]; has an optional takeScreenshot BOOL variable if you don't want to send a screnshot to AppBlade.
     
+    
+    /******************************************
+     CUSTOM PARAMETERS CALL
+    Can be called anywhere after registration. The changed custom parameters will affect all following API calls.
+    ******************************************/
+    [blade setCustomParam:@"I was set inside \"didFinishLaunchingWithOptions\" (on launch)" forKey:@"key_demo_val1"];
     return YES;
 }
 
