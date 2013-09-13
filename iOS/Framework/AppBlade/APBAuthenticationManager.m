@@ -114,10 +114,6 @@ NSString *kTtlDictDateSetKey =  @"ttlInterval";
     [APBSimpleKeychain delete:kAppBladeKeychainTtlKey];
 }
 
-/*!
- @abstract Updates our "time-to-live" for authentication
- @param ttl number of seconds you'd like the app to wai before checking for a refresh again
- */
 - (void)updateTTL:(NSNumber*)ttl
 {
     NSDate* ttlDate = [NSDate date];

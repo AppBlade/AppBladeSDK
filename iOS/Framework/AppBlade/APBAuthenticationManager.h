@@ -1,10 +1,10 @@
-//
-//  AppBladeAuthentication.h
-//  AppBlade
-//
-//  Created by AndrewTremblay on 7/16/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
-//
+/*!
+  @header  AppBladeAuthentication.h
+  @abstract  Holds all authentication-checking and killswitch-related functionality
+  @framework AppBlade
+  @author AndrewTremblay on 7/16/13.
+  @copyright Raizlabs 2013. All rights reserved.
+*/
 
 #import <Foundation/Foundation.h>
 
@@ -13,6 +13,10 @@
 extern NSString *kTtlDictTimeoutKey;
 extern NSString *kTtlDictDateSetKey;
 
+/*!
+ @class APBAuthenticationManager
+ @abstract Manager for the checkApproval call and ttl (time to live) window functionality
+ */
 @interface APBAuthenticationManager : NSObject<APBBasicFeatureManager>
 @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
 
@@ -22,6 +26,13 @@ extern NSString *kTtlDictDateSetKey;
 
 #pragma mark TTL (Time To Live) Methods
 - (void)closeTTLWindow;
+
+
+
+/*!
+ @abstract Updates our "time-to-live" for authentication
+ @param ttl number of seconds you'd like the app to wai before checking for a refresh again
+ */
 - (void)updateTTL:(NSNumber*)ttl;
 - (NSDictionary *)currentTTL;
 - (BOOL)withinStoredTTL;
@@ -31,7 +42,10 @@ extern NSString *kTtlDictDateSetKey;
 
 
 
-//Our additional requirements
+/*! 
+ Our additional properties and methods for Authentication
+ 
+ */
 @interface AppBlade (Authorization)
 @property (nonatomic, strong) APBAuthenticationManager* authenticationManager; //declared here too so the compiler doesn't cry
 
