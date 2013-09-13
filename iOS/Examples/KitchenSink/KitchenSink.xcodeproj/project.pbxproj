@@ -41,6 +41,8 @@
 		3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* appblade_status_bar_icon.png */; };
 		3148A16E1798457F000332D4 /* appblade_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16D1798457F000332D4 /* appblade_icon.png */; };
 		3148A172179845BB000332D4 /* appblade_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A171179845BB000332D4 /* appblade_icon@2x.png */; };
+		31BB3C6717E3450F007B8B28 /* APBDeviceInfoManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 31BB3C6617E3450F007B8B28 /* APBDeviceInfoManagerTest.m */; };
+		31BB3C6E17E345C9007B8B28 /* APBApplicationInfoManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 31BB3C6D17E345C9007B8B28 /* APBApplicationInfoManagerTest.m */; };
 		31D5360717D750350011B9A1 /* CrashReportingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5360517D750350011B9A1 /* CrashReportingViewController.m */; };
 		31D5360817D750350011B9A1 /* CrashReportingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5360517D750350011B9A1 /* CrashReportingViewController.m */; };
 		31D5360917D750350011B9A1 /* CrashReportingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D5360617D750350011B9A1 /* CrashReportingViewController.xib */; };
@@ -149,6 +151,8 @@
 		3148A16817984505000332D4 /* appblade_status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_status_bar_icon.png; sourceTree = "<group>"; };
 		3148A16D1798457F000332D4 /* appblade_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appblade_icon.png; path = ../appblade_icon.png; sourceTree = "<group>"; };
 		3148A171179845BB000332D4 /* appblade_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appblade_icon@2x.png"; path = "../appblade_icon@2x.png"; sourceTree = "<group>"; };
+		31BB3C6617E3450F007B8B28 /* APBDeviceInfoManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = APBDeviceInfoManagerTest.m; path = ../../../Framework/AppBladeTests/APBDeviceInfoManagerTest.m; sourceTree = "<group>"; };
+		31BB3C6D17E345C9007B8B28 /* APBApplicationInfoManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = APBApplicationInfoManagerTest.m; path = ../../Framework/AppBladeTests/APBApplicationInfoManagerTest.m; sourceTree = "<group>"; };
 		31D5360417D750350011B9A1 /* CrashReportingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportingViewController.h; sourceTree = "<group>"; };
 		31D5360517D750350011B9A1 /* CrashReportingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrashReportingViewController.m; sourceTree = "<group>"; };
 		31D5360617D750350011B9A1 /* CrashReportingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrashReportingViewController.xib; sourceTree = "<group>"; };
@@ -186,6 +190,7 @@
 		311A21A21794DC1B007BF879 = {
 			isa = PBXGroup;
 			children = (
+				31BB3C6D17E345C9007B8B28 /* APBApplicationInfoManagerTest.m */,
 				311A21EC1794DC2B007BF879 /* AppBlade.xcodeproj */,
 				311A21B41794DC1B007BF879 /* KitchenSink */,
 				311A21DB1794DC1B007BF879 /* KitchenSinkTests */,
@@ -258,6 +263,7 @@
 		311A21DB1794DC1B007BF879 /* KitchenSinkTests */ = {
 			isa = PBXGroup;
 			children = (
+				31BB3C6617E3450F007B8B28 /* APBDeviceInfoManagerTest.m */,
 				311A21E11794DC1B007BF879 /* KitchenSinkTests.h */,
 				311A21E21794DC1B007BF879 /* KitchenSinkTests.m */,
 				311A21DC1794DC1B007BF879 /* Supporting Files */,
@@ -538,6 +544,8 @@
 				311A21E31794DC1B007BF879 /* KitchenSinkTests.m in Sources */,
 				31D5360817D750350011B9A1 /* CrashReportingViewController.m in Sources */,
 				31D5360F17D750530011B9A1 /* CustomParametersViewController.m in Sources */,
+				31BB3C6717E3450F007B8B28 /* APBDeviceInfoManagerTest.m in Sources */,
+				31BB3C6E17E345C9007B8B28 /* APBApplicationInfoManagerTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
