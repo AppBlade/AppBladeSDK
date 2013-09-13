@@ -42,8 +42,7 @@ NSString *authorizeURLFormat         = @"%@/api/3/authorize"; //GET  request
     
     if ((errorString && ![self withinStoredTTL]) || [[client.responseHeaders valueForKey:@"statusCode"] intValue] == 403) {
         [self closeTTLWindow];
-        NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,
-                                         NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
+        NSDictionary* errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(errorString, nil), NSLocalizedDescriptionKey,  NSLocalizedString(errorString, nil),  NSLocalizedFailureReasonErrorKey, nil];
         NSError* error = [NSError errorWithDomain:kAppBladeErrorDomain code:kAppBladePermissionError userInfo:errorDictionary];
         
         if (signalApproval) {
@@ -146,6 +145,12 @@ NSString *authorizeURLFormat         = @"%@/api/3/authorize"; //GET  request
     return YES;
 }
 
+
+-(NSDictionary *)currentTTL
+{
+    NSDictionary* appBlade_ttl = [APBSimpleKeychain load:kAppBladeKeychainTtlKey];
+    return appBlade_ttl;
+}
 
 @end
 

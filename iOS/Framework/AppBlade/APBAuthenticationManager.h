@@ -20,6 +20,7 @@
 #pragma mark TTL (Time To Live) Methods
 - (void)closeTTLWindow;
 - (void)updateTTL:(NSNumber*)ttl;
+- (NSDictionary *)currentTTL;
 - (BOOL)withinStoredTTL;
 
 
