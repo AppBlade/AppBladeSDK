@@ -45,9 +45,16 @@
 
 }
 
--(void) test02TtlCanBeSet
+-(void) test02TtlCanSetAndUpdate
 {
+    NSNumber *firstNumber = [NSNumber numberWithInt:2000];
+    NSNumber *secondtNumber = [NSNumber numberWithInt:4000];
+    
+    [[[AppBlade sharedManager] authenticationManager] updateTTL:firstNumber];
+    STAssertEquals([[[[AppBlade sharedManager] authenticationManager] currentTTL] objectForKey:kTtlDictTimeoutKey], firstNumber, @"API value could not be set from empty");
 
+    [[[AppBlade sharedManager] authenticationManager] updateTTL:secondtNumber];
+    STAssertEquals([[[[AppBlade sharedManager] authenticationManager] currentTTL] objectForKey:kTtlDictTimeoutKey], secondtNumber, @"API value could not be updated");
 }
 
 -(void) test03TtlIsWithinStoredTime
