@@ -13,6 +13,8 @@
 #import "APBSimpleKeychain.h"
 
 NSString *authorizeURLFormat         = @"%@/api/3/authorize"; //GET  request
+NSString *kTtlDictTimeoutKey =  @"ttlDate";
+NSString *kTtlDictDateSetKey =  @"ttlInterval";
 
 
 @implementation APBAuthenticationManager
@@ -115,7 +117,7 @@ NSString *authorizeURLFormat         = @"%@/api/3/authorize"; //GET  request
 - (void)updateTTL:(NSNumber*)ttl
 {
     NSDate* ttlDate = [NSDate date];
-    NSDictionary* appBlade = [NSDictionary dictionaryWithObjectsAndKeys:ttlDate, @"ttlDate",ttl, @"ttlInterval", nil];
+    NSDictionary* appBlade = [NSDictionary dictionaryWithObjectsAndKeys:ttlDate, kTtlDictDateSetKey, ttl, kTtlDictDateSetKey, nil];
     [APBSimpleKeychain save:kAppBladeKeychainTtlKey data:appBlade];
 }
 
@@ -123,8 +125,8 @@ NSString *authorizeURLFormat         = @"%@/api/3/authorize"; //GET  request
 - (BOOL)withinStoredTTL
 {
     NSDictionary* appBlade_ttl = [APBSimpleKeychain load:kAppBladeKeychainTtlKey];
-    NSDate* ttlDate = [appBlade_ttl objectForKey:@"ttlDate"];
-    NSNumber* ttlInterval = [appBlade_ttl objectForKey:@"ttlInterval"];
+    NSDate* ttlDate = [appBlade_ttl objectForKey:kTtlDictDateSetKey];
+    NSNumber* ttlInterval = [appBlade_ttl objectForKey:kTtlDictDateSetKey];
     
     // if we don't have either value, we're definitely not within a stored TTL
     if(nil == ttlInterval || nil == ttlDate)
@@ -163,7 +165,7 @@ NSString *authorizeURLFormat         = @"%@/api/3/authorize"; //GET  request
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
         ABDebugLog_internal(@"Binary signed by Apple, skipping permissions check forever");
-        NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
+        NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], kAppBladeApiTokenResponseTimeToLiveKey, nil];
         APBWebOperation *selfReference = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             [[AppBlade sharedManager] appBladeWebClient:selfReference receivedPermissions:fairplayPermissions];

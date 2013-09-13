@@ -10,6 +10,9 @@
 
 #import "APBBasicFeatureManager.h"
 
+extern NSString *kTtlDictTimeoutKey;
+extern NSString *kTtlDictDateSetKey;
+
 @interface APBAuthenticationManager : NSObject<APBBasicFeatureManager>
 @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
 
