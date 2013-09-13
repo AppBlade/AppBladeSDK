@@ -76,7 +76,16 @@
     STAssertFalse(([[[AppBlade sharedManager] authenticationManager] withinStoredTTL]), @"TTL should have been invalidted");
 }
 
--(void) test04TtlCanDetectTimeTravel
+-(void) test05TtlCanTimeout
+{
+    NSNumber *oneSecondTimeout = [NSNumber numberWithInt:1];
+    [[[AppBlade sharedManager] authenticationManager] updateTTL:oneSecondTimeout];
+    APB_STALL_RUNLOPP_WHILE(true, 2); //wait for two seconds
+    STAssertFalse(([[[AppBlade sharedManager] authenticationManager] withinStoredTTL]), @"TTL should have expired by now");
+
+}
+
+-(void) test06TtlCanDetectTimeTravel
 {
     //STAssertTrue(([[[AppBlade sharedManager] authenticationManager] withinStoredTTL]), @"TTL should have been detected as ");
 }
