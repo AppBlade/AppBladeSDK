@@ -114,10 +114,14 @@ NSString *kTtlDictDateSetKey =  @"ttlInterval";
     [APBSimpleKeychain delete:kAppBladeKeychainTtlKey];
 }
 
+/*!
+ @abstract Updates our "time-to-live" for authentication
+ @param ttl number of seconds you'd like the app to wai before checking for a refresh again
+ */
 - (void)updateTTL:(NSNumber*)ttl
 {
     NSDate* ttlDate = [NSDate date];
-    NSDictionary* appBlade = [NSDictionary dictionaryWithObjectsAndKeys:ttlDate, kTtlDictDateSetKey, ttl, kTtlDictDateSetKey, nil];
+    NSDictionary* appBlade = [NSDictionary dictionaryWithObjectsAndKeys:ttlDate, kTtlDictDateSetKey, ttl, kTtlDictTimeoutKey, nil];
     [APBSimpleKeychain save:kAppBladeKeychainTtlKey data:appBlade];
 }
 
@@ -126,7 +130,7 @@ NSString *kTtlDictDateSetKey =  @"ttlInterval";
 {
     NSDictionary* appBlade_ttl = [APBSimpleKeychain load:kAppBladeKeychainTtlKey];
     NSDate* ttlDate = [appBlade_ttl objectForKey:kTtlDictDateSetKey];
-    NSNumber* ttlInterval = [appBlade_ttl objectForKey:kTtlDictDateSetKey];
+    NSNumber* ttlInterval = [appBlade_ttl objectForKey:kTtlDictTimeoutKey];
     
     // if we don't have either value, we're definitely not within a stored TTL
     if(nil == ttlInterval || nil == ttlDate)
