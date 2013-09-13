@@ -153,6 +153,7 @@
 		318C22C017CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
 		318C22C117CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
 		31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
+		31BB3C7417E357E2007B8B28 /* APBAuthenticationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 31BB3C7317E357E2007B8B28 /* APBAuthenticationManagerTests.m */; };
 		31C4881B17A9847000EA75E8 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
 		31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
@@ -315,6 +316,8 @@
 		318C22B817CFC0E50007FD5E /* APBTokenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBTokenManager.h; sourceTree = "<group>"; };
 		318C22B917CFC0E50007FD5E /* APBTokenManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBTokenManager.m; sourceTree = "<group>"; };
 		31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestAppBladeKeys.plist; sourceTree = "<group>"; };
+		31BB3C7217E357E2007B8B28 /* APBAuthenticationManagerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APBAuthenticationManagerTests.h; path = AppBladeTests/APBAuthenticationManagerTests.h; sourceTree = SOURCE_ROOT; };
+		31BB3C7317E357E2007B8B28 /* APBAuthenticationManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APBAuthenticationManagerTests.m; path = AppBladeTests/APBAuthenticationManagerTests.m; sourceTree = SOURCE_ROOT; };
 		31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBlade+PrivateMethods.h"; sourceTree = "<group>"; };
 		31D5361417D7B61C0011B9A1 /* AsyncTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AsyncTestMacros.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -666,6 +669,8 @@
 		3134653517A86DFD009DDC86 /* Authentication Tests */ = {
 			isa = PBXGroup;
 			children = (
+				31BB3C7217E357E2007B8B28 /* APBAuthenticationManagerTests.h */,
+				31BB3C7317E357E2007B8B28 /* APBAuthenticationManagerTests.m */,
 			);
 			name = "Authentication Tests";
 			sourceTree = "<group>";
@@ -1084,6 +1089,7 @@
 				3134653417A86DC4009DDC86 /* APBWebOperationTests.m in Sources */,
 				3134457017DFC27500E5AF0B /* APBDeviceInfoManagerTest.m in Sources */,
 				3134457317DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m in Sources */,
+				31BB3C7417E357E2007B8B28 /* APBAuthenticationManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
