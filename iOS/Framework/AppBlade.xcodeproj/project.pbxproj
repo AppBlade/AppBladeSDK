@@ -117,6 +117,7 @@
 		31562C4E17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */; };
 		31562C4F17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */; };
 		31562C5017A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */; };
+		3179281017E39AD500F73BB2 /* NSDate+MockData.m in Sources */ = {isa = PBXBuildFile; fileRef = 3179280F17E39AD500F73BB2 /* NSDate+MockData.m */; };
 		318189C8179E0337006EE07A /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = 313060831794A2A3006DF03A /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		318189C9179E0343006EE07A /* AppBladeSharedConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 311A22C01796072C007BF879 /* AppBladeSharedConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		318189CA179E039D006EE07A /* AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 313060851794A2A3006DF03A /* AppBlade.m */; };
@@ -311,6 +312,9 @@
 		3134653317A86DC4009DDC86 /* APBWebOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = APBWebOperationTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "APBWebOperation+PrivateMethods.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		316C245B17DFABF800F8196F /* AppBladeTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeTestConstants.h; sourceTree = "<group>"; };
+		3179280E17E39AD500F73BB2 /* NSDate+MockData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MockData.h"; sourceTree = "<group>"; };
+		3179280F17E39AD500F73BB2 /* NSDate+MockData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MockData.m"; sourceTree = "<group>"; };
+		3179281117E39BBC00F73BB2 /* SwizzleClassMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwizzleClassMethod.h; sourceTree = "<group>"; };
 		318731E7179DE03300E0D187 /* libAppBladeNoCrashUniversal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrashUniversal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		318C22B817CFC0E50007FD5E /* APBTokenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBTokenManager.h; sourceTree = "<group>"; };
@@ -651,6 +655,9 @@
 				3134456F17DFC27500E5AF0B /* APBDeviceInfoManagerTest.m */,
 				3134457117DFC2D800E5AF0B /* APBApplicationInfoManagerTest.h */,
 				3134457217DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m */,
+				3179280E17E39AD500F73BB2 /* NSDate+MockData.h */,
+				3179280F17E39AD500F73BB2 /* NSDate+MockData.m */,
+				3179281117E39BBC00F73BB2 /* SwizzleClassMethod.h */,
 			);
 			path = AppBladeTests;
 			sourceTree = "<group>";
@@ -1090,6 +1097,7 @@
 				3134457017DFC27500E5AF0B /* APBDeviceInfoManagerTest.m in Sources */,
 				3134457317DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m in Sources */,
 				31BB3C7417E357E2007B8B28 /* APBAuthenticationManagerTests.m in Sources */,
+				3179281017E39AD500F73BB2 /* NSDate+MockData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
