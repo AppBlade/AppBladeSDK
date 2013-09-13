@@ -62,7 +62,10 @@
 
 -(BOOL) simpleJailBreakCheck
 {
-    return (//[[NSFileManager defaultManager] fileExistsAtPath:@"/bin/bash"] || //commenting this out because tests fail on it for some reason
+    return (
+#if !TARGET_IPHONE_SIMULATOR
+            [[NSFileManager defaultManager] fileExistsAtPath:@"/bin/bash"] || //tests fail on this for simulator
+#endif
             [[NSFileManager defaultManager] fileExistsAtPath:@"/Applications/Cydia.app"] ||
             [[NSFileManager defaultManager] fileExistsAtPath:@"/private/var/lib/apt"]);
 }
