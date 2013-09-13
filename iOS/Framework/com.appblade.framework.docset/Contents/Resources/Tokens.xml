@@ -1,9 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
 <Token>
+    <TokenIdentifier>//apple_ref/c/data/authorizeURLFormat</TokenIdentifier>
+    <Path>APBAuthenticationManager_m/index.html</Path>
+    <Abstract>// AppBladeAuthentication.m // AppBlade // //
+Created by AndrewTremblay on 7/16/13. // Copyright
+(c) 2013 Raizlabs. All rights reserved.</Abstract>
+    <Declaration> &lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;a machinegenerated="true" href="index.html#//apple_ref/c/data/authorizeURLFormat" logicalPath="//apple_ref/occ/cl/authorizeURLFormat //apple_ref/occ/tdef/authorizeURLFormat //apple_ref/occ/tag/authorizeURLFormat //apple_ref/occ/struct/authorizeURLFormat //apple_ref/occ/intf/authorizeURLFormat //apple_ref/doc/anysymbol/authorizeURLFormat" target="_top"&gt;&lt;span class="type"&gt;authorizeURLFormat&lt;/span&gt;&lt;/a&gt; = @"%@/&lt;span class="string"&gt;api&lt;/span&gt;/&lt;span class="string"&gt;3&lt;/span&gt;/&lt;span class="string"&gt;authorize&lt;/span&gt;";  &lt;span class="comment"&gt;//GET  request&lt;/span&gt; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cat/AppBlade(Authorization)</TokenIdentifier>
+    <Path>APBAuthenticationManager_h/Categories/AppBlade_Authorization_/index.html</Path>
+    <Abstract>Our additional properties and methods for
+Authentication</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBAuthenticationManager</TokenIdentifier>
+    <Path>APBAuthenticationManager_h/Classes/APBAuthenticationManager/index.html</Path>
+    <Abstract>Manager for the checkApproval call and ttl (time to live) window functionality</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBSimpleKeychain</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html</Path>
+    <Abstract>Our keychain manipulation class.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBWebOperation</TokenIdentifier>
+    <Path>APBAuthenticationManager_m/Classes/APBWebOperation/index.html</Path>
+    <Abstract>Updates our &#34;time-to-live&#34; for authentication</Abstract>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/cl/AppBlade</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Our main class. AppBlade contains our singleton and all public methods, which are used as entrypoints for the lower level managers.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/SimpleKeychainUserPass</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/SimpleKeychainUserPass/index.html</Path>
+    <Abstract>Our keychain manipulation class.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/delete:</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html</Path>
+    <Abstract>Removes the entry for the given service from keychain.</Abstract>
+    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBSimpleKeychain/delete //apple_ref/occ/clm/APBSimpleKeychain/delete //apple_ref/occ/intfcm/APBSimpleKeychain/delete //apple_ref/occ/intfm/APBSimpleKeychain/delete //apple_ref/occ/func/delete //apple_ref/occ/ftmplt/APBSimpleKeychain/delete //apple_ref/occ/defn/delete //apple_ref/occ/macro/delete //apple_ref/doc/anysymbol/delete" machineGenerated="true" --&gt;&lt;span class="function"&gt;delete&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/service //apple_ref/occ/data/APBSimpleKeychain/service //apple_ref/occ/data/service //apple_ref/occ/clconst/APBSimpleKeychain/service " machineGenerated="true" --&gt;&lt;span class="var"&gt;service&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/deleteLocalKeychain</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html</Path>
+    <Abstract>Deletes every deletable thing we have in the app via a clever for loop.</Abstract>
+    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/deleteLocalKeychain //apple_ref/occ/data/APBSimpleKeychain/deleteLocalKeychain //apple_ref/occ/data/deleteLocalKeychain //apple_ref/occ/clconst/APBSimpleKeychain/deleteLocalKeychain " machineGenerated="true" --&gt;&lt;span class="var"&gt;deleteLocalKeychain&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/errorMessageFromCode:</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html</Path>
+    <Abstract>Provides a human-readable error message from the OSErrorCode</Abstract>
+    <Declaration>+(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/instm/APBSimpleKeychain/errorMessageFromCode //apple_ref/occ/clm/APBSimpleKeychain/errorMessageFromCode //apple_ref/occ/intfcm/APBSimpleKeychain/errorMessageFromCode //apple_ref/occ/intfm/APBSimpleKeychain/errorMessageFromCode //apple_ref/occ/func/errorMessageFromCode //apple_ref/occ/ftmplt/APBSimpleKeychain/errorMessageFromCode //apple_ref/occ/defn/errorMessageFromCode //apple_ref/occ/macro/errorMessageFromCode //apple_ref/doc/anysymbol/errorMessageFromCode" machineGenerated="true" --&gt;&lt;span class="function"&gt;errorMessageFromCode&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/OSStatus //apple_ref/occ/tdef/OSStatus //apple_ref/occ/tag/OSStatus //apple_ref/occ/struct/OSStatus //apple_ref/occ/intf/OSStatus //apple_ref/doc/anysymbol/OSStatus" machineGenerated="true" --&gt;&lt;span class="type"&gt;OSStatus&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/errorCode //apple_ref/occ/data/APBSimpleKeychain/errorCode //apple_ref/occ/data/errorCode //apple_ref/occ/clconst/APBSimpleKeychain/errorCode " machineGenerated="true" --&gt;&lt;span class="var"&gt;errorCode&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/hasKeychainAccess</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html</Path>
+    <Abstract>Returns true when the app has acceptable keychain access.</Abstract>
+    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/hasKeychainAccess //apple_ref/occ/data/APBSimpleKeychain/hasKeychainAccess //apple_ref/occ/data/hasKeychainAccess //apple_ref/occ/clconst/APBSimpleKeychain/hasKeychainAccess " machineGenerated="true" --&gt;&lt;span class="var"&gt;hasKeychainAccess&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/keychainInconsistencyExists</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html</Path>
+    <Abstract>Checks for any obvious inconsitencies in the keychain</Abstract>
+    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/keychainInconsistencyExists //apple_ref/occ/data/APBSimpleKeychain/keychainInconsistencyExists //apple_ref/occ/data/keychainInconsistencyExists //apple_ref/occ/clconst/APBSimpleKeychain/keychainInconsistencyExists " machineGenerated="true" --&gt;&lt;span class="var"&gt;keychainInconsistencyExists&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/load:</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html</Path>
+    <Abstract>Loads the stored keychain data from the entered service</Abstract>
+    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBSimpleKeychain/load //apple_ref/occ/clm/APBSimpleKeychain/load //apple_ref/occ/intfcm/APBSimpleKeychain/load //apple_ref/occ/intfm/APBSimpleKeychain/load //apple_ref/occ/func/load //apple_ref/occ/ftmplt/APBSimpleKeychain/load //apple_ref/occ/defn/load //apple_ref/occ/macro/load //apple_ref/doc/anysymbol/load" machineGenerated="true" --&gt;&lt;span class="function"&gt;load&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/service //apple_ref/occ/data/APBSimpleKeychain/service //apple_ref/occ/data/service //apple_ref/occ/clconst/APBSimpleKeychain/service " machineGenerated="true" --&gt;&lt;span class="var"&gt;service&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/sanitizeKeychain</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html</Path>
+    <Abstract>Attempts to conditionally wipe the entire keychain.</Abstract>
+    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/sanitizeKeychain //apple_ref/occ/data/APBSimpleKeychain/sanitizeKeychain //apple_ref/occ/data/sanitizeKeychain //apple_ref/occ/clconst/APBSimpleKeychain/sanitizeKeychain " machineGenerated="true" --&gt;&lt;span class="var"&gt;sanitizeKeychain&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/save:data:</TokenIdentifier>
+    <Path>APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html</Path>
+    <Abstract>Accepts service name and NSCoding-complaint data object and storeds it to the local keychain.</Abstract>
+    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBSimpleKeychain/save //apple_ref/occ/clm/APBSimpleKeychain/save //apple_ref/occ/intfcm/APBSimpleKeychain/save //apple_ref/occ/intfm/APBSimpleKeychain/save //apple_ref/occ/func/save //apple_ref/occ/ftmplt/APBSimpleKeychain/save //apple_ref/occ/defn/save //apple_ref/occ/macro/save //apple_ref/doc/anysymbol/save" machineGenerated="true" --&gt;&lt;span class="function"&gt;save&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="param"&gt;service&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/occ/instm/APBSimpleKeychain/data //apple_ref/occ/clm/APBSimpleKeychain/data //apple_ref/occ/intfcm/APBSimpleKeychain/data //apple_ref/occ/intfm/APBSimpleKeychain/data //apple_ref/occ/func/data //apple_ref/occ/ftmplt/APBSimpleKeychain/data //apple_ref/occ/defn/data //apple_ref/occ/macro/data //apple_ref/doc/anysymbol/data" machineGenerated="true" --&gt;&lt;span class="function"&gt;data&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/data //apple_ref/occ/data/APBSimpleKeychain/data //apple_ref/occ/data/data //apple_ref/occ/clconst/APBSimpleKeychain/data " machineGenerated="true" --&gt;&lt;span class="var"&gt;data&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/clm/AppBlade/logSDKVersion</TokenIdentifier>
@@ -23,6 +105,12 @@
     <Abstract>Our singleton reference, and the only way that
 AppBlade shoud be referenced.</Abstract>
     <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/AppBlade //apple_ref/occ/tdef/AppBlade //apple_ref/occ/tag/AppBlade //apple_ref/occ/struct/AppBlade //apple_ref/occ/intf/AppBlade //apple_ref/doc/anysymbol/AppBlade" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBlade&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/sharedManager //apple_ref/occ/data/AppBlade/sharedManager //apple_ref/occ/data/sharedManager //apple_ref/occ/clconst/AppBlade/sharedManager " machineGenerated="true" --&gt;&lt;span class="var"&gt;sharedManager&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBAuthenticationManager/updateTTL:</TokenIdentifier>
+    <Path>APBAuthenticationManager_h/Classes/APBAuthenticationManager/index.html</Path>
+    <Abstract>Updates our &#34;time-to-live&#34; for authentication</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBAuthenticationManager/updateTTL //apple_ref/occ/clm/APBAuthenticationManager/updateTTL //apple_ref/occ/intfcm/APBAuthenticationManager/updateTTL //apple_ref/occ/intfm/APBAuthenticationManager/updateTTL //apple_ref/occ/func/updateTTL //apple_ref/occ/ftmplt/APBAuthenticationManager/updateTTL //apple_ref/occ/defn/updateTTL //apple_ref/occ/macro/updateTTL //apple_ref/doc/anysymbol/updateTTL" machineGenerated="true" --&gt;&lt;span class="function"&gt;updateTTL&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSNumber //apple_ref/occ/tdef/NSNumber //apple_ref/occ/tag/NSNumber //apple_ref/occ/struct/NSNumber //apple_ref/occ/intf/NSNumber //apple_ref/doc/anysymbol/NSNumber" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSNumber&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/ttl //apple_ref/occ/data/APBAuthenticationManager/ttl //apple_ref/occ/data/ttl //apple_ref/occ/clconst/APBAuthenticationManager/ttl " machineGenerated="true" --&gt;&lt;span class="var"&gt;ttl&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/allowFeedbackReporting</TokenIdentifier>
