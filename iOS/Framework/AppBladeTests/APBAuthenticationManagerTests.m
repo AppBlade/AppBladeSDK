@@ -15,9 +15,12 @@
 #import "AsyncTestMacros.h"
 @implementation APBAuthenticationManagerTests
 
+
 - (void)setUp
 {
     [super setUp];
+
+
 }
 
 - (void)tearDown
@@ -39,7 +42,7 @@
     //our ttl should be set internally to never time out (largest possible integer as the interval)
     NSNumber expectedInterval = [NSNumber numberWithInt:INT_MAX]
     NSDictionary *appBlade_ttl = [[[AppBlade sharedManager] authenticationManager] currentTTL];
-    NSNumber* ttlInterval = [appBlade_ttl objectForKey:@"ttlInterval"];
+    NSNumber* ttlInterval = [appBlade_ttl objectForKey:kTtlDictTimeoutKey];
     STAssertTrue((expectedInterval == ttlInterval), @"TTL should have been set to %d, was set to %d", expectedInterval, ttlInterval);
 #endif
 
@@ -59,20 +62,24 @@
 
 -(void) test03TtlIsWithinStoredTime
 {
-    
+    NSNumber *testTimeout = [NSNumber numberWithInt:1000];
+    [[[AppBlade sharedManager] authenticationManager] updateTTL:testTimeout];
+    STAssertTrue(([[[AppBlade sharedManager] authenticationManager] withinStoredTTL]), @"TTL should have been set and valid");
 }
 
 -(void) test04TtlCanClose
 {
-    
+    NSNumber *testTimeout = [NSNumber numberWithInt:1000];
+    [[[AppBlade sharedManager] authenticationManager] updateTTL:testTimeout];
+    STAssertTrue(([[[AppBlade sharedManager] authenticationManager] withinStoredTTL]), @"TTL should have been set and valid");
+    [[[AppBlade sharedManager] authenticationManager] closeTTLWindow];
+    STAssertFalse(([[[AppBlade sharedManager] authenticationManager] withinStoredTTL]), @"TTL should have been invalidted");
 }
 
 -(void) test04TtlCanDetectTimeTravel
 {
-    
+    //STAssertTrue(([[[AppBlade sharedManager] authenticationManager] withinStoredTTL]), @"TTL should have been detected as ");
 }
-
-
 
 
 @end
