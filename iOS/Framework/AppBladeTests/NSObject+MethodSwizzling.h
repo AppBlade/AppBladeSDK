@@ -1,9 +1,6 @@
 #import <Foundation/Foundation.h>
 
-void ActivateAutoSwizz();
-
-void Swizz(Class c, SEL orig, SEL replace);
-
+void SwizzleClassMethod(Class c, SEL orig, SEL replace);
 
 @interface NSObject (swizz)
 
@@ -16,6 +13,4 @@ void Swizz(Class c, SEL orig, SEL replace);
 //            dispatch_once(&onceToken, ^{
 //                Swizz([UITableViewCell class], @selector(reuseIdentifier), @selector(classReuseIdentifier));
 //            });
-- (void) swizzInit;
-
 @end

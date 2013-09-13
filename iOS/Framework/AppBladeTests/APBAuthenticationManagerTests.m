@@ -13,6 +13,13 @@
 #import "APBWebOperation.h"
 #import "APBAuthenticationManager.h"
 #import "AsyncTestMacros.h"
+
+
+//We gotta swizzle our NSDate so we can time-travel
+#import "NSObject+MethodSwizzling.h"
+#import "NSDate+MockData.h"
+
+
 @implementation APBAuthenticationManagerTests
 
 
@@ -54,10 +61,14 @@
     NSNumber *secondtNumber = [NSNumber numberWithInt:4000];
     
     [[[AppBlade sharedManager] authenticationManager] updateTTL:firstNumber];
-    STAssertEquals([[[[AppBlade sharedManager] authenticationManager] currentTTL] objectForKey:kTtlDictTimeoutKey], firstNumber, @"API value could not be set from empty");
+    
+    NSNumber *storedTimeout = [[[[AppBlade sharedManager] authenticationManager] currentTTL] objectForKey:kTtlDictTimeoutKey];
+    STAssertEquals([storedTimeout integerValue], [firstNumber integerValue], @"API value could not be set from empty");
 
     [[[AppBlade sharedManager] authenticationManager] updateTTL:secondtNumber];
-    STAssertEquals([[[[AppBlade sharedManager] authenticationManager] currentTTL] objectForKey:kTtlDictTimeoutKey], secondtNumber, @"API value could not be updated");
+    
+    storedTimeout = [[[[AppBlade sharedManager] authenticationManager] currentTTL] objectForKey:kTtlDictTimeoutKey];
+    STAssertEquals([storedTimeout integerValue], [secondtNumber integerValue], @"API value could not be updated");
 }
 
 -(void) test03TtlIsWithinStoredTime
@@ -87,7 +98,11 @@
 
 -(void) test06TtlCanDetectTimeTravel
 {
-    //STAssertTrue(([[[AppBlade sharedManager] authenticationManager] withinStoredTTL]), @"TTL should have been detected as ");
+    NSLog(@"Date is: %@", [NSDate date]);
+    SwizzleClassMethod([NSDate class], @selector(date), @selector(mockCurrentDate));  //mock date must replace date
+    [NSDate setMockDate:-1000];
+    NSLog(@"Date is: %@", [NSDate date]);
+    STAssertFalse(([[[AppBlade sharedManager] authenticationManager] withinStoredTTL]), @"TTL should have been detected as out of scope");
 }
 
 
