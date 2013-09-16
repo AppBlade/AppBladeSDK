@@ -65,11 +65,18 @@
 						<Name>AppBlade Web Operations</Name>
 						<Path>AppBladeWebOperation_hdoc</Path>
 						<File>index.html</File>
+						<Subnodes>
+							<NodeRef refid="13"/>
+							<NodeRef refid="132"/>
+						</Subnodes>
 					</Node>
 					<Node>
 						<Name>AppBlade Simple Keychain</Name>
 						<Path>AppBladeSimpleKeychain_hdoc</Path>
 						<File>index.html</File>
+						<Subnodes>
+							<NodeRef refid="14"/>
+						</Subnodes>
 					</Node>
 					<Node>
 						<Name>File Hashing</Name>
