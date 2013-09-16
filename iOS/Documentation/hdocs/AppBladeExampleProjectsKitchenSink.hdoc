@@ -1,6 +1,6 @@
 /*!
   @framework AppBlade
-	@header AppBlade Example : KitchenSink
+	@header AppBlade Example Projects : KitchenSink
 
   @author Andrew Tremblay on 9/9/13
   @discussion The Kitchen Sink project attempts to display every feature in a modular, paresable way. 

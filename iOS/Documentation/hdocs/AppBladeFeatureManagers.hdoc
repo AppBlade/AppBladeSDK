@@ -1,5 +1,7 @@
 /*!
   @framework AppBlade
+    @header AppBlade Feature Managers
+
   @author Andrew Tremblay on 9/9/13
   
   @discussion Each Feature in the AppBlade iOS SDK is delegated to a manager. Inside each manager are any and all additional properties that the AppBlade singleton must have. 
