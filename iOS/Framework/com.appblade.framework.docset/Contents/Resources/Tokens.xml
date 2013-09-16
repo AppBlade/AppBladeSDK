@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
 <Token>
-    <TokenIdentifier>//apple_ref/c/data/authorizeURLFormat</TokenIdentifier>
-    <Path>APBAuthenticationManager_m/index.html</Path>
-    <Abstract>// AppBladeAuthentication.m // AppBlade // //
-Created by AndrewTremblay on 7/16/13. // Copyright
-(c) 2013 Raizlabs. All rights reserved.</Abstract>
-    <Declaration> &lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;a machinegenerated="true" href="index.html#//apple_ref/c/data/authorizeURLFormat" logicalPath="//apple_ref/occ/cl/authorizeURLFormat //apple_ref/occ/tdef/authorizeURLFormat //apple_ref/occ/tag/authorizeURLFormat //apple_ref/occ/struct/authorizeURLFormat //apple_ref/occ/intf/authorizeURLFormat //apple_ref/doc/anysymbol/authorizeURLFormat" target="_top"&gt;&lt;span class="type"&gt;authorizeURLFormat&lt;/span&gt;&lt;/a&gt; = @"%@/&lt;span class="string"&gt;api&lt;/span&gt;/&lt;span class="string"&gt;3&lt;/span&gt;/&lt;span class="string"&gt;authorize&lt;/span&gt;";  &lt;span class="comment"&gt;//GET  request&lt;/span&gt; </Declaration>
-</Token>
-<Token>
     <TokenIdentifier>//apple_ref/occ/cat/AppBlade(Authorization)</TokenIdentifier>
     <Path>APBAuthenticationManager_h/Categories/AppBlade_Authorization_/index.html</Path>
-    <Abstract>Our additional properties and methods for
-Authentication</Abstract>
+    <Abstract>Our additional properties and methods for Authentication</Abstract>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/cl/APBAuthenticationManager</TokenIdentifier>
     <Path>APBAuthenticationManager_h/Classes/APBAuthenticationManager/index.html</Path>
-    <Abstract>Manager for the checkApproval call and ttl (time to live) window functionality</Abstract>
+    <Abstract>The AppBlade Authentication &amp; Killswitch feature</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBCrashReportingManager</TokenIdentifier>
+    <Path>APBCrashReportingManager_h/Classes/APBCrashReportingManager/index.html</Path>
+    <Abstract>The AppBlade Crash Reporting feature</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBCustomParametersManager</TokenIdentifier>
+    <Path>APBCustomParametersManager_h/Classes/APBCustomParametersManager/index.html</Path>
+    <Abstract>The Custom Parameter meta-feature</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBFeedbackReportingManager</TokenIdentifier>
+    <Path>APBFeedbackReportingManager_h/Classes/APBFeedbackReportingManager/index.html</Path>
+    <Abstract>The AppBlade Feedback Reporting feature</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBSessionTrackingManager</TokenIdentifier>
+    <Path>APBSessionTrackingManager_h/Classes/APBSessionTrackingManager/index.html</Path>
+    <Abstract>The AppBlade Update Availablilty feature</Abstract>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/cl/APBSimpleKeychain</TokenIdentifier>
@@ -25,19 +36,14 @@ Authentication</Abstract>
     <Abstract>Our keychain manipulation class.</Abstract>
 </Token>
 <Token>
-    <TokenIdentifier>//apple_ref/occ/cl/APBWebOperation</TokenIdentifier>
-    <Path>APBAuthenticationManager_m/Classes/APBWebOperation/index.html</Path>
-    <Abstract>Updates our &#34;time-to-live&#34; for authentication</Abstract>
+    <TokenIdentifier>//apple_ref/occ/cl/APBUpdatesManager</TokenIdentifier>
+    <Path>APBUpdatesManager_h/Classes/APBUpdatesManager/index.html</Path>
+    <Abstract>The AppBlade Update Availablilty feature</Abstract>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/cl/AppBlade</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Our main class. AppBlade contains our singleton and all public methods, which are used as entrypoints for the lower level managers.</Abstract>
-</Token>
-<Token>
-    <TokenIdentifier>//apple_ref/occ/cl/SimpleKeychainUserPass</TokenIdentifier>
-    <Path>APBSimpleKeychain_h/Classes/SimpleKeychainUserPass/index.html</Path>
-    <Abstract>Our keychain manipulation class.</Abstract>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/delete:</TokenIdentifier>
