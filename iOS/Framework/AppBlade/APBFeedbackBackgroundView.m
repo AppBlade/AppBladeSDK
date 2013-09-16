@@ -23,22 +23,22 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    //// General Declarations
+    //// General 
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    //// Color Declarations
+    //// Color 
     UIColor* color = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
     UIColor* color3 = [UIColor colorWithRed: 0.95 green: 0.95 blue: 0.95 alpha: 1];
     
-    //// Gradient Declarations
+    //// Gradient 
     NSArray* gradient7Colors = [NSArray arrayWithObjects: 
                                 (id)color3.CGColor, 
                                 (id)[UIColor whiteColor].CGColor, nil];
     CGFloat gradient7Locations[] = {0, 1};
     CGGradientRef gradient7 = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)(gradient7Colors), gradient7Locations);
     
-    //// Shadow Declarations
+    //// Shadow 
     CGColorRef shadow4 = [UIColor lightGrayColor].CGColor;
     CGSize shadow4Offset = CGSizeMake(1, 2);
     CGFloat shadow4BlurRadius = 2;
