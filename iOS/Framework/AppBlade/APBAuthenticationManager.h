@@ -15,7 +15,8 @@ extern NSString *kTtlDictDateSetKey;
 
 /*!
  @class APBAuthenticationManager
- @abstract Manager for the checkApproval call and ttl (time to live) window functionality
+ @abstract The AppBlade Authentication & Killswitch feature
+ @discussion This manager contains the checkApproval call and time to live window functionality (ttl, for short).
  */
 @interface APBAuthenticationManager : NSObject<APBBasicFeatureManager>
 @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
@@ -43,8 +44,7 @@ extern NSString *kTtlDictDateSetKey;
 
 
 /*! 
- Our additional properties and methods for Authentication
- 
+  @abstract Our additional properties and methods for Authentication
  */
 @interface AppBlade (Authorization)
 @property (nonatomic, strong) APBAuthenticationManager* authenticationManager; //declared here too so the compiler doesn't cry
