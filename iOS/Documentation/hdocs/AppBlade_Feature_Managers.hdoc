@@ -6,15 +6,14 @@
   
   	  Since it's impossible to declare a property inside of a category, we declare the property inside the manager object and provide getters and setters in the property extension. 
 	  
-	  Our features are as follows:
-	  
+	  Our features are divided into the following managers :
 	  <ul>
-	  <li>Authentication Checking	</li>
-	  <li>Update Checking	  		</li>
-	  <li>Crash Reporting      		</li>
-	  <li>Feedback Reporting		</li>
-	  <li>Session Tracking 			</li>
-	  <li>Custom Parameters			</li>
+	  <li> @link //apple_ref/occ/cl/APBAuthenticationManager Authentication Checking @/link </li>
+	  <li> @link //apple_ref/occ/cl/APBAuthenticationManager Update Checking @/link </li>
+	  <li> @link //apple_ref/occ/cl/APBCrashReportingManager Crash Reporting @/link </li>
+	  <li> @link //apple_ref/occ/cl/APBFeedbackReportingManager Feedback Reporting @/link </li>
+	  <li> @link //apple_ref/occ/cl/APBSessionTrackingManager Session Tracking @/link </li>
+	  <li> @link //apple_ref/occ/cl/APBCustomParametersManager Custom Parameters @/link </li>
 	  </ul>
 	  
  */

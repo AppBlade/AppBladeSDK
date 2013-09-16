@@ -7,5 +7,17 @@
 
 		The Application and Device information that we retrieve could be useful for reasons specific to your project, feel free to use it through our managers.
 		
+		Our core is divided into the following verticals, with a manager for each :
+		  <ul>
+		  <li> @link //apple_ref/occ/cl/APBApplicationInfoManager Application Info (APBApplicationInfoManager) @/link </li>
+		  <li> @link //apple_ref/occ/cl/APBDeviceInfoManager Device Info (APBDeviceInfoManager) @/link </li>
+		  <li> @link //apple_ref/occ/cl/APBTokenManager Token Management (APBTokenManager) @/link </li>
+		  </ul>
+		
+		@note In addition to the Core Managers, you should also familiarize yourself with the core classes that are not delegated to managers if you are planning on epanding the framework, namely the @link //apple_ref/occ/cl/APBWebOperation Web Operations @/link, the @link //apple_ref/occ/cl/APBSimpleKeychain AppBlade Simple Keychain @/link, and the  @link //apple_ref/occ/cl/APBFileMD5Hash File Hashing class @/link
+		
 		@seealso //apple_ref/occ/cl/APBSimpleKeychain APBSimpleKeychain
+		@seealso //apple_ref/occ/cl/APBWebOperation APBWebOperation
+		@seealso //apple_ref/occ/cl/APBFileMD5Hash APBFileMD5Hash
+		
  */ 
