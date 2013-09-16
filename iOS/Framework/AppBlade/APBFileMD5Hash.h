@@ -30,7 +30,7 @@
 
 
 //---------------------------------------------------------
-// Constant declaration
+// Constant
 //---------------------------------------------------------
 
 // In bytes
@@ -38,7 +38,7 @@
 
 
 //---------------------------------------------------------
-// Function declaration
+// Function 
 //---------------------------------------------------------
 
 FILEMD5HASH_EXTERN CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath, 
