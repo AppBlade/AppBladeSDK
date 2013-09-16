@@ -12,8 +12,6 @@
 #import <Foundation/Foundation.h>
 
 
-@class SimpleKeychainUserPass;
-
 
 /*!
  @class APBSimpleKeychain
