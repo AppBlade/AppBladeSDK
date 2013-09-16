@@ -1,10 +1,10 @@
-//
-//  AppBladeTokenRequestManager.h
-//  AppBlade
-//
-//  Created by AndrewTremblay on 8/29/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
-//
+/*!
+ @header  APBTokenManager.h
+ @abstract  Holds all Token managemnt functionality for APBTokenManager
+ @framework AppBlade
+ @author AndrewTremblay on 7/16/13.
+ @copyright Raizlabs 2013. All rights reserved.
+ */
 
 #import <Foundation/Foundation.h>
 #import "AppBlade.h"

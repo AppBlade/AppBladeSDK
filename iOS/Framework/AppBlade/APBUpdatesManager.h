@@ -1,10 +1,10 @@
-//
-//  AppBladeUpdates.h
-//  AppBlade
-//
-//  Created by AndrewTremblay on 7/16/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
-//
+/*!
+ @header  APBUpdatesManager.h
+ @abstract  Holds all update-checking functionality
+ @framework AppBlade
+ @author AndrewTremblay on 7/16/13.
+ @copyright Raizlabs 2013. All rights reserved.
+ */
 
 #import <Foundation/Foundation.h>
 
@@ -17,6 +17,11 @@
     -(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url;
 @end
 
+/*!
+ @class APBUpdatesManager
+ @abstract The AppBlade Update Availablilty feature
+ @discussion This manager contains the checkForUpdates call and callbacks. When AppBlade determines that a new build is available for the app, this update manager will handle the installation of said new build.  
+ */
 @interface APBUpdatesManager : NSObject<APBBasicFeatureManager, APBUpdatesManagerDelegate>
     @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
     @property (nonatomic, retain) NSURL* upgradeLink;

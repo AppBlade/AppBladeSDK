@@ -1,17 +1,22 @@
-//
-//  FeedbackReporting.h
-//  AppBlade
-//
-//  Created by AndrewTremblay on 7/15/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
-//
+/*!
+ @header  APBFeedbackReportingManager.h
+ @abstract  Holds all methods pertaining to custom parameters, which affect the subsequent web calls.
+ @framework AppBlade
+ @author AndrewTremblay on 7/16/13.
+ @copyright Raizlabs 2013. All rights reserved.
+ */
+
 
 #import <Foundation/Foundation.h>
 #import "APBFeedbackDialogue.h"
 
 #import "APBBasicFeatureManager.h"
 
-
+/*!
+ @class APBFeedbackReportingManager
+ @abstract The AppBlade Feedback Reporting feature
+ @discussion This manager contains the showFeedbackDialogueWithOptions call, includng storage of the feedback dictionary and web callbacks.
+ */
 @interface APBFeedbackReportingManager : NSObject<APBBasicFeatureManager>
     @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
 

@@ -1,15 +1,20 @@
-//
-//  CrashReporting.h
-//  AppBlade
-//
-//  Created by AndrewTremblay on 7/16/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
-//
+/*!
+ @header  APBCrashReportingManager.h
+ @abstract  Holds all crash-reporting functionality
+ @framework AppBlade
+ @author AndrewTremblay on 7/16/13.
+ @copyright Raizlabs 2013. All rights reserved.
+ */
 
 #import <Foundation/Foundation.h>
 
 #import "APBBasicFeatureManager.h"
 
+/*!
+ @class APBCrashReportingManager
+ @abstract The AppBlade Crash Reporting feature
+ @discussion This manager contains the catchAndReportCrashes call and callbacks. When an AppBlade-SDK-enabled app enables crash reporting, the SDK listens through the PLCrashReporter library to catch and store the crash logs, which it subsequenty sends to AppBlade for processing once the app is resumed.
+ */
 @interface APBCrashReportingManager : NSObject<APBBasicFeatureManager>
 @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
 

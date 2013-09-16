@@ -1,10 +1,10 @@
-//
-//  APBDeviceInfoManager.h
-//  AppBlade
-//
-//  Created by AndrewTremblay on 9/3/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
-//
+/*!
+ @header  APBDeviceInfoManager.h
+ @abstract  Holds all device information methods, linked through to the APBDeviceInfoManager
+ @framework AppBlade
+ @author AndrewTremblay on 7/16/13.
+ @copyright Raizlabs 2013. All rights reserved.
+ */
 
 #import <Foundation/Foundation.h>
 #import "AppBlade.h"
