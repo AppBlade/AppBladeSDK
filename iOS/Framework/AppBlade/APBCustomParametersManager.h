@@ -13,7 +13,7 @@
 #import "AppBlade+PrivateMethods.h"
 
 /*!
- @class APBFeedbackReportingManager
+ @class APBCustomParametersManager
  @abstract The Custom Parameter meta-feature
  @discussion This manager contains the storage and retrieval of the custom paramter meta-feature. For the other primary "reporter" functions, custom parameters are uselful for containing metadata for third part integration or other analytical protocols. 
  */
