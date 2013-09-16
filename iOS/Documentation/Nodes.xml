@@ -17,7 +17,7 @@
   <!-- Root element -->
 <!-- Demi-Root elements -->
 
-	<Node id="901">
+	<Node id="901" type="bundle">
 		<Name>AppBlade SDK</Name>
 	    <Path>AppBladeSDK_hdoc</Path>
 	    <File>index.html</File>
@@ -87,7 +87,7 @@
 		<File>index.html</File>
 	</Node> <!--XXXXXX AppBlade Architecture Overview -->
 
-	<Node id="903">
+	<Node id="903" type="folder">
 		<Name>Example Projects</Name>
 		<Path>AppBladeExampleProjects_hdoc</Path>
 		<File>index.html</File>
