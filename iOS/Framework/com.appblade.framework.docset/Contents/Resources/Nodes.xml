@@ -8,7 +8,7 @@
 	<File>index.html</File>
 	<Subnodes> 
 		<NodeRef refid="901"/> <!--AppBlade SDK -->
-		<NodeRef refid="903"/> <!--AppBlade SDK -->
+		<NodeRef refid="903"/> <!--Example Projects -->
 	</Subnodes>
   </Node>
 </TOC>
@@ -17,43 +17,45 @@
   <!-- Root element -->
 <!-- Demi-Root elements -->
 
-
-	<Node id="901">
+	<Node id="901" type="bundle">
 		<Name>AppBlade SDK</Name>
 	    <Path>AppBladeSDK_hdoc</Path>
 	    <File>index.html</File>
 	    <Subnodes>
 			<Node id="90101">
-				<Name>Singleton</Name>
+				<Name>Shared Singleton</Name>
 				<Path>AppBladeSingleton_hdoc</Path>
 				<File>index.html</File>
 				<Subnodes>
-					<NodeRef refid="1"/>
-					<NodeRef refid="101"/>
-					<NodeRef refid="2"/>
-					<NodeRef refid="3"/>
+				<NodeRef refid="1"/> <!-- AppBlade Class -->
+				<NodeRef refid="101"/> <!-- AppBlade Delegate -->
+				<NodeRef refid="2"/> <!-- AppBlade+PrivateMethods.h -->
+				<NodeRef refid="3"/> <!-- AppBladeSharedConstants.h -->
 				</Subnodes>
-			</Node>
+			</Node> <!-- Shared Singleton -->
 			<Node id="90102">
 				<Name>Feature Managers</Name>
 				<Path>AppBladeFeatureManagers_hdoc</Path>
 				<File>index.html</File>
 				<Subnodes>
+					<NodeRef refid="7"/>  <!-- Authentication Manager -->
+					<NodeRef refid="8"/>  <!-- Auto Updating Manager -->
+					<NodeRef refid="9"/>  <!-- Session Tracking Manager -->
+					<NodeRef refid="10"/> <!-- Crash Reporting Manager -->
+					<NodeRef refid="11"/> <!-- Feedback Reporting Manager -->
+					<NodeRef refid="12"/> <!-- Custom Parameters Manager -->
 				</Subnodes>
-			</Node>
+			</Node> <!-- Feature Managers -->
 			<Node id="90103">
 				<Name>Core Managers</Name>
 				<Path>AppBladeCoreManagers_hdoc</Path>
 				<File>index.html</File>
 				<Subnodes>
-				APBAuthenticationManager_h
-				APBUpdatesManager_h
-				APBCrashReportingManager_h
-				APBCustomParametersManager_h
-				APBFeedbackReportingManager_h
-				APBSessionTrackingManager_h
+					<NodeRef refid="4"/>  <!-- APBDeviceInfoManager -->
+					<NodeRef refid="5"/>  <!-- APBApplicationInfoManager -->
+					<NodeRef refid="6"/> <!-- APBTokenManager -->
 				</Subnodes>
-			</Node>
+			</Node> <!-- Core Managers -->
 			<Node id="90104">
 				<Name>Other Core Behavior</Name>
 				<Path>AppBladeOtherCore_hdoc</Path>
@@ -73,23 +75,33 @@
 						<Name>File Hashing</Name>
 						<Path>AppBladeFileHashing_hdoc</Path>
 						<File>index.html</File>
+						<Subnodes>
+							<NodeRef refid="15"/>
+						</Subnodes>
 					</Node>
 				</Subnodes>
-			</Node>
+			</Node> <!-- Other Core Behavior -->
     	</Subnodes>
 	</Node> <!--AppBlade SDK -->
+	
 	<Node id="902">
 	    <Name>AppBlade Architecture Overview</Name>
 		<Path>AppBladeArchitechtureOverview_hdoc</Path>
 		<File>index.html</File>
-	</Node> <!--AppBlade Architecture Overview -->
-	<Node id="903">
-    <Name>Example Projects</Name>
-    <Path>AppBladeExampleProjects_hdoc</Path>
-    <File>index.html</File>
-    <Subnodes>
-    	</Subnodes>
-	</Node>
+	</Node> <!--XXXXXX AppBlade Architecture Overview -->
+
+	<Node id="903" type="folder">
+		<Name>Example Projects</Name>
+		<Path>AppBladeExampleProjects_hdoc</Path>
+		<File>index.html</File>
+			<Subnodes>
+				<Node>
+					<Name>Kitchen Sink Project</Name>
+					<Path>AppBladeExampleProjectsKitchenSink_hdoc</Path>
+					<File>index.html</File>
+				</Node>
+			</Subnodes>
+	</Node><!-- Example Projects -->
 	
 	<!-- The Grand Repository -->
 		<!-- AppBlade Singleton-Related Files -->
@@ -97,107 +109,112 @@
 			<Name>AppBlade Class</Name>
 			<Path>AppBlade_h/Classes/AppBlade</Path>
 			<File>index.html</File>
-		</Node>
+		</Node> <!-- AppBlade Class -->
 		<Node id="101">
 			<Name>AppBlade Delegate</Name>
 			<Path>AppBlade_h/Protocols/AppBladeDelegate</Path>
 			<File>index.html</File>
-		</Node>
+		</Node> <!-- AppBlade Delegate -->
 		<Node id="2">
 			<Name>AppBlade+PrivateMethods.h</Name>
 			<Path>AppBlade+PrivateMethods_h</Path>
 			<File>index.html</File>
-		</Node>
+		</Node> <!-- AppBlade+PrivateMethods.h -->
 		<Node id="3">
 			<Name>AppBladeSharedConstants.h</Name>
 			<Path>AppBladeSharedConstants_h</Path>
 			<File>index.html</File>
-		</Node>
+		</Node> <!-- AppBladeSharedConstants.h -->
 
-		<!-- Feature Managers 		 -->
+		<!-- Feature Managers  -->
+		<Node id="7">
+			<Name>Authentication Manager</Name>
+			<Path>APBAuthenticationManager_h</Path>
+			<File>index.html</File>
+		</Node>  <!-- Authentication Manager -->
+		<Node id="8">
+			<Name>Auto Updating Manager</Name>
+			<Path>APBUpdatesManager_h</Path>
+			<File>index.html</File>
+		</Node>  <!-- Auto Updating Manager -->
+		<Node id="9">
+			<Name>Session Tracking Manager</Name>
+			<Path>APBSessionTrackingManager_h</Path>
+			<File>index.html</File>
+		</Node>  <!-- Session Tracking Manager -->
+		<Node id="10">
+			<Name>Crash Reporting Manager</Name>
+			<Path>APBCrashReportingManager_h</Path>
+			<File>index.html</File>
+		</Node> <!-- Crash Reporting Manager -->
+		<Node id="11">
+			<Name>Feedback Reporting Manager</Name>
+			<Path>APBFeedbackReportingManager_h</Path>
+			<File>index.html</File>
+		</Node> <!-- Feedback Reporting Manager -->
+		<Node id="12">
+			<Name>Custom Parameters Manager</Name>
+			<Path>APBCustomParametersManager_h</Path>
+			<File>index.html</File>
+		</Node> <!-- Custom Parameters Manager -->
+
 		<!-- Core Manager 			 -->
-	<!-- The Grand Repository -->
-
 	<Node id="4">
 		<Name>APBDeviceInfoManager</Name>
 		<Path>APBDeviceInfoManager_h</Path>
 		<File>index.html</File>
-	</Node>
+	</Node> <!-- APBDeviceInfoManager -->
 	<Node id="5">
 		<Name>APBApplicationInfoManager</Name>
 		<Path>APBApplicationInfoManager_h</Path>
 		<File>index.html</File>
-	</Node>
+	</Node> <!-- APBApplicationInfoManager -->
 	<Node id="6">
 		<Name>APBTokenManager</Name>
 		<Path>APBTokenManager_h</Path>
 		<File>index.html</File>
-	</Node>
-	<Node id="7">
-		<Name>Authentication</Name>
-		<Path>APBAuthenticationManager_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="8">
-		<Name>Auto Updating</Name>
-		<Path>APBCrashReportingManager_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="9">
-		<Name>Session Tracking</Name>
-		<Path>APBSessionTrackingManager_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="10">
-		<Name>Crash Reporting</Name>
-		<Path>APBCrashReportingManager_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="11">
-		<Name>Feedback Reporting</Name>
-		<Path>APBFeedbackReportingManager_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="12">
-		<Name>Custom Parameters</Name>
-		<Path>APBCustomParametersManager_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="13">
-		<Name>AppBladeWebOperation.h</Name>
-		<Path>AppBladeWebOperation_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="131">
-		<Name>AppBladeWebOperation.m</Name>
-		<Path>AppBladeWebOperation_m</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="132">
-		<Name>AppBladeWebOperation+PrivateMethods.h</Name>
-		<Path>AppBladeWebOperation+PrivateMethods_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="14">
-		<Name>AppBladeSimpleKeychain.h</Name>
-		<Path>AppBladeSimpleKeychain_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="141">
-		<Name>AppBladeSimpleKeychain.m</Name>
-		<Path>AppBladeSimpleKeychain_m</Path>
-		<File>index.html</File>
-	</Node>
+	</Node> <!-- APBTokenManager -->
+		<!-- Other Core Features 	 -->
 	<Node id="15">
 		<Name>APBFileMD5Hash.h</Name>
 		<Path>APBFileMD5Hash_h</Path>
 		<File>index.html</File>
-	</Node>
+	</Node> <!-- APBFileMD5Hash.h -->
 	<Node id="151">
 		<Name>APBFileMD5Hash.c</Name>
 		<Path>APBFileMD5Hash_c</Path>
 		<File>index.html</File>
-	</Node>
+	</Node> <!--XXXXX APBFileMD5Hash.c -->
+
+	<Node id="13">
+		<Name>AppBladeWebOperation.h</Name>
+		<Path>AppBladeWebOperation_h</Path>
+		<File>index.html</File>
+	</Node> <!-- AppBladeWebOperation.h -->
+	<Node id="131">
+		<Name>AppBladeWebOperation.m</Name>
+		<Path>AppBladeWebOperation_m</Path>
+		<File>index.html</File>
+	</Node> <!-- AppBladeWebOperation.m -->
+	<Node id="132">
+		<Name>AppBladeWebOperation+PrivateMethods.h</Name>
+		<Path>AppBladeWebOperation+PrivateMethods_h</Path>
+		<File>index.html</File>
+	</Node> <!-- AppBladeWebOperation+PrivateMethods.m -->
+
+	<Node id="14">
+		<Name>AppBladeSimpleKeychain.h</Name>
+		<Path>AppBladeSimpleKeychain_h</Path>
+		<File>index.html</File>
+	</Node> <!-- AppBladeSimpleKeychain.h -->
+	<Node id="141">
+		<Name>AppBladeSimpleKeychain.m</Name>
+		<Path>AppBladeSimpleKeychain_m</Path>
+		<File>index.html</File>
+	</Node> <!-- AppBladeSimpleKeychain.m -->
+		
+	<!-- Grand Detritus -->
+
 </Library>
 
 </DocSetNodes>

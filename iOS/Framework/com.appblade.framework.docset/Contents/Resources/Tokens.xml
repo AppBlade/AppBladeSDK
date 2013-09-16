@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
 <Token>
+    <TokenIdentifier>//apple_ref/c/func/FileMD5HashCreateWithPath</TokenIdentifier>
+    <Path>APBFileMD5Hash_h/index.html</Path>
+    <Abstract>Finds hash of file.</Abstract>
+    <Declaration>&lt;!-- a logicalPath="//apple_ref/c/cl/FILEMD5HASH_EXTERN //apple_ref/c/tdef/FILEMD5HASH_EXTERN //apple_ref/c/tag/FILEMD5HASH_EXTERN //apple_ref/c/struct/FILEMD5HASH_EXTERN //apple_ref/c/intf/FILEMD5HASH_EXTERN //apple_ref/doc/anysymbol/FILEMD5HASH_EXTERN" machineGenerated="true" --&gt;&lt;span class="type"&gt;FILEMD5HASH_EXTERN&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/CFStringRef //apple_ref/c/tdef/CFStringRef //apple_ref/c/tag/CFStringRef //apple_ref/c/struct/CFStringRef //apple_ref/c/intf/CFStringRef //apple_ref/doc/anysymbol/CFStringRef" machineGenerated="true" --&gt;&lt;span class="type"&gt;CFStringRef&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/c/instm/FileMD5HashCreateWithPath //apple_ref/c/clm/FileMD5HashCreateWithPath //apple_ref/c/intfcm/FileMD5HashCreateWithPath //apple_ref/c/intfm/FileMD5HashCreateWithPath //apple_ref/c/func/FileMD5HashCreateWithPath //apple_ref/c/ftmplt/FileMD5HashCreateWithPath //apple_ref/c/defn/FileMD5HashCreateWithPath //apple_ref/c/macro/FileMD5HashCreateWithPath //apple_ref/doc/anysymbol/FileMD5HashCreateWithPath" machineGenerated="true" --&gt;&lt;span class="function"&gt;FileMD5HashCreateWithPath&lt;/span&gt;&lt;!-- /a --&gt;(
+    &lt;!-- a logicalPath="//apple_ref/c/cl/CFStringRef //apple_ref/c/tdef/CFStringRef //apple_ref/c/tag/CFStringRef //apple_ref/c/struct/CFStringRef //apple_ref/c/intf/CFStringRef //apple_ref/doc/anysymbol/CFStringRef" machineGenerated="true" --&gt;&lt;span class="type"&gt;CFStringRef&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="param"&gt;filePath&lt;/span&gt;, 
+    &lt;!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --&gt;&lt;span class="type"&gt;size_t&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="param"&gt;chunkSizeForReadingData&lt;/span&gt;);  </Declaration>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/cat/AppBlade(Authorization)</TokenIdentifier>
     <Path>APBAuthenticationManager_h/Categories/AppBlade_Authorization_/index.html</Path>
     <Abstract>Our additional properties and methods for Authentication</Abstract>
