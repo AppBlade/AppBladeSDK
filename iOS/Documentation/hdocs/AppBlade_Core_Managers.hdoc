@@ -1,6 +1,7 @@
 /*!
   @framework AppBlade
   @author Andrew Tremblay on 9/9/13
+  @header AppBlade Core Managers
   @discussion Core Managers provide complex but categorizable behavior that, without their inclusion, would cause AppBlade to not work. 
 
 		They mostly revolve around Device and Application information, and are separated for both readability and independent use. 
@@ -14,8 +15,8 @@
 		  <li> @link //apple_ref/occ/cl/APBTokenManager Token Management (APBTokenManager) @/link </li>
 		  </ul>
 		
-		@note In addition to the Core Managers, you should also familiarize yourself with the core classes that are not delegated to managers if you are planning on epanding the framework, namely the @link //apple_ref/occ/cl/APBWebOperation Web Operations @/link, the @link //apple_ref/occ/cl/APBSimpleKeychain AppBlade Simple Keychain @/link, and the  @link //apple_ref/occ/cl/APBFileMD5Hash File Hashing class @/link
-		
+		In addition to the Core Managers, you should also familiarize yourself with the core classes that are not delegated to managers if you are planning on epanding the framework, namely the @link //apple_ref/occ/cl/APBWebOperation Web Operations @/link, the @link //apple_ref/occ/cl/APBSimpleKeychain AppBlade Simple Keychain @/link, and the  @link //apple_ref/occ/cl/APBFileMD5Hash File Hashing class @/link
+
 		@seealso //apple_ref/occ/cl/APBSimpleKeychain APBSimpleKeychain
 		@seealso //apple_ref/occ/cl/APBWebOperation APBWebOperation
 		@seealso //apple_ref/occ/cl/APBFileMD5Hash APBFileMD5Hash
