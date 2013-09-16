@@ -39,17 +39,14 @@
 #pragma mark  API KEYS
 
 /*! 
- @property
  @brief Our endpoint. Usually the AppBlade host name, but it can be custom */
 @property (nonatomic, retain) NSString* appBladeHost;
 /*! 
- @property
  @brief AppBlade API project-issued secret. */
 @property (nonatomic, retain) NSString* appBladeProjectSecret;
 
 // Device Secret
 /*!
- @property
  Our AppBlade-issued device secret. Used in API calls. */
 -(NSString*) appBladeDeviceSecret;
 /*!
