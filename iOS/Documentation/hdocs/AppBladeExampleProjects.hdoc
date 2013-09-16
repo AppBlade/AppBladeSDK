@@ -1,7 +1,14 @@
 /*!
   @framework AppBlade
+  @header AppBlade Example Projects
   @author Andrew Tremblay on 9/9/13
-  @discussion AppBlade comes included with a few example projects. The plurality might have been exaggerated.    
+  @discussion AppBlade comes included with an example project and with the option to make others.    
+  
+  	Our current list of Example Projects are 
+  	<ul>
+  	<li>Kitchen Sink project</li> 
+  	</ul>
+  	
   
   For more information visit our github wiki : http://github.com/AppBlade/SDK/wiki   
  */

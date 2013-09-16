@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<DocSetNodes version="1.0">     <!-- Root element -->
+<DocSetNodes version="1.0">     
 
 <TOC>
   <Node>
     <Name>AppBlade SDK for iOS</Name>
-	<Path></Path>
-	<File>masterTOC.html</File>
+	<Path>AppBladeArchitechtureOverview_hdoc</Path>
+	<File>index.html</File>
 	<Subnodes> 
-		<NodeRef refid="902"/> <!--AppBlade Architecture Overview -->
 		<NodeRef refid="901"/> <!--AppBlade SDK -->
-		<NodeRef refid="903"/> <!--Example Projects -->
+		<NodeRef refid="903"/> <!--AppBlade SDK -->
 	</Subnodes>
   </Node>
 </TOC>
 <!-- Library Elements -->
 <Library>
+  <!-- Root element -->
+<!-- Demi-Root elements -->
+
+
 	<Node id="901">
 		<Name>AppBlade SDK</Name>
 	    <Path>AppBladeSDK_hdoc</Path>
@@ -22,102 +25,99 @@
 	    <Subnodes>
 			<Node id="90101">
 				<Name>Singleton</Name>
-				<Path>AppBlade_Singleton_hdoc</Path>
+				<Path>AppBladeSingleton_hdoc</Path>
 				<File>index.html</File>
 				<Subnodes>
 					<NodeRef refid="1"/>
+					<NodeRef refid="101"/>
 					<NodeRef refid="2"/>
 					<NodeRef refid="3"/>
 				</Subnodes>
 			</Node>
 			<Node id="90102">
 				<Name>Feature Managers</Name>
-				<Path>AppBlade_Feature_Managers_hdoc</Path>
+				<Path>AppBladeFeatureManagers_hdoc</Path>
 				<File>index.html</File>
 				<Subnodes>
-					<NodeRef refid="7"/>
-					<NodeRef refid="8"/>
-					<NodeRef refid="9"/>
 				</Subnodes>
 			</Node>
 			<Node id="90103">
 				<Name>Core Managers</Name>
-				<Path>AppBlade_Core_Managers_hdoc</Path>
+				<Path>AppBladeCoreManagers_hdoc</Path>
 				<File>index.html</File>
 				<Subnodes>
-					<NodeRef refid="4"/>
-					<NodeRef refid="5"/>
-					<NodeRef refid="6"/>
+				APBAuthenticationManager_h
+				APBUpdatesManager_h
+				APBCrashReportingManager_h
+				APBCustomParametersManager_h
+				APBFeedbackReportingManager_h
+				APBSessionTrackingManager_h
 				</Subnodes>
 			</Node>
 			<Node id="90104">
 				<Name>Other Core Behavior</Name>
+				<Path>AppBladeOtherCore_hdoc</Path>
+				<File>index.html</File>
 				<Subnodes>
 					<Node>
 						<Name>AppBlade Web Operations</Name>
-						<Subnodes>
-						  <NodeRef refid="13"/>
-						  <NodeRef refid="131"/>
-						  <NodeRef refid="132"/>
-						</Subnodes>
+						<Path>AppBladeWebOperation_hdoc</Path>
+						<File>index.html</File>
 					</Node>
 					<Node>
 						<Name>AppBlade Simple Keychain</Name>
-						<Subnodes>
-						  <NodeRef refid="14"/>
-						  <NodeRef refid="141"/>
-						</Subnodes>
+						<Path>AppBladeSimpleKeychain_hdoc</Path>
+						<File>index.html</File>
 					</Node>
 					<Node>
 						<Name>File Hashing</Name>
-						<Subnodes>
-						  <NodeRef refid="15"/>
-						  <NodeRef refid="151"/>
-						</Subnodes>
+						<Path>AppBladeFileHashing_hdoc</Path>
+						<File>index.html</File>
 					</Node>
 				</Subnodes>
 			</Node>
     	</Subnodes>
-	</Node>
+	</Node> <!--AppBlade SDK -->
 	<Node id="902">
-		<Name>AppBlade Architecture Overview</Name>
+	    <Name>AppBlade Architecture Overview</Name>
 		<Path>AppBladeArchitechtureOverview_hdoc</Path>
 		<File>index.html</File>
-	</Node>
+	</Node> <!--AppBlade Architecture Overview -->
 	<Node id="903">
     <Name>Example Projects</Name>
     <Path>AppBladeExampleProjects_hdoc</Path>
     <File>index.html</File>
     <Subnodes>
-		<Node>
-			<Name>KitchenSink</Name>
-			<Path>AppBladeExampleProjects_KitchenSink_hdoc</Path>
-			<File>index.html</File>
-		</Node>
     	</Subnodes>
 	</Node>
 	
 	<!-- The Grand Repository -->
-	<Node id="1">
-		<Name>AppBlade Class</Name>
-		<Path>AppBlade_h/Classes/AppBlade</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="101">
-		<Name>AppBlade Delegate</Name>
-		<Path>AppBlade_h/Protocols/AppBladeDelegate</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="2">
-		<Name>AppBlade+PrivateMethods.h</Name>
-		<Path>AppBlade+PrivateMethods_h</Path>
-		<File>index.html</File>
-	</Node>
-	<Node id="3">
-		<Name>AppBladeSharedConstants.h</Name>
-		<Path>AppBladeSharedConstants_h</Path>
-		<File>index.html</File>
-	</Node>
+		<!-- AppBlade Singleton-Related Files -->
+		<Node id="1">
+			<Name>AppBlade Class</Name>
+			<Path>AppBlade_h/Classes/AppBlade</Path>
+			<File>index.html</File>
+		</Node>
+		<Node id="101">
+			<Name>AppBlade Delegate</Name>
+			<Path>AppBlade_h/Protocols/AppBladeDelegate</Path>
+			<File>index.html</File>
+		</Node>
+		<Node id="2">
+			<Name>AppBlade+PrivateMethods.h</Name>
+			<Path>AppBlade+PrivateMethods_h</Path>
+			<File>index.html</File>
+		</Node>
+		<Node id="3">
+			<Name>AppBladeSharedConstants.h</Name>
+			<Path>AppBladeSharedConstants_h</Path>
+			<File>index.html</File>
+		</Node>
+
+		<!-- Feature Managers 		 -->
+		<!-- Core Manager 			 -->
+	<!-- The Grand Repository -->
+
 	<Node id="4">
 		<Name>APBDeviceInfoManager</Name>
 		<Path>APBDeviceInfoManager_h</Path>
@@ -199,6 +199,5 @@
 		<File>index.html</File>
 	</Node>
 </Library>
-	
 
 </DocSetNodes>

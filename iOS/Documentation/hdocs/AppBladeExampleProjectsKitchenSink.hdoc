@@ -1,0 +1,10 @@
+/*!
+  @framework AppBlade
+	@header AppBlade Example : KitchenSink
+
+  @author Andrew Tremblay on 9/9/13
+  @discussion The Kitchen Sink project attempts to display every feature in a modular, paresable way. 
+  
+  The source code is available on github inside the Examples folder https://github.com/AppBlade/SDK/tree/master/iOS/Examples  
+
+ */

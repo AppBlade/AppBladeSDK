@@ -1,5 +1,7 @@
 /*!
   @framework AppBlade
+  @header AppBlade Architecture Overview
+
   @author Andrew Tremblay on 9/9/13
   @discussion This document provides a broad look on the AppBlade SDK code structure. It describes the intention of the current design and gives suggestions about its possible expansion.  
   See also @link //apple_ref/occ/cl/AppBlade The AppBlade base class@/link for  
