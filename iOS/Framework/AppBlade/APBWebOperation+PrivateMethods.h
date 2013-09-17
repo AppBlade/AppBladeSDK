@@ -1,16 +1,27 @@
-//
-//  APBWebOperation+PrivateMethods.h
-//  AppBlade
-//
-//  Created by AndrewTremblay on 7/31/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
-//
+/*!
+ @header  APBWebOperation+PrivateMethods.h
+ @abstract  Private methods for our APBWebOperation interface.
+ @discussion See @link APBWebOperationDelegate @/link and @link APBWebOperation @/link for more information.
+ @framework AppBlade
+ @author Created by AndrewTremblay on 7/31/13.
+ @copyright Raizlabs 2013. All rights reserved.
+
+ @seealso //apple_ref/occ/cl/APBWebOperation APBWebOperation
+ 
+ */
 
 #import "APBWebOperation.h"
 
+/*!
+ @category APBWebOperation(PrivateMethods)
+ @discussion contains private methods for the APBWebOperation class. 
+*/
+@interface APBWebOperation(PrivateMethods)
 
-@interface APBWebOperation (PrivateMethods)
-
+/*!
+  @discussion This method is where the parrallelized NSURLConnection is initialized and sent.
+ If the request was already released or the isCancelled flag was set to true 
+ */
 -(void)issueRequest;
 -(void)scheduleTimeout;
 -(void)cancelTimeout;
