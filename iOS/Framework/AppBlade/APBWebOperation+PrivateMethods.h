@@ -6,7 +6,6 @@
  @author Created by AndrewTremblay on 7/31/13.
  @copyright Raizlabs 2013. All rights reserved.
 
- @seealso //apple_ref/occ/cl/APBWebOperation APBWebOperation
  
  */
 
@@ -15,6 +14,7 @@
 /*!
  @category APBWebOperation(PrivateMethods)
  @discussion contains private methods for the APBWebOperation class. 
+
 */
 @interface APBWebOperation(PrivateMethods)
 
