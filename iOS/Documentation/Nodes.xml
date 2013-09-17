@@ -201,11 +201,6 @@
 		<Path>APBFileMD5Hash_h</Path>
 		<File>index.html</File>
 	</Node> <!-- APBFileMD5Hash.h -->
-	<Node id="151">
-		<Name>APBFileMD5Hash.c</Name>
-		<Path>APBFileMD5Hash_c</Path>
-		<File>index.html</File>
-	</Node> <!--XXXXX APBFileMD5Hash.c -->
 
 	<Node id="13">
 		<Name>APBWebOperation.h</Name>
