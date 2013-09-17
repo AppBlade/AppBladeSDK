@@ -1,7 +1,7 @@
 /*!
+ @framework AppBlade
  @header  APBDeviceInfoManager.h
  @abstract  Holds all device information methods, linked through to the APBDeviceInfoManager
- @framework AppBlade
  @author AndrewTremblay on 7/16/13.
  @copyright Raizlabs 2013. All rights reserved.
  */

@@ -180,6 +180,11 @@
 		<Name>APBTokenManager</Name>
 		<Path>APBTokenManager_h</Path>
 		<File>index.html</File>
+		<Subnodes>
+		<Node> <Name>APBTokenManager Class</Name> <Path>APBTokenManager_h/Classes/APBTokenManager</Path> <File>index.html</File> </Node>
+		<Node> <Name>APBWebOperation (TokenManager)</Name> <Path>APBTokenManager_h/Categories/APBWebOperation_TokenManager_</Path> <File>index.html</File> </Node>
+		<Node> <Name>AppBlade (TokenManager)</Name> <Path>APBTokenManager_h/Categories/AppBlade_TokenManager_</Path> <File>index.html</File> </Node>
+		</Subnodes>
 	</Node> <!-- APBTokenManager -->
 		<!-- Other Core Features 	 -->
 	<Node id="15">

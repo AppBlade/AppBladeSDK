@@ -1,7 +1,7 @@
 /*!
- @header  APBTokenManager.h
- @abstract  Holds all Token managemnt functionality for APBTokenManager
  @framework AppBlade
+ @header  APBTokenManager.h
+ @abstract  Holds all Token management functionality for APBTokenManager
  @author AndrewTremblay on 7/16/13.
  @copyright Raizlabs 2013. All rights reserved.
  */
@@ -13,7 +13,7 @@
 
 /*!
  @class APBTokenManager
- @brief Core Manager for all Token-related requests/behavior.
+ @brief Core Manager for all Token-related requests and behavior.
  
  Tokens are our basis for all authentication and identification for the SDK, and their use is slightly complicated to explain.
 
