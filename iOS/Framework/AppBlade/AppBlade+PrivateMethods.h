@@ -17,7 +17,7 @@
 /*! 
  @methodgroup Appblade Private Methods
  
- Methods that probably shouldn't be used by the average developer. Ther are documented here for the sake of completeness.
+ @discussion  Methods that probably shouldn't be used by the average developer. These are documented here for the sake of completeness.
  */
 
 /*!
@@ -55,12 +55,13 @@
  @param token The token to try to cancel
  
  @discussion
- 
- 
- 
+ This check was added to help with the token authentication cycle, which can be better explained on the APBTokenManager page.
+  
  This will not cancel any operations currently running, so a slight race condition exists.
  See the isCancelled flag to ensure the cancellation behavior is handled properly for each feature's web request.
  
+ @seealso //apple_ref/doc/anysymbol/APBTokenManager APBTokenManager
+
  */
 - (void) cancelPendingRequestsByToken:(NSString *)token;
 
@@ -103,7 +104,6 @@
 
 /*!
  @methodgroup APBWebOperationDelegate Protocol Methods
- @seealso //apple_ref/occ/cl/APBWebOperation APBWebOperation
  */
 
 /*!
