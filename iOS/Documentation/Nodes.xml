@@ -194,31 +194,31 @@
 	</Node> <!--XXXXX APBFileMD5Hash.c -->
 
 	<Node id="13">
-		<Name>AppBladeWebOperation.h</Name>
-		<Path>AppBladeWebOperation_h</Path>
+		<Name>APBWebOperation.h</Name>
+		<Path>APBWebOperation_h</Path>
 		<File>index.html</File>
-	</Node> <!-- AppBladeWebOperation.h -->
+	</Node> <!-- APBWebOperation.h -->
 	<Node id="131">
-		<Name>AppBladeWebOperation.m</Name>
-		<Path>AppBladeWebOperation_m</Path>
+		<Name>APBWebOperation.m</Name>
+		<Path>APBWebOperation_m</Path>
 		<File>index.html</File>
-	</Node> <!-- AppBladeWebOperation.m -->
+	</Node> <!-- APBWebOperation.m -->
 	<Node id="132">
-		<Name>AppBladeWebOperation+PrivateMethods.h</Name>
-		<Path>AppBladeWebOperation+PrivateMethods_h</Path>
+		<Name>APBWebOperation+PrivateMethods.h</Name>
+		<Path>APBWebOperation+PrivateMethods_h</Path>
 		<File>index.html</File>
-	</Node> <!-- AppBladeWebOperation+PrivateMethods.m -->
+	</Node> <!-- APBWebOperation+PrivateMethods.m -->
 
 	<Node id="14">
-		<Name>AppBladeSimpleKeychain.h</Name>
-		<Path>AppBladeSimpleKeychain_h</Path>
+		<Name>APBSimpleKeychain.h</Name>
+		<Path>APBSimpleKeychain_h</Path>
 		<File>index.html</File>
-	</Node> <!-- AppBladeSimpleKeychain.h -->
+	</Node> <!-- APBSimpleKeychain.h -->
 	<Node id="141">
 		<Name>AppBladeSimpleKeychain.m</Name>
 		<Path>AppBladeSimpleKeychain_m</Path>
 		<File>index.html</File>
-	</Node> <!-- AppBladeSimpleKeychain.m -->
+	</Node> <!-- APBSimpleKeychain.m -->
 		
 	<!-- Grand Detritus -->
 
