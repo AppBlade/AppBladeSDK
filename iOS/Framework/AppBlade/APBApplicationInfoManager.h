@@ -23,12 +23,16 @@
  
  This should not be confused with the hashExecutable call, which returns an MD5 hash
  
+ 
  */
 @property (nonatomic, strong) NSString *executableUUID;
 
 /*!
  @return a uuid of the executable
  @discussion we find the uuid of the executable by using the symbol _mh_execute_header and walking the load commands of its program to determine the ending (or beginning) of any section or segment in the program.
+ 
+ @seealso //apple_ref/doc/anysymbol/FileMD5HashCreateWithPath FileMD5HashCreateWithPath for how we find the MD5 hash of a file
+
  */
 - (NSString*)hashInfoPlist;
 
@@ -40,6 +44,7 @@
  
  This should not be confused with the executableUUID call, which walks the load commands and does not return an MD5 hash
  
+ @seealso //apple_ref/doc/anysymbol/FileMD5HashCreateWithPath FileMD5HashCreateWithPath for how we find the MD5 hash of a file
  */
 - (NSString*)hashExecutable;
 
@@ -51,6 +56,7 @@
  @discussion The file we are finding the hash of should not be affected in any way by the Hashing function. 
  If no file exists at the path, the hash of an empty string will be returned "d41d8cd98f00b204e9800998ecf8427e"
  
+ @seealso //apple_ref/doc/anysymbol/FileMD5HashCreateWithPath FileMD5HashCreateWithPath for how we find the MD5 hash of a file
  */
 - (NSString*)hashFile:(NSString *)filePath;
 
