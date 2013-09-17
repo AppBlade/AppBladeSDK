@@ -31,6 +31,8 @@ NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
 
 NSString *deviceSecretHeaderField    = @"X-device-secret";
 
+#define kDefaultTimeout 60
+
 @interface APBWebOperation ()
 
 @property (nonatomic, strong) NSURLConnection *activeConnection;
@@ -96,7 +98,7 @@ const int kNonceRandomStringLength = 74;
         
         // setup our timeout callback.
         if(self.timeoutInterval <= 0)
-            self.timeoutInterval = 60;
+            self.timeoutInterval = kDefaultTimeout;
         [self scheduleTimeout];
         
         while (!self.finished && !self.isCancelled) {
