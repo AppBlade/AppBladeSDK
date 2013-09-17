@@ -115,7 +115,6 @@
 
 #pragma mark - Debugger Check
 
-//Important: Because the definition of the kinfo_proc structure (in <sys/sysctl.h>) is conditionalized by __APPLE_API_UNSTABLE, you should restrict use of the above code to the debug build of your program.
 //src https://developer.apple.com/library/mac/qa/qa1361/_index.html
 static bool AmIBeingDebugged(void)
 // Returns true if the current process is being debugged (either
