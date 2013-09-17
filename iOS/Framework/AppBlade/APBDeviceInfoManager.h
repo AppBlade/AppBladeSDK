@@ -11,11 +11,30 @@
 
 /*!
  @class APBDeviceInfoManager
- @brief Core Manager for our Device Infomation retreival.
+ @brief Core Manager for our Device Infomation retreival
  */
 @interface APBDeviceInfoManager : NSObject
 
+/*!
+ @return the alphanumeric build number of the operating system
+ 
+ @discussion This method is not the same as [[UIDevice currentDevice] systemVersion], which woud return something human readable like 4.2.1 or 7.0.1
+ 
+ We take CTL_KERN KERN_OSVERSION from the system header file sys/sysctl.h and build a string from those kernel values.
+ 
+ http://stackoverflow.com/questions/4857195/how-to-programmatically-get-ioss-alphanumeric-version-string
+ */
 @property (nonatomic, strong) NSString* osVersionBuild;
+
+/*!
+ Finds Base Hardware platform name and returns it.
+ @return a semi-readable, unique string identifier for the hardware platform
+ @discussion
+ the hardware platform is accessed via internal system header <sys/sysctl.h>
+ 
+ From sysctlbyname("hw.machine") we create the unique platform identifier that Apple publically uses to identify hardware systems
+ 
+ */
 @property (nonatomic, strong) NSString* platform;
 
 

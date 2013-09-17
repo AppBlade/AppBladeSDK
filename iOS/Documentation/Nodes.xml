@@ -180,11 +180,10 @@
 		<Name>APBApplicationInfoManager</Name>
 		<Path>APBApplicationInfoManager_h</Path>
 		<File>index.html</File>
-				<Subnodes>
+		<Subnodes>
 		<Node> <Name>APBApplicationInfoManager Class</Name> <Path>APBApplicationInfoManager_h/Classes/APBApplicationInfoManager</Path> <File>index.html</File> </Node>
 		<Node> <Name>AppBlade (ApplicationInfo)</Name> <Path>APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_</Path> <File>index.html</File> </Node>
 		</Subnodes>
-
 	</Node> <!-- APBApplicationInfoManager -->
 	<Node id="6">
 		<Name>APBTokenManager</Name>
