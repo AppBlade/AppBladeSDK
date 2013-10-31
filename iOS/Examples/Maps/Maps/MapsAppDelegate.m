@@ -27,25 +27,14 @@
     
     // Configure AppBlade
     AppBlade *blade = [AppBlade sharedManager];
+    [blade registerWithAppBladePlist];
 
-    // Populate with values from the project SDK settings or load keys from plist
-    // see README for details
-//    blade.appBladeProjectID = @""; //UUID
-//    blade.appBladeProjectToken = @""; //Token
-//    blade.appBladeProjectSecret = @""; //Secret
-//    blade.appBladeProjectIssuedTimestamp = @""; //Issued at
-    
-    // See AppBladeKeys.plist for the format in which to send your keys.
-    // This is optional, but you should not set the keys yourself AND use the plist.
-    // [blade loadSDKKeysFromPlist:[[NSBundle mainBundle] pathForResource:@"AppBladeKeys" ofType:@"plist"]]
-    // Fill AppBladeKeys.plist with your own credentials to test
     [blade setCustomParam:@"CustomKey1" withValue:@"FirstSend"];
-        
+
     self.window.rootViewController = self.mainViewController;
     [self.window makeKeyAndVisible];
     
-    [blade allowFeedbackReporting];
-
+    [blade allowFeedbackReporting]; //must be called after window is keyed and visible
     return YES;
 }
 
@@ -72,6 +61,8 @@
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    AppBlade *blade = [AppBlade sharedManager];
+    [blade checkForUpdates];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -80,10 +71,7 @@
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
-    
-    // Check the app blade status of this application.
-    [[AppBlade sharedManager] checkApproval];
-
+    // Check the app blade update status of this application.
     [AppBlade startSession];
     [[AppBlade sharedManager] allowFeedbackReporting]; //Not a necessary call, but useful for more immediate feedback to show up on Appblade (prompts a check for pending feedback and sends it)
 
@@ -97,7 +85,6 @@
      See also applicationDidEnterBackground:.
      */
     [AppBlade endSession];
-
 }
 
 

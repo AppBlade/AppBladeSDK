@@ -5,7 +5,8 @@
 //  Created by Craig Spitzkoff on 5/31/11.
 //  Copyright 2011 Raizlabs Corporation. All rights reserved.
 //
-
+#define APPBLADE_DEBUG_LOGGING 1
+#define APPBLADE_ERROR_LOGGING 1
 #import <UIKit/UIKit.h>
 
 @class MainViewController;

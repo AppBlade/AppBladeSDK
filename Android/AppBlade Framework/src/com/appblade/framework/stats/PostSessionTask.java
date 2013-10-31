@@ -49,20 +49,20 @@ public class PostSessionTask extends AsyncTask<List<SessionData>, Void, Void>{
 		if (success) {
 			toastMessage = SUCCESS_MESSAGE;
 			if(context != null){
-				Log.d(AppBlade.LogTag, "session posting success. remove successful sessions");
+				Log.v(AppBlade.LogTag, "session posting success. remove successful sessions");
 				if(data.size() > 0){
 				SessionData lastSession = data.get(data.size()-1);
 				SessionHelper.removeSessionsEndedBefore(context, lastSession.ended);
 				}
 			}
 		}else{
-			Log.d(AppBlade.LogTag, "error posting session. response Code " + responseCode);					
+			Log.v(AppBlade.LogTag, "error posting session. response Code " + responseCode);					
 			if(responseCode == 408){
-				Log.d(AppBlade.LogTag, "Timeout, store for later");					
+				Log.v(AppBlade.LogTag, "Timeout, store for later");					
 			}else if(responseCode == 0){
-				Log.d(AppBlade.LogTag, "no data to send, store for later");					
+				Log.v(AppBlade.LogTag, "no data to send, store for later");					
 			}else{
-				Log.d(AppBlade.LogTag, "Bad request, blow away the data");					
+				Log.v(AppBlade.LogTag, "Bad request, blow away the data");					
 				if(data.size() > 0){
 				SessionData lastSession = data.get(data.size()-1);
 				SessionHelper.removeSessionsEndedBefore(context, lastSession.ended);

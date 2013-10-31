@@ -36,7 +36,7 @@
                                 (id)color3.CGColor, 
                                 (id)[UIColor whiteColor].CGColor, nil];
     CGFloat gradient7Locations[] = {0, 1};
-    CGGradientRef gradient7 = CGGradientCreateWithColors(colorSpace, (CFArrayRef)gradient7Colors, gradient7Locations);
+    CGGradientRef gradient7 = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)(gradient7Colors), gradient7Locations);
     
     //// Shadow Declarations
     CGColorRef shadow4 = [UIColor lightGrayColor].CGColor;

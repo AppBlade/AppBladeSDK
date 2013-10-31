@@ -26,6 +26,8 @@
 		31817C36161207D000392343 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817C35161207D000392343 /* Security.framework */; };
 		31817C38161207E000392343 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31817C37161207E000392343 /* MapKit.framework */; };
 		31817C3B1612082F00392343 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31817C3A1612082F00392343 /* MainWindow-iPad.xib */; };
+		31997098170C76D6000FE6DF /* ResourceRules.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31997097170C76D6000FE6DF /* ResourceRules.plist */; };
+		31C9E2AE1718AA45009F9E28 /* AppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31C9E2AD1718AA45009F9E28 /* AppBladeKeys.plist */; };
 		31D6BF9716120A5A0051283A /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D6BF9616120A5A0051283A /* MainWindow.xib */; };
 		31DF476716E94B4E006FC596 /* libCrittercism_v3_4_9.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31DF476616E94B4E006FC596 /* libCrittercism_v3_4_9.a */; };
 		31DF476A16E94CD9006FC596 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31DF476916E94CD9006FC596 /* QuartzCore.framework */; };
@@ -82,6 +84,8 @@
 		31817C35161207D000392343 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		31817C37161207E000392343 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		31817C3A1612082F00392343 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		31997097170C76D6000FE6DF /* ResourceRules.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = ResourceRules.plist; path = Maps/ResourceRules.plist; sourceTree = SOURCE_ROOT; };
+		31C9E2AD1718AA45009F9E28 /* AppBladeKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppBladeKeys.plist; sourceTree = "<group>"; };
 		31D434E4165AD0940075D028 /* AppBlade.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AppBlade.xcodeproj; path = ../../Framework/AppBlade.xcodeproj; sourceTree = "<group>"; };
 		31D6BF9616120A5A0051283A /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		31DF476416E94B4E006FC596 /* Crittercism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crittercism.h; sourceTree = "<group>"; };
@@ -168,6 +172,7 @@
 		31817BFB161202EB00392343 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				31C9E2AD1718AA45009F9E28 /* AppBladeKeys.plist */,
 				31817BFC161202EB00392343 /* Maps-Info.plist */,
 				31817BFD161202EB00392343 /* InfoPlist.strings */,
 				31817C00161202EB00392343 /* main.m */,
@@ -175,6 +180,7 @@
 				31817C06161202EB00392343 /* Default.png */,
 				31817C08161202EB00392343 /* Default@2x.png */,
 				31817C0A161202EB00392343 /* Default-568h@2x.png */,
+				31997097170C76D6000FE6DF /* ResourceRules.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -282,6 +288,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31C9E2AE1718AA45009F9E28 /* AppBladeKeys.plist in Resources */,
 				31817BFF161202EB00392343 /* InfoPlist.strings in Resources */,
 				31817C07161202EB00392343 /* Default.png in Resources */,
 				31817C09161202EB00392343 /* Default@2x.png in Resources */,
@@ -291,6 +298,7 @@
 				31817C291612040700392343 /* MainView.xib in Resources */,
 				31817C3B1612082F00392343 /* MainWindow-iPad.xib in Resources */,
 				31D6BF9716120A5A0051283A /* MainWindow.xib in Resources */,
+				31997098170C76D6000FE6DF /* ResourceRules.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,6 +395,9 @@
 		31817C15161202EB00392343 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_RESOURCE_RULES_PATH = Maps/ResourceRules.plist;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Maps/Maps-Prefix.pch";
 				INFOPLIST_FILE = "Maps/Maps-Info.plist";
@@ -396,6 +407,7 @@
 					"\"$(SRCROOT)/CrittercismSDK\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -403,6 +415,9 @@
 		31817C16161202EB00392343 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_RESOURCE_RULES_PATH = Maps/ResourceRules.plist;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Maps/Maps-Prefix.pch";
 				INFOPLIST_FILE = "Maps/Maps-Info.plist";
@@ -412,6 +427,7 @@
 					"\"$(SRCROOT)/CrittercismSDK\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

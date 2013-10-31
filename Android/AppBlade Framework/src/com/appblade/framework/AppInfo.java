@@ -36,6 +36,7 @@ public class AppInfo {
 	
 	PackageInfo PackageInfo;
 	private String systemInfo;
+	public String storedANDROID_ID;
 	
 	/**
 	 * Initializes systemInfo string if it does not yet exist.
@@ -115,7 +116,7 @@ public class AppInfo {
 		boolean toRet = false;
 		TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		String networkOperator = tm.getNetworkOperatorName();
-		Log.d(AppBlade.LogTag, "networkOperator "+networkOperator);
+		Log.v(AppBlade.LogTag, "networkOperator "+networkOperator);
 		if("Android".equals(networkOperator)) {
 		    // Emulator
 			toRet = true;

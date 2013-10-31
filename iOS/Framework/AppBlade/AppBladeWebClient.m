@@ -9,6 +9,8 @@
 #import "AppBladeWebClient.h"
 
 #import "AppBlade.h"
+#import "AppBladeLogging.h"
+
 #import <CommonCrypto/CommonHMAC.h>
 #include "FileMD5Hash.h"
 #import <dlfcn.h>
@@ -18,245 +20,533 @@
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
+
 NSString *defaultURLScheme           = @"https";
 NSString *defaultAppBladeHostURL     = @"https://AppBlade.com";
-NSString *approvalURLFormat          = @"%@/api/projects/%@/devices/%@.plist";
-NSString *reportCrashURLFormat       = @"%@/api/projects/%@/devices/%@/crash_reports";
-NSString *reportFeedbackURLFormat    = @"%@/api/projects/%@/devices/%@/feedback";
-NSString *sessionURLFormat           = @"%@/api/user_sessions";
+NSString *tokenGenerateURLFormat     = @"%@/api/3/authorize/new";
+NSString *tokenConfirmURLFormat      = @"%@/api/3/authorize"; //POST request (keeping these separate for readiblilty and possible editing later)
+NSString *authorizeURLFormat         = @"%@/api/3/authorize"; //GET  request
+NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
+NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
+NSString *sessionURLFormat           = @"%@/api/3/user_sessions";
+NSString *updateURLFormat            = @"%@/api/3/updates";
+
+NSString *deviceSecretHeaderField    = @"X-device-secret";
 
 
 @interface AppBladeWebClient ()
 
 @property (nonatomic, readwrite) AppBladeWebClientAPI api;
 
-@property (nonatomic, readonly) NSString* osVersionBuild;
-@property (nonatomic, readonly) NSString* platform;
+@property (nonatomic, strong) NSString* osVersionBuild;
+@property (nonatomic, strong) NSString* platform;
+@property (nonatomic, strong) NSString *executableUUID;
+@property (nonatomic, strong) NSURLConnection *activeConnection;
 
+//NSOperation related
+@property (nonatomic, assign) BOOL finished;
+@property (nonatomic, assign) BOOL executing;
+@property (nonatomic, assign) NSTimeInterval timeoutInterval;
+@property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTaskId;
+@property (nonatomic, strong) NSThread *connectionThread;
+-(void)issueRequest;
+-(void)scheduleTimeout;
+-(void)cancelTimeout;
 
-@property (nonatomic, readonly) NSString *executableUUID;
-
-@property (nonatomic, retain) NSURLConnection *activeConnection;
-
-// Request helper methods.
-
-- (NSString *)udid;
+// Request builder methods.
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url;
 - (void)addSecurityToRequest:(NSMutableURLRequest *)request;
-
-
-// Crypto helper methods.
-
+// Crypto methods.
 - (NSString *)HMAC_SHA256_Base64:(NSString *)data with_key:(NSString *)key;
 - (NSString *)SHA_Base64:(NSString *)raw;
 - (NSString *)encodeBase64WithData:(NSData *)objData;
 - (NSString *)genRandStringLength:(int)len;
 - (NSString *)genRandNumberLength:(int)len;
-- (NSString *)urlEncodeValue:(NSString*)string;
-
+- (NSString *)urlEncodeValue:(NSString*)string; //no longer being used
 - (NSString *)hashFile:(NSString*)filePath;
 - (NSString *)hashExecutable;
 - (NSString *)hashInfoPlist;
-
-//other device info methods
+//Device info
 - (NSString *)genExecutableUUID;
-
+- (NSString *)executable_uuid;
+- (NSString *)ios_version_sanitized;
 
 @end
 
 @implementation AppBladeWebClient
 
-@synthesize osVersionBuild = _osVersionBuild;
-@synthesize platform = _platform;
-
-@synthesize delegate = _delegate;
-@synthesize api = _api;
-@synthesize responseHeaders = _responseHeaders;
-@synthesize userInfo = _userInfo;
-@synthesize executableUUID = _executableUUID;
-
-
-@synthesize activeConnection = _activeConnection;
 
 const int kNonceRandomStringLength = 74;
-
-#pragma mark - Fairplay
-
-/* The encryption info struct and constants are missing from the iPhoneSimulator SDK, but not from the iPhoneOS or
- * Mac OS X SDKs. Since one doesn't ever ship a Simulator binary, we'll just provide the definitions here. */
-#if TARGET_IPHONE_SIMULATOR && !defined(LC_ENCRYPTION_INFO)
-#define LC_ENCRYPTION_INFO 0x21
-struct encryption_info_command {
-uint32_t cmd;
-uint32_t cmdsize;
-uint32_t cryptoff;
-uint32_t cryptsize;
-uint32_t cryptid;
-};
-#endif
-
-int main (int argc, char *argv[]);
-
-static BOOL is_encrypted () {
-    const struct mach_header *header;
-    Dl_info dlinfo;
-    
-    /* Fetch the dlinfo for main() */
-    if (dladdr(main, &dlinfo) == 0 || dlinfo.dli_fbase == NULL) {
-        NSLog(@"Could not find main() symbol (very odd)");
-        return NO;
-    }
-    header = dlinfo.dli_fbase;
-    
-    /* Compute the image size and search for a UUID */
-    struct load_command *cmd = (struct load_command *) (header+1);
-    
-    for (uint32_t i = 0; cmd != NULL && i < header->ncmds; i++) {
-        /* Encryption info segment */
-        if (cmd->cmd == LC_ENCRYPTION_INFO) {
-            struct encryption_info_command *crypt_cmd = (struct encryption_info_command *) cmd;
-            /* Check if binary encryption is enabled */
-            if (crypt_cmd->cryptid < 1) {
-                /* Disabled, probably pirated */
-                return NO;
-            }
-            
-            /* Probably not pirated? */
-            return YES;
-        }
-        
-        cmd = (struct load_command *) ((uint8_t *) cmd + cmd->cmdsize);
-    }
-    
-    /* Encryption info not found */
-    return NO;
-}
-
-// From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
-- (NSString *)osVersionBuild {
-    if(_osVersionBuild == nil){
-        int mib[2] = {CTL_KERN, KERN_OSVERSION};
-        u_int namelen = sizeof(mib) / sizeof(mib[0]);
-        size_t bufferSize = 0;
-        
-        NSString *osBuildVersion = nil;
-        
-        // Get the size for the buffer
-        sysctl(mib, namelen, NULL, &bufferSize, NULL, 0);
-        
-        u_char buildBuffer[bufferSize];
-        int result = sysctl(mib, namelen, buildBuffer, &bufferSize, NULL, 0);
-        
-        if (result >= 0) {
-            osBuildVersion = [[[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding] autorelease];
-        }
-        _osVersionBuild = [osBuildVersion retain];
-    }
-    return _osVersionBuild;
-}
-
-- (NSString *) platform{
-    if(_platform == nil){
-        size_t size;
-        sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-        char *machine = malloc(size);
-        sysctlbyname("hw.machine", machine, &size, NULL, 0);
-        _platform = [[NSString stringWithCString:machine encoding:NSUTF8StringEncoding] retain];
-        free(machine);
-    }
-    return _platform;
-}
 
 #pragma mark - Lifecycle
 
 - (id)initWithDelegate:(id<AppBladeWebClientDelegate>)delegate
 {
     if((self = [super init])) {
-        _delegate = delegate;
+        self.delegate = delegate;
     }
     
     return self;
 }
 
-- (void)dealloc
+
+#pragma mark - NSOperation functions
+- (void)start
 {
-    [_request release];
-    [_receivedData release];
-    [_responseHeaders release];
-    [_userInfo release];
-    [_osVersionBuild release];
-    [_platform release];
-    [_executableUUID release];
-    [_activeConnection release];
-    [super dealloc];
+    if (self.isCancelled) {
+        // If it's already been cancelled, mark the operation as finished and don't start the connection.
+        [self willChangeValueForKey:@"isFinished"];
+        self.finished = YES;
+        [self didChangeValueForKey:@"isFinished"];
+        return;
+    }
+    [self willChangeValueForKey:@"isExecuting"];
+    [NSThread detachNewThreadSelector:@selector(issueRequest) toTarget:self withObject:nil];    // Issue the request. That's all
+}
+
+- (void) issueRequest
+{
+    if((nil != self.request) && !self.isCancelled){
+            ABDebugLog_internal(@"Success_IssueRequest: Starting API call.");
+            self.executing = YES;
+            [self didChangeValueForKey:@"isExecuting"];
+            [self willChangeValueForKey:@"isFinished"];
+            self.finished = NO;
+            [self didChangeValueForKey:@"isFinished"];
+            self.activeConnection = [[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:YES] ;
+        
+        
+        
+        // Keep track of the current thread
+        self.connectionThread = [NSThread currentThread];
+        
+        // setup our timeout callback.
+        if(self.timeoutInterval <= 0)
+            self.timeoutInterval = 60;
+        [self scheduleTimeout];
+        
+        while (!self.finished && !self.isCancelled) {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        }
+        
+        @synchronized(self){
+            
+            // end the background task
+            if (self.backgroundTaskId != UIBackgroundTaskInvalid){
+                [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskId];
+                self.backgroundTaskId = UIBackgroundTaskInvalid;
+            }
+            
+            self.connectionThread = nil;
+            
+            [self willChangeValueForKey:@"isFinished"];
+            [self willChangeValueForKey:@"isExecuting"];
+            
+            self.finished = YES;
+            self.executing = NO;
+            
+            [self didChangeValueForKey:@"isExecuting"];
+            [self didChangeValueForKey:@"isFinished"];
+        }
+        
+    } else {
+        ABErrorLog(@"Error_IssueRequest: API request was cancelled or did not initialize properly. Did not perform an API call.");
+        self.executing = NO;
+        [self didChangeValueForKey:@"isExecuting"];
+        [self willChangeValueForKey:@"isFinished"];
+        self.finished = YES;
+        [self didChangeValueForKey:@"isFinished"];
+    }
+}
+
+-(void) cancel
+{
+    if ([NSThread currentThread] != self.connectionThread && self.connectionThread){
+        [self performSelector:@selector(cancelOperation) onThread:self.connectionThread withObject:nil waitUntilDone:NO];
+    }
+    else{
+        [self cancelOperation];
+    }
+}
+
+-(void) cancelOperation
+{
+    @synchronized(self){
+        if (self.isFinished) return;
+        [super cancel];
+        [self cancelTimeout];
+    }
 }
 
 
-+ (NSString *)buildHostURL:(NSString *)customURLString
+- (BOOL)isConcurrent {
+    return YES;
+}
+
+// Flags
+- (BOOL)isExecuting {
+    return self.executing;
+}
+
+- (BOOL)isFinished {
+    return self.finished;
+}
+
+-(void) scheduleTimeout
 {
-    NSString* preparedHostName = nil;
-    if(customURLString == nil){
-        NSLog(@"No custom URL: defaulting to %@", defaultAppBladeHostURL);
-        preparedHostName = defaultAppBladeHostURL;
+    @synchronized(self){
+        if (self.isCancelled) return;
+        [self cancelTimeout];
+        [self performSelector:@selector(timeout) withObject:nil afterDelay:self.timeoutInterval];
+    }
+}
+
+-(void)cancelTimeout
+{
+    // if we never assigned the connection thread property, we never will have scheduled a timeout
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+}
+
+-(void) timeout
+{
+    if (self.isFinished || self.isCancelled) {
+        return;
+    }
+
+    ABDebugLog_internal(@"AppBlade Timeout for %@", self.request.URL);
+    
+    AppBladeWebClient *selfReference = self;
+    id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [delegateReference appBladeWebClientFailed:selfReference];
+    });
+    [self cancel];
+}
+
+#pragma mark - NSURLConnectionDelegate
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    if (self.isCancelled) {
+        ABDebugLog_internal(@"API Call cancelled. didReceiveResponse, but can't ignore yet.");
+    }
+	// Reset the data object.
+    self.receivedData = [[NSMutableData alloc] init];
+    NSMutableDictionary* headers = [NSMutableDictionary dictionaryWithDictionary:[(NSHTTPURLResponse *)response allHeaderFields]];
+    [headers setObject:[NSNumber numberWithInteger:[(NSHTTPURLResponse *)response statusCode]] forKey:@"statusCode"];
+    self.responseHeaders = headers;
+}
+
+
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)aRequest redirectResponse:(NSURLResponse *)redirectResponse;
+{
+    if (self.isCancelled) {
+        ABDebugLog_internal(@"API Call cancelled. willSendRequest, but can't ignore yet.");
+    }
+    
+    if (redirectResponse) {
+		// Clone and retarget request to new URL.
+        NSMutableURLRequest *redirectRequest = [self.request mutableCopy] ;
+        [redirectRequest setURL: [aRequest URL]];
+        return [redirectRequest copy];
     }
     else
     {
-        //build a request to check if the supplied url is valid
-        NSURL *requestURL = [[[NSURL alloc] initWithString:customURLString] autorelease];
-        if(requestURL == nil)
-        {
-            NSLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
-            preparedHostName = defaultAppBladeHostURL;
+        return self.request;
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+	[self.receivedData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    self.receivedData = nil;
+    
+    if (self.isCancelled) {
+        ABDebugLog_internal(@"API Call cancelled. didFailWithError, but Ignoring.");
+        [self willChangeValueForKey:@"isExecuting"];
+        self.executing = NO;
+        [self didChangeValueForKey:@"isExecuting"];
+        [self willChangeValueForKey:@"isFinished"];
+        self.finished = YES;
+        [self didChangeValueForKey:@"isFinished"];
+        return;
+    }
+    
+    if(error){
+        ABErrorLog(@"AppBlade failed with error: %@ for %@", error.localizedDescription, self.request.URL);
+    }
+    
+    AppBladeWebClient *selfReference = self;
+    id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [delegateReference appBladeWebClientFailed:selfReference];
+    });
+    
+    [self willChangeValueForKey:@"isExecuting"];
+    self.executing = NO;
+    [self didChangeValueForKey:@"isExecuting"];
+    [self willChangeValueForKey:@"isFinished"];
+    self.finished = YES;
+    [self didChangeValueForKey:@"isFinished"];
+
+    self.request = nil;
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    if (self.isCancelled) {
+        ABDebugLog_internal(@"API Call cancelled. connectionDidFinishLoading, but Ignoring.");
+        [self willChangeValueForKey:@"isExecuting"];
+        self.executing = NO;
+        [self didChangeValueForKey:@"isExecuting"];
+        [self willChangeValueForKey:@"isFinished"];
+        self.finished = YES;
+        [self didChangeValueForKey:@"isFinished"];
+        return;
+    }
+    
+    if (self.api == AppBladeWebClientAPI_GenerateToken) {
+        NSError *error = nil;
+        ABDebugLog_internal(@"Received Device Secret Refresh Response from AppBlade: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
+        ABDebugLog_internal(@"Parsed JSON: %@", json);
+        AppBladeWebClient *selfReference = self;
+        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegateReference appBladeWebClient:selfReference receivedGenerateTokenResponse:json];
+        });
+    }
+    else if (self.api == AppBladeWebClientAPI_ConfirmToken) {
+        NSError *error = nil;
+        ABDebugLog_internal(@"Received Device Secret Confirm Response from AppBlade: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
+        self.receivedData = nil;
+        AppBladeWebClient *selfReference = self;
+        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegateReference appBladeWebClient:selfReference receivedConfirmTokenResponse:json];
+        });
+    }
+    else if(self.api == AppBladeWebClientAPI_Permissions) {
+        NSError *error = nil;
+        ABDebugLog_internal(@"Received Permission Check Response from AppBlade: %@", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
+
+        NSDictionary *plist = [NSJSONSerialization JSONObjectWithData:self.receivedData options:nil error:&error];
+        //BOOL showUpdatePrompt = [self.request valueForHTTPHeaderField:@"SHOULD_PROMPT"];
+        
+        
+        if (plist && error == NULL) {
+            AppBladeWebClient *selfReference = self;
+            id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [delegateReference appBladeWebClient:selfReference receivedPermissions:plist];
+            });
+
         }
         else
         {
-            NSLog(@"Found custom URL %@", customURLString);
-            preparedHostName = customURLString;
+            if(error){
+                ABErrorLog(@"Error parsing permisions json: %@", [error debugDescription]);
+            }
+            AppBladeWebClient *selfReference = self;
+            id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid response was received from AppBlade; please contact support"];
+            });
+
+        }
+        
+    }
+    else if (self.api == AppBladeWebClientAPI_ReportCrash) {
+        AppBladeWebClient *selfReference = self;
+        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegateReference appBladeWebClientCrashReported:selfReference];
+        });
+    }
+    else if (self.api == AppBladeWebClientAPI_Feedback) {
+        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
+        BOOL success = (status == 201 || status == 200);
+        AppBladeWebClient *selfReference = self;
+        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegateReference appBladeWebClientSentFeedback:selfReference withSuccess:success];
+        });        
+    }
+    else if (self.api == AppBladeWebClientAPI_Sessions) {
+        //NSString* receivedDataString = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
+        //ABDebugLog_internal(@"Received Response from AppBlade Sessions %@", receivedDataString);
+        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
+        BOOL success = (status == 201 || status == 200);
+        AppBladeWebClient *selfReference = self;
+        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegateReference appBladeWebClientSentSessions:selfReference withSuccess:success];
+        });
+    }
+    else if(self.api == AppBladeWebClientAPI_UpdateCheck) {
+        NSError *error = nil;
+        //NSString* string = [[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding] autorelease];
+        //ABDebugLog_internal(@"Received Update Response from AppBlade: %@", string);
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:_receivedData options:nil error:&error];
+        self.receivedData = nil;
+        
+        if (json && error == NULL) {
+            AppBladeWebClient *selfReference = self;
+            id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [delegateReference appBladeWebClient:selfReference receivedUpdate:json];
+            });
+        }
+        else
+        {
+            if(error){
+                ABErrorLog(@"Error parsing update plist: %@", [error debugDescription]);
+            }
+            AppBladeWebClient *selfReference = self;
+            id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [delegateReference appBladeWebClientFailed:selfReference withErrorString:@"An invalid update response was received from AppBlade; please contact support"];
+            });
         }
     }
-    NSLog(@"built host URL: %@", preparedHostName);
-    return preparedHostName;
+    else
+    {
+        ABErrorLog(@"Unhandled connection with AppBladeWebClientAPI value %d", self.api);
+    }
+    
+    [self willChangeValueForKey:@"isFinished"];
+    self.executing = NO;
+    [self didChangeValueForKey:@"isExecuting"];
+    [self willChangeValueForKey:@"isFinished"];
+    self.finished = YES;
+    [self didChangeValueForKey:@"isFinished"];
+    self.request = nil;
 }
 
 
-#pragma mark - AppBlade API
+#pragma mark - AppBlade API calls
+- (void)refreshToken:(NSString *)tokenToConfirm
+{
+    [self setApi:  AppBladeWebClientAPI_GenerateToken];
+    BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
+    if(hasFairplay){
+        //we're signed by apple, skip tokens. Go straight to delegate.
+        ABDebugLog_internal(@"Binary signed by Apple, skipping token generation");
+    }
+    else
+    {
+        // Create the request.
+        NSString* urlString = [NSString stringWithFormat:tokenGenerateURLFormat, [self.delegate appBladeHost]];
+        NSURL* projectUrl = [NSURL URLWithString:urlString];
+        NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
+        [apiRequest setHTTPMethod:@"GET"];
+        [self addSecurityToRequest:apiRequest];
+        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
+    }
+}
+
+- (void)confirmToken:(NSString *)tokenToConfirm
+{
+    ABDebugLog_internal(@"confirming token (client)");
+    [self setApi: AppBladeWebClientAPI_ConfirmToken];
+    BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
+    if(hasFairplay){
+        //we're signed by apple, skip authentication. Go straight to delegate.
+        ABDebugLog_internal(@"Binary signed by Apple, skipping token confirmation");
+//        [self.delegate appBladeWebClient:self receivedPermissions: ];
+    }
+    else
+    {
+        //NSString *storedSecret = [[AppBlade sharedManager] appBladeDeviceSecret];
+        //ABDebugLog_internal(@"storedSecret %@", storedSecret);
+        ABDebugLog_internal(@"tokenToConfirm %@", tokenToConfirm);            
+
+        if(nil != tokenToConfirm && ![tokenToConfirm isEqualToString:@""]){
+            // Create the request.
+            NSString* urlString = [NSString stringWithFormat:tokenConfirmURLFormat, [self.delegate appBladeHost]];
+            NSURL* projectUrl = [NSURL URLWithString:urlString];
+            NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
+            [apiRequest setHTTPMethod:@"POST"];
+            [self addSecurityToRequest:apiRequest];
+            [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
+            //apiRequest is a retained reference to the _request ivar.
+        }
+        else
+        {
+            ABDebugLog_internal(@"We have no stored secret");
+        }
+    }
+}
+
 
 - (void)checkPermissions
 {
-    _api = AppBladeWebClientAPI_Permissions;
-    BOOL hasFairplay = is_encrypted();
+    [self setApi: AppBladeWebClientAPI_Permissions];
+    BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
     if(hasFairplay){
         //we're signed by apple, skip authentication. Go straight to delegate.
-        NSLog(@"Binary signed by Apple, skipping permissions check");
+        ABDebugLog_internal(@"Binary signed by Apple, skipping permissions check forever");
         NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
-        [_delegate appBladeWebClient:self receivedPermissions:fairplayPermissions];
-    }else{    
+        AppBladeWebClient *selfReference = self;
+        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegateReference appBladeWebClient:selfReference receivedPermissions:fairplayPermissions];
+        });
+    }
+    else
+    {
         // Create the request.
-        NSString* udid = [self udid];
-        NSString* urlString = [NSString stringWithFormat:approvalURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
+        NSString* urlString = [NSString stringWithFormat:authorizeURLFormat, [self.delegate appBladeHost]];
         NSURL* projectUrl = [NSURL URLWithString:urlString];
         NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
-        
-        
         [apiRequest setHTTPMethod:@"GET"];
+        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
         [self addSecurityToRequest:apiRequest];
-
-        // Issue the request.
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:apiRequest delegate:self] autorelease];
+        //apiRequest is a retained reference to the _request ivar.
     }
 }
 
 
+- (void)checkForUpdates
+{
+    BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
+    if(hasFairplay){
+        //we're signed by apple, skip updating. Go straight to delegate.
+        ABDebugLog_internal(@"Binary signed by Apple, skipping update check forever");
+        NSDictionary *fairplayPermissions = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:INT_MAX], @"ttl", nil];
+        AppBladeWebClient *selfReference = self;
+        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegateReference appBladeWebClient:selfReference receivedUpdate:fairplayPermissions];
+        });
+    }
+    else
+    {
+        // Create the request.
+        [self setApi: AppBladeWebClientAPI_UpdateCheck];
+        NSString* urlString = [NSString stringWithFormat:updateURLFormat, [self.delegate appBladeHost]];
+        NSURL* projectUrl = [NSURL URLWithString:urlString];
+        NSMutableURLRequest* apiRequest = [self requestForURL:projectUrl];
+        [apiRequest setHTTPMethod:@"GET"];
+        [apiRequest addValue:@"true" forHTTPHeaderField:@"USE_ANONYMOUS"];
+        [self addSecurityToRequest:apiRequest]; //don't need security, but we could do better with it.
+        [apiRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"]; //we want json
+        ABDebugLog_internal(@"Update call %@", urlString);
+        //apiRequest is a retained reference to the _request ivar.
+    }
+}
 
 - (void)reportCrash:(NSString *)crashReport withParams:(NSDictionary *)paramsDict {
-    _api = AppBladeWebClientAPI_ReportCrash;
+    [self setApi: AppBladeWebClientAPI_ReportCrash];
     @synchronized (self)
     {
-    // Retrieve UDID, used in URL.
-    NSString* udid = [self udid];
-        NSLog(@"udid %@", udid);
     // Build report URL.
-    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
+    NSString* urlCrashReportString = [NSString stringWithFormat:reportCrashURLFormat, [self.delegate appBladeHost]];
     NSURL* urlCrashReport = [NSURL URLWithString:urlCrashReportString];    
         
         NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
@@ -280,11 +570,11 @@ static BOOL is_encrypted () {
             [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:paramsData];
-            NSLog(@"Parsed params! They were included.");
+            ABDebugLog_internal(@"Parsed params! They were included.");
         }
         else
         {
-            NSLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
+            ABErrorLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
         }
     }
     
@@ -295,22 +585,20 @@ static BOOL is_encrypted () {
 
     [self addSecurityToRequest:apiRequest];
 
-    // Issue the request.
-   self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+        //apiRequest is a retained reference to the _request ivar.
     }
 }
 
 - (void)sendFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString *)console params:(NSDictionary*)paramsDict
 {
-    _api = AppBladeWebClientAPI_Feedback;
+    [self setApi: AppBladeWebClientAPI_Feedback];
     
     @synchronized (self)
     {
-        NSString* udid = [self udid];
         NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshot];
         
         // Build report URL.
-        NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [_delegate appBladeHost], [_delegate appBladeProjectID], udid];
+        NSString* reportString = [NSString stringWithFormat:reportFeedbackURLFormat, [self.delegate appBladeHost]];
         NSURL* reportURL = [NSURL URLWithString:reportString];
     
         NSString *multipartBoundary = [NSString stringWithFormat:@"---------------------------%@", [self genRandNumberLength:64]];
@@ -341,11 +629,11 @@ static BOOL is_encrypted () {
                 [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
                 [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
                 [body appendData:paramsData];
-                NSLog(@"Parsed params! They were included.");
+                ABDebugLog_internal(@"Parsed params! They were included.");
             }
             else
             {
-                NSLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
+                ABErrorLog(@"Error parsing params. They weren't included. %@ ",error.debugDescription);
             }
         }
         
@@ -356,16 +644,15 @@ static BOOL is_encrypted () {
         
         [self addSecurityToRequest:apiRequest];
         
-        // Issue the request.
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+        //apiRequest is a retained reference to the _request ivar.
     }
 }
 
 - (void)postSessions:(NSArray *)sessions
 {
-    _api = AppBladeWebClientAPI_Sessions;
+    [self setApi: AppBladeWebClientAPI_Sessions];
     
-    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [_delegate appBladeHost]];
+    NSString* sessionString = [NSString stringWithFormat:sessionURLFormat, [self.delegate appBladeHost]];
     NSURL* sessionURL = [NSURL URLWithString:sessionString];
     
     NSError* error = nil;
@@ -379,12 +666,12 @@ static BOOL is_encrypted () {
         [request setValue:[@"multipart/form-data; boundary=" stringByAppendingString:multipartBoundary] forHTTPHeaderField:@"Content-Type"];
         
         NSMutableData* body = [NSMutableData dataWithData:[[NSString stringWithFormat:@"--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Disposition: form-data; name=\"device_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[[UIDevice currentDevice] uniqueIdentifier] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"device_secret\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[[AppBlade sharedManager] appBladeDeviceSecret] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Disposition: form-data; name=\"project_id\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[[AppBlade sharedManager] appBladeProjectID] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Disposition: form-data; name=\"project_secret\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[[AppBlade sharedManager] appBladeProjectSecret] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[@"Content-Disposition: form-data; name=\"sessions\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -397,62 +684,69 @@ static BOOL is_encrypted () {
         [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
 
         [self addSecurityToRequest:request];
-        self.activeConnection = [[[NSURLConnection alloc] initWithRequest:_request delegate:self] autorelease];
+        //request is a retained reference to the _request ivar.
     }
     else {
-        NSLog(@"Error parsing session data");
+        ABErrorLog(@"Error parsing session data");
         if(error)
-            NSLog(@"Error %@", [error debugDescription]);
+            ABErrorLog(@"Error %@", [error debugDescription]);
         
         //we may have to remove the sessions file in extreme cases
-        
-        [self.delegate appBladeWebClientFailed:self];
-        [_request release];
+        AppBladeWebClient *selfReference = self;
+        id<AppBladeWebClientDelegate> delegateReference = self.delegate;
+        dispatch_async(dispatch_get_main_queue(), ^{
+        [delegateReference appBladeWebClientFailed:selfReference];
+        });
     }
     
 }
 
 
 #pragma mark - Request helper methods.
-
-- (NSString *)udid
+- (NSString *)ios_version_sanitized
 {
-#if TARGET_IPHONE_SIMULATOR
-    return @"0000000000000000000000000000000000000000";
-#else
-    return [[UIDevice currentDevice] uniqueIdentifier];
-#endif
+    NSMutableString *asciiCharacters = [NSMutableString string];
+    for (NSInteger i = 32; i < 127; i++)  {
+        [asciiCharacters appendFormat:@"%c", i];
+    }
+    NSCharacterSet *nonAsciiCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:asciiCharacters] invertedSet];
+    NSString *rawVersionString = [self osVersionBuild];
+    return [[rawVersionString componentsSeparatedByCharactersInSet:nonAsciiCharacterSet] componentsJoinedByString:@""];
 }
+
 
 // Creates a preformatted request with appblade headers.
 - (NSMutableURLRequest *)requestForURL:(NSURL *)url
 {
     // create the request
-    NSMutableURLRequest* apiRequest = [[[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10] autorelease];
+    NSMutableURLRequest* apiRequest = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10];
     
     // set up various headers on the request.
-    [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"bundle_identifier"];
-    [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"bundle_version"];
-    [apiRequest addValue:[self osVersionBuild] forHTTPHeaderField:@"IOS_RELEASE"];
-    [apiRequest addValue:[self platform] forHTTPHeaderField:@"DEVICE_MODEL"];
-    [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"MONIKER"];
-    [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"sdk_version"];
-    #if TARGET_IPHONE_SIMULATOR
-        [apiRequest addValue:@"00000-0000-0000-0000-00000000" forHTTPHeaderField:@"executable_UUID"];
-    #else
-        [apiRequest addValue:[self genExecutableUUID] forHTTPHeaderField:@"executable_UUID"];
-    #endif
-    NSString* bundleHash = [self hashExecutable];
-    NSString* plistHash = [self hashInfoPlist];
-    [apiRequest addValue:bundleHash forHTTPHeaderField:@"bundleexecutable_hash"];
-    [apiRequest addValue:plistHash forHTTPHeaderField:@"infoplist_hash"];
+    [apiRequest addValue:[[NSBundle mainBundle] bundleIdentifier] forHTTPHeaderField:@"X-bundle-identifier"];
+    [apiRequest addValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] forHTTPHeaderField:@"X-bundle-version"];
+    [apiRequest addValue:[self ios_version_sanitized] forHTTPHeaderField:@"X-ios-release"];
+
+    [apiRequest addValue:[self platform] forHTTPHeaderField:@"X-device-model"];
+    [apiRequest addValue:[AppBlade sdkVersion] forHTTPHeaderField:@"X-sdk-version"];
+    if([[[AppBlade sharedManager] appBladeDeviceSecret] length] == 0) {
+        [apiRequest addValue:[[AppBlade sharedManager] appBladeProjectSecret] forHTTPHeaderField:@"X-project-secret"];
+    }
+    [apiRequest addValue:[[AppBlade sharedManager] appBladeDeviceSecret] forHTTPHeaderField:deviceSecretHeaderField]; //@"X-device-secret"
     
-    BOOL hasFairplay = is_encrypted();
-    [apiRequest addValue:hasFairplay ? @"0" : @"1" forHTTPHeaderField:@"fairplay_encrypted"];
+    [apiRequest addValue:[self executable_uuid] forHTTPHeaderField:@"X-executable-UUID"];
+    [apiRequest addValue:[self hashExecutable] forHTTPHeaderField:@"X-bundle-executable-hash"];
+    [apiRequest addValue:[self hashInfoPlist] forHTTPHeaderField:@"X-info-plist-hash"];
     
-    [_request release];
-    _request = [apiRequest retain];
+    BOOL hasFairplay = [[AppBlade sharedManager] isAppStoreBuild];
+    [apiRequest addValue:(hasFairplay ? @"1" : @"0") forHTTPHeaderField:@"X-fairplay-encrypted"];
+    if(!hasFairplay){
+        [apiRequest addValue:[[UIDevice currentDevice] name] forHTTPHeaderField:@"X-moniker"];
+    }
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
+        [apiRequest addValue:[[[UIDevice currentDevice] identifierForVendor] UUIDString] forHTTPHeaderField:@"X-device-vendor-udid"];
+    }
     
+    self.request = apiRequest;
     return apiRequest;
 }
 
@@ -483,7 +777,7 @@ static BOOL is_encrypted () {
     NSMutableString *requestBodyRaw = [NSMutableString stringWithString:[[[request URL] absoluteString] substringFromIndex:[preparedHostName length]]];
     if([request HTTPBody]) {
         // Append "?" and the HTTP body.
-        NSString* dataString = [[[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding] autorelease];
+        NSString* dataString = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding] ;
         [requestBodyRaw appendFormat:@"?%@", dataString];
     }
     
@@ -491,12 +785,11 @@ static BOOL is_encrypted () {
     // Construct the nonce (salt). First part of the salt is the delta of the current time and the stored time the
     // version was issued at, then a colon, then a random string of a certain length.
     NSString* randomString = [self genRandStringLength:kNonceRandomStringLength];
-    NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectIssuedTimestamp], randomString];
-        
-    NSString* ext = [self udid];
+    NSString* nonce = [NSString stringWithFormat:@"%@:%@", [self.delegate appBladeProjectSecret], randomString];
+    NSString* ext = [self.delegate appBladeDeviceSecret];
     
     NSString *requestBodyHash = [self SHA_Base64:requestBodyRaw];
-    NSLog(@"%d", [requestBodyRaw length]);
+    ABDebugLog_internal(@"%d", [requestBodyRaw length]);
     
     // Compose the normalized request body.
     NSMutableString* request_body = [NSMutableString stringWithFormat:@"%@\n%@\n%@\n%@\n%@\n%@\n%@\n",
@@ -507,14 +800,14 @@ static BOOL is_encrypted () {
                                      port,
                                      requestBodyHash,
                                      ext];
-    NSLog(@"%@", requestBodyHash);
-    NSLog(@"%@", [requestBodyRaw substringToIndex:MIN([requestBodyRaw length], 1000)]);
+    ABDebugLog_internal(@"%@", requestBodyHash);
+    ABDebugLog_internal(@"%@", [requestBodyRaw substringToIndex:MIN([requestBodyRaw length], 1000)]);
     
     // Digest the normalized request body.
-    NSString* mac = [self HMAC_SHA256_Base64:request_body with_key:[_delegate appBladeProjectSecret]];
+    NSString* mac = [self HMAC_SHA256_Base64:request_body with_key:[self.delegate appBladeProjectSecret]];
     
     NSMutableString *authHeader = [NSMutableString stringWithString:@"HMAC "];
-    [authHeader appendFormat:@"id=\"%@\"", [_delegate appBladeProjectToken]];
+    [authHeader appendFormat:@"id=\"%@\"", [self.delegate appBladeProjectSecret]];
     [authHeader appendFormat:@", nonce=\"%@\"", nonce];
     [authHeader appendFormat:@", body-hash=\"%@\"", requestBodyHash];
     [authHeader appendFormat:@", ext=\"%@\"", ext];
@@ -525,103 +818,10 @@ static BOOL is_encrypted () {
 }
 
 
-- (NSString *)urlEncodeValue:(NSString *)str
+- (NSString *)urlEncodeValue:(NSString *)str //no longer being used
 {
-    NSString *result = (NSString *) CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)str, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8);
-    return [result autorelease];
-}
-
-#pragma mark - NSURLConnectionDelegate
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{    
-	// Reset the data object.
-	[_receivedData release];
-    _receivedData = [[NSMutableData alloc] init];
-    NSMutableDictionary* headers = [NSMutableDictionary dictionaryWithDictionary:[(NSHTTPURLResponse *)response allHeaderFields]];
-    [headers setObject:[NSNumber numberWithInteger:[(NSHTTPURLResponse *)response statusCode]] forKey:@"statusCode"];
-     self.responseHeaders = headers;
-}
-
-
-- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)aRequest redirectResponse:(NSURLResponse *)redirectResponse;
-{
-    if (redirectResponse) {
-		// Clone and retarget request to new URL.
-        NSMutableURLRequest *r = [[_request mutableCopy] autorelease];
-        [r setURL: [aRequest URL]];
-        return [[r copy] autorelease];
-    }
-    else
-    {
-        return _request;
-    }
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-
-	[_receivedData appendData:data];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    [_receivedData release];
-    _receivedData = nil;
-    
-    NSLog(@"AppBlade failed with error: %@", error.localizedDescription);
-    [_delegate appBladeWebClientFailed:self];
-    
-    [_request release];
-    _request = nil;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    if(_api == AppBladeWebClientAPI_Permissions) {
-        NSError *error = nil;
-        NSPropertyListFormat format = 0;
-        
-        NSString* string = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
-        NSLog(@"Received Response from AppBlade: %@", string);
-                
-        NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:_receivedData options:NSPropertyListImmutable format:&format error:&error];
-        
-        [_receivedData release];
-        _receivedData = nil;
-        
-        if (plist && error == NULL) {
-            [_delegate appBladeWebClient:self receivedPermissions:plist];
-        }
-        else
-        {
-            NSLog(@"Error parsing permisions plist: %@", [error debugDescription]);
-            [_delegate appBladeWebClientFailed:self withErrorString:@"An invalid response was received from AppBlade; please contact support"];
-        }
-        
-    } else if (_api == AppBladeWebClientAPI_ReportCrash) {    
-        [_delegate appBladeWebClientCrashReported:self];
-    
-    }else if (_api == AppBladeWebClientAPI_Feedback) {
-        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
-        BOOL success = (status == 201 || status == 200);
-        [_delegate appBladeWebClientSentFeedback:self withSuccess:success];
-
-    }else if (_api == AppBladeWebClientAPI_Sessions) {
-        NSString* receivedDataString = [[[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding] autorelease];
-        NSLog(@"Received Response from AppBlade Sessions %@", receivedDataString);
-        int status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
-        BOOL success = (status == 201 || status == 200);
-        [_delegate appBladeWebClientSentSessions:self withSuccess:success];
-
-    }
-    else
-    {
-        NSLog(@"Unhandled connection with AppBladeWebClientAPI value %d", _api);
-    }
-    
-    [_request release];
-    _request = nil;
+    NSString *result = (__bridge NSString *)(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)str, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8));
+    return result ;
 }
 
 #pragma mark - Crypto utilities
@@ -631,7 +831,7 @@ static BOOL is_encrypted () {
 {
     unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA256, [key UTF8String], [key lengthOfBytesUsingEncoding:NSASCIIStringEncoding], [data UTF8String], [data lengthOfBytesUsingEncoding:NSASCIIStringEncoding], cHMAC);
-    NSData *HMAC = [[[NSData alloc] initWithBytes:cHMAC length:sizeof(cHMAC)] autorelease];
+    NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC length:sizeof(cHMAC)];
     return [self encodeBase64WithData:HMAC];
 }
 
@@ -639,7 +839,7 @@ static BOOL is_encrypted () {
 {
     unsigned char hashedChars[CC_SHA256_DIGEST_LENGTH];
     CC_SHA256([raw UTF8String], [raw lengthOfBytesUsingEncoding:NSASCIIStringEncoding], hashedChars);
-    NSData *toEncode = [[[NSData alloc] initWithBytes:hashedChars length:sizeof(hashedChars)] autorelease];
+    NSData *toEncode = [[NSData alloc] initWithBytes:hashedChars length:sizeof(hashedChars)];
     return [self encodeBase64WithData:toEncode];
 }
 
@@ -697,7 +897,7 @@ static BOOL is_encrypted () {
     for (int i=0; i<len; i++) {
         [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random()%[letters length]] ];
     }      
-    return [[randomString copy] autorelease];
+    return [randomString copy];
 }
 
 // Derived from http://stackoverflow.com/q/2633801/2633948#2633948
@@ -708,23 +908,22 @@ static BOOL is_encrypted () {
     for (int i=0; i<len; i++) {
         [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random()%[letters length]] ];
     }
-    return [[randomString copy] autorelease];
+    return [randomString copy];
 }
 
 #pragma mark - MD5 Hashing
 
 - (NSString*)hashFile:(NSString *)filePath
 {
-    NSString* returnString = nil;
-    CFStringRef executableFileMD5Hash = 
-    FileMD5HashCreateWithPath((CFStringRef)filePath, 
-                              FileHashDefaultChunkSizeForReadingData);
-    if (executableFileMD5Hash) {
-        returnString = [(NSString *)executableFileMD5Hash retain];
-        CFRelease(executableFileMD5Hash);
-    }
     
-    return [returnString autorelease];
+    NSString* returnString = nil;
+    CFStringRef executableFileMD5Hash =
+    FileMD5HashCreateWithPath((__bridge CFStringRef)(filePath), FileHashDefaultChunkSizeForReadingData);
+    if (executableFileMD5Hash) {
+        returnString = (__bridge NSString *)(executableFileMD5Hash);
+         CFRelease(executableFileMD5Hash);
+    }
+    return returnString ;
 }
 
 - (NSString*)hashExecutable
@@ -740,21 +939,80 @@ static BOOL is_encrypted () {
 }
 
 
-#pragma mark Executable UUID
-//_mh_execute_header is declared in mach-o/ldsyms.h (and not an iVar as you might have thought). 
+#pragma mark - receivedStatusCode
+-(int)getReceivedStatusCode
+{
+    int status = 500;
+    if(self.responseHeaders){
+       status = [[self.responseHeaders valueForKey:@"statusCode"] intValue];
+    }
+    return status;
+}
+
+#pragma mark - sentDeviceSecret
+
+-(NSString *)sentDeviceSecret {
+    if(self.request){
+        _sentDeviceSecret = [self.request valueForHTTPHeaderField:deviceSecretHeaderField];
+    }
+    return _sentDeviceSecret;
+}
+
+#pragma mark buildHostURL
+
++ (NSString *)buildHostURL:(NSString *)customURLString
+{
+    NSString* preparedHostName = nil;
+    if(customURLString == nil){
+        ABDebugLog_internal(@"No custom URL: defaulting to %@", defaultAppBladeHostURL);
+        preparedHostName = defaultAppBladeHostURL;
+    }
+    else
+    {
+        //build a request to check if the supplied url is valid
+        NSURL *requestURL = [[NSURL alloc] initWithString:customURLString];
+        if(requestURL == nil)
+        {
+            ABErrorLog(@"Could not parse given URL: %@ defaulting to %@", customURLString, defaultAppBladeHostURL);
+            preparedHostName = defaultAppBladeHostURL;
+        }
+        else
+        {
+            ABDebugLog_internal(@"Found custom URL %@", customURLString);
+            preparedHostName = customURLString;
+        }
+    }
+    ABDebugLog_internal(@"built host URL: %@", preparedHostName);
+    return preparedHostName;
+}
+
+#pragma mark ExecutableUUID
+
+
+- (NSString *)executable_uuid
+{
+#if TARGET_IPHONE_SIMULATOR
+    return @"00000-0000-0000-0000-00000000";
+#else
+    return [self genExecutableUUID];
+#endif
+}
+
+
+//_mh_execute_header is declared in mach-o/ldsyms.h (and not an iVar as you might have thought).
 -(NSString *)genExecutableUUID //will break in simulator, please be careful
 {
-  if(_executableUUID == nil){
+    if(_executableUUID == nil){
         const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
         for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx) {
             if (((const struct load_command *)command)->cmd == LC_UUID) {
                 command += sizeof(struct load_command);
-                _executableUUID = [[NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
-                        command[0], command[1], command[2], command[3],
-                        command[4], command[5],
-                        command[6], command[7],
-                        command[8], command[9],
-                        command[10], command[11], command[12], command[13], command[14], command[15]] retain];
+                _executableUUID = [NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+                                    command[0], command[1], command[2], command[3],
+                                    command[4], command[5],
+                                    command[6], command[7],
+                                    command[8], command[9],
+                                    command[10], command[11], command[12], command[13], command[14], command[15]];
                 break;
             }
             else
@@ -765,6 +1023,46 @@ static BOOL is_encrypted () {
     }
     return _executableUUID;
 }
+
+
+
+#pragma mark - Fairplay
+
+// From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
+- (NSString *)osVersionBuild {
+    if(_osVersionBuild == nil){
+        int mib[2] = {CTL_KERN, KERN_OSVERSION};
+        u_int namelen = sizeof(mib) / sizeof(mib[0]);
+        size_t bufferSize = 0;
+        
+        NSString *osBuildVersion = nil;
+        
+        // Get the size for the buffer
+        sysctl(mib, namelen, NULL, &bufferSize, NULL, 0);
+        
+        u_char buildBuffer[bufferSize];
+        int result = sysctl(mib, namelen, buildBuffer, &bufferSize, NULL, 0);
+        
+        if (result >= 0) {
+            osBuildVersion = [[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding];
+        }
+        _osVersionBuild = osBuildVersion;
+    }
+    return _osVersionBuild;
+}
+
+- (NSString *) platform{
+    if(_platform == nil){
+        size_t size;
+        sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+        char *machine = malloc(size);
+        sysctlbyname("hw.machine", machine, &size, NULL, 0);
+        self.platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+        free(machine);
+    }
+    return _platform;
+}
+
 
 
 @end

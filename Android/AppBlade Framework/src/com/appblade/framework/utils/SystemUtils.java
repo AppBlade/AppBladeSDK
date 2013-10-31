@@ -44,8 +44,7 @@ public class SystemUtils {
 	 */
 	public static String getBestUniqueDeviceID(ContentResolver cr) 
 	{
-		cr = null;
-		String toRet = Build.FINGERPRINT.replace("/", "__").replace(".", "-").replace(":", "-"); //make it so the fingerprint doesn't break routes
+		String toRet = getReadableFINGERPRINT();
 		if(cr != null)
 		{
 			String android_id = Settings.Secure.getString(cr, Settings.Secure.ANDROID_ID); ; //Not factory reset safe. But will hold up across boots and updates, might be "android_id"
@@ -105,7 +104,7 @@ public class SystemUtils {
 				toRet = StringUtils.sha256FromInputStream(streamToHash);
 			}
 		} catch (IOException e) {
-			Log.d(AppBlade.LogTag, "Error reading "+filename);
+			Log.v(AppBlade.LogTag, "Error reading "+filename);
 			e.printStackTrace();
 		}
 		
@@ -113,6 +112,17 @@ public class SystemUtils {
 
 	}
 
+
+	/**
+	 * A hash representing the manifest file included in the APK, the value will change when the file does and not at any other time.
+	 * @param pi
+	 * @return The (SHA256) of AndroidManifest.xml, the file representing all settings, permissions, and version values in the apk.
+	 */
+	public static String hashedManifestFileUuid(PackageInfo pi){
+		return hashedUuidOfPackageFile(pi, "AndroidManifest.xml");  //use this instead of META-INF/MANIFEST.MF, not enough data there.
+	}
+
+	
 	/**
 	 * A hash representing all classes in the APK, the value will change when the classes do and not at any other time.
 	 * @param pi
@@ -145,11 +155,33 @@ public class SystemUtils {
 				toRet = hashedUuidOfPackageFile(pi, "META-INF/CERT.RSA");				
 			}
 			if(toRet == null){
-				toRet = "signed";
+				toRet = StringUtils.sha256OfNull; //hash of null
 			}
 		} 
 		return toRet;
 	}
+
+	/**
+	 * Grabs the fingerprint of the device and swaps out the non-web-friendly characters to match the appblade slug
+	 * @return Build.FINGERPRINT without the "/"s, "."s, and ":"s (swapped with "__", "-", and "-" respectively).
+	 */
+	public static String getReadableFINGERPRINT() {
+		return Build.FINGERPRINT.replace("/", "__").replace(".", "-").replace(":", "-"); //make it so the fingerprint doesn't break routes
+	}
+	
+	/**
+	 * Formats packages into a File-system-readable apk name. 
+	 * @param packageName a package name, either from packageInfo or from an AppBlade server response. (com.appblade.example)
+	 * @return The formatted package name with the periods replaced by underscores (com_appblade_example)
+	 */
+	public static String getReadableApkFileNameFromPackageName(String packageName) {
+		String identifierSanitized = packageName.replaceAll("\\.", "_");
+		return String.format("%s%s", identifierSanitized, ".apk");
+	}
+	
+
+	
+
 
 	
 }

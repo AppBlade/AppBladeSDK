@@ -1,5 +1,6 @@
 package com.appblade.framework.utils;
 
+
 import org.apache.http.HttpVersion;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -48,8 +49,8 @@ public class HttpClientProvider {
 		schReg.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
 		ClientConnectionManager conMgr = new ThreadSafeClientConnManager(params, schReg);
 
-		DefaultHttpClient client = new DefaultHttpClient(conMgr, params);
 		
+		DefaultHttpClient client = new DefaultHttpClient(conMgr, params);		
 		return client;
 	}
 
