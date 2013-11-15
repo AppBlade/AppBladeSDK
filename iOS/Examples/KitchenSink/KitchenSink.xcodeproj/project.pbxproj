@@ -338,7 +338,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0460;
-				ORGANIZATIONNAME = "Raizlabs Corporation";
+				ORGANIZATIONNAME = "AppBlade";
 			};
 			buildConfigurationList = 311A21A61794DC1B007BF879 /* Build configuration list for PBXProject "KitchenSink" */;
 			compatibilityVersion = "Xcode 3.2";

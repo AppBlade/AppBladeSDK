@@ -875,8 +875,8 @@
 		31305FBE1794A146006DF03A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
-				ORGANIZATIONNAME = Raizlabs;
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "AppBlade";
 			};
 			buildConfigurationList = 31305FC11794A146006DF03A /* Build configuration list for PBXProject "AppBlade" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1197,7 +1197,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1243,7 +1243,6 @@
 		3130609D1794A2A3006DF03A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_EMPTY_BODY = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
@@ -1279,7 +1278,6 @@
 		3130609E1794A2A3006DF03A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_EMPTY_BODY = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
@@ -1449,7 +1447,6 @@
 		31873223179DE8C200E0D187 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_EMPTY_BODY = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
@@ -1485,7 +1482,6 @@
 		31873224179DE8C200E0D187 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_EMPTY_BODY = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
