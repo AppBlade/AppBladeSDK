@@ -87,7 +87,7 @@
 
 - (void)throwCustomNSException:(NSString *)reason
 {
-    NSException *e = [NSException exceptionWithName:@"TestException" reason:reason userInfo:nil];
+    NSException *e = [NSException exceptionWithName:@"CustomNSException" reason:reason userInfo:nil];
     @throw e;
 }
 

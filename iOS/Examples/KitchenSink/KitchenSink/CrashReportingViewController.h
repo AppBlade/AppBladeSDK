@@ -21,7 +21,7 @@
 - (void)sigpipe;
 - (void)sigsegv;
 - (void)throwDefaultNSException;
-- (void)throwCustomTestNSException:(NSString *)reason;
+- (void)throwCustomNSException:(NSString *)reason;
 
 
 @end
