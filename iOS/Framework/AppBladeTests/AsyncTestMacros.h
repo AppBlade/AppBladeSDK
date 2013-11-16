@@ -3,7 +3,7 @@
 //  AppBlade
 //
 //  Created by AndrewTremblay on 9/4/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
+//  Copyright (c) 2013 AppBlade. All rights reserved.
 //
 
 #ifndef AppBlade_AsyncTestMacros_h

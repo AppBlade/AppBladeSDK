@@ -3,7 +3,7 @@
 //  KitchenSink
 //
 //  Created by AndrewTremblay on 9/11/13.
-//  Copyright (c) 2013 Raizlabs Corporation. All rights reserved.
+//  Copyright (c) 2013 AppBlade Corporation. All rights reserved.
 //
 
 #import "BaseFeatureViewController.h"

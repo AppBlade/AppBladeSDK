@@ -4,7 +4,7 @@
  @discussion See @link APBWebOperationDelegate @/link and @link APBWebOperation @/link for more information.
  @framework AppBlade
  @author Created by AndrewTremblay on 7/31/13.
- @copyright Raizlabs 2013. All rights reserved.
+ @copyright AppBlade 2013. All rights reserved.
 
  
  */

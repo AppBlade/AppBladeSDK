@@ -3,7 +3,7 @@
 //  AppBlade
 //
 //  Created by AndrewTremblay on 9/13/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
+//  Copyright (c) 2013 AppBlade. All rights reserved.
 //
 
 #import "NSDate+MockData.h"

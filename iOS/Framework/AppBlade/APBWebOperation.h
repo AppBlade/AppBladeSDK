@@ -4,7 +4,7 @@
  @discussion See @link APBWebOperationDelegate @/link and @link APBWebOperation @/link for more information.
  @framework AppBlade
  @author Created by Craig Spitzkoff on 6/18/11. Maintained AndrewTremblay on 7/16/13.
- @copyright Raizlabs 2013. All rights reserved.
+ @copyright AppBlade 2013. All rights reserved.
  
  @seealso //apple_ref/occ/cl/APBWebOperation(PrivateMethods) APBWebOperation (PrivateMethods)
  */

@@ -3,7 +3,7 @@
 //  AppBlade
 //
 //  Created by AndrewTremblay on 8/29/13.
-//  Copyright (c) 2013 Raizlabs. All rights reserved.
+//  Copyright (c) 2013 AppBlade. All rights reserved.
 //
 
 #import "APBTokenManager.h"

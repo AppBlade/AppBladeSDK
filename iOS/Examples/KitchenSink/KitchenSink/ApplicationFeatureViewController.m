@@ -3,7 +3,7 @@
 //  KitchenSink
 //
 //  Created by AppBlade on 7/15/13.
-//  Copyright (c) 2013 Raizlabs Corporation. All rights reserved.
+//  Copyright (c) 2013 AppBlade Corporation. All rights reserved.
 //
 
 #import "ApplicationFeatureViewController.h"

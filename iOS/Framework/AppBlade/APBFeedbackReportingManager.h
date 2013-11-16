@@ -3,7 +3,7 @@
  @abstract  Holds all methods pertaining to custom parameters, which affect the subsequent web calls.
  @framework AppBlade
  @author AndrewTremblay on 7/16/13.
- @copyright Raizlabs 2013. All rights reserved.
+ @copyright AppBlade 2013. All rights reserved.
  */
 
 
