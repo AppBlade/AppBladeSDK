@@ -3,7 +3,7 @@
 //  AppBlade
 //
 //  Created by AndrewTremblay on 6/5/13.
-//  Copyright (c) 2013 Raizlabs Corporation. All rights reserved.
+//  Copyright (c) 2013 AppBlade Corporation. All rights reserved.
 //
 
 #ifndef AppBlade_AppBladeLogging_h

@@ -3,7 +3,7 @@
 //  AppBlade
 //
 //  Created by Michele Titolo on 5/15/12.
-//  Copyright (c) 2012 Raizlabs Corporation. All rights reserved.
+//  Copyright (c) 2012 AppBlade Corporation. All rights reserved.
 //
 
 #import "APBFeedbackBackgroundView.h"

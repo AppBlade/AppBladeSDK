@@ -205,7 +205,7 @@
 		313060821794A2A3006DF03A /* AppBlade-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppBlade-Prefix.pch"; sourceTree = "<group>"; };
 		313060831794A2A3006DF03A /* AppBlade.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppBlade.h; sourceTree = "<group>"; };
 		313060851794A2A3006DF03A /* AppBlade.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppBlade.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		313060A21794A356006DF03A /* AppBladeLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeLogging.h; sourceTree = "<group>"; };
+		313060A21794A356006DF03A /* AppBladeLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppBladeLogging.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		313060A31794A356006DF03A /* APBSimpleKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBSimpleKeychain.h; sourceTree = "<group>"; };
 		313060A41794A356006DF03A /* APBSimpleKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBSimpleKeychain.m; sourceTree = "<group>"; };
 		313060A51794A356006DF03A /* APBWebOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBWebOperation.h; sourceTree = "<group>"; };
@@ -265,8 +265,8 @@
 		313061271794A356006DF03A /* PLCrashSignalHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PLCrashSignalHandler.m; path = Source/PLCrashSignalHandler.m; sourceTree = "<group>"; };
 		313061291794A356006DF03A /* PLCrashSysctl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = PLCrashSysctl.c; path = Source/PLCrashSysctl.c; sourceTree = "<group>"; };
 		3130612A1794A356006DF03A /* PLCrashSysctl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLCrashSysctl.h; path = Source/PLCrashSysctl.h; sourceTree = "<group>"; };
-		313061F81794A357006DF03A /* APBFeedbackBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBFeedbackBackgroundView.h; sourceTree = "<group>"; };
-		313061F91794A357006DF03A /* APBFeedbackBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBFeedbackBackgroundView.m; sourceTree = "<group>"; };
+		313061F81794A357006DF03A /* APBFeedbackBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = APBFeedbackBackgroundView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		313061F91794A357006DF03A /* APBFeedbackBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = APBFeedbackBackgroundView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		313061FA1794A357006DF03A /* APBFeedbackDialogue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBFeedbackDialogue.h; sourceTree = "<group>"; };
 		313061FB1794A357006DF03A /* APBFeedbackDialogue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBFeedbackDialogue.m; sourceTree = "<group>"; };
 		313061FC1794A357006DF03A /* APBFileMD5Hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = APBFileMD5Hash.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
@@ -876,7 +876,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0500;
-				ORGANIZATIONNAME = "AppBlade";
+				ORGANIZATIONNAME = AppBlade;
 			};
 			buildConfigurationList = 31305FC11794A146006DF03A /* Build configuration list for PBXProject "AppBlade" */;
 			compatibilityVersion = "Xcode 3.2";
