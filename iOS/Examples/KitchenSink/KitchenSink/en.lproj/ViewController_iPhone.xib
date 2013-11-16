@@ -92,7 +92,7 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIContentStretch">{{0.25, 0.25}, {0.49999999999999961, 0.49999999999999961}}</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<object class="NSCustomResource" key="IBUIImage" id="786310308">
+						<object class="NSCustomResource" key="IBUIImage" id="418724026">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">card-bg.png</string>
 						</object>
@@ -139,7 +139,7 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIContentStretch">{{0.25, 0.25}, {0.49999999999999961, 0.49999999999999961}}</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<reference key="IBUIImage" ref="786310308"/>
+						<reference key="IBUIImage" ref="418724026"/>
 					</object>
 					<object class="IBUILabel" id="489608260">
 						<reference key="NSNextResponder" ref="825696477"/>
@@ -165,7 +165,7 @@
 							<int key="type">2</int>
 							<double key="pointSize">17</double>
 						</object>
-						<object class="NSFont" key="IBUIFont" id="417481930">
+						<object class="NSFont" key="IBUIFont" id="236187242">
 							<string key="NSName">HelveticaNeue-Bold</string>
 							<double key="NSSize">17</double>
 							<int key="NSfFlags">16</int>
@@ -196,7 +196,7 @@
 							<int key="type">1</int>
 							<double key="pointSize">13</double>
 						</object>
-						<object class="NSFont" key="IBUIFont" id="968808462">
+						<object class="NSFont" key="IBUIFont" id="442064335">
 							<string key="NSName">HelveticaNeue</string>
 							<double key="NSSize">13</double>
 							<int key="NSfFlags">16</int>
@@ -222,7 +222,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">2</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">285</double>
 					</object>
@@ -246,11 +246,11 @@
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
 						</object>
-						<object class="NSCustomResource" key="IBUIHighlightedBackgroundImage" id="197240446">
+						<object class="NSCustomResource" key="IBUIHighlightedBackgroundImage" id="1059083545">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">card-btn-pressed.png</string>
 						</object>
-						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="355571351">
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="38401355">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">card-btn-normal.png</string>
 						</object>
@@ -292,7 +292,7 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIContentStretch">{{0.25, 0.25}, {0.49999999999999961, 0.49999999999999961}}</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<reference key="IBUIImage" ref="786310308"/>
+						<reference key="IBUIImage" ref="418724026"/>
 					</object>
 					<object class="IBUILabel" id="227544457">
 						<reference key="NSNextResponder" ref="355138232"/>
@@ -312,7 +312,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUITextAlignment">1</int>
 						<reference key="IBUIFontDescription" ref="328294757"/>
-						<reference key="IBUIFont" ref="417481930"/>
+						<reference key="IBUIFont" ref="236187242"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 					</object>
 					<object class="IBUILabel" id="365963410">
@@ -333,7 +333,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">290</double>
 					</object>
@@ -354,8 +354,8 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">End Session</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<reference key="IBUIFontDescription" ref="441878619"/>
 						<reference key="IBUIFont" ref="5978146"/>
 					</object>
@@ -377,8 +377,8 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">Start Session</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<reference key="IBUIFontDescription" ref="441878619"/>
 						<reference key="IBUIFont" ref="5978146"/>
 					</object>
@@ -404,7 +404,7 @@
 						<int key="IBUINumberOfLines">0</int>
 						<int key="IBUITextAlignment">1</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">290</double>
 					</object>
@@ -434,7 +434,7 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIContentStretch">{{0.25, 0.25}, {0.49999999999999961, 0.49999999999999961}}</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<reference key="IBUIImage" ref="786310308"/>
+						<reference key="IBUIImage" ref="418724026"/>
 					</object>
 					<object class="IBUILabel" id="285825748">
 						<reference key="NSNextResponder" ref="634589926"/>
@@ -454,7 +454,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUITextAlignment">1</int>
 						<reference key="IBUIFontDescription" ref="328294757"/>
-						<reference key="IBUIFont" ref="417481930"/>
+						<reference key="IBUIFont" ref="236187242"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 					</object>
 					<object class="IBUILabel" id="127729244">
@@ -475,7 +475,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">275</double>
 					</object>
@@ -496,8 +496,8 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">Clear All</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<reference key="IBUIFontDescription" ref="441878619"/>
 						<reference key="IBUIFont" ref="5978146"/>
 					</object>
@@ -519,8 +519,8 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">Set New Parameter</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<reference key="IBUIFontDescription" ref="441878619"/>
 						<reference key="IBUIFont" ref="5978146"/>
 					</object>
@@ -542,8 +542,8 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">See All Current Parameters</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<reference key="IBUIFontDescription" ref="441878619"/>
 						<reference key="IBUIFont" ref="5978146"/>
 					</object>
@@ -573,7 +573,7 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIContentStretch">{{0.25, 0.25}, {0.49999999999999961, 0.49999999999999961}}</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<reference key="IBUIImage" ref="786310308"/>
+						<reference key="IBUIImage" ref="418724026"/>
 					</object>
 					<object class="IBUILabel" id="539130563">
 						<reference key="NSNextResponder" ref="1001423630"/>
@@ -593,7 +593,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUITextAlignment">1</int>
 						<reference key="IBUIFontDescription" ref="328294757"/>
-						<reference key="IBUIFont" ref="417481930"/>
+						<reference key="IBUIFont" ref="236187242"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 					</object>
 					<object class="IBUILabel" id="488916501">
@@ -614,7 +614,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">290</double>
 					</object>
@@ -639,7 +639,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">290</double>
 					</object>
@@ -661,7 +661,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">2</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">165</double>
 					</object>
@@ -682,8 +682,8 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">Show Form</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<reference key="IBUIFontDescription" ref="441878619"/>
 						<reference key="IBUIFont" ref="5978146"/>
 					</object>
@@ -713,7 +713,7 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIContentStretch">{{0.25, 0.25}, {0.49999999999999961, 0.49999999999999961}}</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<reference key="IBUIImage" ref="786310308"/>
+						<reference key="IBUIImage" ref="418724026"/>
 					</object>
 					<object class="IBUILabel" id="447372950">
 						<reference key="NSNextResponder" ref="682771292"/>
@@ -733,7 +733,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUITextAlignment">1</int>
 						<reference key="IBUIFontDescription" ref="328294757"/>
-						<reference key="IBUIFont" ref="417481930"/>
+						<reference key="IBUIFont" ref="236187242"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 					</object>
 					<object class="IBUILabel" id="714394663">
@@ -754,7 +754,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">290</double>
 					</object>
@@ -776,7 +776,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">2</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">290</double>
 					</object>
@@ -795,13 +795,13 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">SIGABRT</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="617547939">
 							<int key="type">2</int>
 							<double key="pointSize">15</double>
 						</object>
-						<object class="NSFont" key="IBUIFont" id="92105959">
+						<object class="NSFont" key="IBUIFont" id="512885272">
 							<string key="NSName">HelveticaNeue-Bold</string>
 							<double key="NSSize">15</double>
 							<int key="NSfFlags">16</int>
@@ -822,10 +822,10 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">Custom NS</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<reference key="IBUIFontDescription" ref="617547939"/>
-						<reference key="IBUIFont" ref="92105959"/>
+						<reference key="IBUIFont" ref="512885272"/>
 					</object>
 					<object class="IBUIButton" id="333386553">
 						<reference key="NSNextResponder" ref="682771292"/>
@@ -841,10 +841,10 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">SIGSEGV</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<reference key="IBUIFontDescription" ref="617547939"/>
-						<reference key="IBUIFont" ref="92105959"/>
+						<reference key="IBUIFont" ref="512885272"/>
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 199}</string>
@@ -872,7 +872,7 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIContentStretch">{{0.25, 0.25}, {0.49999999999999961, 0.49999999999999961}}</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<reference key="IBUIImage" ref="786310308"/>
+						<reference key="IBUIImage" ref="418724026"/>
 					</object>
 					<object class="IBUILabel" id="151647905">
 						<reference key="NSNextResponder" ref="461098431"/>
@@ -895,7 +895,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUITextAlignment">1</int>
 						<reference key="IBUIFontDescription" ref="328294757"/>
-						<reference key="IBUIFont" ref="417481930"/>
+						<reference key="IBUIFont" ref="236187242"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 					</object>
 					<object class="IBUILabel" id="892946015">
@@ -916,7 +916,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">0</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">281</double>
 					</object>
@@ -938,7 +938,7 @@
 						<int key="IBUIBaselineAdjustment">0</int>
 						<int key="IBUINumberOfLines">3</int>
 						<reference key="IBUIFontDescription" ref="303600959"/>
-						<reference key="IBUIFont" ref="968808462"/>
+						<reference key="IBUIFont" ref="442064335"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<double key="preferredMaxLayoutWidth">281</double>
 					</object>
@@ -964,8 +964,8 @@
 						<reference key="IBUIHighlightedTitleColor" ref="405509049"/>
 						<string key="IBUINormalTitle">Check Now</string>
 						<reference key="IBUINormalTitleShadowColor" ref="773840763"/>
-						<reference key="IBUIHighlightedBackgroundImage" ref="197240446"/>
-						<reference key="IBUINormalBackgroundImage" ref="355571351"/>
+						<reference key="IBUIHighlightedBackgroundImage" ref="1059083545"/>
+						<reference key="IBUINormalBackgroundImage" ref="38401355"/>
 						<reference key="IBUIFontDescription" ref="441878619"/>
 						<reference key="IBUIFont" ref="5978146"/>
 					</object>
