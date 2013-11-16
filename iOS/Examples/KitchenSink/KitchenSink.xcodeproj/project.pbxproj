@@ -41,6 +41,10 @@
 		3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* appblade_status_bar_icon.png */; };
 		3148A16E1798457F000332D4 /* appblade_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16D1798457F000332D4 /* appblade_icon.png */; };
 		3148A172179845BB000332D4 /* appblade_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A171179845BB000332D4 /* appblade_icon@2x.png */; };
+		3169896F1837226B001A7210 /* Launch-Image-4in-AppBlade.png in Resources */ = {isa = PBXBuildFile; fileRef = 3169896B1837226B001A7210 /* Launch-Image-4in-AppBlade.png */; };
+		316989701837226B001A7210 /* Launch-Image-Retina-AppBlade.png in Resources */ = {isa = PBXBuildFile; fileRef = 3169896C1837226B001A7210 /* Launch-Image-Retina-AppBlade.png */; };
+		316989711837226B001A7210 /* Settings-Icon-AppBlade.png in Resources */ = {isa = PBXBuildFile; fileRef = 3169896D1837226B001A7210 /* Settings-Icon-AppBlade.png */; };
+		316989721837226B001A7210 /* Spotlight-Icon-AppBlade.png in Resources */ = {isa = PBXBuildFile; fileRef = 3169896E1837226B001A7210 /* Spotlight-Icon-AppBlade.png */; };
 		31BB3C6717E3450F007B8B28 /* APBDeviceInfoManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 31BB3C6617E3450F007B8B28 /* APBDeviceInfoManagerTest.m */; };
 		31BB3C6E17E345C9007B8B28 /* APBApplicationInfoManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 31BB3C6D17E345C9007B8B28 /* APBApplicationInfoManagerTest.m */; };
 		31D5360717D750350011B9A1 /* CrashReportingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5360517D750350011B9A1 /* CrashReportingViewController.m */; };
@@ -151,6 +155,10 @@
 		3148A16817984505000332D4 /* appblade_status_bar_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appblade_status_bar_icon.png; sourceTree = "<group>"; };
 		3148A16D1798457F000332D4 /* appblade_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appblade_icon.png; path = ../appblade_icon.png; sourceTree = "<group>"; };
 		3148A171179845BB000332D4 /* appblade_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appblade_icon@2x.png"; path = "../appblade_icon@2x.png"; sourceTree = "<group>"; };
+		3169896B1837226B001A7210 /* Launch-Image-4in-AppBlade.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Launch-Image-4in-AppBlade.png"; sourceTree = "<group>"; };
+		3169896C1837226B001A7210 /* Launch-Image-Retina-AppBlade.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Launch-Image-Retina-AppBlade.png"; sourceTree = "<group>"; };
+		3169896D1837226B001A7210 /* Settings-Icon-AppBlade.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Settings-Icon-AppBlade.png"; sourceTree = "<group>"; };
+		3169896E1837226B001A7210 /* Spotlight-Icon-AppBlade.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Spotlight-Icon-AppBlade.png"; sourceTree = "<group>"; };
 		31BB3C6617E3450F007B8B28 /* APBDeviceInfoManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = APBDeviceInfoManagerTest.m; path = ../../../Framework/AppBladeTests/APBDeviceInfoManagerTest.m; sourceTree = "<group>"; };
 		31BB3C6D17E345C9007B8B28 /* APBApplicationInfoManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = APBApplicationInfoManagerTest.m; path = ../../../Framework/AppBladeTests/APBApplicationInfoManagerTest.m; sourceTree = "<group>"; };
 		31D5360417D750350011B9A1 /* CrashReportingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReportingViewController.h; sourceTree = "<group>"; };
@@ -333,16 +341,28 @@
 		3148A16117983D52000332D4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				316989651837224F001A7210 /* Icons & Launch Images */,
 				312E175817D6DC0C003AD6DD /* card-btn-normal@2x.png */,
 				312E175917D6DC0C003AD6DD /* card-btn-pressed@2x.png */,
 				312E174C17D6BC64003AD6DD /* card-bg@2x.png */,
-				3148A16D1798457F000332D4 /* appblade_icon.png */,
-				3148A171179845BB000332D4 /* appblade_icon@2x.png */,
 				312E175C17D6DF1A003AD6DD /* appblade_logo_white@2x.png */,
 				3148A16717984505000332D4 /* appblade_logo_red@2x.png */,
 				3148A16817984505000332D4 /* appblade_status_bar_icon.png */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		316989651837224F001A7210 /* Icons & Launch Images */ = {
+			isa = PBXGroup;
+			children = (
+				3148A16D1798457F000332D4 /* appblade_icon.png */,
+				3148A171179845BB000332D4 /* appblade_icon@2x.png */,
+				3169896B1837226B001A7210 /* Launch-Image-4in-AppBlade.png */,
+				3169896C1837226B001A7210 /* Launch-Image-Retina-AppBlade.png */,
+				3169896D1837226B001A7210 /* Settings-Icon-AppBlade.png */,
+				3169896E1837226B001A7210 /* Spotlight-Icon-AppBlade.png */,
+			);
+			name = "Icons & Launch Images";
 			sourceTree = "<group>";
 		};
 		31D535FF17D74FFC0011B9A1 /* Secondary ViewControllers */ = {
@@ -474,9 +494,11 @@
 				311A21C11794DC1B007BF879 /* Default.png in Resources */,
 				311A21C31794DC1B007BF879 /* Default@2x.png in Resources */,
 				311A21C51794DC1B007BF879 /* Default-568h@2x.png in Resources */,
+				316989701837226B001A7210 /* Launch-Image-Retina-AppBlade.png in Resources */,
 				311A21CB1794DC1B007BF879 /* ApplicationFeatureViewController_iPhone.xib in Resources */,
 				311A21CE1794DC1B007BF879 /* ApplicationFeatureViewController_iPad.xib in Resources */,
 				311A22A01795859D007BF879 /* AppBladeKeys.plist in Resources */,
+				316989721837226B001A7210 /* Spotlight-Icon-AppBlade.png in Resources */,
 				311A22A11795859D007BF879 /* ResourceRules.plist in Resources */,
 				3148A16917984505000332D4 /* appblade_logo_red@2x.png in Resources */,
 				3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */,
@@ -488,8 +510,10 @@
 				312E175D17D6DF1A003AD6DD /* appblade_logo_white@2x.png in Resources */,
 				31D5360917D750350011B9A1 /* CrashReportingViewController.xib in Resources */,
 				31D5361017D750530011B9A1 /* CustomParametersViewController.xib in Resources */,
+				3169896F1837226B001A7210 /* Launch-Image-4in-AppBlade.png in Resources */,
 				3133221D17E2422D008C835C /* DeviceFeatureViewController.xib in Resources */,
 				3133222417E252F9008C835C /* RootViewController.xib in Resources */,
+				316989711837226B001A7210 /* Settings-Icon-AppBlade.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
