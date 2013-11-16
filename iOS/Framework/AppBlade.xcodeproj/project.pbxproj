@@ -925,7 +925,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0460;
-				ORGANIZATIONNAME = Raizlabs;
+				ORGANIZATIONNAME = "AppBlade Corporation";
 			};
 			buildConfigurationList = 31305FC11794A146006DF03A /* Build configuration list for PBXProject "AppBlade" */;
 			compatibilityVersion = "Xcode 3.2";
