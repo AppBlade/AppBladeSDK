@@ -224,8 +224,8 @@
 		<File>index.html</File>
 	</Node> <!-- APBSimpleKeychain.h -->
 	<Node id="141">
-		<Name>AppBladeSimpleKeychain.m</Name>
-		<Path>AppBladeSimpleKeychain_m</Path>
+		<Name>APBSimpleKeychain.m</Name>
+		<Path>APBSimpleKeychain_m</Path>
 		<File>index.html</File>
 	</Node> <!-- APBSimpleKeychain.m -->
 		
