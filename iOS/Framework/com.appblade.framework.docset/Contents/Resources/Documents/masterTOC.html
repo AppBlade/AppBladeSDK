@@ -2,11 +2,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ascii">
-<title>API Reference: AppBlade</title>
+<title>API Reference: APBApplicationInfoManager.h</title>
 <!-- A big scary CSS block --><style type="text/css"><!--#pagehead { FONT-WEIGHT: bold; FONT-SIZE: 32px; COLOR: #000000; FONT-FAMILY: lucida grande, geneva, helvetica, arial, sans-serif; } td { font-size: 10px; } a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #0000ff;} a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #0000ff;} a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;} body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;} --></style>
 <!-- End big scary CSS block -->
 </head>
-<head><meta name="ROBOTS" content="NOINDEX"></head>
+<meta name="ROBOTS" content="NOINDEX">
 <body bgcolor="#ffffff">
 
 <a name="MYTAG"></a>
@@ -23,7 +23,7 @@
 			</tr>
 <tr>
 <td width="600">
-					<div id="pagehead">AppBlade</div>
+					<div id="pagehead">APBApplicationInfoManager.h</div>
 				</td>
 			</tr>
 <tr height="10">
@@ -31,13 +31,7 @@
 			</tr>
 <tr>
 <td valign="top" width="600"><font face="Geneva,Helvetica,Arial" size="2"><span id="bodytext"> 
-<p>The AppBlade SDK provides an easy integration solution for the AppBlade service. 
-</p>
-<p>Certain Mobile Application Management features require that this framework be used. 
-</p>
-<p>This framework should be considered an extension (if not an independent entity) to the AppBlade MDM service.
-</p>
-<p>For more information visit our github wiki : http://github.com/AppBlade/SDK/wiki   
+<p>Original solution by StackOverflow user Anomie: http://stackoverflow.com/q/5251820
  </p></span></font></td>
 			</tr>
 <tr height="10">
@@ -63,19 +57,26 @@
 <a href="AppBlade_h/index.html">AppBlade</a><br>
 </td>
 <td width="33%">
-<a href="AppBladeLogging_h/index.html">AppBladeLogging</a><br>
+<a href="AppBladeSharedConstants_h/index.html">AppBladeSharedConstants</a><br>
 </td>
 </tr>
 <tr>
 <td width="33%">
-<a href="APBSimpleKeychain_h/index.html">APBSimpleKeychain</a><br>
+<a href="APBSimpleKeychain_m/index.html">APBSimpleKeychain.m</a><br>
 </td>
 <td width="33%">
 <a href="AppBlade+PrivateMethods_h/index.html">AppBlade+PrivateMethods</a><br>
 </td>
+<td width="33%"></td>
+</tr>
+<tr>
 <td width="33%">
-<a href="AppBladeSharedConstants_h/index.html">AppBladeSharedConstants</a><br>
+<a href="APBWebOperation_m/index.html">APBWebOperation.m</a><br>
 </td>
+<td width="33%">
+<a href="AppBladeLogging_h/index.html">AppBladeLogging</a><br>
+</td>
+<td width="33%"></td>
 </tr>
 </table>
 </blockquote>
@@ -85,10 +86,54 @@
 <table border="0" cellpadding="1" cellspacing="0" width="420">
 <tr>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/APBAuthenticationManager/updateTTL:" name="group___function_AP" retarget="yes" href="APBAuthenticationManager_h/Classes/APBAuthenticationManager/index.html#//apple_ref/occ/instm/APBAuthenticationManager/updateTTL:">-[ APBAuthenticationManager updateTTL: ]</a><br>
+<a logicalpath="//apple_ref/c/func/addPendingRequest:" name="group___function_AD" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/addPendingRequest:">addPendingRequest:</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/checkApproval" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkApproval">-[ AppBlade checkApproval ]</a><br>
+<a logicalpath="//apple_ref/occ/intfm/APBWebOperationDelegate/appBladeWebClientFailed:" retarget="yes" href="APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html#//apple_ref/occ/intfm/APBWebOperationDelegate/appBladeWebClientFailed:withErrorString:">+[ APBWebOperationDelegate appBladeWebClientFailed: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/handleCrashReport" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/handleCrashReport">-[ AppBlade handleCrashReport ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBApplicationInfoManager/hashExecutable" name="group___function_AP" retarget="yes" href="APBApplicationInfoManager_h/Classes/APBApplicationInfoManager/index.html#//apple_ref/occ/instm/APBApplicationInfoManager/hashExecutable">-[ APBApplicationInfoManager hashExecutable ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/intfm/APBWebOperationDelegate/appBladeWebClientFailed:withErrorString:" retarget="yes" href="APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html#//apple_ref/occ/intfm/APBWebOperationDelegate/appBladeWebClientFailed:withErrorString:">+[ APBWebOperationDelegate appBladeWebClientFailed:withErrorString: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/clm/AppBlade/logSDKVersion" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/clm/AppBlade/logSDKVersion">+[ AppBlade logSDKVersion ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBApplicationInfoManager/hashFile:" retarget="yes" href="APBApplicationInfoManager_h/Classes/APBApplicationInfoManager/index.html#//apple_ref/occ/instm/APBApplicationInfoManager/hashFile:">-[ APBApplicationInfoManager hashFile: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/intfm/APBWebOperationDelegate/containsOperationInPendingRequests:" retarget="yes" href="APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html#//apple_ref/occ/intfm/APBWebOperationDelegate/containsOperationInPendingRequests:">+[ APBWebOperationDelegate containsOperationInPendingRequests: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/logSessionEnd" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/logSessionEnd">-[ AppBlade logSessionEnd ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBApplicationInfoManager/hashInfoPlist" retarget="yes" href="APBApplicationInfoManager_h/Classes/APBApplicationInfoManager/index.html#//apple_ref/occ/instm/APBApplicationInfoManager/hashInfoPlist">-[ APBApplicationInfoManager hashInfoPlist ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/intfm/APBWebOperationDelegate/generateWebOperation" retarget="yes" href="APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html#//apple_ref/occ/intfm/APBWebOperationDelegate/generateWebOperation">+[ APBWebOperationDelegate generateWebOperation ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/logSessionStart" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/logSessionStart">-[ AppBlade logSessionStart ]</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBAuthenticationManager/updateTTL:" retarget="yes" href="APBAuthenticationManager_h/Classes/APBAuthenticationManager/index.html#//apple_ref/occ/instm/APBAuthenticationManager/updateTTL:">-[ APBAuthenticationManager updateTTL: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/intfm/APBWebOperationDelegate/pendingRequestsOfType:" retarget="yes" href="APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html#//apple_ref/occ/intfm/APBWebOperationDelegate/pendingRequestsOfType:">+[ APBWebOperationDelegate pendingRequestsOfType: ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/randomString:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/randomString:">-[ AppBlade randomString: ]</a><br>
@@ -99,7 +144,7 @@
 <a logicalpath="//apple_ref/occ/clm/APBSimpleKeychain/delete:" retarget="yes" href="APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html#//apple_ref/occ/clm/APBSimpleKeychain/delete:">+[ APBSimpleKeychain delete: ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/checkForExistingCrashReports" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkForExistingCrashReports">-[ AppBlade checkForExistingCrashReports ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(ApplicationInfo)/executableUUID" retarget="yes" href="APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html#//apple_ref/occ/instm/AppBlade(ApplicationInfo)/executableUUID">-[ AppBlade(ApplicationInfo) executableUUID ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/registerWithAppBladePlist" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/registerWithAppBladePlist">-[ AppBlade registerWithAppBladePlist ]</a><br>
@@ -110,7 +155,7 @@
 <a logicalpath="//apple_ref/occ/clm/APBSimpleKeychain/deleteLocalKeychain" retarget="yes" href="APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html#//apple_ref/occ/clm/APBSimpleKeychain/deleteLocalKeychain">+[ APBSimpleKeychain deleteLocalKeychain ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/checkForUpdates" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkForUpdates">-[ AppBlade checkForUpdates ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(ApplicationInfo)/hashExecutable" retarget="yes" href="APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html#//apple_ref/occ/instm/AppBlade(ApplicationInfo)/hashExecutable">-[ AppBlade(ApplicationInfo) hashExecutable ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/registerWithAppBladePlistNamed:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/registerWithAppBladePlistNamed:">-[ AppBlade registerWithAppBladePlistNamed: ]</a><br>
@@ -121,7 +166,7 @@
 <a logicalpath="//apple_ref/occ/clm/APBSimpleKeychain/errorMessageFromCode:" retarget="yes" href="APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html#//apple_ref/occ/clm/APBSimpleKeychain/errorMessageFromCode:">+[ APBSimpleKeychain errorMessageFromCode: ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/cleanOutKeychain" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/cleanOutKeychain">-[ AppBlade cleanOutKeychain ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(ApplicationInfo)/hashInfoPlist" retarget="yes" href="APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html#//apple_ref/occ/instm/AppBlade(ApplicationInfo)/hashInfoPlist">-[ AppBlade(ApplicationInfo) hashInfoPlist ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/sanitizeKeychain" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/sanitizeKeychain">-[ AppBlade sanitizeKeychain ]</a><br>
@@ -132,7 +177,7 @@
 <a logicalpath="//apple_ref/occ/clm/APBSimpleKeychain/hasKeychainAccess" retarget="yes" href="APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html#//apple_ref/occ/clm/APBSimpleKeychain/hasKeychainAccess">+[ APBSimpleKeychain hasKeychainAccess ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/clearAllCustomParams" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/clearAllCustomParams">-[ AppBlade clearAllCustomParams ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(ApplicationInfo)/isAppStoreBuild" retarget="yes" href="APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html#//apple_ref/occ/instm/AppBlade(ApplicationInfo)/isAppStoreBuild">-[ AppBlade(ApplicationInfo) isAppStoreBuild ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/clm/AppBlade/sdkVersion" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/clm/AppBlade/sdkVersion">+[ AppBlade sdkVersion ]</a><br>
@@ -143,7 +188,7 @@
 <a logicalpath="//apple_ref/occ/clm/APBSimpleKeychain/keychainInconsistencyExists" retarget="yes" href="APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html#//apple_ref/occ/clm/APBSimpleKeychain/keychainInconsistencyExists">+[ APBSimpleKeychain keychainInconsistencyExists ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/clearAppBladeKeychain" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/clearAppBladeKeychain">-[ AppBlade clearAppBladeKeychain ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(ApplicationInfo)/isBeingDebugged" retarget="yes" href="APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html#//apple_ref/occ/instm/AppBlade(ApplicationInfo)/isBeingDebugged">-[ AppBlade(ApplicationInfo) isBeingDebugged ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/setAppBladeDeviceSecret:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/setAppBladeDeviceSecret:">-[ AppBlade setAppBladeDeviceSecret: ]</a><br>
@@ -154,7 +199,7 @@
 <a logicalpath="//apple_ref/occ/clm/APBSimpleKeychain/load:" retarget="yes" href="APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html#//apple_ref/occ/clm/APBSimpleKeychain/load:">+[ APBSimpleKeychain load: ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/currentSession" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/currentSession">-[ AppBlade currentSession ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(DeviceInfo)/iosVersionSanitized" retarget="yes" href="APBDeviceInfoManager_h/Categories/AppBlade_DeviceInfo_/index.html#//apple_ref/occ/instm/AppBlade(DeviceInfo)/iosVersionSanitized">-[ AppBlade(DeviceInfo) iosVersionSanitized ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/setCustomParam:forKey:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/setCustomParam:forKey:">-[ AppBlade setCustomParam:forKey: ]</a><br>
@@ -165,7 +210,7 @@
 <a logicalpath="//apple_ref/occ/clm/APBSimpleKeychain/sanitizeKeychain" retarget="yes" href="APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html#//apple_ref/occ/clm/APBSimpleKeychain/sanitizeKeychain">+[ APBSimpleKeychain sanitizeKeychain ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/getCustomParams" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/getCustomParams">-[ AppBlade getCustomParams ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(DeviceInfo)/osVersionBuild" retarget="yes" href="APBDeviceInfoManager_h/Categories/AppBlade_DeviceInfo_/index.html#//apple_ref/occ/instm/AppBlade(DeviceInfo)/osVersionBuild">-[ AppBlade(DeviceInfo) osVersionBuild ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/setCustomParams:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/setCustomParams:">-[ AppBlade setCustomParams: ]</a><br>
@@ -176,7 +221,7 @@
 <a logicalpath="//apple_ref/occ/clm/APBSimpleKeychain/save:data:" retarget="yes" href="APBSimpleKeychain_h/Classes/APBSimpleKeychain/index.html#//apple_ref/occ/clm/APBSimpleKeychain/save:data:">+[ APBSimpleKeychain save:data: ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/handleBackloggedFeedback" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/handleBackloggedFeedback">-[ AppBlade handleBackloggedFeedback ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(DeviceInfo)/platform" retarget="yes" href="APBDeviceInfoManager_h/Categories/AppBlade_DeviceInfo_/index.html#//apple_ref/occ/instm/AppBlade(DeviceInfo)/platform">-[ AppBlade(DeviceInfo) platform ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/clm/AppBlade/sharedManager" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/clm/AppBlade/sharedManager">+[ AppBlade sharedManager ]</a><br>
@@ -184,10 +229,10 @@
 </tr>
 <tr>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/allowFeedbackReporting" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:">-[ AppBlade allowFeedbackReporting ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/APBTokenManager/appBladeDeviceSecret" retarget="yes" href="APBTokenManager_h/Classes/APBTokenManager/index.html#//apple_ref/occ/instm/APBTokenManager/appBladeDeviceSecrets">-[ APBTokenManager appBladeDeviceSecret ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/handleCrashReport" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/handleCrashReport">-[ AppBlade handleCrashReport ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(DeviceInfo)/simpleJailBreakCheck" retarget="yes" href="APBDeviceInfoManager_h/Categories/AppBlade_DeviceInfo_/index.html#//apple_ref/occ/instm/AppBlade(DeviceInfo)/simpleJailBreakCheck">-[ AppBlade(DeviceInfo) simpleJailBreakCheck ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/showFeedbackDialogue" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/showFeedbackDialogue">-[ AppBlade showFeedbackDialogue ]</a><br>
@@ -195,10 +240,10 @@
 </tr>
 <tr>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:">-[ AppBlade allowFeedbackReportingForWindow:withOptions: ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/APBTokenManager/appBladeDeviceSecrets" retarget="yes" href="APBTokenManager_h/Classes/APBTokenManager/index.html#//apple_ref/occ/instm/APBTokenManager/appBladeDeviceSecrets">-[ APBTokenManager appBladeDeviceSecrets ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/clm/AppBlade/logSDKVersion" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/clm/AppBlade/logSDKVersion">+[ AppBlade logSDKVersion ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(TokenManager)/appBladeWebClient:receivedConfirmTokenResponse:" retarget="yes" href="APBTokenManager_h/Categories/AppBlade_TokenManager_/index.html#//apple_ref/occ/instm/AppBlade(TokenManager)/appBladeWebClient:receivedConfirmTokenResponse:">-[ AppBlade(TokenManager) appBladeWebClient:receivedConfirmTokenResponse: ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/showFeedbackDialogueWithOptions:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/showFeedbackDialogueWithOptions:">-[ AppBlade showFeedbackDialogueWithOptions: ]</a><br>
@@ -206,10 +251,10 @@
 </tr>
 <tr>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/appBladeDeviceSecret" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/appBladeDeviceSecret">-[ AppBlade appBladeDeviceSecret ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/APBTokenManager/confirmToken:" retarget="yes" href="APBTokenManager_h/Classes/APBTokenManager/index.html#//apple_ref/occ/instm/APBTokenManager/confirmToken:">-[ APBTokenManager confirmToken: ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/logSessionEnd" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/logSessionEnd">-[ AppBlade logSessionEnd ]</a><br>
+<a logicalpath="//apple_ref/occ/instm/AppBlade(TokenManager)/appBladeWebClient:receivedGenerateTokenResponse:" retarget="yes" href="APBTokenManager_h/Categories/AppBlade_TokenManager_/index.html#//apple_ref/occ/instm/AppBlade(TokenManager)/appBladeWebClient:receivedGenerateTokenResponse:">-[ AppBlade(TokenManager) appBladeWebClient:receivedGenerateTokenResponse: ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/occ/intfm/AppBladeDelegate/appBlade:applicationApproved:error:" retarget="yes" href="AppBlade_h/Protocols/AppBladeDelegate/index.html#//apple_ref/occ/intfm/AppBladeDelegate/appBlade:applicationApproved:error:">+[ AppBladeDelegate appBlade:applicationApproved:error: ]</a><br>
@@ -217,14 +262,142 @@
 </tr>
 <tr>
 <td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBTokenManager/isCurrentToken:" retarget="yes" href="APBTokenManager_h/Classes/APBTokenManager/index.html#//apple_ref/occ/instm/APBTokenManager/isCurrentToken:">-[ APBTokenManager isCurrentToken: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/allowFeedbackReporting" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:">-[ AppBlade allowFeedbackReporting ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/cachesDirectoryPath" name="group___function_CA" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/cachesDirectoryPath">cachesDirectoryPath</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBTokenManager/isDeviceSecretBeingConfirmed" retarget="yes" href="APBTokenManager_h/Classes/APBTokenManager/index.html#//apple_ref/occ/instm/APBTokenManager/isDeviceSecretBeingConfirmed">-[ APBTokenManager isDeviceSecretBeingConfirmed ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/allowFeedbackReportingForWindow:withOptions:">-[ AppBlade allowFeedbackReportingForWindow:withOptions: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/cancelAllPendingRequests" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/cancelAllPendingRequests">cancelAllPendingRequests</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBTokenManager/setAppBladeDeviceSecret:" retarget="yes" href="APBTokenManager_h/Classes/APBTokenManager/index.html#//apple_ref/occ/instm/APBTokenManager/setAppBladeDeviceSecret:">-[ APBTokenManager setAppBladeDeviceSecret: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/appBladeDeviceSecret" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/appBladeDeviceSecret">-[ AppBlade appBladeDeviceSecret ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/cancelPendingRequestsByToken:" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/cancelPendingRequestsByToken:">cancelPendingRequestsByToken:</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBWebOperation(PrivateMethods)/issueRequest" retarget="yes" href="APBWebOperation+PrivateMethods_h/Categories/APBWebOperation_PrivateMethods_/index.html#//apple_ref/occ/instm/APBWebOperation(PrivateMethods)/issueRequest">-[ APBWebOperation(PrivateMethods) issueRequest ]</a><br>
+</td>
+<td width="33%">
 <a logicalpath="//apple_ref/occ/instm/AppBlade/catchAndReportCrashes" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/catchAndReportCrashes">-[ AppBlade catchAndReportCrashes ]</a><br>
 </td>
 <td width="33%">
-<a logicalpath="//apple_ref/occ/instm/AppBlade/logSessionStart" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/logSessionStart">-[ AppBlade logSessionStart ]</a><br>
+<a logicalpath="//apple_ref/c/func/checkAndCreateAppBladeCacheDirectory" name="group___function_CH" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/checkAndCreateAppBladeCacheDirectory">checkAndCreateAppBladeCacheDirectory</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBWebOperation(TokenManager)/confirmToken:" retarget="yes" href="APBTokenManager_h/Categories/APBWebOperation_TokenManager_/index.html#//apple_ref/occ/instm/APBWebOperation(TokenManager)/confirmToken:">-[ APBWebOperation(TokenManager) confirmToken: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/checkApproval" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkApproval">-[ AppBlade checkApproval ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/clearCacheDirectory" name="group___function_CL" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/clearCacheDirectory">clearCacheDirectory</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBWebOperation(TokenManager)/refreshToken:" retarget="yes" href="APBTokenManager_h/Categories/APBWebOperation_TokenManager_/index.html#//apple_ref/occ/instm/APBWebOperation(TokenManager)/refreshToken:">-[ APBWebOperation(TokenManager) refreshToken: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/checkForExistingCrashReports" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkForExistingCrashReports">-[ AppBlade checkForExistingCrashReports ]</a><br>
 </td>
 <td width="33%">
 <a logicalpath="//apple_ref/c/func/FileMD5HashCreateWithPath" name="group___function_FI" retarget="yes" href="APBFileMD5Hash_h/index.html#//apple_ref/c/func/FileMD5HashCreateWithPath">FileMD5HashCreateWithPath</a><br>
 </td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBWebOperation/addSecurityToRequest:" retarget="yes" href="APBWebOperation_h/Classes/APBWebOperation/index.html#//apple_ref/occ/instm/APBWebOperation/addSecurityToRequest:">-[ APBWebOperation addSecurityToRequest: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/checkForUpdates" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/checkForUpdates">-[ AppBlade checkForUpdates ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/generateWebOperation" name="group___function_GE" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/generateWebOperation">generateWebOperation</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/clm/APBWebOperation/buildHostURL:" retarget="yes" href="APBWebOperation_h/Classes/APBWebOperation/index.html#//apple_ref/occ/clm/APBWebOperation/buildHostURL:">+[ APBWebOperation buildHostURL: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/cleanOutKeychain" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/cleanOutKeychain">-[ AppBlade cleanOutKeychain ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/pauseCurrentPendingRequests" name="group___function_PA" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/pauseCurrentPendingRequests">pauseCurrentPendingRequests</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBWebOperation/encodeBase64WithData:" retarget="yes" href="APBWebOperation_h/Classes/APBWebOperation/index.html#//apple_ref/occ/instm/APBWebOperation/encodeBase64WithData:">-[ APBWebOperation encodeBase64WithData: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/clearAllCustomParams" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/clearAllCustomParams">-[ AppBlade clearAllCustomParams ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/pendingRequestsOfType:" name="group___function_PE" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/pendingRequestsOfType:">pendingRequestsOfType:</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBWebOperation/genRandNumberLength:" retarget="yes" href="APBWebOperation_h/Classes/APBWebOperation/index.html#//apple_ref/occ/instm/APBWebOperation/genRandNumberLength:">-[ APBWebOperation genRandNumberLength: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/clearAppBladeKeychain" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/clearAppBladeKeychain">-[ AppBlade clearAppBladeKeychain ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/raiseConfigurationExceptionWithMessage:" name="group___function_RA" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/raiseConfigurationExceptionWithMessage:">raiseConfigurationExceptionWithMessage:</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBWebOperation/getReceivedStatusCode" retarget="yes" href="APBWebOperation_h/Classes/APBWebOperation/index.html#//apple_ref/occ/instm/APBWebOperation/getReceivedStatusCode">-[ APBWebOperation getReceivedStatusCode ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/currentSession" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/currentSession">-[ AppBlade currentSession ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/validateProjectConfiguration" name="group___function_VA" retarget="yes" href="AppBlade+PrivateMethods_h/index.html#//apple_ref/c/func/validateProjectConfiguration">validateProjectConfiguration</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/APBWebOperation/initWithDelegate:" retarget="yes" href="APBWebOperation_h/Classes/APBWebOperation/index.html#//apple_ref/occ/instm/APBWebOperation/initWithDelegate:">-[ APBWebOperation initWithDelegate: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/getCustomParams" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/getCustomParams">-[ AppBlade getCustomParams ]</a><br>
+</td>
+<td width="33%"></td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/intfm/APBWebOperationDelegate/addPendingRequest:" retarget="yes" href="APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html#//apple_ref/occ/intfm/APBWebOperationDelegate/addPendingRequest:">+[ APBWebOperationDelegate addPendingRequest: ]</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/occ/instm/AppBlade/handleBackloggedFeedback" retarget="yes" href="AppBlade_h/Classes/AppBlade/index.html#//apple_ref/occ/instm/AppBlade/handleBackloggedFeedback">-[ AppBlade handleBackloggedFeedback ]</a><br>
+</td>
+<td width="33%"></td>
 </tr>
 </table>
 </blockquote>

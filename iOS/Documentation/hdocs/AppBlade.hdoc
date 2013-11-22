@@ -1,6 +1,5 @@
 /*!
   @framework AppBlade
-  @author Andrew Tremblay on 9/9/13
   @discussion The AppBlade SDK provides an easy integration solution for the AppBlade service. 
 	  
 	  Certain Mobile Application Management features require that this framework be used. 
@@ -8,4 +7,5 @@
 	  This framework should be considered an extension (if not an independent entity) to the AppBlade MDM service.
 	  
 	  For more information visit our github wiki : http://github.com/AppBlade/SDK/wiki   
+  @author Andrew Tremblay on 9/9/13
  */

@@ -1,12 +1,10 @@
 /*!
   @framework AppBlade
   @header AppBlade Architecture Overview
-
-  @author Andrew Tremblay on 9/9/13
   @discussion This document provides a broad look on the AppBlade SDK code structure. It describes the intention of the current design and gives suggestions about its possible expansion.  
   See also the AppBlade base class for further explanation.
 
-	<h4>Contents:</h4>
+	Contents:
 	<p class="blockquote">
                 <a href="#the_singleton">The AppBlade Singleton</a>
             <br>
@@ -18,8 +16,7 @@
             <br>
     </p>
     <br>
-    <a name="birds_eye_view" title="A Birds Eye View"></a>
-    <h2 class="jump">The AppBlade Singleton</h2>
+    The AppBlade Singleton
     <p>The AppBlade singleton is intended to be the sole entrypoint to the features of AppBlade. Accessing the secondary managers should be restricted to development. </p>
 
  */

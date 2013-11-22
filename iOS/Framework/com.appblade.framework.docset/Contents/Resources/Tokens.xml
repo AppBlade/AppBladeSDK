@@ -1,6 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
 <Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kAppBladeCacheDirectory</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>The Appblade cache folder name</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kAppBladeCacheDirectory //apple_ref/c/tdef/kAppBladeCacheDirectory //apple_ref/c/tag/kAppBladeCacheDirectory //apple_ref/c/struct/kAppBladeCacheDirectory //apple_ref/c/intf/kAppBladeCacheDirectory //apple_ref/doc/anysymbol/kAppBladeCacheDirectory" machineGenerated="true" --&gt;&lt;span class="type"&gt;kAppBladeCacheDirectory&lt;/span&gt;&lt;!-- /a --&gt; = @"&lt;span class="string"&gt;AppBladeCache&lt;/span&gt;";  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kAppBladeDefaultHost</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract></Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kAppBladeDefaultHost //apple_ref/c/tdef/kAppBladeDefaultHost //apple_ref/c/tag/kAppBladeDefaultHost //apple_ref/c/struct/kAppBladeDefaultHost //apple_ref/c/intf/kAppBladeDefaultHost //apple_ref/doc/anysymbol/kAppBladeDefaultHost" machineGenerated="true" --&gt;&lt;span class="type"&gt;kAppBladeDefaultHost&lt;/span&gt;&lt;!-- /a --&gt; = @"&lt;span class="string"&gt;https&lt;/span&gt;://&lt;span class="string"&gt;appblade&lt;/span&gt;.&lt;span class="string"&gt;com&lt;/span&gt;";  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kAppBladeErrorDomain</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract></Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kAppBladeErrorDomain //apple_ref/c/tdef/kAppBladeErrorDomain //apple_ref/c/tag/kAppBladeErrorDomain //apple_ref/c/struct/kAppBladeErrorDomain //apple_ref/c/intf/kAppBladeErrorDomain //apple_ref/doc/anysymbol/kAppBladeErrorDomain" machineGenerated="true" --&gt;&lt;span class="type"&gt;kAppBladeErrorDomain&lt;/span&gt;&lt;!-- /a --&gt; = @"&lt;span class="string"&gt;com&lt;/span&gt;.&lt;span class="string"&gt;appblade&lt;/span&gt;.&lt;span class="string"&gt;sdk&lt;/span&gt;";  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kAppBladeKeychainDeviceSecretKey</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>AppBlade Dictionary key</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kAppBladeKeychainDeviceSecretKey //apple_ref/c/tdef/kAppBladeKeychainDeviceSecretKey //apple_ref/c/tag/kAppBladeKeychainDeviceSecretKey //apple_ref/c/struct/kAppBladeKeychainDeviceSecretKey //apple_ref/c/intf/kAppBladeKeychainDeviceSecretKey //apple_ref/doc/anysymbol/kAppBladeKeychainDeviceSecretKey" machineGenerated="true" --&gt;&lt;span class="type"&gt;kAppBladeKeychainDeviceSecretKey&lt;/span&gt;&lt;!-- /a --&gt; = @"&lt;span class="string"&gt;appBlade_device_secret&lt;/span&gt;";  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kAppBladeKeychainDeviceSecretKeyNew</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>Key of the freshest secret in the
+kAppBladeKeychainDeviceSecretKey Dictionary</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kAppBladeKeychainDeviceSecretKeyNew //apple_ref/c/tdef/kAppBladeKeychainDeviceSecretKeyNew //apple_ref/c/tag/kAppBladeKeychainDeviceSecretKeyNew //apple_ref/c/struct/kAppBladeKeychainDeviceSecretKeyNew //apple_ref/c/intf/kAppBladeKeychainDeviceSecretKeyNew //apple_ref/doc/anysymbol/kAppBladeKeychainDeviceSecretKeyNew" machineGenerated="true" --&gt;&lt;span class="type"&gt;kAppBladeKeychainDeviceSecretKeyNew&lt;/span&gt;&lt;!-- /a --&gt; = 
+@"&lt;span class="string"&gt;new_secret&lt;/span&gt;";  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kAppBladeKeychainDeviceSecretKeyOld</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>Key of the second-freshest secret in the
+kAppBladeKeychainDeviceSecretKey Dictionary</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kAppBladeKeychainDeviceSecretKeyOld //apple_ref/c/tdef/kAppBladeKeychainDeviceSecretKeyOld //apple_ref/c/tag/kAppBladeKeychainDeviceSecretKeyOld //apple_ref/c/struct/kAppBladeKeychainDeviceSecretKeyOld //apple_ref/c/intf/kAppBladeKeychainDeviceSecretKeyOld //apple_ref/doc/anysymbol/kAppBladeKeychainDeviceSecretKeyOld" machineGenerated="true" --&gt;&lt;span class="type"&gt;kAppBladeKeychainDeviceSecretKeyOld&lt;/span&gt;&lt;!-- /a --&gt; = 
+@"&lt;span class="string"&gt;old_secret&lt;/span&gt;";  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kAppBladeKeychainDisabledKey</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>Key for the SDK Disabled flag</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kAppBladeKeychainDisabledKey //apple_ref/c/tdef/kAppBladeKeychainDisabledKey //apple_ref/c/tag/kAppBladeKeychainDisabledKey //apple_ref/c/struct/kAppBladeKeychainDisabledKey //apple_ref/c/intf/kAppBladeKeychainDisabledKey //apple_ref/doc/anysymbol/kAppBladeKeychainDisabledKey" machineGenerated="true" --&gt;&lt;span class="type"&gt;kAppBladeKeychainDisabledKey&lt;/span&gt;&lt;!-- /a --&gt; = @"&lt;span class="string"&gt;appBlade_disabled&lt;/span&gt;";  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kAppBladeKeychainPlistHashKey</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>Key for the last plist hash in the
+kAppBladeKeychainDeviceSecretKey Dictionary</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kAppBladeKeychainPlistHashKey //apple_ref/c/tdef/kAppBladeKeychainPlistHashKey //apple_ref/c/tag/kAppBladeKeychainPlistHashKey //apple_ref/c/struct/kAppBladeKeychainPlistHashKey //apple_ref/c/intf/kAppBladeKeychainPlistHashKey //apple_ref/doc/anysymbol/kAppBladeKeychainPlistHashKey" machineGenerated="true" --&gt;&lt;span class="type"&gt;kAppBladeKeychainPlistHashKey&lt;/span&gt;&lt;!-- /a --&gt; = @"&lt;span class="string"&gt;plist_hash&lt;/span&gt;";  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kPermissionDeniedAlertTag</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>Alert tag for the &#34;Permission Denied&#34; dialog. Every alert view should have a unique tag for behavior control</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --&gt;&lt;span class="type"&gt;int&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kPermissionDeniedAlertTag //apple_ref/c/tdef/kPermissionDeniedAlertTag //apple_ref/c/tag/kPermissionDeniedAlertTag //apple_ref/c/struct/kPermissionDeniedAlertTag //apple_ref/c/intf/kPermissionDeniedAlertTag //apple_ref/doc/anysymbol/kPermissionDeniedAlertTag" machineGenerated="true" --&gt;&lt;span class="type"&gt;kPermissionDeniedAlertTag&lt;/span&gt;&lt;!-- /a --&gt; = &lt;span class="number"&gt;613&lt;/span&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kTokenInvalidStatusCode</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>If the above status code is ever returned, that means the app is being used illegally and should be closed</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --&gt;&lt;span class="type"&gt;int&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kTokenInvalidStatusCode //apple_ref/c/tdef/kTokenInvalidStatusCode //apple_ref/c/tag/kTokenInvalidStatusCode //apple_ref/c/struct/kTokenInvalidStatusCode //apple_ref/c/intf/kTokenInvalidStatusCode //apple_ref/doc/anysymbol/kTokenInvalidStatusCode" machineGenerated="true" --&gt;&lt;span class="type"&gt;kTokenInvalidStatusCode&lt;/span&gt;&lt;!-- /a --&gt; = &lt;span class="number"&gt;403&lt;/span&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kTokenRefreshStatusCode</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>If this status code is ever returned, that means the token is expired and needs renewing before the api can be called</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --&gt;&lt;span class="type"&gt;int&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kTokenRefreshStatusCode //apple_ref/c/tdef/kTokenRefreshStatusCode //apple_ref/c/tag/kTokenRefreshStatusCode //apple_ref/c/struct/kTokenRefreshStatusCode //apple_ref/c/intf/kTokenRefreshStatusCode //apple_ref/doc/anysymbol/kTokenRefreshStatusCode" machineGenerated="true" --&gt;&lt;span class="type"&gt;kTokenRefreshStatusCode&lt;/span&gt;&lt;!-- /a --&gt; = &lt;span class="number"&gt;401&lt;/span&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/kUpdateAlertTag</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract>Alert tag for the &#34;Update Available&#34; dialog. Every alert view should have a unique tag for behavior control</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/int //apple_ref/c/tdef/int //apple_ref/c/tag/int //apple_ref/c/struct/int //apple_ref/c/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --&gt;&lt;span class="type"&gt;int&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/kUpdateAlertTag //apple_ref/c/tdef/kUpdateAlertTag //apple_ref/c/tag/kUpdateAlertTag //apple_ref/c/struct/kUpdateAlertTag //apple_ref/c/intf/kUpdateAlertTag //apple_ref/doc/anysymbol/kUpdateAlertTag" machineGenerated="true" --&gt;&lt;span class="type"&gt;kUpdateAlertTag&lt;/span&gt;&lt;!-- /a --&gt; = &lt;span class="number"&gt;316&lt;/span&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/AppBladeSharedConstants.h/s_sdkVersion</TokenIdentifier>
+    <Path>AppBladeSharedConstants_h/index.html</Path>
+    <Abstract></Abstract>
+    <Declaration>&lt;span class="keyword"&gt;static&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;span class="keyword"&gt;const&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/s_sdkVersion //apple_ref/c/tdef/s_sdkVersion //apple_ref/c/tag/s_sdkVersion //apple_ref/c/struct/s_sdkVersion //apple_ref/c/intf/s_sdkVersion //apple_ref/doc/anysymbol/s_sdkVersion" machineGenerated="true" --&gt;&lt;span class="type"&gt;s_sdkVersion&lt;/span&gt;&lt;!-- /a --&gt; = @"&lt;span class="string"&gt;0&lt;/span&gt;.&lt;span class="string"&gt;5&lt;/span&gt;.&lt;span class="string"&gt;0&lt;/span&gt;";  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/defaultAppBladeHostURL</TokenIdentifier>
+    <Path>APBWebOperation_h/index.html</Path>
+    <Abstract>defaultAppBladeHostURL default endpoint url.
+(appblade.com)</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;extern&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;!-- a logicalPath="//apple_ref/c/econst/defaultAppBladeHostURL //apple_ref/c/data/defaultAppBladeHostURL //apple_ref/c/clconst/defaultAppBladeHostURL " machineGenerated="true" --&gt;&lt;span class="var"&gt;defaultAppBladeHostURL&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/defaultURLScheme</TokenIdentifier>
+    <Path>APBWebOperation_h/index.html</Path>
+    <Abstract>defaultURLScheme default web scheme. (https)</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;extern&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;!-- a logicalPath="//apple_ref/c/econst/defaultURLScheme //apple_ref/c/data/defaultURLScheme //apple_ref/c/clconst/defaultURLScheme " machineGenerated="true" --&gt;&lt;span class="var"&gt;defaultURLScheme&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/data/deviceSecretHeaderField</TokenIdentifier>
+    <Path>APBWebOperation_h/index.html</Path>
+    <Abstract>The headerfield name for the header that contains
+our devices secret, which is our primary
+authentication method. ("X-device-secret")</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;extern&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;!-- a logicalPath="//apple_ref/c/econst/deviceSecretHeaderField //apple_ref/c/data/deviceSecretHeaderField //apple_ref/c/clconst/deviceSecretHeaderField " machineGenerated="true" --&gt;&lt;span class="var"&gt;deviceSecretHeaderField&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/c/func/FileMD5HashCreateWithPath</TokenIdentifier>
     <Path>APBFileMD5Hash_h/index.html</Path>
     <Abstract>Finds hash of file.</Abstract>
@@ -9,9 +113,196 @@
     &lt;!-- a logicalPath="//apple_ref/c/cl/size_t //apple_ref/c/tdef/size_t //apple_ref/c/tag/size_t //apple_ref/c/struct/size_t //apple_ref/c/intf/size_t //apple_ref/doc/anysymbol/size_t" machineGenerated="true" --&gt;&lt;span class="type"&gt;size_t&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="param"&gt;chunkSizeForReadingData&lt;/span&gt;);  </Declaration>
 </Token>
 <Token>
+    <TokenIdentifier>//apple_ref/c/func/addPendingRequest:</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Adds an APBWebOperation to the pending request queue.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/c/instm/addPendingRequest //apple_ref/c/clm/addPendingRequest //apple_ref/c/intfcm/addPendingRequest //apple_ref/c/intfm/addPendingRequest //apple_ref/c/func/addPendingRequest //apple_ref/c/ftmplt/addPendingRequest //apple_ref/c/defn/addPendingRequest //apple_ref/c/macro/addPendingRequest //apple_ref/doc/anysymbol/addPendingRequest" machineGenerated="true" --&gt;&lt;span class="function"&gt;addPendingRequest&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/c/cl/APBWebOperation //apple_ref/c/tdef/APBWebOperation //apple_ref/c/tag/APBWebOperation //apple_ref/c/struct/APBWebOperation //apple_ref/c/intf/APBWebOperation //apple_ref/doc/anysymbol/APBWebOperation" machineGenerated="true" --&gt;&lt;span class="type"&gt;APBWebOperation&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/c/econst/webOperation //apple_ref/c/data/webOperation //apple_ref/c/clconst/webOperation " machineGenerated="true" --&gt;&lt;span class="var"&gt;webOperation&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/cachesDirectoryPath</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Path to the AppBlade cache directory.</Abstract>
+    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/c/econst/cachesDirectoryPath //apple_ref/c/data/cachesDirectoryPath //apple_ref/c/clconst/cachesDirectoryPath " machineGenerated="true" --&gt;&lt;span class="var"&gt;cachesDirectoryPath&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/cancelAllPendingRequests</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Cancels all APBWebOperations in the pendingRequests queue</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;) &lt;!-- a logicalPath="//apple_ref/c/econst/cancelAllPendingRequests //apple_ref/c/data/cancelAllPendingRequests //apple_ref/c/clconst/cancelAllPendingRequests " machineGenerated="true" --&gt;&lt;span class="var"&gt;cancelAllPendingRequests&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/cancelPendingRequestsByToken:</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Selectively cancels all APBWebOperations in the pendingRequests queue that contain the sent token as the device-secret header</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;) &lt;!-- a logicalPath="//apple_ref/c/instm/cancelPendingRequestsByToken //apple_ref/c/clm/cancelPendingRequestsByToken //apple_ref/c/intfcm/cancelPendingRequestsByToken //apple_ref/c/intfm/cancelPendingRequestsByToken //apple_ref/c/func/cancelPendingRequestsByToken //apple_ref/c/ftmplt/cancelPendingRequestsByToken //apple_ref/c/defn/cancelPendingRequestsByToken //apple_ref/c/macro/cancelPendingRequestsByToken //apple_ref/doc/anysymbol/cancelPendingRequestsByToken" machineGenerated="true" --&gt;&lt;span class="function"&gt;cancelPendingRequestsByToken&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/c/econst/token //apple_ref/c/data/token //apple_ref/c/clconst/token " machineGenerated="true" --&gt;&lt;span class="var"&gt;token&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/checkAndCreateAppBladeCacheDirectory</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Creates the AppBlade cache directory, if it does not exist.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/c/econst/checkAndCreateAppBladeCacheDirectory //apple_ref/c/data/checkAndCreateAppBladeCacheDirectory //apple_ref/c/clconst/checkAndCreateAppBladeCacheDirectory " machineGenerated="true" --&gt;&lt;span class="var"&gt;checkAndCreateAppBladeCacheDirectory&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/clearCacheDirectory</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Clears the contents of the AppBlade cache directory.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/c/econst/clearCacheDirectory //apple_ref/c/data/clearCacheDirectory //apple_ref/c/clconst/clearCacheDirectory " machineGenerated="true" --&gt;&lt;span class="var"&gt;clearCacheDirectory&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/generateWebOperation</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>A simple method that constructs a web operation with the delegate preset.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/APBWebOperation //apple_ref/c/tdef/APBWebOperation //apple_ref/c/tag/APBWebOperation //apple_ref/c/struct/APBWebOperation //apple_ref/c/intf/APBWebOperation //apple_ref/doc/anysymbol/APBWebOperation" machineGenerated="true" --&gt;&lt;span class="type"&gt;APBWebOperation&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/c/econst/generateWebOperation //apple_ref/c/data/generateWebOperation //apple_ref/c/clconst/generateWebOperation " machineGenerated="true" --&gt;&lt;span class="var"&gt;generateWebOperation&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/pauseCurrentPendingRequests</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Halts the request queue, pausing all APBWebOperations</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;) &lt;!-- a logicalPath="//apple_ref/c/econst/pauseCurrentPendingRequests //apple_ref/c/data/pauseCurrentPendingRequests //apple_ref/c/clconst/pauseCurrentPendingRequests " machineGenerated="true" --&gt;&lt;span class="var"&gt;pauseCurrentPendingRequests&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/pendingRequestsOfType:</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Returns the number of APBWebOperations with the specified AppBladeWebClientAPI value.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/NSInteger //apple_ref/c/tdef/NSInteger //apple_ref/c/tag/NSInteger //apple_ref/c/struct/NSInteger //apple_ref/c/intf/NSInteger //apple_ref/doc/anysymbol/NSInteger" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSInteger&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/c/instm/pendingRequestsOfType //apple_ref/c/clm/pendingRequestsOfType //apple_ref/c/intfcm/pendingRequestsOfType //apple_ref/c/intfm/pendingRequestsOfType //apple_ref/c/func/pendingRequestsOfType //apple_ref/c/ftmplt/pendingRequestsOfType //apple_ref/c/defn/pendingRequestsOfType //apple_ref/c/macro/pendingRequestsOfType //apple_ref/doc/anysymbol/pendingRequestsOfType" machineGenerated="true" --&gt;&lt;span class="function"&gt;pendingRequestsOfType&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/c/cl/AppBladeWebClientAPI //apple_ref/c/tdef/AppBladeWebClientAPI //apple_ref/c/tag/AppBladeWebClientAPI //apple_ref/c/struct/AppBladeWebClientAPI //apple_ref/c/intf/AppBladeWebClientAPI //apple_ref/doc/anysymbol/AppBladeWebClientAPI" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBladeWebClientAPI&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/c/econst/clientType //apple_ref/c/data/clientType //apple_ref/c/clconst/clientType " machineGenerated="true" --&gt;&lt;span class="var"&gt;clientType&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/raiseConfigurationExceptionWithMessage:</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Disables the SDK with a message.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/c/instm/raiseConfigurationExceptionWithMessage //apple_ref/c/clm/raiseConfigurationExceptionWithMessage //apple_ref/c/intfcm/raiseConfigurationExceptionWithMessage //apple_ref/c/intfm/raiseConfigurationExceptionWithMessage //apple_ref/c/func/raiseConfigurationExceptionWithMessage //apple_ref/c/ftmplt/raiseConfigurationExceptionWithMessage //apple_ref/c/defn/raiseConfigurationExceptionWithMessage //apple_ref/c/macro/raiseConfigurationExceptionWithMessage //apple_ref/doc/anysymbol/raiseConfigurationExceptionWithMessage" machineGenerated="true" --&gt;&lt;span class="function"&gt;raiseConfigurationExceptionWithMessage&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/c/econst/name //apple_ref/c/data/name //apple_ref/c/clconst/name " machineGenerated="true" --&gt;&lt;span class="var"&gt;name&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/func/validateProjectConfiguration</TokenIdentifier>
+    <Path>AppBlade+PrivateMethods_h/index.html</Path>
+    <Abstract>Internal method to confirm proper SDK setup before continuing.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/c/econst/validateProjectConfiguration //apple_ref/c/data/validateProjectConfiguration //apple_ref/c/clconst/validateProjectConfiguration " machineGenerated="true" --&gt;&lt;span class="var"&gt;validateProjectConfiguration&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/tdef/AppBladeRequestCompletionBlock</TokenIdentifier>
+    <Path>APBWebOperation_h/index.html</Path>
+    <Abstract>AppBladeRequestCompletionBlock is our main
+workhorse, though sometimes most of the logic is
+actually in manager handle* calls.</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;typedef&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt; (^&lt;!-- a logicalPath="//apple_ref/c/instm/AppBladeRequestCompletionBlock //apple_ref/c/clm/AppBladeRequestCompletionBlock //apple_ref/c/intfcm/AppBladeRequestCompletionBlock //apple_ref/c/intfm/AppBladeRequestCompletionBlock //apple_ref/c/func/AppBladeRequestCompletionBlock //apple_ref/c/ftmplt/AppBladeRequestCompletionBlock //apple_ref/c/defn/AppBladeRequestCompletionBlock //apple_ref/c/macro/AppBladeRequestCompletionBlock //apple_ref/doc/anysymbol/AppBladeRequestCompletionBlock" machineGenerated="true" --&gt;&lt;span class="function"&gt;AppBladeRequestCompletionBlock&lt;/span&gt;&lt;!-- /a --&gt;)(
+    &lt;!-- a logicalPath="//apple_ref/c/cl/NSMutableURLRequest //apple_ref/c/tdef/NSMutableURLRequest //apple_ref/c/tag/NSMutableURLRequest //apple_ref/c/struct/NSMutableURLRequest //apple_ref/c/intf/NSMutableURLRequest //apple_ref/doc/anysymbol/NSMutableURLRequest" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSMutableURLRequest&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;span class="param"&gt;request&lt;/span&gt;,
+    &lt;!-- a logicalPath="//apple_ref/c/cl/id //apple_ref/c/tdef/id //apple_ref/c/tag/id //apple_ref/c/struct/id //apple_ref/c/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="param"&gt;rawSentData&lt;/span&gt;,
+    &lt;!-- a logicalPath="//apple_ref/c/cl/NSDictionary //apple_ref/c/tdef/NSDictionary //apple_ref/c/tag/NSDictionary //apple_ref/c/struct/NSDictionary //apple_ref/c/intf/NSDictionary //apple_ref/doc/anysymbol/NSDictionary" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSDictionary&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;span class="param"&gt;responseHeaders&lt;/span&gt;,
+    &lt;!-- a logicalPath="//apple_ref/c/cl/NSMutableData //apple_ref/c/tdef/NSMutableData //apple_ref/c/tag/NSMutableData //apple_ref/c/struct/NSMutableData //apple_ref/c/intf/NSMutableData //apple_ref/doc/anysymbol/NSMutableData" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSMutableData&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;span class="param"&gt;receivedData&lt;/span&gt;,
+    &lt;!-- a logicalPath="//apple_ref/c/cl/NSError //apple_ref/c/tdef/NSError //apple_ref/c/tag/NSError //apple_ref/c/struct/NSError //apple_ref/c/intf/NSError //apple_ref/doc/anysymbol/NSError" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSError&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;span class="param"&gt;webError&lt;/span&gt;);  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/tdef/AppBladeRequestFailureBlock</TokenIdentifier>
+    <Path>APBWebOperation_h/index.html</Path>
+    <Abstract>AppBladeRequestFailureBlock is our block for when
+the webcall failed. It usually involves storing our
+data that failed to send.</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;typedef&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt; (^&lt;!-- a logicalPath="//apple_ref/c/instm/AppBladeRequestFailureBlock //apple_ref/c/clm/AppBladeRequestFailureBlock //apple_ref/c/intfcm/AppBladeRequestFailureBlock //apple_ref/c/intfm/AppBladeRequestFailureBlock //apple_ref/c/func/AppBladeRequestFailureBlock //apple_ref/c/ftmplt/AppBladeRequestFailureBlock //apple_ref/c/defn/AppBladeRequestFailureBlock //apple_ref/c/macro/AppBladeRequestFailureBlock //apple_ref/doc/anysymbol/AppBladeRequestFailureBlock" machineGenerated="true" --&gt;&lt;span class="function"&gt;AppBladeRequestFailureBlock&lt;/span&gt;&lt;!-- /a --&gt;)(
+    &lt;!-- a logicalPath="//apple_ref/c/cl/id //apple_ref/c/tdef/id //apple_ref/c/tag/id //apple_ref/c/struct/id //apple_ref/c/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="param"&gt;data&lt;/span&gt;,
+    &lt;!-- a logicalPath="//apple_ref/c/cl/NSError //apple_ref/c/tdef/NSError //apple_ref/c/tag/NSError //apple_ref/c/struct/NSError //apple_ref/c/intf/NSError //apple_ref/doc/anysymbol/NSError" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSError&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;span class="param"&gt;error&lt;/span&gt;);  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/tdef/AppBladeRequestPrepareBlock</TokenIdentifier>
+    <Path>APBWebOperation_h/index.html</Path>
+    <Abstract>AppBladeRequestPrepareBlock is our setup block, and
+is called immediately before web request is sent.
+This is usually where you want the most up to date
+data to be added to the request, like security
+credentials.</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;typedef&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt; (^&lt;!-- a logicalPath="//apple_ref/c/instm/AppBladeRequestPrepareBlock //apple_ref/c/clm/AppBladeRequestPrepareBlock //apple_ref/c/intfcm/AppBladeRequestPrepareBlock //apple_ref/c/intfm/AppBladeRequestPrepareBlock //apple_ref/c/func/AppBladeRequestPrepareBlock //apple_ref/c/ftmplt/AppBladeRequestPrepareBlock //apple_ref/c/defn/AppBladeRequestPrepareBlock //apple_ref/c/macro/AppBladeRequestPrepareBlock //apple_ref/doc/anysymbol/AppBladeRequestPrepareBlock" machineGenerated="true" --&gt;&lt;span class="function"&gt;AppBladeRequestPrepareBlock&lt;/span&gt;&lt;!-- /a --&gt;)(
+    &lt;!-- a logicalPath="//apple_ref/c/cl/id //apple_ref/c/tdef/id //apple_ref/c/tag/id //apple_ref/c/struct/id //apple_ref/c/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="param"&gt;preparationData&lt;/span&gt;);  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/tdef/AppBladeRequestSuccessBlock</TokenIdentifier>
+    <Path>APBWebOperation_h/index.html</Path>
+    <Abstract>AppBladeRequestSuccessBlock is our block for when
+the webcall was succesful. It usually involves
+cleaning up data that was just sent.</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;typedef&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt; (^&lt;!-- a logicalPath="//apple_ref/c/instm/AppBladeRequestSuccessBlock //apple_ref/c/clm/AppBladeRequestSuccessBlock //apple_ref/c/intfcm/AppBladeRequestSuccessBlock //apple_ref/c/intfm/AppBladeRequestSuccessBlock //apple_ref/c/func/AppBladeRequestSuccessBlock //apple_ref/c/ftmplt/AppBladeRequestSuccessBlock //apple_ref/c/defn/AppBladeRequestSuccessBlock //apple_ref/c/macro/AppBladeRequestSuccessBlock //apple_ref/doc/anysymbol/AppBladeRequestSuccessBlock" machineGenerated="true" --&gt;&lt;span class="function"&gt;AppBladeRequestSuccessBlock&lt;/span&gt;&lt;!-- /a --&gt;)(
+    &lt;!-- a logicalPath="//apple_ref/c/cl/id //apple_ref/c/tdef/id //apple_ref/c/tag/id //apple_ref/c/struct/id //apple_ref/c/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="param"&gt;data&lt;/span&gt;,
+    &lt;!-- a logicalPath="//apple_ref/c/cl/NSError //apple_ref/c/tdef/NSError //apple_ref/c/tag/NSError //apple_ref/c/struct/NSError //apple_ref/c/intf/NSError //apple_ref/doc/anysymbol/NSError" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSError&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;span class="param"&gt;error&lt;/span&gt;);  &lt;span class="comment"&gt;//we can return an error and still be successful&lt;/span&gt; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/c/tdef/AppBladeWebClientAPI</TokenIdentifier>
+    <Path>APBWebOperation_h/index.html</Path>
+    <Abstract>AppBladeWebClientAPI is our enumerator for quickly
+identifying what requests are pending. Every
+webcall that our features use should have a value
+in this enum.</Abstract>
+    <Declaration>&lt;span class="keyword"&gt;typedef&lt;/span&gt; &lt;span class="keyword"&gt;enum&lt;/span&gt; { 
+    &lt;!-- a logicalPath="//apple_ref/c/econst/AppBladeWebClientAPI_GenerateToken //apple_ref/c/data/AppBladeWebClientAPI_GenerateToken //apple_ref/c/clconst/AppBladeWebClientAPI_GenerateToken " machineGenerated="true" --&gt;&lt;span class="var"&gt;AppBladeWebClientAPI_GenerateToken&lt;/span&gt;&lt;!-- /a --&gt;, 
+    &lt;!-- a logicalPath="//apple_ref/c/econst/AppBladeWebClientAPI_ConfirmToken //apple_ref/c/data/AppBladeWebClientAPI_ConfirmToken //apple_ref/c/clconst/AppBladeWebClientAPI_ConfirmToken " machineGenerated="true" --&gt;&lt;span class="var"&gt;AppBladeWebClientAPI_ConfirmToken&lt;/span&gt;&lt;!-- /a --&gt;, 
+    &lt;!-- a logicalPath="//apple_ref/c/econst/AppBladeWebClientAPI_Permissions //apple_ref/c/data/AppBladeWebClientAPI_Permissions //apple_ref/c/clconst/AppBladeWebClientAPI_Permissions " machineGenerated="true" --&gt;&lt;span class="var"&gt;AppBladeWebClientAPI_Permissions&lt;/span&gt;&lt;!-- /a --&gt;, 
+    &lt;!-- a logicalPath="//apple_ref/c/econst/AppBladeWebClientAPI_ReportCrash //apple_ref/c/data/AppBladeWebClientAPI_ReportCrash //apple_ref/c/clconst/AppBladeWebClientAPI_ReportCrash " machineGenerated="true" --&gt;&lt;span class="var"&gt;AppBladeWebClientAPI_ReportCrash&lt;/span&gt;&lt;!-- /a --&gt;, 
+    &lt;!-- a logicalPath="//apple_ref/c/econst/AppBladeWebClientAPI_Feedback //apple_ref/c/data/AppBladeWebClientAPI_Feedback //apple_ref/c/clconst/AppBladeWebClientAPI_Feedback " machineGenerated="true" --&gt;&lt;span class="var"&gt;AppBladeWebClientAPI_Feedback&lt;/span&gt;&lt;!-- /a --&gt;, 
+    &lt;!-- a logicalPath="//apple_ref/c/econst/AppBladeWebClientAPI_Sessions //apple_ref/c/data/AppBladeWebClientAPI_Sessions //apple_ref/c/clconst/AppBladeWebClientAPI_Sessions " machineGenerated="true" --&gt;&lt;span class="var"&gt;AppBladeWebClientAPI_Sessions&lt;/span&gt;&lt;!-- /a --&gt;, 
+    &lt;!-- a logicalPath="//apple_ref/c/econst/AppBladeWebClientAPI_UpdateCheck //apple_ref/c/data/AppBladeWebClientAPI_UpdateCheck //apple_ref/c/clconst/AppBladeWebClientAPI_UpdateCheck " machineGenerated="true" --&gt;&lt;span class="var"&gt;AppBladeWebClientAPI_UpdateCheck&lt;/span&gt;&lt;!-- /a --&gt;, 
+    &lt;!-- a logicalPath="//apple_ref/c/econst/AppBladeWebClientAPI_AllTypes //apple_ref/c/data/AppBladeWebClientAPI_AllTypes //apple_ref/c/clconst/AppBladeWebClientAPI_AllTypes " machineGenerated="true" --&gt;&lt;span class="var"&gt;AppBladeWebClientAPI_AllTypes&lt;/span&gt;&lt;!-- /a --&gt; 
+} &lt;!-- a logicalPath="//apple_ref/c/econst/AppBladeWebClientAPI //apple_ref/c/data/AppBladeWebClientAPI //apple_ref/c/clconst/AppBladeWebClientAPI " machineGenerated="true" --&gt;&lt;span class="var"&gt;AppBladeWebClientAPI&lt;/span&gt;&lt;!-- /a --&gt;;  </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cat/APBSimpleKeychain()</TokenIdentifier>
+    <Path>APBSimpleKeychain_m/Categories/APBSimpleKeychain_/index.html</Path>
+    <Abstract>All of AppBlade relies heavily on the keychain, as
+that is where our credentials are stored for web
+calls.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cat/APBSimpleKeychain*+(BOOL)</TokenIdentifier>
+    <Path>APBSimpleKeychain_m/Categories/APBSimpleKeychain_BOOL_/index.html</Path>
+    <Abstract>All of AppBlade relies heavily on the keychain, as
+that is where our credentials are stored for web
+calls.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cat/APBWebOperation()</TokenIdentifier>
+    <Path>APBWebOperation_m/Categories/APBWebOperation_/index.html</Path>
+    <Abstract>APBWebOperation</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cat/APBWebOperation(PrivateMethods)</TokenIdentifier>
+    <Path>APBWebOperation+PrivateMethods_h/Categories/APBWebOperation_PrivateMethods_/index.html</Path>
+    <Abstract>contains private methods for the APBWebOperation
+class.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cat/APBWebOperation(TokenManager)</TokenIdentifier>
+    <Path>APBTokenManager_h/Categories/APBWebOperation_TokenManager_/index.html</Path>
+    <Abstract>Our Token related generatiors for APBWebOperation</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cat/AppBlade(ApplicationInfo)</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html</Path>
+    <Abstract>An AppBlade category for ApplicationInfo methods.
+Basically, instead of having direct calls to
+applicationInfoManager, AppBlade can call the
+hot-potato helper method.</Abstract>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/cat/AppBlade(Authorization)</TokenIdentifier>
     <Path>APBAuthenticationManager_h/Categories/AppBlade_Authorization_/index.html</Path>
     <Abstract>Our additional properties and methods for Authentication</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cat/AppBlade(DeviceInfo)</TokenIdentifier>
+    <Path>APBDeviceInfoManager_h/Categories/AppBlade_DeviceInfo_/index.html</Path>
+    <Abstract>An AppBlade category for DeviceInfo methods.
+Bascally, instead of having direct calls to
+deviceInfoManager, AppBlade can call the hot-potato
+helper method.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cat/AppBlade(TokenManager)</TokenIdentifier>
+    <Path>APBTokenManager_h/Categories/AppBlade_TokenManager_/index.html</Path>
+    <Abstract>Our TokenManager-related web callbacks for the main
+AppBlade class. We also want the tokenManager to be
+visible to these functions, so we create a dynamic
+link to the internal APBTokenManager property.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBApplicationInfoManager</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Classes/APBApplicationInfoManager/index.html</Path>
+    <Abstract>Core Manager for our Application Infomation retreival.</Abstract>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/cl/APBAuthenticationManager</TokenIdentifier>
@@ -29,6 +320,11 @@
     <Abstract>The Custom Parameter meta-feature</Abstract>
 </Token>
 <Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBDeviceInfoManager</TokenIdentifier>
+    <Path>APBDeviceInfoManager_h/Classes/APBDeviceInfoManager/index.html</Path>
+    <Abstract>Core Manager for our Device Infomation retreival</Abstract>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/cl/APBFeedbackReportingManager</TokenIdentifier>
     <Path>APBFeedbackReportingManager_h/Classes/APBFeedbackReportingManager/index.html</Path>
     <Abstract>The AppBlade Feedback Reporting feature</Abstract>
@@ -44,14 +340,50 @@
     <Abstract>Our keychain manipulation class.</Abstract>
 </Token>
 <Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBSimpleKeychain()</TokenIdentifier>
+    <Path>APBSimpleKeychain_m/Classes/APBSimpleKeychain_/index.html</Path>
+    <Abstract>All of AppBlade relies heavily on the keychain, as
+that is where our credentials are stored for web
+calls.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBTokenManager</TokenIdentifier>
+    <Path>APBTokenManager_h/Classes/APBTokenManager/index.html</Path>
+    <Abstract>Core Manager for all Token-related requests and behavior.</Abstract>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/cl/APBUpdatesManager</TokenIdentifier>
     <Path>APBUpdatesManager_h/Classes/APBUpdatesManager/index.html</Path>
     <Abstract>The AppBlade Update Availablilty feature</Abstract>
 </Token>
 <Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBWebOperation</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>The main class for all web operations. Each
+APBWebOperation object is to be considered a single
+webrequest (single GET/POST/PUT) that pends in a
+queue if too many requests were called in front of
+it. For more complicated web activities (like a
+conditional second web request on a failure), web
+operations can be queued or called from inside
+feature manager web-handling methods. Completion,
+success, and failure blocks should be used whenever
+possible.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/APBWebOperation()</TokenIdentifier>
+    <Path>APBWebOperation_m/Classes/APBWebOperation_/index.html</Path>
+    <Abstract>the NSOperation that handles our web requests</Abstract>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/cl/AppBlade</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Our main class. AppBlade contains our singleton and all public methods, which are used as entrypoints for the lower level managers.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/cl/defaultURLScheme</TokenIdentifier>
+    <Path>APBWebOperation_m/Classes/defaultURLScheme/index.html</Path>
+    <Abstract>the NSOperation that handles our web requests</Abstract>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/clm/APBSimpleKeychain/delete:</TokenIdentifier>
@@ -102,6 +434,12 @@
     <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBSimpleKeychain/save //apple_ref/occ/clm/APBSimpleKeychain/save //apple_ref/occ/intfcm/APBSimpleKeychain/save //apple_ref/occ/intfm/APBSimpleKeychain/save //apple_ref/occ/func/save //apple_ref/occ/ftmplt/APBSimpleKeychain/save //apple_ref/occ/defn/save //apple_ref/occ/macro/save //apple_ref/doc/anysymbol/save" machineGenerated="true" --&gt;&lt;span class="function"&gt;save&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="param"&gt;service&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/occ/instm/APBSimpleKeychain/data //apple_ref/occ/clm/APBSimpleKeychain/data //apple_ref/occ/intfcm/APBSimpleKeychain/data //apple_ref/occ/intfm/APBSimpleKeychain/data //apple_ref/occ/func/data //apple_ref/occ/ftmplt/APBSimpleKeychain/data //apple_ref/occ/defn/data //apple_ref/occ/macro/data //apple_ref/doc/anysymbol/data" machineGenerated="true" --&gt;&lt;span class="function"&gt;data&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/data //apple_ref/occ/data/APBSimpleKeychain/data //apple_ref/occ/data/data //apple_ref/occ/clconst/APBSimpleKeychain/data " machineGenerated="true" --&gt;&lt;span class="var"&gt;data&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
 </Token>
 <Token>
+    <TokenIdentifier>//apple_ref/occ/clm/APBWebOperation/buildHostURL:</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>Standard generator for appending the host to the api endpoint. Every web operation will have some endpoint that they will need to GET/POST/PUT/DELETE to. This method generatess the full path to that endpoint.</Abstract>
+    <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBWebOperation/buildHostURL //apple_ref/occ/clm/APBWebOperation/buildHostURL //apple_ref/occ/intfcm/APBWebOperation/buildHostURL //apple_ref/occ/intfm/APBWebOperation/buildHostURL //apple_ref/occ/func/buildHostURL //apple_ref/occ/ftmplt/APBWebOperation/buildHostURL //apple_ref/occ/defn/buildHostURL //apple_ref/occ/macro/buildHostURL //apple_ref/doc/anysymbol/buildHostURL" machineGenerated="true" --&gt;&lt;span class="function"&gt;buildHostURL&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/customURLString //apple_ref/occ/data/APBWebOperation/customURLString //apple_ref/occ/data/customURLString //apple_ref/occ/clconst/APBWebOperation/customURLString " machineGenerated="true" --&gt;&lt;span class="var"&gt;customURLString&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/clm/AppBlade/logSDKVersion</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Log SDK Version to NSLog</Abstract>
@@ -121,10 +459,218 @@ AppBlade shoud be referenced.</Abstract>
     <Declaration>+ (&lt;!-- a logicalPath="//apple_ref/occ/cl/AppBlade //apple_ref/occ/tdef/AppBlade //apple_ref/occ/tag/AppBlade //apple_ref/occ/struct/AppBlade //apple_ref/occ/intf/AppBlade //apple_ref/doc/anysymbol/AppBlade" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBlade&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/sharedManager //apple_ref/occ/data/AppBlade/sharedManager //apple_ref/occ/data/sharedManager //apple_ref/occ/clconst/AppBlade/sharedManager " machineGenerated="true" --&gt;&lt;span class="var"&gt;sharedManager&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
 </Token>
 <Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBApplicationInfoManager/hashExecutable</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Classes/APBApplicationInfoManager/index.html</Path>
+    <Abstract>we find the hash of the executable by first taking
+[NSBundle mainBundle] executablePath] and finding
+the hashFile value.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/hashExecutable //apple_ref/occ/data/APBApplicationInfoManager/hashExecutable //apple_ref/occ/data/hashExecutable //apple_ref/occ/clconst/APBApplicationInfoManager/hashExecutable " machineGenerated="true" --&gt;&lt;span class="var"&gt;hashExecutable&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBApplicationInfoManager/hashFile:</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Classes/APBApplicationInfoManager/index.html</Path>
+    <Abstract>The file we are finding the hash of should not be
+affected in any way by the Hashing function. If no
+file exists at the path, the hash of an empty
+string will be returned
+"d41d8cd98f00b204e9800998ecf8427e"</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBApplicationInfoManager/hashFile //apple_ref/occ/clm/APBApplicationInfoManager/hashFile //apple_ref/occ/intfcm/APBApplicationInfoManager/hashFile //apple_ref/occ/intfm/APBApplicationInfoManager/hashFile //apple_ref/occ/func/hashFile //apple_ref/occ/ftmplt/APBApplicationInfoManager/hashFile //apple_ref/occ/defn/hashFile //apple_ref/occ/macro/hashFile //apple_ref/doc/anysymbol/hashFile" machineGenerated="true" --&gt;&lt;span class="function"&gt;hashFile&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/filePath //apple_ref/occ/data/APBApplicationInfoManager/filePath //apple_ref/occ/data/filePath //apple_ref/occ/clconst/APBApplicationInfoManager/filePath " machineGenerated="true" --&gt;&lt;span class="var"&gt;filePath&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBApplicationInfoManager/hashInfoPlist</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Classes/APBApplicationInfoManager/index.html</Path>
+    <Abstract>we find the uuid of the executable by using the
+symbol _mh_execute_header and walking the load
+commands of its program to determine the ending (or
+beginning) of any section or segment in the
+program.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/hashInfoPlist //apple_ref/occ/data/APBApplicationInfoManager/hashInfoPlist //apple_ref/occ/data/hashInfoPlist //apple_ref/occ/clconst/APBApplicationInfoManager/hashInfoPlist " machineGenerated="true" --&gt;&lt;span class="var"&gt;hashInfoPlist&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/instm/APBAuthenticationManager/updateTTL:</TokenIdentifier>
     <Path>APBAuthenticationManager_h/Classes/APBAuthenticationManager/index.html</Path>
     <Abstract>Updates our &#34;time-to-live&#34; for authentication</Abstract>
     <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBAuthenticationManager/updateTTL //apple_ref/occ/clm/APBAuthenticationManager/updateTTL //apple_ref/occ/intfcm/APBAuthenticationManager/updateTTL //apple_ref/occ/intfm/APBAuthenticationManager/updateTTL //apple_ref/occ/func/updateTTL //apple_ref/occ/ftmplt/APBAuthenticationManager/updateTTL //apple_ref/occ/defn/updateTTL //apple_ref/occ/macro/updateTTL //apple_ref/doc/anysymbol/updateTTL" machineGenerated="true" --&gt;&lt;span class="function"&gt;updateTTL&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSNumber //apple_ref/occ/tdef/NSNumber //apple_ref/occ/tag/NSNumber //apple_ref/occ/struct/NSNumber //apple_ref/occ/intf/NSNumber //apple_ref/doc/anysymbol/NSNumber" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSNumber&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/ttl //apple_ref/occ/data/APBAuthenticationManager/ttl //apple_ref/occ/data/ttl //apple_ref/occ/clconst/APBAuthenticationManager/ttl " machineGenerated="true" --&gt;&lt;span class="var"&gt;ttl&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBTokenManager/appBladeDeviceSecret</TokenIdentifier>
+    <Path>APBTokenManager_h/Classes/APBTokenManager/index.html</Path>
+    <Abstract>Getter method for for the current device secret, or active SDK token.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/appBladeDeviceSecret //apple_ref/occ/data/APBTokenManager/appBladeDeviceSecret //apple_ref/occ/data/appBladeDeviceSecret //apple_ref/occ/clconst/APBTokenManager/appBladeDeviceSecret " machineGenerated="true" --&gt;&lt;span class="var"&gt;appBladeDeviceSecret&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBTokenManager/appBladeDeviceSecrets</TokenIdentifier>
+    <Path>APBTokenManager_h/Classes/APBTokenManager/index.html</Path>
+    <Abstract>Helper method for retrieving all device secret data in the app keychain</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSMutableDictionary //apple_ref/occ/tdef/NSMutableDictionary //apple_ref/occ/tag/NSMutableDictionary //apple_ref/occ/struct/NSMutableDictionary //apple_ref/occ/intf/NSMutableDictionary //apple_ref/doc/anysymbol/NSMutableDictionary" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSMutableDictionary&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/econst/appBladeDeviceSecrets //apple_ref/occ/data/APBTokenManager/appBladeDeviceSecrets //apple_ref/occ/data/appBladeDeviceSecrets //apple_ref/occ/clconst/APBTokenManager/appBladeDeviceSecrets " machineGenerated="true" --&gt;&lt;span class="var"&gt;appBladeDeviceSecrets&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBTokenManager/confirmToken:</TokenIdentifier>
+    <Path>APBTokenManager_h/Classes/APBTokenManager/index.html</Path>
+    <Abstract>Begins a token confirmation call, passing the freshly retrieved token.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBTokenManager/confirmToken //apple_ref/occ/clm/APBTokenManager/confirmToken //apple_ref/occ/intfcm/APBTokenManager/confirmToken //apple_ref/occ/intfm/APBTokenManager/confirmToken //apple_ref/occ/func/confirmToken //apple_ref/occ/ftmplt/APBTokenManager/confirmToken //apple_ref/occ/defn/confirmToken //apple_ref/occ/macro/confirmToken //apple_ref/doc/anysymbol/confirmToken" machineGenerated="true" --&gt;&lt;span class="function"&gt;confirmToken&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/tokenToConfirm //apple_ref/occ/data/APBTokenManager/tokenToConfirm //apple_ref/occ/data/tokenToConfirm //apple_ref/occ/clconst/APBTokenManager/tokenToConfirm " machineGenerated="true" --&gt;&lt;span class="var"&gt;tokenToConfirm&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBTokenManager/isCurrentToken:</TokenIdentifier>
+    <Path>APBTokenManager_h/Classes/APBTokenManager/index.html</Path>
+    <Abstract>Checks to see ith eth passed token matches the current assumed token. A retroactive callback to detect if an authentication failure should be respected.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBTokenManager/isCurrentToken //apple_ref/occ/clm/APBTokenManager/isCurrentToken //apple_ref/occ/intfcm/APBTokenManager/isCurrentToken //apple_ref/occ/intfm/APBTokenManager/isCurrentToken //apple_ref/occ/func/isCurrentToken //apple_ref/occ/ftmplt/APBTokenManager/isCurrentToken //apple_ref/occ/defn/isCurrentToken //apple_ref/occ/macro/isCurrentToken //apple_ref/doc/anysymbol/isCurrentToken" machineGenerated="true" --&gt;&lt;span class="function"&gt;isCurrentToken&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/token //apple_ref/occ/data/APBTokenManager/token //apple_ref/occ/data/token //apple_ref/occ/clconst/APBTokenManager/token " machineGenerated="true" --&gt;&lt;span class="var"&gt;token&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBTokenManager/isDeviceSecretBeingConfirmed</TokenIdentifier>
+    <Path>APBTokenManager_h/Classes/APBTokenManager/index.html</Path>
+    <Abstract></Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/isDeviceSecretBeingConfirmed //apple_ref/occ/data/APBTokenManager/isDeviceSecretBeingConfirmed //apple_ref/occ/data/isDeviceSecretBeingConfirmed //apple_ref/occ/clconst/APBTokenManager/isDeviceSecretBeingConfirmed " machineGenerated="true" --&gt;&lt;span class="var"&gt;isDeviceSecretBeingConfirmed&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBTokenManager/setAppBladeDeviceSecret:</TokenIdentifier>
+    <Path>APBTokenManager_h/Classes/APBTokenManager/index.html</Path>
+    <Abstract>Setter method for for the current device secret, or active SDK token.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;) &lt;!-- a logicalPath="//apple_ref/occ/instm/APBTokenManager/setAppBladeDeviceSecret //apple_ref/occ/clm/APBTokenManager/setAppBladeDeviceSecret //apple_ref/occ/intfcm/APBTokenManager/setAppBladeDeviceSecret //apple_ref/occ/intfm/APBTokenManager/setAppBladeDeviceSecret //apple_ref/occ/func/setAppBladeDeviceSecret //apple_ref/occ/ftmplt/APBTokenManager/setAppBladeDeviceSecret //apple_ref/occ/defn/setAppBladeDeviceSecret //apple_ref/occ/macro/setAppBladeDeviceSecret //apple_ref/doc/anysymbol/setAppBladeDeviceSecret" machineGenerated="true" --&gt;&lt;span class="function"&gt;setAppBladeDeviceSecret&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/appBladeDeviceSecret //apple_ref/occ/data/APBTokenManager/appBladeDeviceSecret //apple_ref/occ/data/appBladeDeviceSecret //apple_ref/occ/clconst/APBTokenManager/appBladeDeviceSecret " machineGenerated="true" --&gt;&lt;span class="var"&gt;appBladeDeviceSecret&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBWebOperation(PrivateMethods)/issueRequest</TokenIdentifier>
+    <Path>APBWebOperation+PrivateMethods_h/Categories/APBWebOperation_PrivateMethods_/index.html</Path>
+    <Abstract>This method is where the parrallelized
+NSURLConnection is initialized and sent. If the
+request was already released or the isCancelled
+flag was set to true</Abstract>
+    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/issueRequest //apple_ref/occ/data/APBWebOperation/issueRequest //apple_ref/occ/data/issueRequest //apple_ref/occ/clconst/APBWebOperation/issueRequest " machineGenerated="true" --&gt;&lt;span class="var"&gt;issueRequest&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBWebOperation(TokenManager)/confirmToken:</TokenIdentifier>
+    <Path>APBTokenManager_h/Categories/APBWebOperation_TokenManager_/index.html</Path>
+    <Abstract>Prepares the APBWebOperation to become a confirm
+Token call</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBWebOperation/confirmToken //apple_ref/occ/clm/APBWebOperation/confirmToken //apple_ref/occ/intfcm/APBWebOperation/confirmToken //apple_ref/occ/intfm/APBWebOperation/confirmToken //apple_ref/occ/func/confirmToken //apple_ref/occ/ftmplt/APBWebOperation/confirmToken //apple_ref/occ/defn/confirmToken //apple_ref/occ/macro/confirmToken //apple_ref/doc/anysymbol/confirmToken" machineGenerated="true" --&gt;&lt;span class="function"&gt;confirmToken&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/tokenToConfirm //apple_ref/occ/data/APBWebOperation/tokenToConfirm //apple_ref/occ/data/tokenToConfirm //apple_ref/occ/clconst/APBWebOperation/tokenToConfirm " machineGenerated="true" --&gt;&lt;span class="var"&gt;tokenToConfirm&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBWebOperation(TokenManager)/refreshToken:</TokenIdentifier>
+    <Path>APBTokenManager_h/Categories/APBWebOperation_TokenManager_/index.html</Path>
+    <Abstract>Prepares the APBWebOperation to become a refresh
+Token call</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBWebOperation/refreshToken //apple_ref/occ/clm/APBWebOperation/refreshToken //apple_ref/occ/intfcm/APBWebOperation/refreshToken //apple_ref/occ/intfm/APBWebOperation/refreshToken //apple_ref/occ/func/refreshToken //apple_ref/occ/ftmplt/APBWebOperation/refreshToken //apple_ref/occ/defn/refreshToken //apple_ref/occ/macro/refreshToken //apple_ref/doc/anysymbol/refreshToken" machineGenerated="true" --&gt;&lt;span class="function"&gt;refreshToken&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/tokenToConfirm //apple_ref/occ/data/APBWebOperation/tokenToConfirm //apple_ref/occ/data/tokenToConfirm //apple_ref/occ/clconst/APBWebOperation/tokenToConfirm " machineGenerated="true" --&gt;&lt;span class="var"&gt;tokenToConfirm&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBWebOperation/addSecurityToRequest:</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>Adds Appblade authorization headers to a request.
+Should be used in the prepare block for the most
+immediate credentials.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBWebOperation/addSecurityToRequest //apple_ref/occ/clm/APBWebOperation/addSecurityToRequest //apple_ref/occ/intfcm/APBWebOperation/addSecurityToRequest //apple_ref/occ/intfm/APBWebOperation/addSecurityToRequest //apple_ref/occ/func/addSecurityToRequest //apple_ref/occ/ftmplt/APBWebOperation/addSecurityToRequest //apple_ref/occ/defn/addSecurityToRequest //apple_ref/occ/macro/addSecurityToRequest //apple_ref/doc/anysymbol/addSecurityToRequest" machineGenerated="true" --&gt;&lt;span class="function"&gt;addSecurityToRequest&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSMutableURLRequest //apple_ref/occ/tdef/NSMutableURLRequest //apple_ref/occ/tag/NSMutableURLRequest //apple_ref/occ/struct/NSMutableURLRequest //apple_ref/occ/intf/NSMutableURLRequest //apple_ref/doc/anysymbol/NSMutableURLRequest" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSMutableURLRequest&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/request //apple_ref/occ/data/APBWebOperation/request //apple_ref/occ/data/request //apple_ref/occ/clconst/APBWebOperation/request " machineGenerated="true" --&gt;&lt;span class="var"&gt;request&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBWebOperation/encodeBase64WithData:</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>Helper method to generate a string has of given
+data. Used for checksums to ensure files were
+completely transferred</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBWebOperation/encodeBase64WithData //apple_ref/occ/clm/APBWebOperation/encodeBase64WithData //apple_ref/occ/intfcm/APBWebOperation/encodeBase64WithData //apple_ref/occ/intfm/APBWebOperation/encodeBase64WithData //apple_ref/occ/func/encodeBase64WithData //apple_ref/occ/ftmplt/APBWebOperation/encodeBase64WithData //apple_ref/occ/defn/encodeBase64WithData //apple_ref/occ/macro/encodeBase64WithData //apple_ref/doc/anysymbol/encodeBase64WithData" machineGenerated="true" --&gt;&lt;span class="function"&gt;encodeBase64WithData&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSData //apple_ref/occ/tdef/NSData //apple_ref/occ/tag/NSData //apple_ref/occ/struct/NSData //apple_ref/occ/intf/NSData //apple_ref/doc/anysymbol/NSData" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSData&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/objData //apple_ref/occ/data/APBWebOperation/objData //apple_ref/occ/data/objData //apple_ref/occ/clconst/APBWebOperation/objData " machineGenerated="true" --&gt;&lt;span class="var"&gt;objData&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBWebOperation/genRandNumberLength:</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>Helper method to generate a numeric string (numbers
+1-9, no zeros) of a certain length.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBWebOperation/genRandNumberLength //apple_ref/occ/clm/APBWebOperation/genRandNumberLength //apple_ref/occ/intfcm/APBWebOperation/genRandNumberLength //apple_ref/occ/intfm/APBWebOperation/genRandNumberLength //apple_ref/occ/func/genRandNumberLength //apple_ref/occ/ftmplt/APBWebOperation/genRandNumberLength //apple_ref/occ/defn/genRandNumberLength //apple_ref/occ/macro/genRandNumberLength //apple_ref/doc/anysymbol/genRandNumberLength" machineGenerated="true" --&gt;&lt;span class="function"&gt;genRandNumberLength&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/int //apple_ref/occ/tdef/int //apple_ref/occ/tag/int //apple_ref/occ/struct/int //apple_ref/occ/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --&gt;&lt;span class="type"&gt;int&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/len //apple_ref/occ/data/APBWebOperation/len //apple_ref/occ/data/len //apple_ref/occ/clconst/APBWebOperation/len " machineGenerated="true" --&gt;&lt;span class="var"&gt;len&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBWebOperation/getReceivedStatusCode</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>If this method is called before the header
+completes, a 500 will be returned. This method
+should only be relied upon after the web operation
+finishes.</Abstract>
+    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/int //apple_ref/occ/tdef/int //apple_ref/occ/tag/int //apple_ref/occ/struct/int //apple_ref/occ/intf/int //apple_ref/doc/anysymbol/int" machineGenerated="true" --&gt;&lt;span class="type"&gt;int&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/getReceivedStatusCode //apple_ref/occ/data/APBWebOperation/getReceivedStatusCode //apple_ref/occ/data/getReceivedStatusCode //apple_ref/occ/clconst/APBWebOperation/getReceivedStatusCode " machineGenerated="true" --&gt;&lt;span class="var"&gt;getReceivedStatusCode&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/APBWebOperation/initWithDelegate:</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>all APBWebOperation should have a delegate for
+ownership and authority behavior. The delegate will
+be weakly referenced so that the</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/APBWebOperation/initWithDelegate //apple_ref/occ/clm/APBWebOperation/initWithDelegate //apple_ref/occ/intfcm/APBWebOperation/initWithDelegate //apple_ref/occ/intfm/APBWebOperation/initWithDelegate //apple_ref/occ/func/initWithDelegate //apple_ref/occ/ftmplt/APBWebOperation/initWithDelegate //apple_ref/occ/defn/initWithDelegate //apple_ref/occ/macro/initWithDelegate //apple_ref/doc/anysymbol/initWithDelegate" machineGenerated="true" --&gt;&lt;span class="function"&gt;initWithDelegate&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt;&amp;lt;&lt;span class="param"&gt;APBWebOperationDelegate&lt;/span&gt;&amp;gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/delegate //apple_ref/occ/data/APBWebOperation/delegate //apple_ref/occ/data/delegate //apple_ref/occ/clconst/APBWebOperation/delegate " machineGenerated="true" --&gt;&lt;span class="var"&gt;delegate&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(ApplicationInfo)/executableUUID</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html</Path>
+    <Abstract>we find the uuid of the executable by using the
+symbol _mh_execute_header and walking the load
+commands of its program to determine the ending (or
+beginning) of any section or segment in the
+program.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/executableUUID //apple_ref/occ/data/AppBlade/executableUUID //apple_ref/occ/data/executableUUID //apple_ref/occ/clconst/AppBlade/executableUUID " machineGenerated="true" --&gt;&lt;span class="var"&gt;executableUUID&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(ApplicationInfo)/hashExecutable</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html</Path>
+    <Abstract>we find the hash of the executable by first taking
+[NSBundle mainBundle] executablePath] and finding
+the hashFile value.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/hashExecutable //apple_ref/occ/data/AppBlade/hashExecutable //apple_ref/occ/data/hashExecutable //apple_ref/occ/clconst/AppBlade/hashExecutable " machineGenerated="true" --&gt;&lt;span class="var"&gt;hashExecutable&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(ApplicationInfo)/hashInfoPlist</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html</Path>
+    <Abstract>we find the uuid of the executable by using the
+symbol _mh_execute_header and walking the load
+commands of its program to determine the ending (or
+beginning) of any section or segment in the
+program.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/hashInfoPlist //apple_ref/occ/data/AppBlade/hashInfoPlist //apple_ref/occ/data/hashInfoPlist //apple_ref/occ/clconst/AppBlade/hashInfoPlist " machineGenerated="true" --&gt;&lt;span class="var"&gt;hashInfoPlist&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(ApplicationInfo)/isAppStoreBuild</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html</Path>
+    <Abstract>Detects if whether the application is signed by Apple.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/isAppStoreBuild //apple_ref/occ/data/AppBlade/isAppStoreBuild //apple_ref/occ/data/isAppStoreBuild //apple_ref/occ/clconst/AppBlade/isAppStoreBuild " machineGenerated="true" --&gt;&lt;span class="var"&gt;isAppStoreBuild&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(ApplicationInfo)/isBeingDebugged</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Categories/AppBlade_ApplicationInfo_/index.html</Path>
+    <Abstract>Detects if the application is being debugged.</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/isBeingDebugged //apple_ref/occ/data/AppBlade/isBeingDebugged //apple_ref/occ/data/isBeingDebugged //apple_ref/occ/clconst/AppBlade/isBeingDebugged " machineGenerated="true" --&gt;&lt;span class="var"&gt;isBeingDebugged&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(DeviceInfo)/iosVersionSanitized</TokenIdentifier>
+    <Path>APBDeviceInfoManager_h/Categories/AppBlade_DeviceInfo_/index.html</Path>
+    <Abstract>Removes all non ascii characters in the value of
+osVersionBuild and returns that sanitized string.</Abstract>
+    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/econst/iosVersionSanitized //apple_ref/occ/data/AppBlade/iosVersionSanitized //apple_ref/occ/data/iosVersionSanitized //apple_ref/occ/clconst/AppBlade/iosVersionSanitized " machineGenerated="true" --&gt;&lt;span class="var"&gt;iosVersionSanitized&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(DeviceInfo)/osVersionBuild</TokenIdentifier>
+    <Path>APBDeviceInfoManager_h/Categories/AppBlade_DeviceInfo_/index.html</Path>
+    <Abstract>This method is not the same as [[UIDevice
+currentDevice] systemVersion], which woud return
+something human readable like 4.2.1 or 7.0.1</Abstract>
+    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/econst/osVersionBuild //apple_ref/occ/data/AppBlade/osVersionBuild //apple_ref/occ/data/osVersionBuild //apple_ref/occ/clconst/AppBlade/osVersionBuild " machineGenerated="true" --&gt;&lt;span class="var"&gt;osVersionBuild&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(DeviceInfo)/platform</TokenIdentifier>
+    <Path>APBDeviceInfoManager_h/Categories/AppBlade_DeviceInfo_/index.html</Path>
+    <Abstract>Finds Base Hardware platform name and returns it.</Abstract>
+    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/econst/platform //apple_ref/occ/data/AppBlade/platform //apple_ref/occ/data/platform //apple_ref/occ/clconst/AppBlade/platform " machineGenerated="true" --&gt;&lt;span class="var"&gt;platform&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(DeviceInfo)/simpleJailBreakCheck</TokenIdentifier>
+    <Path>APBDeviceInfoManager_h/Categories/AppBlade_DeviceInfo_/index.html</Path>
+    <Abstract>detects if the device is Jailbroken through a few standard checks</Abstract>
+    <Declaration>-(&lt;!-- a logicalPath="//apple_ref/occ/cl/BOOL //apple_ref/occ/tdef/BOOL //apple_ref/occ/tag/BOOL //apple_ref/occ/struct/BOOL //apple_ref/occ/intf/BOOL //apple_ref/doc/anysymbol/BOOL" machineGenerated="true" --&gt;&lt;span class="type"&gt;BOOL&lt;/span&gt;&lt;!-- /a --&gt;) &lt;!-- a logicalPath="//apple_ref/occ/econst/simpleJailBreakCheck //apple_ref/occ/data/AppBlade/simpleJailBreakCheck //apple_ref/occ/data/simpleJailBreakCheck //apple_ref/occ/clconst/AppBlade/simpleJailBreakCheck " machineGenerated="true" --&gt;&lt;span class="var"&gt;simpleJailBreakCheck&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(TokenManager)/appBladeWebClient:receivedConfirmTokenResponse:</TokenIdentifier>
+    <Path>APBTokenManager_h/Categories/AppBlade_TokenManager_/index.html</Path>
+    <Abstract>Callback for a confirm token call</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/AppBlade/appBladeWebClient //apple_ref/occ/clm/AppBlade/appBladeWebClient //apple_ref/occ/intfcm/AppBlade/appBladeWebClient //apple_ref/occ/intfm/AppBlade/appBladeWebClient //apple_ref/occ/func/appBladeWebClient //apple_ref/occ/ftmplt/AppBlade/appBladeWebClient //apple_ref/occ/defn/appBladeWebClient //apple_ref/occ/macro/appBladeWebClient //apple_ref/doc/anysymbol/appBladeWebClient" machineGenerated="true" --&gt;&lt;span class="function"&gt;appBladeWebClient&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/APBWebOperation //apple_ref/occ/tdef/APBWebOperation //apple_ref/occ/tag/APBWebOperation //apple_ref/occ/struct/APBWebOperation //apple_ref/occ/intf/APBWebOperation //apple_ref/doc/anysymbol/APBWebOperation" machineGenerated="true" --&gt;&lt;span class="type"&gt;APBWebOperation&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="param"&gt;client&lt;/span&gt; 
+        &lt;!-- a logicalPath="//apple_ref/occ/instm/AppBlade/receivedConfirmTokenResponse //apple_ref/occ/clm/AppBlade/receivedConfirmTokenResponse //apple_ref/occ/intfcm/AppBlade/receivedConfirmTokenResponse //apple_ref/occ/intfm/AppBlade/receivedConfirmTokenResponse //apple_ref/occ/func/receivedConfirmTokenResponse //apple_ref/occ/ftmplt/AppBlade/receivedConfirmTokenResponse //apple_ref/occ/defn/receivedConfirmTokenResponse //apple_ref/occ/macro/receivedConfirmTokenResponse //apple_ref/doc/anysymbol/receivedConfirmTokenResponse" machineGenerated="true" --&gt;&lt;span class="function"&gt;receivedConfirmTokenResponse&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSDictionary //apple_ref/occ/tdef/NSDictionary //apple_ref/occ/tag/NSDictionary //apple_ref/occ/struct/NSDictionary //apple_ref/occ/intf/NSDictionary //apple_ref/doc/anysymbol/NSDictionary" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSDictionary&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/response //apple_ref/occ/data/AppBlade/response //apple_ref/occ/data/response //apple_ref/occ/clconst/AppBlade/response " machineGenerated="true" --&gt;&lt;span class="var"&gt;response&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instm/AppBlade(TokenManager)/appBladeWebClient:receivedGenerateTokenResponse:</TokenIdentifier>
+    <Path>APBTokenManager_h/Categories/AppBlade_TokenManager_/index.html</Path>
+    <Abstract>Callback for a generate token call</Abstract>
+    <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/AppBlade/appBladeWebClient //apple_ref/occ/clm/AppBlade/appBladeWebClient //apple_ref/occ/intfcm/AppBlade/appBladeWebClient //apple_ref/occ/intfm/AppBlade/appBladeWebClient //apple_ref/occ/func/appBladeWebClient //apple_ref/occ/ftmplt/AppBlade/appBladeWebClient //apple_ref/occ/defn/appBladeWebClient //apple_ref/occ/macro/appBladeWebClient //apple_ref/doc/anysymbol/appBladeWebClient" machineGenerated="true" --&gt;&lt;span class="function"&gt;appBladeWebClient&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/APBWebOperation //apple_ref/occ/tdef/APBWebOperation //apple_ref/occ/tag/APBWebOperation //apple_ref/occ/struct/APBWebOperation //apple_ref/occ/intf/APBWebOperation //apple_ref/doc/anysymbol/APBWebOperation" machineGenerated="true" --&gt;&lt;span class="type"&gt;APBWebOperation&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;span class="param"&gt;client&lt;/span&gt; 
+        &lt;!-- a logicalPath="//apple_ref/occ/instm/AppBlade/receivedGenerateTokenResponse //apple_ref/occ/clm/AppBlade/receivedGenerateTokenResponse //apple_ref/occ/intfcm/AppBlade/receivedGenerateTokenResponse //apple_ref/occ/intfm/AppBlade/receivedGenerateTokenResponse //apple_ref/occ/func/receivedGenerateTokenResponse //apple_ref/occ/ftmplt/AppBlade/receivedGenerateTokenResponse //apple_ref/occ/defn/receivedGenerateTokenResponse //apple_ref/occ/macro/receivedGenerateTokenResponse //apple_ref/doc/anysymbol/receivedGenerateTokenResponse" machineGenerated="true" --&gt;&lt;span class="function"&gt;receivedGenerateTokenResponse&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/NSDictionary //apple_ref/occ/tdef/NSDictionary //apple_ref/occ/tag/NSDictionary //apple_ref/occ/struct/NSDictionary //apple_ref/occ/intf/NSDictionary //apple_ref/doc/anysymbol/NSDictionary" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSDictionary&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/response //apple_ref/occ/data/AppBlade/response //apple_ref/occ/data/response //apple_ref/occ/clconst/AppBlade/response " machineGenerated="true" --&gt;&lt;span class="var"&gt;response&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/instm/AppBlade/allowFeedbackReporting</TokenIdentifier>
@@ -279,6 +825,69 @@ calls.</Abstract>
     <Declaration>- (&lt;!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --&gt;&lt;span class="type"&gt;void&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/instm/AppBlade/showFeedbackDialogueWithOptions //apple_ref/occ/clm/AppBlade/showFeedbackDialogueWithOptions //apple_ref/occ/intfcm/AppBlade/showFeedbackDialogueWithOptions //apple_ref/occ/intfm/AppBlade/showFeedbackDialogueWithOptions //apple_ref/occ/func/showFeedbackDialogueWithOptions //apple_ref/occ/ftmplt/AppBlade/showFeedbackDialogueWithOptions //apple_ref/occ/defn/showFeedbackDialogueWithOptions //apple_ref/occ/macro/showFeedbackDialogueWithOptions //apple_ref/doc/anysymbol/showFeedbackDialogueWithOptions" machineGenerated="true" --&gt;&lt;span class="function"&gt;showFeedbackDialogueWithOptions&lt;/span&gt;&lt;!-- /a --&gt;:(&lt;!-- a logicalPath="//apple_ref/occ/cl/AppBladeFeedbackDisplayOptions //apple_ref/occ/tdef/AppBladeFeedbackDisplayOptions //apple_ref/occ/tag/AppBladeFeedbackDisplayOptions //apple_ref/occ/struct/AppBladeFeedbackDisplayOptions //apple_ref/occ/intf/AppBladeFeedbackDisplayOptions //apple_ref/doc/anysymbol/AppBladeFeedbackDisplayOptions" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBladeFeedbackDisplayOptions&lt;/span&gt;&lt;!-- /a --&gt;)&lt;!-- a logicalPath="//apple_ref/occ/econst/options //apple_ref/occ/data/AppBlade/options //apple_ref/occ/data/options //apple_ref/occ/clconst/AppBlade/options " machineGenerated="true" --&gt;&lt;span class="var"&gt;options&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
 </Token>
 <Token>
+    <TokenIdentifier>//apple_ref/occ/instp/APBApplicationInfoManager/executableUUID</TokenIdentifier>
+    <Path>APBApplicationInfoManager_h/Classes/APBApplicationInfoManager/index.html</Path>
+    <Abstract>we find the uuid of the executable by using the
+symbol _mh_execute_header and walking the load
+commands of its program to determine the ending (or
+beginning) of any section or segment in the
+program.</Abstract>
+    <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
+    &lt;span class="param"&gt;strong&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt; &lt;span class="type"&gt;*&lt;/span&gt;&lt;!-- a logicalPath="//apple_ref/occ/econst/executableUUID //apple_ref/occ/data/APBApplicationInfoManager/executableUUID //apple_ref/occ/data/executableUUID //apple_ref/occ/clconst/APBApplicationInfoManager/executableUUID " machineGenerated="true" --&gt;&lt;span class="var"&gt;executableUUID&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instp/APBDeviceInfoManager/osVersionBuild</TokenIdentifier>
+    <Path>APBDeviceInfoManager_h/Classes/APBDeviceInfoManager/index.html</Path>
+    <Abstract>This method is not the same as [[UIDevice
+currentDevice] systemVersion], which woud return
+something human readable like 4.2.1 or 7.0.1</Abstract>
+    <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
+    &lt;span class="param"&gt;strong&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/osVersionBuild //apple_ref/occ/data/APBDeviceInfoManager/osVersionBuild //apple_ref/occ/data/osVersionBuild //apple_ref/occ/clconst/APBDeviceInfoManager/osVersionBuild " machineGenerated="true" --&gt;&lt;span class="var"&gt;osVersionBuild&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instp/APBDeviceInfoManager/platform</TokenIdentifier>
+    <Path>APBDeviceInfoManager_h/Classes/APBDeviceInfoManager/index.html</Path>
+    <Abstract>Finds Base Hardware platform name and returns it.</Abstract>
+    <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
+    &lt;span class="param"&gt;strong&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --&gt;&lt;span class="type"&gt;NSString&lt;/span&gt;&lt;!-- /a --&gt;&lt;span class="type"&gt;*&lt;/span&gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/platform //apple_ref/occ/data/APBDeviceInfoManager/platform //apple_ref/occ/data/platform //apple_ref/occ/clconst/APBDeviceInfoManager/platform " machineGenerated="true" --&gt;&lt;span class="var"&gt;platform&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instp/APBWebOperation/api</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>The api identifier for the webcall. Used in -
+(NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;</Abstract>
+    <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
+    &lt;span class="param"&gt;readwrite&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/AppBladeWebClientAPI //apple_ref/occ/tdef/AppBladeWebClientAPI //apple_ref/occ/tag/AppBladeWebClientAPI //apple_ref/occ/struct/AppBladeWebClientAPI //apple_ref/occ/intf/AppBladeWebClientAPI //apple_ref/doc/anysymbol/AppBladeWebClientAPI" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBladeWebClientAPI&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/api //apple_ref/occ/data/APBWebOperation/api //apple_ref/occ/data/api //apple_ref/occ/clconst/APBWebOperation/api " machineGenerated="true" --&gt;&lt;span class="var"&gt;api&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instp/APBWebOperation/failBlock</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>the AppBladeRequestFailureBlock for this specific web operation</Abstract>
+    <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
+    &lt;span class="param"&gt;copy&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/AppBladeRequestFailureBlock //apple_ref/occ/tdef/AppBladeRequestFailureBlock //apple_ref/occ/tag/AppBladeRequestFailureBlock //apple_ref/occ/struct/AppBladeRequestFailureBlock //apple_ref/occ/intf/AppBladeRequestFailureBlock //apple_ref/doc/anysymbol/AppBladeRequestFailureBlock" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBladeRequestFailureBlock&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/failBlock //apple_ref/occ/data/APBWebOperation/failBlock //apple_ref/occ/data/failBlock //apple_ref/occ/clconst/APBWebOperation/failBlock " machineGenerated="true" --&gt;&lt;span class="var"&gt;failBlock&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instp/APBWebOperation/prepareBlock</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>the AppBladeRequestPrepareBlock for this specific web operation</Abstract>
+    <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
+    &lt;span class="param"&gt;copy&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/AppBladeRequestPrepareBlock //apple_ref/occ/tdef/AppBladeRequestPrepareBlock //apple_ref/occ/tag/AppBladeRequestPrepareBlock //apple_ref/occ/struct/AppBladeRequestPrepareBlock //apple_ref/occ/intf/AppBladeRequestPrepareBlock //apple_ref/doc/anysymbol/AppBladeRequestPrepareBlock" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBladeRequestPrepareBlock&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/prepareBlock //apple_ref/occ/data/APBWebOperation/prepareBlock //apple_ref/occ/data/prepareBlock //apple_ref/occ/clconst/APBWebOperation/prepareBlock " machineGenerated="true" --&gt;&lt;span class="var"&gt;prepareBlock&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instp/APBWebOperation/requestCompletionBlock</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>the AppBladeRequestCompletionBlock for this specific web operation</Abstract>
+    <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
+    &lt;span class="param"&gt;copy&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/AppBladeRequestCompletionBlock //apple_ref/occ/tdef/AppBladeRequestCompletionBlock //apple_ref/occ/tag/AppBladeRequestCompletionBlock //apple_ref/occ/struct/AppBladeRequestCompletionBlock //apple_ref/occ/intf/AppBladeRequestCompletionBlock //apple_ref/doc/anysymbol/AppBladeRequestCompletionBlock" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBladeRequestCompletionBlock&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/requestCompletionBlock //apple_ref/occ/data/APBWebOperation/requestCompletionBlock //apple_ref/occ/data/requestCompletionBlock //apple_ref/occ/clconst/APBWebOperation/requestCompletionBlock " machineGenerated="true" --&gt;&lt;span class="var"&gt;requestCompletionBlock&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/instp/APBWebOperation/successBlock</TokenIdentifier>
+    <Path>APBWebOperation_h/Classes/APBWebOperation/index.html</Path>
+    <Abstract>the AppBladeRequestSuccessBlock for this specific web operation</Abstract>
+    <Declaration>@property (&lt;span class="param"&gt;nonatomic&lt;/span&gt;,
+    &lt;span class="param"&gt;copy&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/AppBladeRequestSuccessBlock //apple_ref/occ/tdef/AppBladeRequestSuccessBlock //apple_ref/occ/tag/AppBladeRequestSuccessBlock //apple_ref/occ/struct/AppBladeRequestSuccessBlock //apple_ref/occ/intf/AppBladeRequestSuccessBlock //apple_ref/doc/anysymbol/AppBladeRequestSuccessBlock" machineGenerated="true" --&gt;&lt;span class="type"&gt;AppBladeRequestSuccessBlock&lt;/span&gt;&lt;!-- /a --&gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/successBlock //apple_ref/occ/data/APBWebOperation/successBlock //apple_ref/occ/data/successBlock //apple_ref/occ/clconst/APBWebOperation/successBlock " machineGenerated="true" --&gt;&lt;span class="var"&gt;successBlock&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/instp/AppBlade/appBladeHost</TokenIdentifier>
     <Path>AppBlade_h/Classes/AppBlade/index.html</Path>
     <Abstract>Our endpoint. Usually the AppBlade host name, but it can be custom</Abstract>
@@ -301,9 +910,48 @@ authentication and other events</Abstract>
     &lt;span class="param"&gt;assign&lt;/span&gt;) &lt;!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --&gt;&lt;span class="type"&gt;id&lt;/span&gt;&lt;!-- /a --&gt;&amp;lt;&lt;span class="template"&gt;AppBladeDelegate&lt;/span&gt;&amp;gt; &lt;!-- a logicalPath="//apple_ref/occ/econst/delegate //apple_ref/occ/data/AppBlade/delegate //apple_ref/occ/data/delegate //apple_ref/occ/clconst/AppBlade/delegate " machineGenerated="true" --&gt;&lt;span class="var"&gt;delegate&lt;/span&gt;&lt;!-- /a --&gt;; </Declaration>
 </Token>
 <Token>
+    <TokenIdentifier>//apple_ref/occ/intf/APBWebOperationDelegate</TokenIdentifier>
+    <Path>APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html</Path>
+    <Abstract>The protocol that either the singleton or a feature
+manager could use to handle webcallbacks.</Abstract>
+</Token>
+<Token>
     <TokenIdentifier>//apple_ref/occ/intf/AppBladeDelegate</TokenIdentifier>
     <Path>AppBlade_h/Protocols/AppBladeDelegate/index.html</Path>
     <Abstract>Protocol to receive messages regarding device authentication and other events.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/intfm/APBWebOperationDelegate/addPendingRequest:</TokenIdentifier>
+    <Path>APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html</Path>
+    <Abstract>Adds an APBWebOperation to the pending request queue.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/intfm/APBWebOperationDelegate/appBladeWebClientFailed:</TokenIdentifier>
+    <Path>APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html</Path>
+    <Abstract>Essentially -
+(void)appBladeWebClientFailed:(APBWebOperation
+*)client withErrorString:nil;</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/intfm/APBWebOperationDelegate/appBladeWebClientFailed:withErrorString:</TokenIdentifier>
+    <Path>APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html</Path>
+    <Abstract>Internal function call that allows us to centralize
+failure behavior outside of the failure blocks.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/intfm/APBWebOperationDelegate/containsOperationInPendingRequests:</TokenIdentifier>
+    <Path>APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html</Path>
+    <Abstract>Iterates through the pendingrequests to find the webOperation.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/intfm/APBWebOperationDelegate/generateWebOperation</TokenIdentifier>
+    <Path>APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html</Path>
+    <Abstract>A simple method that constructs a web operation with the delegate preset.</Abstract>
+</Token>
+<Token>
+    <TokenIdentifier>//apple_ref/occ/intfm/APBWebOperationDelegate/pendingRequestsOfType:</TokenIdentifier>
+    <Path>APBWebOperation_h/Protocols/APBWebOperationDelegate/index.html</Path>
+    <Abstract>Returns the number of APBWebOperations with the specified AppBladeWebClientAPI value.</Abstract>
 </Token>
 <Token>
     <TokenIdentifier>//apple_ref/occ/intfm/AppBladeDelegate/appBlade:applicationApproved:error:</TokenIdentifier>
