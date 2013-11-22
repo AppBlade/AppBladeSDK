@@ -1,14 +1,14 @@
 /*!
 @header  APBSimpleKeychain.h
-  AppBlade
+@framework AppBlade
+@author Created by jkaufman on 3/23/11.
+@copyright AppBlade 2011. All rights reserved.
 
-  Created by jkaufman on 3/23/11.
-  Copyright 2011 AppBlade. All rights reserved.
+@brief Simple wrapper for saving NSCoding-compliant objects to Keychain.
 
-  Simple wrapper for saving NSCoding-compliant objects to Keychain.
-
-  Original solution by StackOverflow user Anomie: http://stackoverflow.com/q/5251820
+@discussion Original solution by StackOverflow user Anomie: http://stackoverflow.com/q/5251820
 */
+
 #import <Foundation/Foundation.h>
 
 

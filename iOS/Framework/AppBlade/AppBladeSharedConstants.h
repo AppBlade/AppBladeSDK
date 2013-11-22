@@ -1,10 +1,8 @@
-//
-//  AppBladeSharedConstants.h
-//  AppBlade
-//
-//  Created by AndrewTremblay on 7/16/13.
-//  Copyright (c) 2013 AppBlade. All rights reserved.
-//
+/*!
+ @header AppBladeSharedConstants
+ @brief Header containing the shared constants used throughout AppBlade
+ @discussion Support and FAQ can be found at http://support.appblade.com
+*/
 
 /*!
  @header AppBladeSharedConstants
@@ -50,10 +48,6 @@ static const int kPermissionDeniedAlertTag                     = 613;
 
 
 /*!
-@group Feature file names and paths
- */
-
-/*!
  The Appblade cache folder name
  */
 static NSString* const kAppBladeCacheDirectory          = @"AppBladeCache";
@@ -69,10 +63,6 @@ static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
 
 static NSString* const kAppBladeSessionFile             = @"AppBladeSessions.txt";
-
-/*!
- @group Keychain Values
- */
 
 static NSString* const kAppBladeKeychainTtlKey          = @"appBlade_ttl";
 /*! 
@@ -100,13 +90,6 @@ static NSString* const kAppBladeKeychainDisabledKey        = @"appBlade_disabled
 static NSString* const kAppBladeKeychainDisabledValueTrue    = @"is_disabled";
 static NSString* const kAppBladeKeychainDisabledValueFalse   = @"not_disabled";
 
-/*!
- @group Plist Key Values
-*/
-
-/*!
-Root key for the AppBladeKeys plist
- */
 static NSString* const kAppBladePlistApiDictionaryKey    = @"api_keys";
 static NSString* const kAppBladePlistDeviceSecretKey     = @"device_secret";
 static NSString* const kAppBladePlistProjectSecretKey    = @"project_secret";
@@ -114,51 +97,12 @@ static NSString* const kAppBladePlistEndpointKey         = @"host";
 static NSString* const kAppBladePlistDefaultDeviceSecretValue    = @"DEFAULT";
 static NSString* const kAppBladePlistDefaultProjectSecretValue   = @"DEFAULT";
 
-/*!
- @group Internal Error Codes 
- */
-
-
-/*! @constant kAppBladeOfflineError */
-static const int kAppBladeOfflineError                         = 1200;
-/*! @constant kAppBladeParsingError */
-static const int kAppBladeParsingError                         = 1208;
-/*! @constant kAppBladePermissionError */
-static const int kAppBladePermissionError                      = 1216;
-
-
-static NSString* const s_letters                        = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-
-/*!
- @group API Response Values
-*/
-
-/*! @constant kAppBladeApiTokenResponseDeviceSecretKey */
+static const int kAppBladeOfflineError = 1200;
+static const int kAppBladeParsingError = 1208;
+static const int kAppBladePermissionError = 1216;
+static NSString* const s_letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 static NSString* const kAppBladeApiTokenResponseDeviceSecretKey     = @"device_secret";
-/*! @constant kAppBladeApiTokenResponseTimeToLiveKey */
 static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
-
-
-/*!
- @group Feature Bitmasks
- @brief Bistmasks are the preferred structure for passing options to feature calls 
- */
-
-/*! 
- @attributelist AppBladeFeedbackSetupOptions
-    AppBladeFeedbackSetupDefault                 = 0,      // default behavior
-    AppBladeFeedbackSetupTripleFingerDoubleTap   = 1 <<  0,   // on all touch downs
-    AppBladeFeedbackSetupCustomPrompt            = 1 <<  1    // on multiple touchdowns (tap count > 1)
- */
-
-
-/*!
- @attributelist AppBladeFeedbackDisplayOptions
-    AppBladeFeedbackDisplayDefault                 = 0,      // default behavior
-    AppBladeFeedbackDisplayWithScreenshot          = 1 <<  0,   // Take a screenshot to send with the feedback (default)
-    AppBladeFeedbackDisplayWithoutScreenshot       = 1 <<  1    // Do not take a screenshot
- */
 
 
 typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackSetupOptions) {

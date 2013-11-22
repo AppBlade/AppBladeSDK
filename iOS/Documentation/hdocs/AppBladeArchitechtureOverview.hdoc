@@ -4,7 +4,7 @@
 
   @author Andrew Tremblay on 9/9/13
   @discussion This document provides a broad look on the AppBlade SDK code structure. It describes the intention of the current design and gives suggestions about its possible expansion.  
-  See also @link //apple_ref/occ/cl/AppBlade The AppBlade base class@/link for  
+  See also the AppBlade base class for further explanation.
 
 	<h4>Contents:</h4>
 	<p class="blockquote">
@@ -20,6 +20,6 @@
     <br>
     <a name="birds_eye_view" title="A Birds Eye View"></a>
     <h2 class="jump">The AppBlade Singleton</h2>
-    <p>The AppBlade singleton is intended to be the sole entrypoint to the features of AppBlade.  </p>
+    <p>The AppBlade singleton is intended to be the sole entrypoint to the features of AppBlade. Accessing the secondary managers should be restricted to development. </p>
 
  */

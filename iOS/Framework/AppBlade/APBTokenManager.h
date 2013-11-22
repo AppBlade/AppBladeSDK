@@ -42,7 +42,7 @@
 -(NSOperationQueue *) tokenRequests;
 -(NSOperationQueue *) addTokenRequest:(NSOperation *)request;
 
-/*!
+/**
  @brief Begins a refresh token call, passing the current token if possible.
  */
 - (void)refreshToken:(NSString *)tokenToConfirm;
