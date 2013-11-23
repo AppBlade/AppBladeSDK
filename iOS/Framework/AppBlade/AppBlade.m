@@ -153,6 +153,11 @@ static AppBlade *s_sharedManager = nil;
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         self.delegate = self;
+        //init the default values for the global options
+        self.webReportingGlobalOptions = AppBladeWebReportingDefault;
+        self.webReportingTimeout = 0; //not respected by default
+
+        
         //init the core managers
         self.tokenManager = [[APBTokenManager alloc] init];
         self.applicationInfoManager = [[APBApplicationInfoManager alloc] init];
@@ -327,6 +332,12 @@ static AppBlade *s_sharedManager = nil;
 }
 
 -(void) resumeCurrentPendingRequests {
+    //ensure that our web options are set correctly
+    if (self.webReportingGlobalOptions == AppBladeWebReportingOnRegularInterval) {
+#warning This isn't finished
+        //       self.webReportingTimeout
+    }
+    //
     [[self pendingRequests] setSuspended:NO];
 }
 

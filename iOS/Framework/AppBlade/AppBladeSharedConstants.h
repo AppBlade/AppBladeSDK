@@ -100,6 +100,15 @@ static NSString* const kAppBladeApiTokenResponseDeviceSecretKey     = @"device_s
 static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 
+//options that determine when requests are reported
+typedef NS_OPTIONS(NSUInteger, AppBladeWebReportingGlobalOptions) {
+    AppBladeWebReportingDefault                 = 0,      // default behavior
+    AppBladeWebReportingOnResume                = 1 <<  0,   // when the app is resumed
+    AppBladeWebReportingOnRegularInterval       = 1 <<  1,   // when set, respect the WebTimeout Interval value
+    AppBladeWebReportingOnWifiOnly              = 1 <<  2    // add the requirement that the app must have wifi to send requests successfully. Default is any internet connection. 
+};
+
+
 typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackSetupOptions) {
     AppBladeFeedbackSetupDefault                 = 0,      // default behavior
     AppBladeFeedbackSetupTripleFingerDoubleTap   = 1 <<  0,   // on all touch downs
@@ -111,7 +120,5 @@ typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackDisplayOptions) {
     AppBladeFeedbackDisplayWithScreenshot          = 1 <<  0,   // Take a screenshot to send with the feedback (default)
     AppBladeFeedbackDisplayWithoutScreenshot       = 1 <<  1    // Do not take a screenshot
 };
-
-
 
 #endif

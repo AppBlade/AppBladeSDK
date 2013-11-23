@@ -39,7 +39,7 @@
 #pragma mark  API KEYS
 
 /*! 
- @brief Our endpoint. Usually the AppBlade host name, but it can be custom */
+ @brief Our endpoint. Usually the AppBlade host name, but it can be customized from the plist */
 @property (nonatomic, retain) NSString* appBladeHost;
 /*! 
  @brief AppBlade API project-issued secret. */
@@ -52,6 +52,13 @@
 /*!
  @property Setter method for the device secret. Used in API calls */
 -(void) setAppBladeDeviceSecret:(NSString *)appBladeDeviceSecret;
+
+/*! @brief Option value that determines when web requests occur.
+ For example, if your app should run in a kiosk, have it respect a timeout.
+ */
+@property (nonatomic, assign) NSInteger webReportingGlobalOptions;
+@property (nonatomic, assign) NSInteger webReportingTimeout;
+
 
 /*! 
  @property
