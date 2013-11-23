@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "ApplicationFeatureViewController.h"
-
 //Use these defines to enable logging of internal AppBlade calls.
 //these calls are only recommended in the case that you think
 //something's wrong with the AppBlade SDK
@@ -33,7 +32,11 @@
     // Configure Window
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [navigationController setNavigationBarHidden:YES animated:NO];
-    
+   
+    if (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_6_1) {
+        [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:225.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0f]];
+    }
+
     [self.window setRootViewController:navigationController];
     [self.window makeKeyAndVisible];
 

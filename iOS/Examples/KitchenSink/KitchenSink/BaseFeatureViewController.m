@@ -29,6 +29,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[UINavigationBar appearance] setBackgroundColor:[UIColor colorWithRed:225.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0f]];
+    NSDictionary *titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
+
+//for backwards compatibility
+    if (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_6_1) {
+//        [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+        [[UINavigationBar appearance] setBackgroundColor:[UIColor colorWithRed:225.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0f]];
+    }else{
+        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:225.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1.0f]];
+        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    }
+    
+    [[UINavigationBar appearance] setTitleTextAttributes:titleTextAttributes];
+
 	// Do any additional setup after loading the view.
 }
 
