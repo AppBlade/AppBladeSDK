@@ -12,12 +12,15 @@
 #import "CrashReportingViewController.h"
 #import "CustomParametersViewController.h"
 
+#import "APBStatusBarUnderview.h"
+
 @interface ApplicationFeatureViewController : BaseFeatureViewController
 
 @property (strong, nonatomic) CrashReportingViewController *crashVC;
 @property (strong, nonatomic) CustomParametersViewController *customParamsVC;
 
 
+@property (strong, nonatomic) IBOutlet APBStatusBarUnderview *customStatusBar;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @property (strong, nonatomic) IBOutlet UIView *headerWrapperView;

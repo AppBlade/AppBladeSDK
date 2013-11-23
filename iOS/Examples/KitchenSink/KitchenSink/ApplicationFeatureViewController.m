@@ -21,7 +21,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    //load instances of feature detail views
     self.crashVC = [[CrashReportingViewController alloc] init];
     self.customParamsVC = [[CustomParametersViewController alloc] init];
     
@@ -36,9 +36,13 @@
                      self.updateCheckingWrapperView,
                      self.authenticationWrapperView,
                      nil];
-    
+    //current session demonstration
     [NSTimer scheduledTimerWithTimeInterval:0.1 target:self
                                    selector:@selector(updateCurrentSessionDisplay) userInfo:nil repeats:YES];
+    
+    if (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_6_1) {
+        [self.customStatusBar setHidden:YES];
+    }
 }
 
 -(void)viewWillLayoutSubviews
@@ -68,7 +72,10 @@
 }
 
 
-
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.customStatusBar updateColorFromOffset:scrollView.contentOffset.y];
+}
 
 #pragma mark - Button Handling
 

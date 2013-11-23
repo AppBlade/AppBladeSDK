@@ -33,6 +33,7 @@
     // Configure Window
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [navigationController setNavigationBarHidden:YES animated:NO];
+    
     [self.window setRootViewController:navigationController];
     [self.window makeKeyAndVisible];
 
