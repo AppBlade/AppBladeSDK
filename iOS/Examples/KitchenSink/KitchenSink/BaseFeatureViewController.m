@@ -200,40 +200,51 @@
 // Called when the UIKeyboardDidShowNotification is sent.
 - (void)keyboardWasShown:(NSNotification*)aNotification
 {
+    self.lastContentOffset = scrollView.contentOffset;
+
+    
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
-    scrollView.contentInset = contentInsets;
-    scrollView.scrollIndicatorInsets = contentInsets;
+    //resize the scrollview to compensate for the keyboard
+    scrollView.frame = CGRectMake(scrollView.frame.origin.x,
+                                 scrollView.frame.origin.y,
+                                 scrollView.frame.size.width,
+                                 scrollView.frame.size.height - kbSize.height);   //resize
+
     
     // If active text field is hidden by keyboard, scroll it so it's visible
     // Your application might not need or want this behavior.
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    aRect.size.height -= kbSize.height;
-    if (activeField!= nil && !CGRectContainsPoint(aRect, activeField.frame.origin) ) {
-        CGPoint scrollPoint = CGPointMake(0.0, 438.0);
-        [scrollView setContentOffset:scrollPoint animated:YES];
-    }
+//    if (activeField!= nil && !CGRectContainsPoint(scrollView.frame, activeField.frame.origin) ) {
+//        CGPoint scrollPoint = CGPointMake(0.0, scrollView.frame.size.height - kbSize.height);
+//        [scrollView setContentOffset:scrollPoint animated:YES];
+//    }
 }
 
 // Called when the UIKeyboardWillHideNotification is sent
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
 {
-    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
-    scrollView.contentInset = contentInsets;
-    scrollView.scrollIndicatorInsets = contentInsets;
+    NSDictionary* info = [aNotification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+   
+    scrollView.frame = CGRectMake(scrollView.frame.origin.x,
+                                  scrollView.frame.origin.y,
+                                  scrollView.frame.size.width,
+                                  scrollView.frame.size.height + kbSize.height); //resize
+    
+
     
     if(activeField != nil)
     {
         [activeField resignFirstResponder];
     }
+    
+    scrollView.contentOffset = self.lastContentOffset;
 }
-
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+
+    
     activeField = textField;
 }
 

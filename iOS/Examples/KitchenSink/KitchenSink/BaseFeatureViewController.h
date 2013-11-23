@@ -12,6 +12,7 @@
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) UITextField *activeField;
 @property (strong, nonatomic) NSArray *viewList;
+@property (assign, nonatomic) CGPoint lastContentOffset;
 
 -(CGFloat)buildViewListForScrollView:(UIScrollView*)scrollView;
 

@@ -115,7 +115,9 @@ NSInteger kMinParamTextFieldHeight = 113;
     //and move any views beneath the customParamWrapperView
     CGFloat newHeight = [self resizeSubView:self.currentParamsTextView ofViewListElement:self.currentParamView fromSize:oldSize toSize:newSize];
     
-
+    newHeight = MAX(newHeight, self.scrollView.bounds.size.height);
+    
+    
     //update ContentSize of scrollview
     [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width, newHeight)];
 }
@@ -153,7 +155,18 @@ NSInteger kMinParamTextFieldHeight = 113;
 
 }
 
-- (IBAction)backButtonPressed:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+
+- (IBAction)didBeginEditingTextField:(id)sender {
+    [self textFieldDidBeginEditing:sender];
+}
+
+- (IBAction)didExitValueTextField:(id)sender {
+    [self.valueTextField resignFirstResponder];
+}
+
+- (IBAction)didExitKeyTextField:(id)sender {
+    [self.keyTextField resignFirstResponder];
+    [self.valueTextField becomeFirstResponder];
+
 }
 @end
