@@ -4,11 +4,6 @@
  @discussion Support and FAQ can be found at http://support.appblade.com
 */
 
-/*!
- @header AppBladeSharedConstants
- @brief Header containing all the constants that are used throughout the SDK.
- */
-
 #ifndef AppBlade_AppBladeSharedConstants_h
 #define AppBlade_AppBladeSharedConstants_h
 /*!
