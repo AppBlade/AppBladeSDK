@@ -105,7 +105,7 @@ NSInteger kMinParamTextFieldHeight = 113;
     }
     //set the content of the customParam text field
     CGSize oldSize = self.currentParamsTextView.contentSize;//[self.currentParamsTextView.text sizeWithFont:self.currentParamsTextView.font constrainedToSize:CGSizeMake(self.currentParamsTextView.frame.size.width, kMaxParamTextFieldHeight)lineBreakMode:NSLineBreakByWordWrapping];
-    
+    self.currentParamsTextView.contentInset = UIEdgeInsetsZero;
     [self.currentParamsTextView setText:textViewMessage];
     [self.currentParamsTextView setTextAlignment:(centerText ? NSTextAlignmentCenter : NSTextAlignmentLeft)];
     [self.currentParamsTextView sizeToFit];
