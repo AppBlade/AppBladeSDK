@@ -12,9 +12,10 @@
 
 @interface CrashReportingViewController : BaseFeatureViewController
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (strong, nonatomic) IBOutlet UIView *headerWrapperView;
 
 - (IBAction)crashButtonPressed:(id)sender;
+
+//each crash button has a corresponding crash function
 @property (strong, nonatomic) IBOutlet UIButton *sigabrtCrashBtn;
 @property (strong, nonatomic) IBOutlet UIButton *sigbusCrashBtn;
 @property (strong, nonatomic) IBOutlet UIButton *sigfpeCrashBtn;
@@ -27,13 +28,10 @@
 @property (strong, nonatomic) IBOutlet UIView *crashChoiceView;
 
 @property (strong, nonatomic) IBOutlet UIView *crashDescriptionView;
-
+@property (weak, nonatomic) IBOutlet UITextField *crashCustomNameTextField;
 - (IBAction)crashCustomNameChanged:(id)sender;
 - (IBAction)crashCustomBeganEditing:(id)sender;
 - (IBAction)crashCustomEndedEditing:(id)sender;
-
-@property (strong, nonatomic) IBOutlet UIButton *backButton;
-- (IBAction)backButtonPressed:(id)sender;
 
 
 #pragma mark - Crash "Helpers"

@@ -26,8 +26,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"Crash Reporting";
     // Do any additional setup after loading the view from its nib.
 }
+
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [super viewWillDisappear:animated];
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -43,7 +59,6 @@
     
 	//Build the cards in the scroll view
     CGFloat totalHeight = 0.0f;
-    totalHeight = [self addView:self.headerWrapperView toScrollView:self.scrollView atVertOffset:totalHeight];
     totalHeight = [self addView:self.crashDescriptionView toScrollView:self.scrollView atVertOffset:totalHeight];
     totalHeight = [self addView:self.crashChoiceView toScrollView:self.scrollView atVertOffset:totalHeight];
     [self.scrollView setContentSize:CGSizeMake(self.view.bounds.size.width, totalHeight)];
@@ -104,11 +119,6 @@
     @throw e;
 }
 
-//Nav Nav
-- (IBAction)backButtonPressed:(id)sender {
-    [self.navigationController popViewControllerAnimated:true];
-}
-
 - (IBAction)crashCustomNameChanged:(id)sender {
 //don't need to do much except maybe sanitize
 }
@@ -122,7 +132,30 @@
 {
     [self textFieldDidEndEditing:sender];
 }
+- (IBAction)crashCustomPressedDone:(id)sender {
+    [self.crashCustomNameTextField resignFirstResponder];
+    [self textFieldDidEndEditing:sender];
+}
+
+
 
 - (IBAction)crashButtonPressed:(id)sender {
+    if(sender == self.sigabrtCrashBtn){
+        [self sigabrt];
+    }else if (sender == self.sigbusCrashBtn){
+        [self sigbus];
+    }else if (sender == self.sigfpeCrashBtn){
+        [self sigfpe];
+    }else if (sender == self.sigillCrashBtn){
+        [self sigill];
+    }else if (sender == self.sigpipeCrashBtn){
+        [self sigpipe];
+    }else if (sender == self.sigsegvCrashBtn){
+        [self sigsegv];
+    }else if (sender == self.nsExDefaultCrashBtn){
+        [self throwDefaultNSException];
+    }else if (sender == self.nsExCustomCrashBtn){
+        [self throwCustomTestNSException:self.crashCustomNameTextField.text];
+    }
 }
 @end
