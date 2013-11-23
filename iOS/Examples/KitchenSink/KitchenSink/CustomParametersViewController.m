@@ -32,14 +32,27 @@ NSInteger kMinParamTextFieldHeight = 113;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"Custom Parameters";
+    
     // Do any additional setup after loading the view from its nib.
     self.viewList = [NSArray arrayWithObjects:
-                     self.headerView,
                      self.addParamView,
                      self.currentParamView,
                      self.actionsView,
                      nil];
     
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
 - (void)didReceiveMemoryWarning
