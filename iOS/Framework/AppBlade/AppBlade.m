@@ -63,6 +63,11 @@
 @property (nonatomic, assign, getter = isAllDisabled, setter = setDisabled:) BOOL allDisabled;
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 
+/*! @brief Our local timer that will handle our web request retries when we're in Guided Access Mode
+ */
+@property (nonatomic, strong) NSTimer *webRequestTimer;
+
+
 @property (nonatomic, strong) APBTokenManager* tokenManager;
 @property (nonatomic, strong) APBApplicationInfoManager* applicationInfoManager;
 @property (nonatomic, strong) APBDeviceInfoManager*      deviceInfoManager;
@@ -332,12 +337,6 @@ static AppBlade *s_sharedManager = nil;
 }
 
 -(void) resumeCurrentPendingRequests {
-    //ensure that our web options are set correctly
-    if (self.webReportingGlobalOptions == AppBladeWebReportingOnRegularInterval) {
-#warning This isn't finished
-        //       self.webReportingTimeout
-    }
-    //
     [[self pendingRequests] setSuspended:NO];
 }
 
@@ -362,6 +361,52 @@ static AppBlade *s_sharedManager = nil;
     [[self pendingRequests] setSuspended:NO];
 }
 
+#pragma mark WebTimer for kiosk or guided access mode
+/*! 
+ returns whether guided access mode is enabled, (false if we're running an OS version that can't support it.
+ */
++(BOOL)isGuidedAccessModeEnabled
+{
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")){
+        return UIAccessibilityIsGuidedAccessEnabled();
+    }
+    return FALSE;
+}
+
+
+
+-(void)setupGuidedAccessHandling
+{
+    if( !(self.webReportingGlobalOptions & AppBladeWebReportingIgnoreGuidedAccess) ){
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(guidedAccessChanged) name:UIAccessibilityGuidedAccessStatusDidChangeNotification object:nil];
+
+        //check if we're starting enabled
+        if([AppBlade isGuidedAccessModeEnabled]) {
+            self.webRequestTimer = [NSTimer scheduledTimerWithTimeInterval:self.webReportingTimeout target:self selector:@selector(webRequestTimerFired) userInfo:NULL repeats:YES];
+        }
+    }
+}
+
+-(void)updateWebRequestTimer
+{
+    if(self.webReportingTimeout == 0){
+        self.webReportingTimeout = kAppBladeWebRequestDefaultRetryInterval;
+    }
+    //ensure that our web options are set correctly
+    if (self.webRequestTimer == NULL &&
+        ((self.webReportingGlobalOptions & AppBladeWebReportingOnRegularInterval) ||
+        (UIAccessibilityIsGuidedAccessEnabled() && !(self.webReportingGlobalOptions & AppBladeWebReportingIgnoreGuidedAccess)))) {
+        self.webRequestTimer = [NSTimer scheduledTimerWithTimeInterval:self.webReportingTimeout target:self selector:@selector(webRequestTimerFired) userInfo:NULL repeats:YES];
+    }
+}
+
+-(void)webRequestTimerFired
+{
+//check if any requests are still pending.
+    
+//hard kick any timed out features via their managers
+//    [self.authenticationManager checkApproval];
+}
 
 #pragma mark API Token Calls
 
