@@ -103,9 +103,10 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 //options that determine when requests are reported
 typedef NS_OPTIONS(NSUInteger, AppBladeWebReportingGlobalOptions) {
     AppBladeWebReportingDefault                 = 0,      // default behavior
-    AppBladeWebReportingOnResume                = 1 <<  0,   // when the app is resumed
-    AppBladeWebReportingOnRegularInterval       = 1 <<  1,   // when set, respect the WebTimeout Interval value
-    AppBladeWebReportingOnWifiOnly              = 1 <<  2    // add the requirement that the app must have wifi to send requests successfully. Default is any internet connection. 
+    AppBladeWebReportingOnResume                = 1 <<  0,  // when the app is resumed
+    AppBladeWebReportingOnRegularInterval       = 1 <<  1,  // when set, respect the WebTimeout Interval value
+    AppBladeWebReportingOnWifiOnly              = 1 <<  2,  // add the requirement that the app must have wifi to send requests successfully. Default is any internet connection.
+    AppBladeWebReportingIgnoreGuidedAccess      = 1 << 3    //this is set if we *don't* want to enable the timer when guided access is turned on, which we do automatically.
 };
 
 
