@@ -57,8 +57,10 @@
  For example, if your app should run in a kiosk, have it respect a timeout.
  */
 @property (nonatomic, assign) NSInteger webReportingGlobalOptions;
-@property (nonatomic, assign) NSInteger webReportingTimeout;
 
+/*! @brief A value that will determine the interval when our web requests will automatically reattempt. Cannot be zero.
+ See kAppBladeWebRequestDefaultRetryInterval in AppBladeSharedConstants.h for the defalut value, */
+@property (nonatomic, assign) NSInteger webReportingTimeout;
 
 /*! 
  @property
