@@ -100,6 +100,8 @@ static NSString* const kAppBladeApiTokenResponseDeviceSecretKey     = @"device_s
 static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 
+static const int kAppBladeWebRequestDefaultRetryInterval = 300; //every five minutes
+
 //options that determine when requests are reported
 typedef NS_OPTIONS(NSUInteger, AppBladeWebReportingGlobalOptions) {
     AppBladeWebReportingDefault                 = 0,      // default behavior
