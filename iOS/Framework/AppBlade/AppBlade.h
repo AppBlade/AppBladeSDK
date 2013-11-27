@@ -58,9 +58,9 @@
  */
 @property (nonatomic, assign) NSInteger webReportingGlobalOptions;
 
-/*! @brief A value that will determine the interval when our web requests will automatically reattempt. Cannot be zero.
+/*! @brief A value that will determine the interval (in seconds) when our web requests will automatically reattempt. Cannot be zero.
  See kAppBladeWebRequestDefaultRetryInterval in AppBladeSharedConstants.h for the defalut value, */
-@property (nonatomic, assign) NSInteger webReportingTimeout;
+@property (nonatomic, assign) NSTimeInterval webReportingTimeout;
 
 /*! 
  @property
