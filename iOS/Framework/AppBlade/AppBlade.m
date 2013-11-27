@@ -197,7 +197,7 @@ static AppBlade *s_sharedManager = nil;
 
 -(void)dealloc
 {
-#warning Don't forget to place your teardown code here
+// Don't forget to place your teardown code here
     [self teardownGuidedAccessHandling];
 }
 
