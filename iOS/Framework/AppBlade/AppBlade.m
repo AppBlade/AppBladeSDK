@@ -402,6 +402,34 @@ static AppBlade *s_sharedManager = nil;
 {   //sanity check
     if(self.webRequestTimer != nil && [self.webRequestTimer isValid])
     {
+        if ([[AppBlade sharedManager] isAllDisabled]) {
+            //check if any requests are still pending.
+            ABDebugLog_internal(@"AppBlade was disabled, waiting to die.");
+        }else{
+            //hard kick any timed out features via their managers (helper functions really help here)
+            if(self.enabledFeaturesForRefresh & AppBladeFeaturesAuthenticationEnabled){
+                ABDebugLog_internal(@"Refreshing checkApproval.");
+                [self checkApproval];
+            }
+            if(self.enabledFeaturesForRefresh & AppBladeFeaturesUpdateCheckingEnabled){
+                ABDebugLog_internal(@"Refreshing checkForUpdates.");
+                [self checkForUpdates];
+            }
+            if(self.enabledFeaturesForRefresh & AppBladeFeaturesFeedbackReportingEnabled){
+                ABDebugLog_internal(@"Refreshing handleBackloggedFeedback.");
+                [self handleBackloggedFeedback];
+            }
+            if(self.enabledFeaturesForRefresh & AppBladeFeaturesCrashReportingEnabled){
+                ABDebugLog_internal(@"Refreshing checkForExistingCrashReports.");
+                [self checkForExistingCrashReports];
+            }
+            if(self.enabledFeaturesForRefresh & AppBladeFeaturesSessionTrackingEnabled){
+                ABDebugLog_internal(@"Refreshing checkForExistingCrashReports.");
+                [self checkForAndPostSessions];
+            }
+        }
+    }else{
+        ABDebugLog_internal(@"Timer was invalidated, not refreshing webrequests");
     }
 }
 
