@@ -369,8 +369,39 @@ static AppBlade *s_sharedManager = nil;
     [[self pendingRequests] setSuspended:NO];
 }
 
-#pragma mark WebTimer for kiosk or guided access mode
-/*! 
+#pragma mark WebTimer
+-(void)startWebRequestTimer
+{
+    if(self.webReportingTimeout == 0){ //illegal value for our timer
+        self.webReportingTimeout = kAppBladeWebRequestDefaultRetryInterval;
+    }
+    if(self.webRequestTimer == nil){ //initialize the timer if we have not done so
+        self.webRequestTimer = [NSTimer scheduledTimerWithTimeInterval:self.webReportingTimeout
+                                                                target:self
+                                                              selector:@selector(webRequestTimerFired)
+                                                              userInfo:NULL
+                                                               repeats:YES];
+    }
+}
+
+-(void)stopWebRequestTimer
+{
+    if(self.webRequestTimer != nil){
+        [self.webRequestTimer invalidate];
+        self.webRequestTimer = nil;
+    }
+}
+
+-(void)webRequestTimerFired
+{   //sanity check
+    if(self.webRequestTimer != nil && [self.webRequestTimer isValid])
+    {
+    }
+}
+
+
+#pragma mark Guided Access Handing
+/*!
  returns whether guided access mode is enabled, (false if we're running an OS version that can't support it.
  */
 +(BOOL)isGuidedAccessModeEnabled
@@ -382,39 +413,42 @@ static AppBlade *s_sharedManager = nil;
 }
 
 
-
 -(void)setupGuidedAccessHandling
 {
-    if( !(self.webReportingGlobalOptions & AppBladeWebReportingIgnoreGuidedAccess) ){
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(guidedAccessChanged) name:UIAccessibilityGuidedAccessStatusDidChangeNotification object:nil];
-
-        //check if we're starting enabled
+    if( !(self.webReportingGlobalOptions & AppBladeWebReportingIgnoreGuidedAccess) ){ //if we don't want to ignore guided access
+        //check if we're already enabled (for exanple, if we are recovering from a crash)
         if([AppBlade isGuidedAccessModeEnabled]) {
-            self.webRequestTimer = [NSTimer scheduledTimerWithTimeInterval:self.webReportingTimeout target:self selector:@selector(webRequestTimerFired) userInfo:NULL repeats:YES];
+            [self startWebRequestTimer];
         }
+
+        //then register to make sure the guided access changed.
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkGuidedAccess) name:UIAccessibilityGuidedAccessStatusDidChangeNotification object:nil]; //register if
+    }
+    //If you want to ignore guided access, but are still in guided access, storage will likely bloat unless you call the managers manually.
+}
+
+/*! 
+ Method called when guided access is enabled, or when we're brought back out to the embedded menu (successful password unlock).
+*/
+-(void)checkGuidedAccess
+{
+    if([AppBlade isGuidedAccessModeEnabled]) {
+        [self startWebRequestTimer];
+    }else{
+        [self stopWebRequestTimer];
     }
 }
 
--(void)updateWebRequestTimer
+-(void)teardownGuidedAccessHandling
 {
-    if(self.webReportingTimeout == 0){
-        self.webReportingTimeout = kAppBladeWebRequestDefaultRetryInterval;
-    }
-    //ensure that our web options are set correctly
-    if (self.webRequestTimer == NULL &&
-        ((self.webReportingGlobalOptions & AppBladeWebReportingOnRegularInterval) ||
-        (UIAccessibilityIsGuidedAccessEnabled() && !(self.webReportingGlobalOptions & AppBladeWebReportingIgnoreGuidedAccess)))) {
-        self.webRequestTimer = [NSTimer scheduledTimerWithTimeInterval:self.webReportingTimeout target:self selector:@selector(webRequestTimerFired) userInfo:NULL repeats:YES];
-    }
+    //disable all refreshable features
+    self.enabledFeaturesForRefresh = AppBladeFeaturesNone;
+    //remove the webRequest timer
+    [self stopWebRequestTimer];
+    //uregister the guided access changed.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkGuidedAccess) name:UIAccessibilityGuidedAccessStatusDidChangeNotification object:nil]; //register if
 }
 
--(void)webRequestTimerFired
-{
-//check if any requests are still pending.
-    
-//hard kick any timed out features via their managers
-//    [self.authenticationManager checkApproval];
-}
 
 #pragma mark API Token Calls
 
