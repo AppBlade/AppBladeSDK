@@ -367,9 +367,9 @@ static AppBlade *s_sharedManager = nil;
  */
 +(BOOL)isGuidedAccessModeEnabled
 {
-    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0")){
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
         return UIAccessibilityIsGuidedAccessEnabled();
-    }
+    }  //pre iOS 6? No guided access mode.
     return FALSE;
 }
 
