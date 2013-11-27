@@ -263,6 +263,9 @@ static AppBlade *s_sharedManager = nil;
     {
         ABDebugLog_internal(@"User did not provide proper API credentials for AppBlade to be used in development.");
     }
+    
+    //registration is just about to end, setup guided access
+    [self setupGuidedAccessHandling];
 }
 
 - (void)registerWithAppBladeDictionary:(NSDictionary*)appbladeVariables atPlistPath:(NSString*)plistPath
