@@ -752,6 +752,15 @@ static AppBlade *s_sharedManager = nil;
     return toRet;
 }
 
+- (void)checkForAndPostSessions {
+#ifndef SKIP_SESSIONS
+        ABDebugLog_internal(@"Can't check for Sessions, SDK disabled");
+    [self.sessionTrackingManager checkForAndPostSessions];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+}
+
 
 #pragma mark - AppBlade Custom Params
 -(NSDictionary *)getCustomParams
