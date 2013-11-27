@@ -49,5 +49,4 @@ extern NSString *kSessionTimeElapsed;
 @interface AppBlade (SessionTracking)
     @property (nonatomic, strong) APBSessionTrackingManager* sessionTrackingManager;
     - (void)appBladeWebClientSentSessions:(APBWebOperation *)client withSuccess:(BOOL)success;
-
 @end
