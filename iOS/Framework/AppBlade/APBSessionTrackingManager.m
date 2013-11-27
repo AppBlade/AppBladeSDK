@@ -65,6 +65,7 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 
 -(void)checkForAndPostSessions
 {
+#warning session tracking is still unstable in guided access mode 
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     ABDebugLog_internal(@"Checking Session Path: %@", sessionFilePath);
     

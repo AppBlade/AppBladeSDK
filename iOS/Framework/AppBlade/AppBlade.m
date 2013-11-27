@@ -796,6 +796,7 @@ static AppBlade *s_sharedManager = nil;
 #ifndef SKIP_SESSIONS
         ABDebugLog_internal(@"Can't check for Sessions, SDK disabled");
     [self.sessionTrackingManager checkForAndPostSessions];
+    self.enabledFeaturesForRefresh = self.enabledFeaturesForRefresh | AppBladeFeaturesSessionTrackingEnabled;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
