@@ -195,6 +195,12 @@ static AppBlade *s_sharedManager = nil;
     return self;
 }
 
+-(void)dealloc
+{
+#warning Don't forget to place your teardown code here
+    [self teardownGuidedAccessHandling];
+}
+
 - (void)validateProjectConfiguration
 {
     NSString* const exceptionMissingMessageFormat = @"AppBlade is missing %@. The project is likely misconfigured. Make sure you declare the shared AppBlade manager from within your application delegate and you have your AppBladeKeys plist file in the right place.";
