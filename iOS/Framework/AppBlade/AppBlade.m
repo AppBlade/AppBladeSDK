@@ -162,10 +162,11 @@ static AppBlade *s_sharedManager = nil;
     if ((self = [super init])) {
         // Delegate authentication outcomes and other messages are handled by self unless overridden.
         self.delegate = self;
+        //first time singleton is being called, so nothing is availible yet
+        self.enabledFeaturesForRefresh = AppBladeFeaturesNone;
         //init the default values for the global options
         self.webReportingGlobalOptions = AppBladeWebReportingDefault;
         self.webReportingTimeout = 0; //not respected by default
-
         
         //init the core managers
         self.tokenManager = [[APBTokenManager alloc] init];
