@@ -137,6 +137,22 @@
  */
 - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
 
+/*!
+ @brief An internal enum that keeps track of each feature that was called.
+ @discussion Used internally by our refresh timer. The relevant bit is set from the master method call. 
+ see also enabledFeaturesForRefresh, 
+ (none are enabled until we call them at least once from the code)
+ 
+ */
+typedef NS_OPTIONS(NSUInteger, AppBladeEnabledFeaturesInternalEnum) {
+    AppBladeFeaturesNone                           = 0,      // default behavior (nothing enabled)
+    AppBladeFeaturesAuthenticationEnabled                  = 1 <<  1, //Authentication was used previously during app lifetime
+    AppBladeFeaturesUpdateCheckingEnabled                  = 1 <<  2, //An Update Check  was used previously during app lifetime
+    AppBladeFeaturesCrashReportingEnabled                  = 1 <<  3, //Crash Reporting was enabled previously during app lifetime
+    AppBladeFeaturesFeedbackReportingEnabled               = 1 <<  4, //Feedback Reporting was enabled previously during app lifetime
+    AppBladeFeaturesSessionTrackingEnabled                 = 1 <<  5  //Session Tracking was used previously during app lifetime
+};
+
 @end
 
 #pragma mark - Additional Macros
