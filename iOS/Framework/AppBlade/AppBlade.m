@@ -96,6 +96,8 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
 @end
 
 @implementation AppBlade
+/*! @brief Our master disable value. When set to true, all functionality of the SDK should be inactive.
+ */
 @synthesize allDisabled = _allDisabled;
 
 @synthesize tokenManager;
