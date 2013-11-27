@@ -67,6 +67,8 @@
  */
 @property (nonatomic, strong) NSTimer *webRequestTimer;
 
+@property (nonatomic, assign) AppBladeEnabledFeaturesInternalEnum enabledFeaturesForRefresh;
+
 
 @property (nonatomic, strong) APBTokenManager* tokenManager;
 @property (nonatomic, strong) APBApplicationInfoManager* applicationInfoManager;
