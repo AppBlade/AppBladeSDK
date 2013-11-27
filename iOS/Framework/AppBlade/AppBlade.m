@@ -457,6 +457,7 @@ static AppBlade *s_sharedManager = nil;
     }
     [self validateProjectConfiguration];    
     [self.authenticationManager checkApproval];
+    self.enabledFeaturesForRefresh = self.enabledFeaturesForRefresh | AppBladeFeaturesAuthenticationEnabled;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
 #endif
@@ -473,6 +474,7 @@ static AppBlade *s_sharedManager = nil;
         return;
     }
     [self.updatesManager checkForUpdates];
+    self.enabledFeaturesForRefresh = self.enabledFeaturesForRefresh | AppBladeFeaturesUpdateCheckingEnabled;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
 #endif
@@ -490,6 +492,7 @@ static AppBlade *s_sharedManager = nil;
     }
     ABDebugLog_internal(@"Catch and report crashes");
     [self.crashManager catchAndReportCrashes];
+    self.enabledFeaturesForRefresh = self.enabledFeaturesForRefresh | AppBladeFeaturesCrashReportingEnabled;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
 #endif
@@ -504,6 +507,7 @@ static AppBlade *s_sharedManager = nil;
     }
 
     [self.crashManager checkForExistingCrashReports];
+    self.enabledFeaturesForRefresh = self.enabledFeaturesForRefresh | AppBladeFeaturesCrashReportingEnabled;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
 #endif
@@ -522,6 +526,7 @@ static AppBlade *s_sharedManager = nil;
         APBWebOperation * client = [self.crashManager generateCrashReportFromDictionary:crashDict withParams:[self getCustomParams]];
         [self.pendingRequests addOperation:client];
     }
+    self.enabledFeaturesForRefresh = self.enabledFeaturesForRefresh | AppBladeFeaturesCrashReportingEnabled;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__);
 #endif
@@ -590,6 +595,7 @@ static AppBlade *s_sharedManager = nil;
     }
     [self validateProjectConfiguration];
     [self.feedbackManager allowFeedbackReportingForWindow:feedbackWindow withOptions:options];
+    self.enabledFeaturesForRefresh = self.enabledFeaturesForRefresh | AppBladeFeaturesFeedbackReportingEnabled;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -709,6 +715,7 @@ static AppBlade *s_sharedManager = nil;
         return;
     }
     [[self sessionTrackingManager] logSessionStart];
+    self.enabledFeaturesForRefresh = self.enabledFeaturesForRefresh | AppBladeFeaturesSessionTrackingEnabled;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
@@ -723,6 +730,7 @@ static AppBlade *s_sharedManager = nil;
         return;
     }
     [[self sessionTrackingManager] logSessionEnd];
+    self.enabledFeaturesForRefresh = self.enabledFeaturesForRefresh | AppBladeFeaturesSessionTrackingEnabled;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
