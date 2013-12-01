@@ -69,6 +69,7 @@
 @property (nonatomic, strong) NSTimer *webRequestTimer;
 
 @property (nonatomic, assign) AppBladeEnabledFeaturesInternalEnum enabledFeaturesForRefresh;
+@property (nonatomic, assign) AppBladeEnabledFeaturesInternalEnum initializedFeatures;
 
 
 @property (nonatomic, strong) APBDataManager*   dataManager;
@@ -179,21 +180,27 @@ static AppBlade *s_sharedManager = nil;
         //init the feature managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls
 #ifndef SKIP_AUTHENTICATION
         self.authenticationManager  = [[APBAuthenticationManager alloc] initWithDelegate:self];
+        self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesAuthenticationEnabled;
 #endif
 #ifndef SKIP_AUTO_UPDATING
         self.updatesManager         = [[APBUpdatesManager alloc] initWithDelegate:self];
+        self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesUpdateCheckingEnabled;
 #endif
 #ifndef SKIP_FEEDBACK
         self.feedbackManager        = [[APBFeedbackReportingManager alloc] initWithDelegate:self];
+        self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesFeedbackReportingEnabled;
 #endif
 #ifndef SKIP_CRASH_REPORTING
         self.crashManager           = [[APBCrashReportingManager alloc] initWithDelegate:self];
+        self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesCrashReportingEnabled;
 #endif
 #ifndef SKIP_SESSIONS
         self.sessionTrackingManager = [[APBSessionTrackingManager alloc] initWithDelegate:self];
+        self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesSessionTrackingEnabled;
 #endif
 #ifndef SKIP_CUSTOM_PARAMS
         self.customParamsManager    = [[APBCustomParametersManager alloc] initWithDelegate:self];
+        self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesCustomParametersEnabled;
 #endif
     }
     return self;
