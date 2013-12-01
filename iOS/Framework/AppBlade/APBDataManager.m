@@ -26,8 +26,8 @@
         
         //create or migrate the database
         NSString *dataBase = [self getDatabaseFilePath];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:dataFolder]){
-            ABDebugLog_internal(@"Creating the database %@", dataFolder);
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dataBase]){
+            ABDebugLog_internal(@"Creating the database %@", dataBase);
             
         }else {
             if ([self shouldMigrateDatabase]){
