@@ -31,6 +31,7 @@
 #import "APBTokenManager.h"
 #import "APBApplicationInfoManager.h"
 #import "APBDeviceInfoManager.h"
+#import "APBDataManager.h"
 
 //Feature List (with exclusion conditionals)
 #ifndef SKIP_AUTHENTICATION
@@ -70,6 +71,7 @@
 @property (nonatomic, assign) AppBladeEnabledFeaturesInternalEnum enabledFeaturesForRefresh;
 
 
+@property (nonatomic, strong) APBDataManager*   dataManager;
 @property (nonatomic, strong) APBTokenManager* tokenManager;
 @property (nonatomic, strong) APBApplicationInfoManager* applicationInfoManager;
 @property (nonatomic, strong) APBDeviceInfoManager*      deviceInfoManager;
@@ -102,6 +104,7 @@ void post_crash_callback (siginfo_t *info, ucontext_t *uap, void *context);
  */
 @synthesize allDisabled = _allDisabled;
 
+@synthesize dataManager;
 @synthesize tokenManager;
 @synthesize applicationInfoManager;
 @synthesize deviceInfoManager;
@@ -169,6 +172,7 @@ static AppBlade *s_sharedManager = nil;
         self.webReportingTimeout = 0; //not respected by default
         
         //init the core managers
+        self.dataManager =  [[APBDataManager alloc] init];
         self.tokenManager = [[APBTokenManager alloc] init];
         self.applicationInfoManager = [[APBApplicationInfoManager alloc] init];
         self.deviceInfoManager      = [[APBDeviceInfoManager alloc] init];

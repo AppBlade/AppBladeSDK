@@ -159,6 +159,17 @@
 		31C4881B17A9847000EA75E8 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
 		31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
+		31D924E7184A97CA00012197 /* APBDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D924E5184A97CA00012197 /* APBDataManager.h */; };
+		31D924E8184A97CA00012197 /* APBDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D924E5184A97CA00012197 /* APBDataManager.h */; };
+		31D924E9184A97CA00012197 /* APBDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D924E5184A97CA00012197 /* APBDataManager.h */; };
+		31D924EA184A97CA00012197 /* APBDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D924E5184A97CA00012197 /* APBDataManager.h */; };
+		31D924EB184A97CA00012197 /* APBDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D924E6184A97CA00012197 /* APBDataManager.m */; };
+		31D924EC184A97CA00012197 /* APBDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D924E6184A97CA00012197 /* APBDataManager.m */; };
+		31D924ED184A97CA00012197 /* APBDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D924E6184A97CA00012197 /* APBDataManager.m */; };
+		31D924EE184A97CA00012197 /* APBDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D924E6184A97CA00012197 /* APBDataManager.m */; };
+		31D924EF184A97CA00012197 /* APBDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D924E6184A97CA00012197 /* APBDataManager.m */; };
+		31D924FB184AA67000012197 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D924FA184AA67000012197 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		31D924FC184AA68700012197 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D924FA184AA67000012197 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -326,6 +337,9 @@
 		31BB3C7317E357E2007B8B28 /* APBAuthenticationManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APBAuthenticationManagerTests.m; path = AppBladeTests/APBAuthenticationManagerTests.m; sourceTree = SOURCE_ROOT; };
 		31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBlade+PrivateMethods.h"; sourceTree = "<group>"; };
 		31D5361417D7B61C0011B9A1 /* AsyncTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AsyncTestMacros.h; sourceTree = "<group>"; };
+		31D924E5184A97CA00012197 /* APBDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDataManager.h; sourceTree = "<group>"; };
+		31D924E6184A97CA00012197 /* APBDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDataManager.m; sourceTree = "<group>"; };
+		31D924FA184AA67000012197 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -340,6 +354,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31D924FC184AA68700012197 /* libsqlite3.dylib in Frameworks */,
 				313464BB17A86248009DDC86 /* SenTestingKit.framework in Frameworks */,
 				3130640F1794A403006DF03A /* UIKit.framework in Frameworks */,
 				3130640E1794A3D8006DF03A /* Security.framework in Frameworks */,
@@ -371,6 +386,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31D924FB184AA67000012197 /* libsqlite3.dylib in Frameworks */,
 				313464BA17A86241009DDC86 /* SenTestingKit.framework in Frameworks */,
 				3187321E179DE8C200E0D187 /* UIKit.framework in Frameworks */,
 				3187321F179DE8C200E0D187 /* Security.framework in Frameworks */,
@@ -498,6 +514,7 @@
 		31305FC81794A146006DF03A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31D924FA184AA67000012197 /* libsqlite3.dylib */,
 				3134652C17A86A9C009DDC86 /* CoreGraphics.framework */,
 				313464B917A86241009DDC86 /* SenTestingKit.framework */,
 				313060A71794A356006DF03A /* PLCrashReporter */,
@@ -731,6 +748,7 @@
 		318C22AC17CFB0E70007FD5E /* Core Managers */ = {
 			isa = PBXGroup;
 			children = (
+				31D924F0184A97D000012197 /* Data Manager */,
 				31D5361317D756A10011B9A1 /* Application Info */,
 				31D5361217D756790011B9A1 /* Device Info */,
 				318C22B817CFC0E50007FD5E /* APBTokenManager.h */,
@@ -757,6 +775,15 @@
 			name = "Application Info";
 			sourceTree = "<group>";
 		};
+		31D924F0184A97D000012197 /* Data Manager */ = {
+			isa = PBXGroup;
+			children = (
+				31D924E5184A97CA00012197 /* APBDataManager.h */,
+				31D924E6184A97CA00012197 /* APBDataManager.m */,
+			);
+			name = "Data Manager";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -767,6 +794,7 @@
 				311A21531794C79F007BF879 /* AppBlade.h in Headers */,
 				318731CB179DAC0500E0D187 /* AppBladeLogging.h in Headers */,
 				311A21541794C79F007BF879 /* APBFileMD5Hash.h in Headers */,
+				31D924E8184A97CA00012197 /* APBDataManager.h in Headers */,
 				311A21551794C79F007BF879 /* APBFeedbackBackgroundView.h in Headers */,
 				31562C4E17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				318C22BB17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
@@ -780,6 +808,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				313064131794A866006DF03A /* AppBlade.h in Headers */,
+				31D924E7184A97CA00012197 /* APBDataManager.h in Headers */,
 				313064151794A866006DF03A /* APBFileMD5Hash.h in Headers */,
 				313064141794A866006DF03A /* APBFeedbackBackgroundView.h in Headers */,
 				311A22981794E633007BF879 /* APBFeedbackReportingManager.h in Headers */,
@@ -807,6 +836,7 @@
 				31562C5017A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				318C22BD17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
 				311711BB17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
+				31D924EA184A97CA00012197 /* APBDataManager.h in Headers */,
 				311711C617D687FA004170B7 /* APBDeviceInfoManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -815,6 +845,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31D924E9184A97CA00012197 /* APBDataManager.h in Headers */,
 				31562C4F17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 				318C22BC17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
@@ -1044,6 +1075,7 @@
 				311A215D1794C79F007BF879 /* APBFeedbackDialogue.m in Sources */,
 				311A215E1794C79F007BF879 /* APBFileMD5Hash.c in Sources */,
 				318C22BF17CFC0E50007FD5E /* APBTokenManager.m in Sources */,
+				31D924EC184A97CA00012197 /* APBDataManager.m in Sources */,
 				311711BD17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
 				311711C817D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
@@ -1082,6 +1114,7 @@
 				313062821794A357006DF03A /* PLCrashReportProcessorInfo.m in Sources */,
 				313062851794A357006DF03A /* PLCrashReportSignalInfo.m in Sources */,
 				313062881794A357006DF03A /* PLCrashReportSystemInfo.m in Sources */,
+				31D924EB184A97CA00012197 /* APBDataManager.m in Sources */,
 				3130628E1794A357006DF03A /* PLCrashReportTextFormatter.m in Sources */,
 				313062911794A357006DF03A /* PLCrashReportThreadInfo.m in Sources */,
 				313062941794A357006DF03A /* PLCrashSignalHandler.m in Sources */,
@@ -1109,6 +1142,7 @@
 				3134457317DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m in Sources */,
 				31BB3C7417E357E2007B8B28 /* APBAuthenticationManagerTests.m in Sources */,
 				3179281017E39AD500F73BB2 /* NSDate+MockData.m in Sources */,
+				31D924EF184A97CA00012197 /* APBDataManager.m in Sources */,
 				3179281717E3A3E900F73BB2 /* NSObject+MethodSwizzling.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1130,6 +1164,7 @@
 				318C22C117CFC0E50007FD5E /* APBTokenManager.m in Sources */,
 				311711BF17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
 				311711CA17D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
+				31D924EE184A97CA00012197 /* APBDataManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1144,6 +1179,7 @@
 				318731FC179DE8C200E0D187 /* APBFeedbackDialogue.m in Sources */,
 				318731FD179DE8C200E0D187 /* APBFileMD5Hash.c in Sources */,
 				31873217179DE8C200E0D187 /* APBFeedbackReportingManager.m in Sources */,
+				31D924ED184A97CA00012197 /* APBDataManager.m in Sources */,
 				31873219179DE8C200E0D187 /* APBSessionTrackingManager.m in Sources */,
 				3187321A179DE8C200E0D187 /* APBUpdatesManager.m in Sources */,
 				3187321B179DE8C200E0D187 /* APBAuthenticationManager.m in Sources */,
