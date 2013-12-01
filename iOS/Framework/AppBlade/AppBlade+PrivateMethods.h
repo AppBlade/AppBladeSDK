@@ -150,7 +150,8 @@ typedef NS_OPTIONS(NSUInteger, AppBladeEnabledFeaturesInternalEnum) {
     AppBladeFeaturesUpdateCheckingEnabled                  = 1 <<  2, //An Update Check  was used previously during app lifetime
     AppBladeFeaturesCrashReportingEnabled                  = 1 <<  3, //Crash Reporting was enabled previously during app lifetime
     AppBladeFeaturesFeedbackReportingEnabled               = 1 <<  4, //Feedback Reporting was enabled previously during app lifetime
-    AppBladeFeaturesSessionTrackingEnabled                 = 1 <<  5  //Session Tracking was used previously during app lifetime
+    AppBladeFeaturesSessionTrackingEnabled                 = 1 <<  5,  //Session Tracking was used previously during app lifetime
+    AppBladeFeaturesCustomParametersEnabled                = 1 <<  6 //Custom parameters were initialized
 };
 
 @end
