@@ -9,6 +9,9 @@
 #import "APBDataManager.h"
 #import "AppBladeLogging.h"
 
+/*!
+ The datamanager is feature agnostic. It should only concern itself with evaluating SQL queries, whatever they may be.
+*/
 @implementation APBDataManager
 
 -(id)init{
@@ -46,7 +49,7 @@
 
 -(BOOL)shouldMigrateDatabase
 {
-    return FALSE;
+    return FALSE; //This is reserved for point releases to the SDK, not to be confused with App-level updates.
 }
 
 -(NSString *)getDocumentsSubFolderPath
