@@ -39,5 +39,28 @@ typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
 @interface APBDataManager : NSObject
 
 -(NSString *)getDatabaseFilePath;
+-(NSString *)getDocumentsSubFolderPath;
+
+//table functions
+-(NSError *)createTable:(NSString *)tableName;
+-(NSError *)removeTable:(NSString *)tableName;
+
+//column functions
+-(NSError *)addColumns:(NSArray *)columns toTable:(NSString *)tableName;
+//column functions
+-(NSError *)addColumn:(NSString *)columnName ofType:(AppBladeDataBaseColumnType)type toTable:(NSString *)tableName;
+-(NSError *)addColumn:(NSString *)columnName ofType:(AppBladeDataBaseColumnType)type withDefaultValue:(id)defaultValue toTable:(NSString *)tableName;
+-(NSError *)removeColumn:(NSString *)columnName fromTable:(NSString *)tableName;
+
+//row functions
+-(NSError *)addRow:(NSDictionary *)newRow toTable:(NSString *)tableName;
+-(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName;
+
+-(NSError *)addRows:(NSArray *)newRows toTable:(NSString *)tableName;
+-(NSError *)removeRows:(NSArray *)rows toTable:(NSString *)tableName;
+
+-(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName;
+-(NSError *)createOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName;
+
 
 @end

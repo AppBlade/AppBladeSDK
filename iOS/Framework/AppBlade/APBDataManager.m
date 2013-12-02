@@ -14,6 +14,8 @@
 */
 @implementation APBDataManager
 
+#pragma mark - Initializers & Global functions
+
 -(id)init{
     if((self = [super init])) {
         NSError *error = nil;
@@ -31,7 +33,6 @@
         NSString *dataBase = [self getDatabaseFilePath];
         if (![[NSFileManager defaultManager] fileExistsAtPath:dataBase]){
             ABDebugLog_internal(@"Creating the database %@", dataBase);
-            
         }else {
             if ([self shouldMigrateDatabase]){
                 ABDebugLog_internal(@"Database exists but must be updated.");
@@ -62,5 +63,81 @@
     
     return [[self getDocumentsSubFolderPath] stringByAppendingPathComponent:kAppBladeDataBaseName];
 }
+
+#pragma mark -
+#pragma mark Table functions
+-(NSError *)createTable:(NSString *)tableName
+{
+#warning incomplete
+    return nil;
+}
+-(NSError *)removeTable:(NSString *)tableName
+{
+#warning incomplete
+    return nil;
+}
+#pragma mark Column functions
+-(NSError *)addColumns:(NSArray *)columns toTable:(NSString *)tableName {
+#warning incomplete
+    return nil;
+}
+//column functions
+-(NSError *)addColumn:(NSString *)columnName ofType:(AppBladeDataBaseColumnType)type toTable:(NSString *)tableName
+{
+#warning incomplete
+    return nil;
+}
+
+-(NSError *)addColumn:(NSString *)columnName ofType:(AppBladeDataBaseColumnType)type withDefaultValue:(id)defaultValue toTable:(NSString *)tableName{
+#warning incomplete
+    return nil;
+}
+
+-(NSError *)removeColumn:(NSString *)columnName fromTable:(NSString *)tableName{
+#warning incomplete
+    return nil;
+}
+
+
+#pragma mark Row functions
+-(NSError *)addRow:(NSDictionary *)newRow toTable:(NSString *)tableName {
+#warning incomplete
+    return nil;
+}
+
+-(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName {
+#warning incomplete
+    return nil;
+}
+
+
+-(NSError *)addRows:(NSArray *)newRows toTable:(NSString *)tableName {
+#warning incomplete
+    return nil;
+}
+
+-(NSError *)removeRows:(NSArray *)rows toTable:(NSString *)tableName {
+#warning incomplete
+    return nil;
+}
+
+-(NSError *)getRow:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName {
+#warning incomplete
+    return nil;
+}
+
+-(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName {
+#warning incomplete
+    return nil;
+}
+
+-(NSError *)createOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName
+{
+#warning incomplete
+    return nil;
+}
+
+
+
 
 @end
