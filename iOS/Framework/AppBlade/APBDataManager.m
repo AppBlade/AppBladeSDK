@@ -129,7 +129,14 @@
     return nil;
 }
 
--(NSError *)getRow:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName {
+
+-(NSDictionary *)getFirstRowFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error {
+#warning incomplete
+    return nil;
+}
+
+-(NSArray *)getAllRowsFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error
+{
 #warning incomplete
     return nil;
 }

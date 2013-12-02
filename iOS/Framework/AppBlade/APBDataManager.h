@@ -37,7 +37,6 @@ typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
 };
 
 @interface APBDataManager : NSObject
-
 -(NSString *)getDatabaseFilePath;
 -(NSString *)getDocumentsSubFolderPath;
 
@@ -61,8 +60,13 @@ typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
 -(NSError *)addRows:(NSArray *)newRows toTable:(NSString *)tableName;
 -(NSError *)removeRows:(NSArray *)rows toTable:(NSString *)tableName;
 
+//Will return the data in the row as a dictionary, or nil with an NSError
+-(NSDictionary *)getFirstRowFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error;
+-(NSArray *)getAllRowsFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error;
+
 -(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName;
 -(NSError *)createOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName;
+
 
 
 @end
