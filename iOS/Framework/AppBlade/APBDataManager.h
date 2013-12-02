@@ -41,6 +41,8 @@ typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
 -(NSString *)getDatabaseFilePath;
 -(NSString *)getDocumentsSubFolderPath;
 
++(NSError *)dataBaseErrorWithMessage:(NSString *)msg;
+
 //table functions
 -(NSError *)createTable:(NSString *)tableName;
 -(NSError *)removeTable:(NSString *)tableName;

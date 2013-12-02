@@ -64,6 +64,14 @@
     return [[self getDocumentsSubFolderPath] stringByAppendingPathComponent:kAppBladeDataBaseName];
 }
 
++(NSError *)dataBaseErrorWithMessage:(NSString *)msg
+{
+    return [NSError errorWithDomain:@"AppBlade Database"
+                               code:200
+                           userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg, NSLocalizedDescriptionKey, nil]];
+}
+
+
 #pragma mark -
 #pragma mark Table functions
 -(NSError *)createTable:(NSString *)tableName
