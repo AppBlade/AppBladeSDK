@@ -180,8 +180,32 @@
 
 -(NSError *)removeTable:(NSString *)tableName
 {
-#warning incomplete
-    return nil;
+    const char *dbpath = [self.getDatabaseFilePath UTF8String];
+    sqlite3 *myDB;
+    if (sqlite3_open(dbpath, &myDB) == SQLITE_OK) {
+        
+        NSString *deleteTableQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS %@", tableName];
+        
+        int results = 0;
+        //create all chars tables
+        const char *deleteTableQuerySQL = [deleteTableQuery UTF8String];
+        sqlite3_stmt * deleteTableQueryStatement = nil;
+        results = sqlite3_exec(myDB, deleteTableQuerySQL, NULL, NULL, NULL);
+        if (results != SQLITE_DONE) {
+            const char *err = sqlite3_errmsg(myDB);
+            NSString *errMsg = [NSString stringWithFormat:@"%s",err];
+            if (![errMsg isEqualToString:@"not an error"]) {
+                return [APBDataManager dataBaseErrorWithMessage:errMsg];
+            }
+        }
+        
+        sqlite3_finalize(deleteTableQueryStatement);
+        sqlite3_close(myDB);
+        
+        return nil;
+    }else{
+        return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
+    }
 }
 #pragma mark Column functions
 -(NSError *)addColumns:(NSArray *)columns toTable:(NSString *)tableName {
