@@ -66,9 +66,8 @@ typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
 
 -(NSError *)executeSqlQuery:(NSString *)query;
 
-//table functions
--(NSError *)createTable:(NSString *)tableName;
--(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnsAndTypes;
+//table functions (table will always create at least one column named "id" for the primary key
+-(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData;
 -(NSError *)removeTable:(NSString *)tableName;
 
 //column functions

@@ -148,13 +148,18 @@
  ]
 */
 
--(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnsAndTypes
+-(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData
 {
     const char *dbpath = [self.getDatabaseFilePath UTF8String];
     sqlite3 *myDB;
     if (sqlite3_open(dbpath, &myDB) == SQLITE_OK) {
         
-        NSString *createTableQuery = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(id INTEGER PRIMARY KEY)", tableName];
+        NSString *createTableQuery = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(id INTEGER PRIMARY KEY", tableName];
+
+        for(NSMutableDictionary* col in columnData){
+            createTableQuery = [NSString stringWithFormat:@"%@, %@", createTableQuery, [col toSQLiteColumnDefinition]];
+        }
+        createTableQuery = [NSString stringWithFormat:@"%@)", createTableQuery];
         
         int results = 0;
         //create all chars tables
