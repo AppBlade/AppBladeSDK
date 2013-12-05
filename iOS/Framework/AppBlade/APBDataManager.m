@@ -89,14 +89,14 @@
 #warning incomplete
     return nil;
 }
-//column functions
--(NSError *)addColumn:(NSString *)columnName ofType:(AppBladeDataBaseColumnType)type toTable:(NSString *)tableName
+//column functions (these are kinda dumb right now, we aren't expecting the tables to change after they're created. 
+-(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints toTable:(NSString *)tableName
 {
 #warning incomplete
     return nil;
 }
 
--(NSError *)addColumn:(NSString *)columnName ofType:(AppBladeDataBaseColumnType)type withDefaultValue:(id)defaultValue toTable:(NSString *)tableName{
+-(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints withDefaultValue:(id)defaultValue toTable:(NSString *)tableName{
 #warning incomplete
     return nil;
 }
