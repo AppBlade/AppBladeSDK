@@ -9,6 +9,8 @@
 #import "APBDataManager.h"
 #import "AppBladeLogging.h"
 
+#import "NSMutableDictionary+AppBladeDataBaseColumn.h"
+
 /*!
  The datamanager is feature agnostic. It should only concern itself with evaluating SQL queries, whatever they may be.
 */
@@ -79,7 +81,7 @@
  
  UPDATE table-name SET column-name=expresssion WHERE expressions
  */
--(NSError *)executeSqlQuery:(NSString *)query
+-(NSError *)executeArbitrarySqlQuery:(NSString *)query
 {
     const char *dbpath = [self.getDatabaseFilePath UTF8String];
     sqlite3 *myDB;
@@ -141,8 +143,8 @@
 }
 
 /*
- columnsAndTypes format :
- @[  @{@"columnName":@"id", @"columnType":@"NUMBER", @"additionalArgs":@"PRIMARY KEY"}, 
+ columnDict format :
+ @[  @{@"columnName":@"id", @"columnType":@"NUMBER", @"columnConstraints":costraintEnum, @"columnAdditionalArgs":@""},
      @{@"columnName":@"createdAt", @"columnType":@"TEXT", @"additionalArgs":@""},  
      @{@"columnName":@"updatedAt", @"columnType":@"TEXT"}
  ]
@@ -214,17 +216,27 @@
 }
 #pragma mark Column functions
 -(NSError *)addColumns:(NSArray *)columns toTable:(NSString *)tableName {
-#warning incomplete
+#warning Dangerous. Messy. We have no way of knowing which columns were added. Wrap this in a better SQL query
+    for (NSDictionary *column in columns) {
+        NSError *e = [self addColumn:column toTable:tableName];
+        if(e != nil)
+            return e;
+    }
     return nil;
 }
 //column functions (these are kinda dumb right now, we aren't expecting the tables to change after they're created. 
--(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints toTable:(NSString *)tableName
+-(NSError *)addColumn:(NSDictionary *)column toTable:(NSString *)tableName
 {
 #warning incomplete
     return nil;
 }
 
--(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints withDefaultValue:(id)defaultValue toTable:(NSString *)tableName{
+-(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints toTable:(NSString *)tableName
+{
+    return [self addColumn:columnName withConstraints:constraints withAdditionalArgs:nil toTable:tableName];
+}
+
+-(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints withAdditionalArgs:(NSString *)args toTable:(NSString *)tableName{
 #warning incomplete
     return nil;
 }
@@ -252,7 +264,7 @@
     return nil;
 }
 
--(NSError *)removeRows:(NSArray *)rows toTable:(NSString *)tableName {
+-(NSError *)removeRows:(NSArray *)rows fromTable:(NSString *)tableName {
 #warning incomplete
     return nil;
 }
@@ -274,7 +286,7 @@
     return nil;
 }
 
--(NSError *)createOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName
+-(NSError *)addOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName
 {
 #warning incomplete
     return nil;

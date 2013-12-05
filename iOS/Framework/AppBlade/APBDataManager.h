@@ -37,18 +37,16 @@ static NSString* const kAppBladeColumnAffinityInteger   = @"INTEGER";
 static NSString* const kAppBladeColumnAffinityReal      = @"REAL";
 static NSString* const kAppBladeColumnAffinityNone      = @"NONE";
 
-static NSString* const kAppBladeColumnStorageTypeNull  = @"NULL";
+static NSString* const kAppBladeColumnStorageTypeNull    = @"NULL";
 static NSString* const kAppBladeColumnStorageTypeInteger = @"INTEGER";
 static NSString* const kAppBladeColumnStorageTypeReal  = @"REAL";
 static NSString* const kAppBladeColumnStorageTypeText  = @"TEXT";
 static NSString* const kAppBladeColumnStorageTypeBlob  = @"BLOB";
 
 //Foreign Key
-static NSString* const kAppBladeDatabaseForeignKeyFormat  = @"FOREIGN KEY(%@) REFERENCES %@(%@)";
+static NSString* const kAppBladeDatabaseForeignKeyFormat  = @"FOREIGN KEY(%@) REFERENCES %@(%@)"; //existing_column_name, secondary_table_name, secondary_existing_column (likely id)
 
-
-//default values must be handled separately, same with other CHECK functions
-
+//default values must be handled separately, same with other CHECK functions, those can go in AdditionalArgs for now
 
 //in the case of AppBladeDataBaseColumnTypeReference, pass a dictionary with {reftype, reference-table-name, index-value(s)},
 typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
@@ -60,37 +58,34 @@ typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
 
 @interface APBDataManager : NSObject
 -(NSString *)getDatabaseFilePath;
--(NSString *)getDocumentsSubFolderPath;
+-(NSString *)getDocumentsSubFolderPath; //the sql file is stored somewhere in documents
 
-+(NSError *)dataBaseErrorWithMessage:(NSString *)msg;
++(NSError *)dataBaseErrorWithMessage:(NSString *)msg; //useful internal for all the error messages
 
--(NSError *)executeSqlQuery:(NSString *)query;
+//careful with this one
+-(NSError *)executeArbitrarySqlQuery:(NSString *)query;
 
 //table functions (table will always create at least one column named "id" for the primary key
 -(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData;
 -(NSError *)removeTable:(NSString *)tableName;
 
-//column functions
+//column functions (probably not going to be used all that much, since the tables probably aren't going to be changed after initilization)
 -(NSError *)addColumns:(NSArray *)columns toTable:(NSString *)tableName;
-//column functions
--(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints toTable:(NSString *)tableName;
--(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints withDefaultValue:(id)defaultValue toTable:(NSString *)tableName;
+-(NSError *)addColumn:(NSDictionary *)column toTable:(NSString *)tableName;
 -(NSError *)removeColumn:(NSString *)columnName fromTable:(NSString *)tableName;
 
 //row functions
 -(NSError *)addRow:(NSDictionary *)newRow toTable:(NSString *)tableName;
--(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName;
-
 -(NSError *)addRows:(NSArray *)newRows toTable:(NSString *)tableName;
--(NSError *)removeRows:(NSArray *)rows toTable:(NSString *)tableName;
+
+-(NSError *)addOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName;
+-(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName;
 
 //Will return the data in the row as a dictionary, or nil with an NSError
 -(NSDictionary *)getFirstRowFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error;
 -(NSArray *)getAllRowsFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error;
 
--(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName;
--(NSError *)createOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName;
-
-
+-(NSError *)removeRows:(NSArray *)rows fromTable:(NSString *)tableName;
+-(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName;
 
 @end
