@@ -14,7 +14,7 @@ static float const kAppBladeDataBaseVersion         = 0.0;
 
 //major design structure
 //every table has an index column for keyvalue and reference (called id)
-//all columns can be null, though a default value can be declared
+//all columns can be null, though a default value can be declared (via additional args)
 
 //sqlite does not enforce types, they instead use affinities
 typedef NS_OPTIONS(NSUInteger, AppBladeColumnConstraint) {
@@ -25,9 +25,11 @@ typedef NS_OPTIONS(NSUInteger, AppBladeColumnConstraint) {
     AppBladeColumnConstraintAffinityInteger          = 1 <<  4,
     AppBladeColumnConstraintAffinityReal             = 1 <<  5,
     AppBladeColumnConstraintAffinityNone             = 1 <<  6, //no multiple affinities, please
-    AppBladeColumnConstraintPrimaryKey              = 1 <<  7,
-    AppBladeColumnConstraintUnique                  = 1 <<  8
-};
+    AppBladeColumnConstraintPrimaryKey              = 1 <<  7, //can cause memory issues
+    AppBladeColumnConstraintUnique                  = 1 <<  8,
+    AppBladeColumnConstraintAutoincrement           = 1 <<  9
+};  //todo1: more sql-related datatypes.
+    //todo2: increment, sorting, maybe link foreign keys into this enum somehow
 
 static NSString* const kAppBladeColumnAffinityText      = @"TEXT";
 static NSString* const kAppBladeColumnAffinityNumeric   = @"NUMERIC";
