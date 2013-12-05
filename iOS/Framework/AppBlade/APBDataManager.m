@@ -112,9 +112,72 @@
 #pragma mark Table functions
 -(NSError *)createTable:(NSString *)tableName
 {
-#warning incomplete
-    return nil;
+    const char *dbpath = [self.getDatabaseFilePath UTF8String];
+    sqlite3 *myDB;
+    if (sqlite3_open(dbpath, &myDB) == SQLITE_OK) {
+        
+        NSString *createTableQuery = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(id INTEGER PRIMARY KEY)", tableName];
+        
+        int results = 0;
+        //create all chars tables
+        const char *createTableQuerySQL = [createTableQuery UTF8String];
+        sqlite3_stmt * createTableQueryStatement = nil;
+        results = sqlite3_exec(myDB, createTableQuerySQL, NULL, NULL, NULL);
+        if (results != SQLITE_DONE) {
+            const char *err = sqlite3_errmsg(myDB);
+            NSString *errMsg = [NSString stringWithFormat:@"%s",err];
+            if (![errMsg isEqualToString:@"not an error"]) {
+                return [APBDataManager dataBaseErrorWithMessage:errMsg];
+            }
+        }
+        
+        sqlite3_finalize(createTableQueryStatement);
+        sqlite3_close(myDB);
+        
+        return nil;
+    }else{
+        return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
+    }
 }
+
+/*
+ columnsAndTypes format :
+ @[  @{@"columnName":@"id", @"columnType":@"NUMBER", @"additionalArgs":@"PRIMARY KEY"}, 
+     @{@"columnName":@"createdAt", @"columnType":@"TEXT", @"additionalArgs":@""},  
+     @{@"columnName":@"updatedAt", @"columnType":@"TEXT"}
+ ]
+*/
+
+-(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnsAndTypes
+{
+    const char *dbpath = [self.getDatabaseFilePath UTF8String];
+    sqlite3 *myDB;
+    if (sqlite3_open(dbpath, &myDB) == SQLITE_OK) {
+        
+        NSString *createTableQuery = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(id INTEGER PRIMARY KEY)", tableName];
+        
+        int results = 0;
+        //create all chars tables
+        const char *createTableQuerySQL = [createTableQuery UTF8String];
+        sqlite3_stmt * createTableQueryStatement = nil;
+        results = sqlite3_exec(myDB, createTableQuerySQL, NULL, NULL, NULL);
+        if (results != SQLITE_DONE) {
+            const char *err = sqlite3_errmsg(myDB);
+            NSString *errMsg = [NSString stringWithFormat:@"%s",err];
+            if (![errMsg isEqualToString:@"not an error"]) {
+                return [APBDataManager dataBaseErrorWithMessage:errMsg];
+            }
+        }
+        
+        sqlite3_finalize(createTableQueryStatement);
+        sqlite3_close(myDB);
+        
+        return nil;
+    }else{
+        return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
+    }
+}
+
 -(NSError *)removeTable:(NSString *)tableName
 {
 #warning incomplete
