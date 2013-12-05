@@ -70,6 +70,42 @@
                                code:200
                            userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg, NSLocalizedDescriptionKey, nil]];
 }
+/*!
+ INSERT INTO table-name DEFAULT VALUES
+ 
+ INSERT INTO table-name ( column-name1, column-name2) VALUES (aValue1, aValue2), (bValue1, bValue2)
+ 
+ DELETE FROM table-name WHERE expression
+ 
+ UPDATE table-name SET column-name=expresssion WHERE expressions
+ */
+-(NSError *)executeSqlQuery:(NSString *)query
+{
+    const char *dbpath = [self.getDatabaseFilePath UTF8String];
+    sqlite3 *myDB;
+    if (sqlite3_open(dbpath, &myDB) == SQLITE_OK) {
+        int results = 0;
+        const char *querySQL = [query UTF8String];
+        sqlite3_stmt * queryStatement = nil;
+        results = sqlite3_exec(myDB, querySQL, NULL, NULL, NULL);
+        if (results != SQLITE_DONE) {
+            const char *err = sqlite3_errmsg(myDB);
+            NSString *errMsg = [NSString stringWithFormat:@"%s",err];
+            if (![errMsg isEqualToString:@"not an error"]) {
+                return [APBDataManager dataBaseErrorWithMessage:errMsg];
+            }
+        }
+        sqlite3_finalize(queryStatement);
+        sqlite3_close(myDB);
+        return nil;
+    } else {
+        return [APBDataManager dataBaseErrorWithMessage:@"Could not open database."];
+    }
+    return nil;
+
+}
+
+
 
 
 #pragma mark -
