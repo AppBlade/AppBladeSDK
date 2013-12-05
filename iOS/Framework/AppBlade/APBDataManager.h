@@ -29,6 +29,24 @@ typedef NS_OPTIONS(NSUInteger, AppBladeColumnConstraint) {
     AppBladeColumnConstraintUnique                  = 1 <<  8
 };
 
+static NSString* const kAppBladeColumnAffinityText      = @"TEXT";
+static NSString* const kAppBladeColumnAffinityNumeric   = @"NUMERIC";
+static NSString* const kAppBladeColumnAffinityInteger   = @"INTEGER";
+static NSString* const kAppBladeColumnAffinityReal      = @"REAL";
+static NSString* const kAppBladeColumnAffinityNone      = @"NONE";
+
+static NSString* const kAppBladeColumnStorageTypeNull  = @"NULL";
+static NSString* const kAppBladeColumnStorageTypeInteger = @"INTEGER";
+static NSString* const kAppBladeColumnStorageTypeReal  = @"REAL";
+static NSString* const kAppBladeColumnStorageTypeText  = @"TEXT";
+static NSString* const kAppBladeColumnStorageTypeBlob  = @"BLOB";
+
+//Foreign Key
+static NSString* const kAppBladeDatabaseForeignKeyFormat  = @"FOREIGN KEY(%@) REFERENCES %@(%@)";
+
+
+//default values must be handled separately, same with other CHECK functions
+
 
 //in the case of AppBladeDataBaseColumnTypeReference, pass a dictionary with {reftype, reference-table-name, index-value(s)},
 typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
