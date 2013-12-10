@@ -19,6 +19,8 @@
 
 NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
 
+static NSString* const kDbCrashReportDatabaseMainTableName = @"crashreports";
+
 static NSString* const kCrashDictCrashReportString  = @"_crashReportString";
 static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
 
@@ -38,7 +40,7 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
 {
     if((self = [super init])) {
         self.delegate = webOpAndDataManagerDelegate;
-        self.dbMainTableName = @"crashreports";
+        self.dbMainTableName = kDbCrashReportDatabaseMainTableName;
     
         
         self.dbMainTableAdditionalColumns = [APBDatabaseCrashReport columnDeclarations];
@@ -274,6 +276,9 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
 
 
 @implementation APBDataManager (CrashReporting)
+-(NSError *)addCrashReport:(APBDatabaseCrashReport *)crashReport {
+    return [self writeData:crashReport toTable:kDbCrashReportDatabaseMainTableName];
+}
 
 @end
 
