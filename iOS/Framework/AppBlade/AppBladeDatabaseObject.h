@@ -7,14 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <sqlite3.h>
 
 //represents a single row in a table
 @interface AppBladeDatabaseObject : NSObject
 //
 //    @property (nonatomic, strong) NSString *tableName; //the table this object currently resides
-//    @property (nonatomic, strong, getter = getId) NSString *dbRowId; //the id this row has in the table
+    @property (nonatomic, strong, readonly, getter = getId) NSString *dbRowId; //the id this row has in the table
 
-
-
+-(NSString *)insertSqlIntoTable:(NSString *)tableName;
+-(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement;
 
 @end

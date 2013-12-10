@@ -344,28 +344,6 @@
 }
 
 
--(NSError *)addRows:(NSArray *)newRows toTable:(NSString *)tableName {
-#warning incomplete
-    return nil;
-}
-
--(NSError *)removeRows:(NSArray *)rows fromTable:(NSString *)tableName {
-#warning incomplete
-    return nil;
-}
-
-
--(NSDictionary *)getFirstRowFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error {
-#warning incomplete
-    return nil;
-}
-
--(NSArray *)getAllRowsFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error
-{
-#warning incomplete
-    return nil;
-}
-
 -(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName {
 #warning incomplete
     return nil;
@@ -376,6 +354,62 @@
 #warning incomplete
     return nil;
 }
+
+
+#pragma mark Data functions
+-(NSError *)writeData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName
+{
+    NSError *errorCheck = nil;
+    sqlite3_stmt    *statement;
+    if ([self prepareTransaction] == SQLITE_OK)
+    {
+        NSString *insertSQL = [dataObject insertSqlIntoTable:tableName];
+        const char *insert_stmt = [insertSQL UTF8String];
+        sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL);
+        if (sqlite3_step(statement) == SQLITE_DONE)
+        {
+            errorCheck = nil;
+        } else {
+            errorCheck = [APBDataManager dataBaseErrorWithMessage:@"Data not added"];
+        }
+        sqlite3_finalize(statement);
+        [self finishTransaction];
+    }
+    return errorCheck;
+}
+
+-(AppBladeDatabaseObject *)findDataInTable:(NSString *)tableName withParams:(NSString *)params
+{
+    NSError *errorCheck = nil;
+    AppBladeDatabaseObject* toRet = [[AppBladeDatabaseObject alloc] init];
+    sqlite3_stmt    *statement;
+    if ([self prepareTransaction]  == SQLITE_OK)
+    {
+        NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@", tableName, params];
+        const char *query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(_db,
+                               query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                errorCheck = [toRet readFromSQLiteStatement:statement];
+                //Match found (posssibly)
+            } else {
+                //Match not found
+                errorCheck = [APBDataManager dataBaseErrorWithMessage:@"Match not found"];
+            }
+            sqlite3_finalize(statement);
+        }
+        [self finishTransaction];
+    }
+    if(errorCheck != nil){
+        toRet = nil;
+        ABErrorLog(@"%@", errorCheck);
+    }
+    return  toRet;
+}
+
 
 
 @end

@@ -11,6 +11,7 @@
 
 #import "AppBladeDatabaseColumn.h"
 #import "AppBladeDatabaseConstants.h"
+#import "AppBladeDatabaseObject.h"
 
 static NSString* const kAppBladeDatabaseName        = @"AppBlade.sqlite";
 static NSString* const kAppBladeDatabaseTextEncoding= @"UTF-8"; //Cannot currently be changed. Still here for prescience.
@@ -51,5 +52,10 @@ static int const kAppBladeDatabaseVersion           = 0; //For internal use only
 -(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName;
 
 -(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName;
+
+//basic table-agnostic find and write
+-(NSError *)writeData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName;
+-(AppBladeDatabaseObject *)findDataInTable:(NSString *)tableName withParams:(NSString *)params;
+
 
 @end
