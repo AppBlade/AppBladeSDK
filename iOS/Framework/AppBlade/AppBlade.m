@@ -178,6 +178,10 @@ static AppBlade *s_sharedManager = nil;
         self.applicationInfoManager = [[APBApplicationInfoManager alloc] init];
         self.deviceInfoManager      = [[APBDeviceInfoManager alloc] init];
         //init the feature managers conditionally, all other feature-dependent initialization code goes in their respective initWithDelegate calls
+#ifndef SKIP_CUSTOM_PARAMS
+        self.customParamsManager    = [[APBCustomParametersManager alloc] initWithDelegate:self];
+        self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesCustomParametersEnabled;
+#endif
 #ifndef SKIP_AUTHENTICATION
         self.authenticationManager  = [[APBAuthenticationManager alloc] initWithDelegate:self];
         self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesAuthenticationEnabled;
@@ -197,10 +201,6 @@ static AppBlade *s_sharedManager = nil;
 #ifndef SKIP_SESSIONS
         self.sessionTrackingManager = [[APBSessionTrackingManager alloc] initWithDelegate:self];
         self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesSessionTrackingEnabled;
-#endif
-#ifndef SKIP_CUSTOM_PARAMS
-        self.customParamsManager    = [[APBCustomParametersManager alloc] initWithDelegate:self];
-        self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesCustomParametersEnabled;
 #endif
     }
     return self;
