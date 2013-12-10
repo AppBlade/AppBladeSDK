@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "APBBasicFeatureManager.h"
+#import "APBDataManager.h"
 
 /*!
  @class APBCrashReportingManager
@@ -17,6 +18,10 @@
  */
 @interface APBCrashReportingManager : NSObject<APBBasicFeatureManager>
 @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
+
+@property (nonatomic, strong, readonly) NSString *dbMainTableName;
+@property (nonatomic, strong, readonly) NSArray  *dbMainTableAdditionalColumns; //remember: all tables by design have an id column assigned
+
 
 #pragma mark - Web Request Generators
 - (APBWebOperation*) generateCrashReportFromDictionary:(NSDictionary *)crashDictionary withParams:(NSDictionary *)paramsDict;
@@ -41,5 +46,11 @@
 //hasPendingCrashReport in PLCrashReporter
 - (void)appBladeWebClientCrashReported:(APBWebOperation *)client;
 
+
+@end
+
+
+
+@interface APBDataManager (CrashReporting)
 
 @end

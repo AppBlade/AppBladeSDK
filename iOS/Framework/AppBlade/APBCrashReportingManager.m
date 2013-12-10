@@ -7,7 +7,9 @@
 //
 
 #import "APBCrashReportingManager.h"
-#import "AppBlade.h"
+#import "AppBlade+PrivateMethods.h"
+
+#import "APBDataBaseCrashReport.h"
 
 #import "AppBladeDatabaseColumn.h"
 
@@ -19,22 +21,35 @@ NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
 
 static NSString* const kCrashDictCrashReportString  = @"_crashReportString";
 static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
+
 @interface APBCrashReportingManager ()
-- (APBWebOperation*) generateCrashReport:(NSString *)crashReport withParams:(NSDictionary *)paramsDict;
+    //redeclarations of readonly properties
+    @property (nonatomic, strong, readwrite) NSString *dbMainTableName;
+    @property (nonatomic, strong, readwrite) NSArray  *dbMainTableAdditionalColumns;
+
+    - (APBWebOperation*) generateCrashReport:(NSString *)crashReport withParams:(NSDictionary *)paramsDict;
 @end
 
 
 @implementation APBCrashReportingManager
 @synthesize delegate;
 
-- (id)initWithDelegate:(id<APBWebOperationDelegate>)webOpDelegate
+- (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpAndDatabaseDelegate
 {
     if((self = [super init])) {
-        self.delegate = webOpDelegate;
+        self.delegate = webOpAndDatabaseDelegate;
+        self.dbMainTableName = @"crashreports";
+    
+        
+        self.dbMainTableAdditionalColumns = @[[AppBladeDatabaseColumn initColumnNamed:@"stackTrace" ofType:nil withContraints: (AppBladeColumnConstraintAffinityNone | AppBladeColumnConstraintNotNull) additionalArgs:nil],
+                                              [AppBladeDatabaseColumn initColumnNamed:@"reportedAt" ofType:nil withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]];
+        
+        [self createTablesWithDelegate:webOpAndDatabaseDelegate];
     }
     
     return self;
 }
+
 
 #pragma mark - Web Request Generators
 - (APBWebOperation*) generateCrashReportFromDictionary:(NSDictionary *)crashDictionary withParams:(NSDictionary *)paramsDict
@@ -148,6 +163,7 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
 
 - (void)handleWebClientCrashReported:(APBWebOperation *)client
 {
+    ABDebugLog_internal(@"Appblade: Webclient reported crash successfully.");
 }
 
 - (void)crashReportCallbackFailed:(APBWebOperation *)client withErrorString:(NSString*)errorString
@@ -158,6 +174,18 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
 }
 
 #pragma mark Stored Crash Handling
+
+-(void)createTablesWithDelegate:(id<APBDataManagerDelegate>)databaseDelegate
+{
+    if([[databaseDelegate getDataManager] tableExistsWithName:self.dbMainTableName]){
+        //table exists, see if we need to update it
+#warning TODO: Table consistency check
+    }else{
+        //table doesn't exist! we need to create it.
+        [[databaseDelegate getDataManager] createTable:self.dbMainTableName withColumns:self.dbMainTableAdditionalColumns];
+    }
+}
+
 
 -(void) catchAndReportCrashes
 {
@@ -179,7 +207,7 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
         [[AppBlade sharedManager] handleCrashReport];
     }
 }
-
+//see "NSDictionary+AppBladeDataBaseCrashReports.h"
 - (NSDictionary *) handleCrashReportAsDictionary
 {
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
@@ -244,3 +272,10 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
 
 
 @end
+
+
+@implementation APBDataManager (CrashReporting)
+
+@end
+
+
