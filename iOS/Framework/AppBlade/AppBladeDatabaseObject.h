@@ -15,7 +15,8 @@
 //    @property (nonatomic, strong) NSString *tableName; //the table this object currently resides
     @property (nonatomic, strong, readonly, getter = getId) NSString *dbRowId; //the id this row has in the table
 
+-(NSString *)SqlFormattedProperty:(id)propertyValue;
+
 -(NSString *)insertSqlIntoTable:(NSString *)tableName;
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement;
-
 @end

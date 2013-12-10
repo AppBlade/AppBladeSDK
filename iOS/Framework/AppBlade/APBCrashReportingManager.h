@@ -55,7 +55,11 @@
 
 
 @interface APBDataManager (CrashReporting)
+@property (nonatomic) sqlite3 *db;
+
+
 -(NSError *)addCrashReport:(APBDatabaseCrashReport *)crashReport;
--(NSArray *)crashReports;
+-(APBDatabaseCrashReport *)getCrashReportFromParameters:(NSString *)parameterString;
+-(NSArray *)crashReports; //array of APBDatabaseCrashReport
 
 @end

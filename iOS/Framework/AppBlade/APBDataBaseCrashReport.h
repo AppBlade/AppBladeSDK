@@ -10,14 +10,19 @@
 #import "AppBladeDatabaseColumn.h"
 #import "AppBladeDatabaseObject.h"
 
+#ifndef SKIP_CUSTOM_PARAMS
+#import "APBCustomParametersManager.h"
+#endif
 
 //an APBDatabaseCrashReport object will represent a single row in the CrashReports database
 @interface APBDatabaseCrashReport : AppBladeDatabaseObject
 +(NSArray *)columnDeclarations;
 
-@property (nonatomic, strong) NSData *crashBlob; // the entire feedback blob
-
-@property (nonatomic, strong) NSDate *crashReportedAt;
-@property (nonatomic, strong) NSDate *crashDeliveredAt;
+@property (nonatomic, strong) NSData *stackTrace; // the entire stack trace (as a blob)
+@property (nonatomic, strong) NSDate *crashReportedAt; // time of crash
+#ifndef SKIP_CUSTOM_PARAMS
+@property (nonatomic, strong) NSString *customParameter;
+-(APBDatabaseCustomParameter *)customParameterObj;
+#endif
 
 @end

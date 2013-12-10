@@ -15,6 +15,24 @@
 
 @implementation AppBladeDatabaseObject
 
+
+-(NSString *)SqlFormattedProperty:(id)propertyValue {
+    //case check for whatever is passed?
+    if(propertyValue == nil){
+        return @"NULL";
+    }
+    
+    if([[propertyValue type] isKindOfClass:[NSString class]])
+    {
+        return (NSString *)propertyValue;
+    }else if([[propertyValue type] isKindOfClass:[AppBladeDatabaseObject class]]){
+        return [(AppBladeDatabaseObject *)propertyValue getId];
+    }
+    else{
+        return @"NULL";
+    }
+}
+
 -(NSString *)insertSqlIntoTable:(NSString *)tableName
 {
     return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)", tableName, [self columnNames], [self rowValues]];

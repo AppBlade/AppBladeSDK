@@ -276,9 +276,50 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
 
 
 @implementation APBDataManager (CrashReporting)
+    @dynamic db;
+
 -(NSError *)addCrashReport:(APBDatabaseCrashReport *)crashReport {
     return [self writeData:crashReport toTable:kDbCrashReportDatabaseMainTableName];
 }
+
+-(APBDatabaseCrashReport *)getCrashReportFromParameters:(NSString *)params {
+    return (APBDatabaseCrashReport *)[self findDataInTable:kDbCrashReportDatabaseMainTableName withParams:params];
+}
+
+-(NSArray *)crashReports {
+    NSError *errorCheck = nil;
+    NSMutableArray *toRet = [NSMutableArray init];
+    sqlite3_stmt    *statement;
+    if ([self prepareTransaction]  == SQLITE_OK)
+    {
+
+        NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM %@", kDbCrashReportDatabaseMainTableName];
+        const char *query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(self.db, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                APBDatabaseCrashReport* tempObj = [[APBDatabaseCrashReport alloc] init];
+                errorCheck = [tempObj readFromSQLiteStatement:statement];
+                if(errorCheck != nil){
+                    errorCheck = [APBDataManager dataBaseErrorWithMessage:@"error reading results"];
+                    break;
+                }else{
+                    [toRet addObject:tempObj];
+                } //Match found (posssibly)
+            }
+            sqlite3_finalize(statement);
+        }
+        [self finishTransaction];
+    }
+    if(errorCheck != nil){
+        toRet = nil;
+        ABErrorLog(@"%@", errorCheck);
+    }
+    return  toRet;
+}
+
 
 @end
 
