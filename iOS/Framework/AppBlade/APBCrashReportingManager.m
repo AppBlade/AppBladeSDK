@@ -41,6 +41,7 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
         self.dbMainTableName = @"crashreports";
     
         
+        self.dbMainTableAdditionalColumns = [APBDatabaseCrashReport columnDeclarations];
         
         [self createTablesWithDelegate:webOpAndDataManagerDelegate];
     }
