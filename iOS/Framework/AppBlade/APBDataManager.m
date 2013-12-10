@@ -111,10 +111,12 @@
 }
 
 //preparation methods
--(int)prepareTransaction {
+-(int)prepareTransaction
+{
     return sqlite3_open([[self getDatabaseFilePath] UTF8String], &_db);
 }
--(int)finishTransaction {
+-(int)finishTransaction
+{
    return sqlite3_close(_db);
 }
 

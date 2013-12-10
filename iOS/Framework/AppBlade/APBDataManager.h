@@ -46,12 +46,14 @@ static int const kAppBladeDatabaseVersion           = 0; //For internal use only
 -(NSError *)removeTable:(NSString *)tableName;
 
 //row functions
--(NSError *)addRow:(NSDictionary *)newRow toTable:(NSString *)tableName;
+-(NSError *)addOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName; //returns error only if there's a write error
+-(NSError *)addRow:(NSDictionary *)newRow toTable:(NSString *)tableName;      //returns error if row already exists
+-(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName;      //returns error if row doesn't exist yet
+-(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName;    //error on DNE, error on write error
 
--(NSError *)addOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName;
--(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName;
+-(int)prepareTransaction;
+-(int)finishTransaction;
 
--(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName;
 
 //basic table-agnostic find and write
 -(NSError *)writeData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName;
