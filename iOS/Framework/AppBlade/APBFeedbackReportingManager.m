@@ -8,12 +8,21 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "APBFeedbackReportingManager.h"
+
+#import "AppBladeDatabaseColumn.h"
+
+#import "APBDatabaseFeedbackReport.h"
+
 #import "AppBlade.h"
 #import "AppBlade+PrivateMethods.h"
 
 NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 
 @interface APBFeedbackReportingManager ()
+//redeclarations of readonly properties
+@property (nonatomic, strong, readwrite) NSString *dbMainTableName;
+@property (nonatomic, strong, readwrite) NSArray  *dbMainTableAdditionalColumns;
+
 @end
 
 @implementation APBFeedbackReportingManager
@@ -28,10 +37,30 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 {
     if((self = [super init])) {
         self.delegate = webOpDataManagerDelegate;
+        self.dbMainTableName = @"feedbackreports";
+        self.dbMainTableAdditionalColumns = [APBDatabaseFeedbackReport columnDeclarations];
+        
+        [self createTablesWithDelegate: webOpDataManagerDelegate];
     }
     
     return self;
 }
+
+
+-(void)createTablesWithDelegate:(id<APBDataManagerDelegate>)databaseDelegate
+{
+    if([[databaseDelegate getDataManager] tableExistsWithName:self.dbMainTableName]){
+        //table exists, see if we need to update it
+#warning TODO: Table consistency check
+    }else{
+        //table doesn't exist! we need to create it.
+        [[databaseDelegate getDataManager] createTable:self.dbMainTableName withColumns:self.dbMainTableAdditionalColumns];
+    }
+}
+
+
+#pragma mark Stored Crash Handling
+
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options
 {
