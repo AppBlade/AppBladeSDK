@@ -38,15 +38,11 @@ static NSString* const kAppBladeColumnAffinityInteger   = @"INTEGER";
 static NSString* const kAppBladeColumnAffinityReal      = @"REAL";
 static NSString* const kAppBladeColumnAffinityNone      = @"NONE";
 
-static NSString* const kAppBladeColumnConstraintPrimaryKey = @"PRIMARY KEY";
-static NSString* const kAppBladeColumnConstraintNotNull = @"NOT NULL";
-static NSString* const kAppBladeColumnConstraintUnique  = @"UNIQUE";
-static NSString* const kAppBladeColumnConstraintAutoincrement  = @"AUTOINCREMENT";
-
-static NSString* const kAppBladeColumnStorageTypeInteger = @"INTEGER";
-static NSString* const kAppBladeColumnStorageTypeReal  = @"REAL";
-static NSString* const kAppBladeColumnStorageTypeText  = @"TEXT";
-static NSString* const kAppBladeColumnStorageTypeBlob  = @"BLOB";
+//Our supported column constraints
+static NSString* const kAppBladeColumnConstraintPrimaryKey      = @"PRIMARY KEY";
+static NSString* const kAppBladeColumnConstraintNotNull         = @"NOT NULL";
+static NSString* const kAppBladeColumnConstraintUnique          = @"UNIQUE";
+static NSString* const kAppBladeColumnConstraintAutoincrement   = @"AUTOINCREMENT";
 
 //Foreign Key
 static NSString* const kAppBladeDatabaseForeignKeyFormat  = @"FOREIGN KEY(%@) REFERENCES %@(%@)"; //existing_column_name, secondary_table_name, secondary_table_primary_key_column (almost always id)
