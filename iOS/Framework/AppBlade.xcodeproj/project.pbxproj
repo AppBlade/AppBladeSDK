@@ -170,14 +170,18 @@
 		31D924EF184A97CA00012197 /* APBDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D924E6184A97CA00012197 /* APBDataManager.m */; };
 		31D924FB184AA67000012197 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D924FA184AA67000012197 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		31D924FC184AA68700012197 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D924FA184AA67000012197 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
-		31D9251418509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251218509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h */; };
-		31D9251518509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251218509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h */; };
-		31D9251618509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251218509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h */; };
-		31D9251718509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251218509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h */; };
-		31D9251818509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251318509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m */; };
-		31D9251918509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251318509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m */; };
-		31D9251A18509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251318509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m */; };
-		31D9251B18509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251318509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m */; };
+		31D9251F1850BC1C00012197 /* APBDataBaseCrashReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251D1850BC1C00012197 /* APBDataBaseCrashReport.h */; };
+		31D925201850BC1C00012197 /* APBDataBaseCrashReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251D1850BC1C00012197 /* APBDataBaseCrashReport.h */; };
+		31D925211850BC1C00012197 /* APBDataBaseCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251E1850BC1C00012197 /* APBDataBaseCrashReport.m */; };
+		31D925221850BC1C00012197 /* APBDataBaseCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251E1850BC1C00012197 /* APBDataBaseCrashReport.m */; };
+		31E36B241856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */; };
+		31E36B251856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */; };
+		31E36B261856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */; };
+		31E36B271856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */; };
+		31E36B281856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E36B231856A36D00A32D1A /* AppBladeDatabaseColumn.m */; };
+		31E36B291856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E36B231856A36D00A32D1A /* AppBladeDatabaseColumn.m */; };
+		31E36B2A1856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E36B231856A36D00A32D1A /* AppBladeDatabaseColumn.m */; };
+		31E36B2B1856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E36B231856A36D00A32D1A /* AppBladeDatabaseColumn.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -348,8 +352,10 @@
 		31D924E5184A97CA00012197 /* APBDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDataManager.h; sourceTree = "<group>"; };
 		31D924E6184A97CA00012197 /* APBDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDataManager.m; sourceTree = "<group>"; };
 		31D924FA184AA67000012197 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		31D9251218509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+AppBladeDataBaseColumn.h"; sourceTree = "<group>"; };
-		31D9251318509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+AppBladeDataBaseColumn.m"; sourceTree = "<group>"; };
+		31D9251D1850BC1C00012197 /* APBDataBaseCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDataBaseCrashReport.h; sourceTree = "<group>"; };
+		31D9251E1850BC1C00012197 /* APBDataBaseCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDataBaseCrashReport.m; sourceTree = "<group>"; };
+		31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeDatabaseColumn.h; sourceTree = "<group>"; };
+		31E36B231856A36D00A32D1A /* AppBladeDatabaseColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeDatabaseColumn.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -437,6 +443,7 @@
 		311A22911794E59F007BF879 /* Crash Reporting */ = {
 			isa = PBXGroup;
 			children = (
+				31D9251C1850BBE900012197 /* Data  */,
 				311A22A51795CFFF007BF879 /* APBCrashReportingManager.h */,
 				311A22A61795CFFF007BF879 /* APBCrashReportingManager.m */,
 			);
@@ -798,10 +805,19 @@
 		31D9251118509F8A00012197 /* Data Files */ = {
 			isa = PBXGroup;
 			children = (
-				31D9251218509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h */,
-				31D9251318509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m */,
+				31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */,
+				31E36B231856A36D00A32D1A /* AppBladeDatabaseColumn.m */,
 			);
 			name = "Data Files";
+			sourceTree = "<group>";
+		};
+		31D9251C1850BBE900012197 /* Data  */ = {
+			isa = PBXGroup;
+			children = (
+				31D9251D1850BC1C00012197 /* APBDataBaseCrashReport.h */,
+				31D9251E1850BC1C00012197 /* APBDataBaseCrashReport.m */,
+			);
+			name = "Data ";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -812,10 +828,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				311A21531794C79F007BF879 /* AppBlade.h in Headers */,
-				31D9251518509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h in Headers */,
 				318731CB179DAC0500E0D187 /* AppBladeLogging.h in Headers */,
 				311A21541794C79F007BF879 /* APBFileMD5Hash.h in Headers */,
 				31D924E8184A97CA00012197 /* APBDataManager.h in Headers */,
+				31E36B251856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
 				311A21551794C79F007BF879 /* APBFeedbackBackgroundView.h in Headers */,
 				31562C4E17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				318C22BB17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
@@ -829,7 +845,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				313064131794A866006DF03A /* AppBlade.h in Headers */,
-				31D9251418509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h in Headers */,
 				31D924E7184A97CA00012197 /* APBDataManager.h in Headers */,
 				313064151794A866006DF03A /* APBFileMD5Hash.h in Headers */,
 				313064141794A866006DF03A /* APBFeedbackBackgroundView.h in Headers */,
@@ -842,8 +857,10 @@
 				311A22C21796072C007BF879 /* AppBladeSharedConstants.h in Headers */,
 				311A22CA1796DE3B007BF879 /* APBBasicFeatureManager.h in Headers */,
 				31562C4D17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
+				31E36B241856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
 				31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 				318C22BA17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
+				31D9251F1850BC1C00012197 /* APBDataBaseCrashReport.h in Headers */,
 				311711B817D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
 				311711C317D687FA004170B7 /* APBDeviceInfoManager.h in Headers */,
 			);
@@ -854,8 +871,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				318189C8179E0337006EE07A /* AppBlade.h in Headers */,
-				31D9251718509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h in Headers */,
 				318189C9179E0343006EE07A /* AppBladeSharedConstants.h in Headers */,
+				31E36B271856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
 				31562C5017A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				318C22BD17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
 				311711BB17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
@@ -868,8 +885,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31D9251618509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.h in Headers */,
+				31D925201850BC1C00012197 /* APBDataBaseCrashReport.h in Headers */,
 				31D924E9184A97CA00012197 /* APBDataManager.h in Headers */,
+				31E36B261856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
 				31562C4F17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 				318C22BC17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
@@ -1092,6 +1110,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31E36B291856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */,
 				311A21591794C79F007BF879 /* AppBlade.m in Sources */,
 				311A215A1794C79F007BF879 /* APBSimpleKeychain.m in Sources */,
 				311A215B1794C79F007BF879 /* APBWebOperation.m in Sources */,
@@ -1101,7 +1120,6 @@
 				318C22BF17CFC0E50007FD5E /* APBTokenManager.m in Sources */,
 				31D924EC184A97CA00012197 /* APBDataManager.m in Sources */,
 				311711BD17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
-				31D9251918509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m in Sources */,
 				311711C817D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1114,10 +1132,12 @@
 				313064111794A820006DF03A /* crash_report.proto in Sources */,
 				313060861794A2A3006DF03A /* AppBlade.m in Sources */,
 				313061FF1794A357006DF03A /* APBSimpleKeychain.m in Sources */,
+				31E36B281856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */,
 				313062021794A357006DF03A /* APBWebOperation.m in Sources */,
 				313063BF1794A357006DF03A /* APBFeedbackBackgroundView.m in Sources */,
 				313063C21794A357006DF03A /* APBFeedbackDialogue.m in Sources */,
 				313063C51794A357006DF03A /* APBFileMD5Hash.c in Sources */,
+				31D925211850BC1C00012197 /* APBDataBaseCrashReport.m in Sources */,
 				313062371794A357006DF03A /* CrashReporter.m in Sources */,
 				313062731794A357006DF03A /* PLCrashReporter.m in Sources */,
 				3130623D1794A357006DF03A /* PLCrashAsync.c in Sources */,
@@ -1152,7 +1172,6 @@
 				311A22BE1795D313007BF879 /* APBCustomParametersManager.m in Sources */,
 				318C22BE17CFC0E50007FD5E /* APBTokenManager.m in Sources */,
 				311711BC17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
-				31D9251818509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m in Sources */,
 				311711C717D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1178,10 +1197,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				318189CA179E039D006EE07A /* AppBlade.m in Sources */,
-				31D9251B18509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m in Sources */,
 				318189CB179E039D006EE07A /* APBAuthenticationManager.m in Sources */,
 				318189CC179E039D006EE07A /* APBUpdatesManager.m in Sources */,
 				318189CD179E039D006EE07A /* APBSessionTrackingManager.m in Sources */,
+				31E36B2B1856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */,
 				318189CE179E039D006EE07A /* APBFeedbackReportingManager.m in Sources */,
 				318189CF179E039D006EE07A /* APBFeedbackBackgroundView.m in Sources */,
 				318189D0179E039D006EE07A /* APBFeedbackDialogue.m in Sources */,
@@ -1201,6 +1220,8 @@
 			files = (
 				318731F8179DE8C200E0D187 /* AppBlade.m in Sources */,
 				318731F9179DE8C200E0D187 /* APBSimpleKeychain.m in Sources */,
+				31E36B2A1856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */,
+				31D925221850BC1C00012197 /* APBDataBaseCrashReport.m in Sources */,
 				318731FA179DE8C200E0D187 /* APBWebOperation.m in Sources */,
 				318731FB179DE8C200E0D187 /* APBFeedbackBackgroundView.m in Sources */,
 				318731FC179DE8C200E0D187 /* APBFeedbackDialogue.m in Sources */,
@@ -1213,7 +1234,6 @@
 				3187321C179DE8C200E0D187 /* APBCustomParametersManager.m in Sources */,
 				318C22C017CFC0E50007FD5E /* APBTokenManager.m in Sources */,
 				311711BE17D687B5004170B7 /* APBApplicationInfoManager.m in Sources */,
-				31D9251A18509FC000012197 /* NSMutableDictionary+AppBladeDataBaseColumn.m in Sources */,
 				311711C917D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

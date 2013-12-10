@@ -9,7 +9,7 @@
 #import "APBDataManager.h"
 #import "AppBladeLogging.h"
 
-#import "NSMutableDictionary+AppBladeDataBaseColumn.h"
+#import "AppBladeDatabaseColumn.h"
 
 /*!
  The datamanager is feature agnostic. It should only concern itself with evaluating SQL queries, whatever they may be.

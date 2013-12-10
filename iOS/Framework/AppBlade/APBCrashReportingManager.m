@@ -9,6 +9,7 @@
 #import "APBCrashReportingManager.h"
 #import "AppBlade.h"
 
+#import "AppBladeDatabaseColumn.h"
 
 #import "PLCrashReporter.h"
 #import "PLCrashReport.h"
