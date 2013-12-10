@@ -15,10 +15,26 @@
 {
     if((self = [super init])) {
         self.delegate = webOpAndDataManagerDelegate;
+        self.dbMainTableName = kDbCustomParametersMainTableName;
+//       self.dbMainTableAdditionalColumns ;
+        
+        [self createTablesWithDelegate:webOpAndDataManagerDelegate];
     }
     
     return self;
 }
+
+
+-(void)createTablesWithDelegate:(id<APBDataManagerDelegate>)databaseDelegate
+{
+    
+}
+
++(NSString *)getDefaultForeignKeyDefinition:(NSString *)referencingColumn
+{
+    return [NSString stringWithFormat:@"FOREIGN KEY(%@) REFERENCES %@(id)", referencingColumn, kDbCustomParametersMainTableName]; //existing_column_name, secondary_table_name
+}
+
 
 -(NSDictionary *)getCustomParams
 {

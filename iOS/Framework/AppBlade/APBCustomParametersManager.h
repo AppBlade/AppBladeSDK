@@ -12,6 +12,9 @@
 #import "APBBasicFeatureManager.h"
 #import "AppBlade+PrivateMethods.h"
 
+
+static NSString* const kDbCustomParametersMainTableName = @"customparams";
+
 /*!
  @class APBCustomParametersManager
  @abstract The Custom Parameter meta-feature
@@ -19,6 +22,11 @@
  */
 @interface APBCustomParametersManager : NSObject<APBBasicFeatureManager>
 @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
+
+@property (nonatomic, strong, readwrite) NSString *dbMainTableName;
+@property (nonatomic, strong, readwrite) NSArray  *dbMainTableAdditionalColumns;
+
++(NSString *)getDefaultForeignKeyDefinition:(NSString *)referencingColumn;
 
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;

@@ -1199,6 +1199,13 @@ static AppBlade *s_sharedManager = nil;
     return returnString;
 }
 
+//internal manager getters
+#ifndef SKIP_CUSTOM_PARAMETERS
+-(APBCustomParametersManager *)getCustomParamsManager {
+   return self.customParamsManager;
+}
+#endif
+
 
 
 #pragma mark Assorted Other
