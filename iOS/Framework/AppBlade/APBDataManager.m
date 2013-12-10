@@ -269,6 +269,8 @@
 //be very careful when not including the default index, as foreign keys require a column with a primary key
 -(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData includeDefaultIndex:(BOOL)includeId
 {
+    ABDebugLog_internal(@"attempting to create %@ : %@", tableName, columnData);
+
     if ([self prepareTransaction] == SQLITE_OK) {
         //prepare the query given the params
         NSMutableString *createTableQuery = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(", tableName];
