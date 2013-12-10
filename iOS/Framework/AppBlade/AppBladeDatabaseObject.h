@@ -10,9 +10,11 @@
 
 //represents a single row in a table
 @interface AppBladeDatabaseObject : NSObject
+//
+//    @property (nonatomic, strong) NSString *tableName; //the table this object currently resides
+//    @property (nonatomic, strong, getter = getId) NSString *dbRowId; //the id this row has in the table
 
-    @property (nonatomic, strong) NSString *tableName; //the table this object currently resides
-    @property (nonatomic, strong, getter = getId) NSString *dbRowId; //the id this row has in the table
+
 
 
 @end
