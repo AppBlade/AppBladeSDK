@@ -23,9 +23,7 @@ static int const kAppBladeDatabaseVersion           = 0; //For internal use only
 
 @class APBDataManager;
 @protocol APBDataManagerDelegate <NSObject>
-
 -(APBDataManager *)getDataManager;
-
 @end
 
 @interface APBDataManager : NSObject
@@ -46,23 +44,12 @@ static int const kAppBladeDatabaseVersion           = 0; //For internal use only
 -(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData;
 -(NSError *)removeTable:(NSString *)tableName;
 
-//column functions (probably not going to be used all that much, since the tables probably aren't going to be changed after initilization)
--(NSError *)addColumns:(NSArray *)columns toTable:(NSString *)tableName;
--(NSError *)addColumn:(NSDictionary *)column toTable:(NSString *)tableName;
--(NSError *)removeColumn:(NSString *)columnName fromTable:(NSString *)tableName;
-
 //row functions
 -(NSError *)addRow:(NSDictionary *)newRow toTable:(NSString *)tableName;
--(NSError *)addRows:(NSArray *)newRows toTable:(NSString *)tableName;
 
 -(NSError *)addOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName;
 -(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName;
 
-//Will return the data in the row as a dictionary, or nil with an NSError
--(NSDictionary *)getFirstRowFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error;
--(NSArray *)getAllRowsFromCriteria:(NSDictionary *)rowCriteria fromTable:(NSString *)tableName error:(NSError *)error;
-
--(NSError *)removeRows:(NSArray *)rows fromTable:(NSString *)tableName;
 -(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName;
 
 @end

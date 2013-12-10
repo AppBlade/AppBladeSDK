@@ -330,37 +330,6 @@
         return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
     }
 }
-#pragma mark Column functions
--(NSError *)addColumns:(NSArray *)columns toTable:(NSString *)tableName {
-#warning Dangerous. Messy. We have no way of knowing which columns were added. Wrap this in a better SQL query
-    for (NSDictionary *column in columns) {
-        NSError *e = [self addColumn:column toTable:tableName];
-        if(e != nil)
-            return e;
-    }
-    return nil;
-}
-//column functions (these are kinda dumb right now, we aren't expecting the tables to change after they're created. 
--(NSError *)addColumn:(NSDictionary *)column toTable:(NSString *)tableName
-{
-#warning incomplete
-    return nil;
-}
-
--(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints toTable:(NSString *)tableName
-{
-    return [self addColumn:columnName withConstraints:constraints withAdditionalArgs:nil toTable:tableName];
-}
-
--(NSError *)addColumn:(NSString *)columnName withConstraints:(AppBladeColumnConstraint)constraints withAdditionalArgs:(NSString *)args toTable:(NSString *)tableName{
-#warning incomplete
-    return nil;
-}
-
--(NSError *)removeColumn:(NSString *)columnName fromTable:(NSString *)tableName{
-#warning incomplete
-    return nil;
-}
 
 
 #pragma mark Row functions
