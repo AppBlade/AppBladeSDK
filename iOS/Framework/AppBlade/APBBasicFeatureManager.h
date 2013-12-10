@@ -16,7 +16,7 @@
 @protocol APBBasicFeatureManager
 
 @required
-    - (id)initWithDelegate:(id<APBWebOperationDelegate>)webOpDelegate;
+- (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpAndDataManagerDelegate;
 
 //Suggested pragma structure (after implementing the required methods, which should always be first)
 #pragma mark - Web Request Generators
@@ -25,6 +25,8 @@
 -(void)createTablesWithDelegate:(id<APBDataManagerDelegate>)databaseDelegate;
 //wherein you implement any storage behavior for pending API calls.
 
-//...
 //then whatever else you feel like
+@optional
+-(NSString *)getDefaultForeignKeyDefinition:(NSString *)referencingColumn;
+
 @end

@@ -22,10 +22,10 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 
 
 
-- (id)initWithDelegate:(id<APBWebOperationDelegate>)webOpDelegate
+- (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpDataManagerDelegate
 {
     if((self = [super init])) {
-        self.delegate = webOpDelegate;
+        self.delegate = webOpDataManagerDelegate;
     }
     
     return self;

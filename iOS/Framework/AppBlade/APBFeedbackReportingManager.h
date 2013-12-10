@@ -18,7 +18,10 @@
  @discussion This manager contains the showFeedbackDialogueWithOptions call, includng storage of the feedback dictionary and web callbacks.
  */
 @interface APBFeedbackReportingManager : NSObject<APBBasicFeatureManager>
-    @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
+    @property (nonatomic, strong) id<APBWebOperationDelegate, APBDataManagerDelegate> delegate;
+
+@property (nonatomic, strong, readonly) NSString *dbMainTableName;
+@property (nonatomic, strong, readonly) NSArray  *dbMainTableAdditionalColumns; //remember: all tables by design have an id column assigned
 
 @property (nonatomic, retain) NSMutableDictionary* feedbackDictionary;
 @property (nonatomic, assign) BOOL showingFeedbackDialogue;

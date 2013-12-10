@@ -17,7 +17,6 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 @end
 
 @implementation APBFeedbackReportingManager
-@synthesize delegate;
 
 @synthesize feedbackDictionary;
 @synthesize showingFeedbackDialogue;
@@ -25,10 +24,10 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 @synthesize feedbackWindow;
 
 
-- (id)initWithDelegate:(id<APBWebOperationDelegate>)webOpDelegate
+- (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpDataManagerDelegate
 {
     if((self = [super init])) {
-        self.delegate = webOpDelegate;
+        self.delegate = webOpDataManagerDelegate;
     }
     
     return self;

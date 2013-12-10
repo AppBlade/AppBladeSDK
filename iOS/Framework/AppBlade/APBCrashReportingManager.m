@@ -34,21 +34,15 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
 @implementation APBCrashReportingManager
 @synthesize delegate;
 
-- (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpAndDatabaseDelegate
+- (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpAndDataManagerDelegate
 {
     if((self = [super init])) {
-        self.delegate = webOpAndDatabaseDelegate;
+        self.delegate = webOpAndDataManagerDelegate;
         self.dbMainTableName = @"crashreports";
     
         
-        self.dbMainTableAdditionalColumns = @[[AppBladeDatabaseColumn initColumnNamed:@"stackTrace" withContraints: (AppBladeColumnConstraintAffinityNone | AppBladeColumnConstraintNotNull) additionalArgs:nil],
-                                              [AppBladeDatabaseColumn initColumnNamed:@"reportedAt" withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]
-#ifndef SKIP_CUSTOM_PARAMS
-                                              ,[AppBladeDatabaseColumn initColumnNamed:@"customParamsId" withContraints:(AppBladeColumnConstraintAffinityInteger) additionalArgs:nil]
-#endif
-                                              ];
         
-        [self createTablesWithDelegate:webOpAndDatabaseDelegate];
+        [self createTablesWithDelegate:webOpAndDataManagerDelegate];
     }
     
     return self;

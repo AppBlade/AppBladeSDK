@@ -21,6 +21,7 @@
  */
 @interface APBCrashReportingManager : NSObject<APBBasicFeatureManager>
 @property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
+@property (nonatomic, strong) id<APBWebOperationDelegate, APBDataManagerDelegate> delegate;
 
 @property (nonatomic, strong, readonly) NSString *dbMainTableName;
 @property (nonatomic, strong, readonly) NSArray  *dbMainTableAdditionalColumns; //remember: all tables by design have an id column assigned
@@ -55,7 +56,7 @@
 
 
 @interface APBDataManager (CrashReporting)
--(NSError *)addCrashReport:(AppBladeDatabaseCrashReport *)crashReport;
+-(NSError *)addCrashReport:(APBDatabaseCrashReport *)crashReport;
 -(NSArray *)crashReports;
 
 @end

@@ -16,10 +16,10 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 @synthesize delegate;
 @synthesize upgradeLink;
 
-- (id)initWithDelegate:(id<APBWebOperationDelegate>)webOpDelegate
+- (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpDataManagerDelegate
 {
     if((self = [super init])) {
-        self.delegate = webOpDelegate;
+        self.delegate = webOpDataManagerDelegate;
     }
     
     return self;

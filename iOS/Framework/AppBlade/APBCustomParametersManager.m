@@ -11,10 +11,10 @@
 @implementation APBCustomParametersManager
 @synthesize delegate;
 
-- (id)initWithDelegate:(id<APBWebOperationDelegate>)webOpDelegate
+- (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpAndDataManagerDelegate
 {
     if((self = [super init])) {
-        self.delegate = webOpDelegate;
+        self.delegate = webOpAndDataManagerDelegate;
     }
     
     return self;
