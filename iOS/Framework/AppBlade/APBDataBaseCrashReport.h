@@ -16,7 +16,8 @@
 +(NSArray *)columnDeclarations;
 
 @property (nonatomic, strong) NSData *crashBlob; // the entire feedback blob
+
 @property (nonatomic, strong) NSDate *crashReportedAt;
-@property (nonatomic, strong) NSData *crashDeliveredAt;
+@property (nonatomic, strong) NSDate *crashDeliveredAt;
 
 @end
