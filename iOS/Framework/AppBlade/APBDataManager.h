@@ -56,6 +56,15 @@ typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
     AppBladeDataBaseRefTypeOneToMany                    = 1 << 3
 };
 
+
+@class APBDataManager;
+@protocol APBDataManagerDelegate <NSObject>
+
+-(BOOL)dataBaseExists;
+-(APBDataManager *)getDataManager;
+
+@end
+
 @interface APBDataManager : NSObject
 -(NSString *)getDatabaseFilePath;
 -(NSString *)getDocumentsSubFolderPath; //the sql file is stored somewhere in documents

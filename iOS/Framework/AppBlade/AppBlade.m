@@ -55,7 +55,7 @@
 
 
 
-@interface AppBlade ()<APBWebOperationDelegate
+@interface AppBlade ()<APBWebOperationDelegate, APBDataManagerDelegate
     #ifndef SKIP_FEEDBACK
     , APBFeedbackDialogueDelegate
     #endif
@@ -339,6 +339,13 @@ static AppBlade *s_sharedManager = nil;
 -(void)sanitizeKeychain {
     [APBSimpleKeychain sanitizeKeychain];
 }
+
+#pragma mark DataMAnager helper fuunctions
+
+-(APBDataManager *)getDataManager{
+    return self.dataManager;
+}
+
 
 #pragma mark Pending Requests Queue
 
