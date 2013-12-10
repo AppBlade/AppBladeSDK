@@ -12,6 +12,7 @@
 #import "APBBasicFeatureManager.h"
 #import "AppBlade+PrivateMethods.h"
 
+#import "APBDatabaseCustomParameter.h"
 
 static NSString* const kDbCustomParametersMainTableName = @"customparams";
 
