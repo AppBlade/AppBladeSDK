@@ -1,5 +1,5 @@
 //
-//  APBDataBaseCrashReport.h
+//  APBDatabaseCrashReport.h
 //  AppBlade
 //
 //  Created by AndrewTremblay on 12/5/13.
@@ -9,7 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "AppBladeDatabaseColumn.h"
 
-//an APBDataBaseCrashReport object will represent a single row in the CrashReports database
-@interface APBDataBaseCrashReport : NSMutableDictionary
+//an APBDatabaseCrashReport object will represent a single row in the CrashReports database
+@interface APBDatabaseCrashReport : NSObject
+@property (nonatomic, strong) NSData *crashBlob;
+@property (nonatomic, strong) NSDate *crashReportedAt;
+@property (nonatomic, strong) NSData *crashDeliveredAt;
 
 @end

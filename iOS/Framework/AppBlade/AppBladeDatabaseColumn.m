@@ -1,5 +1,5 @@
 //
-//  NSMutableDictionary+AppBladeDataBaseColumn.m
+//  NSMutableDictionary+AppBladeDatabaseColumn.m
 //  AppBlade
 //
 //  Created by AndrewTremblay on 12/5/13.
@@ -10,18 +10,17 @@
 
 @implementation AppBladeDatabaseColumn
 
-+(id)initColumnNamed:(NSString*)name ofType:(NSString *)columnType withContraints:(AppBladeColumnConstraint)constraints additionalArgs:(NSString *)args
++(id)initColumnNamed:(NSString*)name  withContraints:(AppBladeColumnConstraint)constraints additionalArgs:(NSString *)args
 {
-    return [[AppBladeDatabaseColumn alloc] initColumnNamed:name ofType:columnType withContraints:constraints additionalArgs:args];
+    return [[AppBladeDatabaseColumn alloc] initColumnNamed:name withContraints:constraints additionalArgs:args];
 }
 
 
--(id)initColumnNamed:(NSString*)name ofType:(NSString *)columnType withContraints:(AppBladeColumnConstraint)constraints additionalArgs:(NSString *)args {
+-(id)initColumnNamed:(NSString*)name withContraints:(AppBladeColumnConstraint)constraints additionalArgs:(NSString *)args {
     self = [super init];
     if (self != nil)
     {
         [self setColumnName:name];
-        [self setColumnType:columnType];
         [self setConstraints:constraints];
         [self setAdditionalArgs:args];
     }
@@ -34,7 +33,6 @@
     if (self != nil)
     {
         [self setColumnName: [dictionary objectForKey:kAppBladeColumnDictName]];
-        [self setColumnType: [dictionary objectForKey: kAppBladeColumnDictType]];
         [self setConstraints: [(NSNumber *)[dictionary objectForKey:kAppBladeColumnDictContraints] integerValue]];
         [self setAdditionalArgs:[dictionary objectForKey:kAppBladeColumnDictAdditionalArgs]];
     }
@@ -45,7 +43,6 @@
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
         self.columnName, kAppBladeColumnDictName,
-        self.columnType, kAppBladeColumnDictType,
         [NSNumber numberWithInteger:self.constraints], kAppBladeColumnDictContraints,
         self.additionalArgs, kAppBladeColumnDictAdditionalArgs, nil];
 }
@@ -58,14 +55,9 @@
     }
     //otherwise it's business as usual
     NSMutableString *toRet = [NSMutableString stringWithString:[self columnName]];
-    if([self columnType] != nil)
-    {
-        [toRet appendFormat:@" %@",[self columnType]];
-    }
 
-
-    if((self.constraints & AppBladeColumnConstraintNone)){
-    
+    if(!(self.constraints & AppBladeColumnConstraintNone)){
+        // for when we start updating columns, we should put better logic here
     }else{
         if(self.constraints & AppBladeColumnConstraintAffinityNone){
          [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
@@ -86,13 +78,13 @@
             [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
         }
         if(self.constraints & AppBladeColumnConstraintNotNull){
-            [toRet appendFormat:@" %@",@"NOT NULL"];
+            [toRet appendFormat:@" %@", kAppBladeColumnConstraintNotNull];
         }
         if(self.constraints & AppBladeColumnConstraintUnique){
-            [toRet appendFormat:@" %@",@"UNIQUE"];
+            [toRet appendFormat:@" %@", kAppBladeColumnConstraintUnique];
         }
         if(self.constraints & AppBladeColumnConstraintAutoincrement){
-            [toRet appendFormat:@" %@", @"AUTOINCREMENT"];
+            [toRet appendFormat:@" %@", kAppBladeColumnConstraintAutoincrement];
         }
     }
     

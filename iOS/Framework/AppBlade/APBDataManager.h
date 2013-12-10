@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
 
-static NSString* const kAppBladeDataBaseName        = @"AppBlade.sqlite";
-static NSString* const kAppBladeDataBaseTextEncoding= @"UTF-8"; //Cannot currently be changed. Still here for prescience.
-static int const kAppBladeDataBaseVersion           = 0; //For internal use only. (should link to PRAGMA user_version;)
+static NSString* const kAppBladeDatabaseName        = @"AppBlade.sqlite";
+static NSString* const kAppBladeDatabaseTextEncoding= @"UTF-8"; //Cannot currently be changed. Still here for prescience.
+static int const kAppBladeDatabaseVersion           = 0; //For internal use only. (should link to PRAGMA user_version;)
 
 //major design structure
 //every table has an index column for keyvalue and reference (preferably called id)
@@ -38,6 +38,11 @@ static NSString* const kAppBladeColumnAffinityInteger   = @"INTEGER";
 static NSString* const kAppBladeColumnAffinityReal      = @"REAL";
 static NSString* const kAppBladeColumnAffinityNone      = @"NONE";
 
+static NSString* const kAppBladeColumnConstraintPrimaryKey = @"PRIMARY KEY";
+static NSString* const kAppBladeColumnConstraintNotNull = @"NOT NULL";
+static NSString* const kAppBladeColumnConstraintUnique  = @"UNIQUE";
+static NSString* const kAppBladeColumnConstraintAutoincrement  = @"AUTOINCREMENT";
+
 static NSString* const kAppBladeColumnStorageTypeInteger = @"INTEGER";
 static NSString* const kAppBladeColumnStorageTypeReal  = @"REAL";
 static NSString* const kAppBladeColumnStorageTypeText  = @"TEXT";
@@ -48,12 +53,12 @@ static NSString* const kAppBladeDatabaseForeignKeyFormat  = @"FOREIGN KEY(%@) RE
 
 //default values must be handled separately, same with other CHECK functions, those can go in AdditionalArgs for now
 
-//in the case of AppBladeDataBaseColumnTypeReference, pass a dictionary with {reftype, reference-table-name, index-value(s)},
-typedef NS_OPTIONS(NSUInteger, AppBladeDataBaseRefType) {
-    AppBladeDataBaseRefTypeInvalid                      = 0,
-    AppBladeDataBaseRefTypeOneToOne                     = 1 << 1,
-    AppBladeDataBaseRefTypeManyToOne                    = 1 << 2,
-    AppBladeDataBaseRefTypeOneToMany                    = 1 << 3
+//in the case of AppBladeDatabaseColumnTypeReference, pass a dictionary with {reftype, reference-table-name, index-value(s)},
+typedef NS_OPTIONS(NSUInteger, AppBladeDatabaseRefType) {
+    AppBladeDatabaseRefTypeInvalid                      = 0,
+    AppBladeDatabaseRefTypeOneToOne                     = 1 << 1,
+    AppBladeDatabaseRefTypeManyToOne                    = 1 << 2,
+    AppBladeDatabaseRefTypeOneToMany                    = 1 << 3
 };
 
 

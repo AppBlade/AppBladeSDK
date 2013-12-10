@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "APBDataManager.h"
 static NSString* const kAppBladeColumnDictName  = @"columnName";
-static NSString* const kAppBladeColumnDictType  = @"columnType";
 static NSString* const kAppBladeColumnDictContraints     = @"columnConstraints";
 static NSString* const kAppBladeColumnDictAdditionalArgs = @"columnAdditionalArgs";
 
@@ -18,11 +17,10 @@ static NSString* const kAppBladeColumnDictAdditionalArgs = @"columnAdditionalArg
  */
 @interface AppBladeDatabaseColumn : NSObject
 @property (nonatomic, strong) NSString *columnName;
-@property (nonatomic, strong) NSString *columnType;
 @property (nonatomic, assign) AppBladeColumnConstraint constraints;
 @property (nonatomic, strong) NSString *additionalArgs;
 
-+(id)initColumnNamed:(NSString*)name ofType:(NSString *)columnType withContraints:(AppBladeColumnConstraint)constraints additionalArgs:(NSString *)args;
++(id)initColumnNamed:(NSString*)name withContraints:(AppBladeColumnConstraint)constraints additionalArgs:(NSString *)args;
 -(id)initWithDict:(NSDictionary *)dictionary;
 -(NSDictionary *)toDictionary;
 

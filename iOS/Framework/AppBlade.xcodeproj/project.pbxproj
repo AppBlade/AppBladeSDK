@@ -170,10 +170,10 @@
 		31D924EF184A97CA00012197 /* APBDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D924E6184A97CA00012197 /* APBDataManager.m */; };
 		31D924FB184AA67000012197 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D924FA184AA67000012197 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		31D924FC184AA68700012197 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D924FA184AA67000012197 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Required, ); }; };
-		31D9251F1850BC1C00012197 /* APBDataBaseCrashReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251D1850BC1C00012197 /* APBDataBaseCrashReport.h */; };
-		31D925201850BC1C00012197 /* APBDataBaseCrashReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251D1850BC1C00012197 /* APBDataBaseCrashReport.h */; };
-		31D925211850BC1C00012197 /* APBDataBaseCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251E1850BC1C00012197 /* APBDataBaseCrashReport.m */; };
-		31D925221850BC1C00012197 /* APBDataBaseCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251E1850BC1C00012197 /* APBDataBaseCrashReport.m */; };
+		31D9251F1850BC1C00012197 /* APBDatabaseCrashReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251D1850BC1C00012197 /* APBDatabaseCrashReport.h */; };
+		31D925201850BC1C00012197 /* APBDatabaseCrashReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D9251D1850BC1C00012197 /* APBDatabaseCrashReport.h */; };
+		31D925211850BC1C00012197 /* APBDatabaseCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251E1850BC1C00012197 /* APBDatabaseCrashReport.m */; };
+		31D925221850BC1C00012197 /* APBDatabaseCrashReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D9251E1850BC1C00012197 /* APBDatabaseCrashReport.m */; };
 		31E36B241856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */; };
 		31E36B251856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */; };
 		31E36B261856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */; };
@@ -352,8 +352,8 @@
 		31D924E5184A97CA00012197 /* APBDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDataManager.h; sourceTree = "<group>"; };
 		31D924E6184A97CA00012197 /* APBDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDataManager.m; sourceTree = "<group>"; };
 		31D924FA184AA67000012197 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		31D9251D1850BC1C00012197 /* APBDataBaseCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDataBaseCrashReport.h; sourceTree = "<group>"; };
-		31D9251E1850BC1C00012197 /* APBDataBaseCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDataBaseCrashReport.m; sourceTree = "<group>"; };
+		31D9251D1850BC1C00012197 /* APBDatabaseCrashReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = APBDatabaseCrashReport.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		31D9251E1850BC1C00012197 /* APBDatabaseCrashReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = APBDatabaseCrashReport.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		31E36B221856A36D00A32D1A /* AppBladeDatabaseColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeDatabaseColumn.h; sourceTree = "<group>"; };
 		31E36B231856A36D00A32D1A /* AppBladeDatabaseColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeDatabaseColumn.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -814,8 +814,8 @@
 		31D9251C1850BBE900012197 /* Data  */ = {
 			isa = PBXGroup;
 			children = (
-				31D9251D1850BC1C00012197 /* APBDataBaseCrashReport.h */,
-				31D9251E1850BC1C00012197 /* APBDataBaseCrashReport.m */,
+				31D9251D1850BC1C00012197 /* APBDatabaseCrashReport.h */,
+				31D9251E1850BC1C00012197 /* APBDatabaseCrashReport.m */,
 			);
 			name = "Data ";
 			sourceTree = "<group>";
@@ -860,7 +860,7 @@
 				31E36B241856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
 				31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 				318C22BA17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
-				31D9251F1850BC1C00012197 /* APBDataBaseCrashReport.h in Headers */,
+				31D9251F1850BC1C00012197 /* APBDatabaseCrashReport.h in Headers */,
 				311711B817D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
 				311711C317D687FA004170B7 /* APBDeviceInfoManager.h in Headers */,
 			);
@@ -885,7 +885,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31D925201850BC1C00012197 /* APBDataBaseCrashReport.h in Headers */,
+				31D925201850BC1C00012197 /* APBDatabaseCrashReport.h in Headers */,
 				31D924E9184A97CA00012197 /* APBDataManager.h in Headers */,
 				31E36B261856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
 				31562C4F17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
@@ -1137,7 +1137,7 @@
 				313063BF1794A357006DF03A /* APBFeedbackBackgroundView.m in Sources */,
 				313063C21794A357006DF03A /* APBFeedbackDialogue.m in Sources */,
 				313063C51794A357006DF03A /* APBFileMD5Hash.c in Sources */,
-				31D925211850BC1C00012197 /* APBDataBaseCrashReport.m in Sources */,
+				31D925211850BC1C00012197 /* APBDatabaseCrashReport.m in Sources */,
 				313062371794A357006DF03A /* CrashReporter.m in Sources */,
 				313062731794A357006DF03A /* PLCrashReporter.m in Sources */,
 				3130623D1794A357006DF03A /* PLCrashAsync.c in Sources */,
@@ -1221,7 +1221,7 @@
 				318731F8179DE8C200E0D187 /* AppBlade.m in Sources */,
 				318731F9179DE8C200E0D187 /* APBSimpleKeychain.m in Sources */,
 				31E36B2A1856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */,
-				31D925221850BC1C00012197 /* APBDataBaseCrashReport.m in Sources */,
+				31D925221850BC1C00012197 /* APBDatabaseCrashReport.m in Sources */,
 				318731FA179DE8C200E0D187 /* APBWebOperation.m in Sources */,
 				318731FB179DE8C200E0D187 /* APBFeedbackBackgroundView.m in Sources */,
 				318731FC179DE8C200E0D187 /* APBFeedbackDialogue.m in Sources */,

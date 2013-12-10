@@ -9,7 +9,7 @@
 #import "APBCrashReportingManager.h"
 #import "AppBlade+PrivateMethods.h"
 
-#import "APBDataBaseCrashReport.h"
+#import "APBDatabaseCrashReport.h"
 
 #import "AppBladeDatabaseColumn.h"
 
@@ -20,7 +20,7 @@
 NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
 
 static NSString* const kCrashDictCrashReportString  = @"_crashReportString";
-static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
+static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
 
 @interface APBCrashReportingManager ()
     //redeclarations of readonly properties
@@ -41,8 +41,12 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
         self.dbMainTableName = @"crashreports";
     
         
-        self.dbMainTableAdditionalColumns = @[[AppBladeDatabaseColumn initColumnNamed:@"stackTrace" ofType:nil withContraints: (AppBladeColumnConstraintAffinityNone | AppBladeColumnConstraintNotNull) additionalArgs:nil],
-                                              [AppBladeDatabaseColumn initColumnNamed:@"reportedAt" ofType:nil withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]];
+        self.dbMainTableAdditionalColumns = @[[AppBladeDatabaseColumn initColumnNamed:@"stackTrace" withContraints: (AppBladeColumnConstraintAffinityNone | AppBladeColumnConstraintNotNull) additionalArgs:nil],
+                                              [AppBladeDatabaseColumn initColumnNamed:@"reportedAt" withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]
+#ifndef SKIP_CUSTOM_PARAMS
+                                              ,[AppBladeDatabaseColumn initColumnNamed:@"customParamsId" withContraints:(AppBladeColumnConstraintAffinityInteger) additionalArgs:nil]
+#endif
+                                              ];
         
         [self createTablesWithDelegate:webOpAndDatabaseDelegate];
     }
@@ -207,7 +211,7 @@ static NSString* const kCrashDictQueuedFilePath  = @"_queuedFilePath";
         [[AppBlade sharedManager] handleCrashReport];
     }
 }
-//see "NSDictionary+AppBladeDataBaseCrashReports.h"
+//see "NSDictionary+AppBladeDatabaseCrashReports.h"
 - (NSDictionary *) handleCrashReportAsDictionary
 {
     PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];

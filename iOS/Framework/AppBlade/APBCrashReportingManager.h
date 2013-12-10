@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import "APBDatabaseCrashReport.h"
+
+
 #import "APBBasicFeatureManager.h"
 #import "APBDataManager.h"
 
@@ -52,5 +55,7 @@
 
 
 @interface APBDataManager (CrashReporting)
+-(NSError *)addCrashReport:(AppBladeDatabaseCrashReport *)crashReport;
+-(NSArray *)crashReports;
 
 @end

@@ -47,7 +47,7 @@
             if ([self prepareTransaction] == SQLITE_OK)
             {
                 //set our user version
-                const char *sqlStatement = [[NSString stringWithFormat:@"PRAGMA user_version = %d;", kAppBladeDataBaseVersion] UTF8String];
+                const char *sqlStatement = [[NSString stringWithFormat:@"PRAGMA user_version = %d;", kAppBladeDatabaseVersion] UTF8String];
                 char *error;
                 sqlite3_exec(_db, sqlStatement, NULL, NULL, &error);
                 [self finishTransaction];
@@ -84,7 +84,7 @@
 -(NSString *)getDatabaseFilePath
 {
     
-    return [[self getDocumentsSubFolderPath] stringByAppendingPathComponent:kAppBladeDataBaseName];
+    return [[self getDocumentsSubFolderPath] stringByAppendingPathComponent:kAppBladeDatabaseName];
 }
 
 +(NSError *)dataBaseErrorWithMessage:(NSString *)msg
@@ -101,7 +101,7 @@
 
 -(BOOL)shouldMigrateDatabase
 {
-    return ([self storedDatabaseVersion] < kAppBladeDataBaseVersion); //This is an internal check reserved for point releases to the SDK, not to be confused with App-level updates (handled within the keychain).
+    return ([self storedDatabaseVersion] < kAppBladeDatabaseVersion); //This is an internal check reserved for point releases to the SDK, not to be confused with App-level updates (handled within the keychain).
 }
 
 //preparation methods
