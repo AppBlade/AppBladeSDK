@@ -99,6 +99,12 @@
     return @"id INTEGER PRIMARY KEY AUTOINCREMENT";
 }
 
+-(AppBladeDatabaseColumn *)generateReferenceColumn:(NSString *)columnName forTable:(NSString *)tableName{
+    return [AppBladeDatabaseColumn initColumnNamed:columnName
+                                    withContraints:AppBladeColumnConstraintAffinityInteger 
+                                    additionalArgs:[NSString stringWithFormat:kAppBladeDatabaseForeignKeyFormat, columnName, @"id", tableName]];
+}
+
 -(BOOL)shouldMigrateDatabase
 {
     return ([self storedDatabaseVersion] < kAppBladeDatabaseVersion); //This is an internal check reserved for point releases to the SDK, not to be confused with App-level updates (handled within the keychain).

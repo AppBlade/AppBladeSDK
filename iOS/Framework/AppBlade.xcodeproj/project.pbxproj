@@ -198,6 +198,10 @@
 		31E36B3E1856C8A200A32D1A /* APBDatabaseFeedbackReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E36B381856C8A200A32D1A /* APBDatabaseFeedbackReport.m */; };
 		31E36B3F1856C8A200A32D1A /* APBDatabaseFeedbackReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E36B381856C8A200A32D1A /* APBDatabaseFeedbackReport.m */; };
 		31E36B401856C8A200A32D1A /* APBDatabaseFeedbackReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 31E36B381856C8A200A32D1A /* APBDatabaseFeedbackReport.m */; };
+		31E36B421856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B411856D6FA00A32D1A /* AppBladeDatabaseConstants.h */; };
+		31E36B431856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B411856D6FA00A32D1A /* AppBladeDatabaseConstants.h */; };
+		31E36B441856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B411856D6FA00A32D1A /* AppBladeDatabaseConstants.h */; };
+		31E36B451856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E36B411856D6FA00A32D1A /* AppBladeDatabaseConstants.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -376,6 +380,7 @@
 		31E36B2D1856B2E300A32D1A /* AppBladeDatabaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeDatabaseObject.m; sourceTree = "<group>"; };
 		31E36B371856C8A200A32D1A /* APBDatabaseFeedbackReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDatabaseFeedbackReport.h; sourceTree = "<group>"; };
 		31E36B381856C8A200A32D1A /* APBDatabaseFeedbackReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDatabaseFeedbackReport.m; sourceTree = "<group>"; };
+		31E36B411856D6FA00A32D1A /* AppBladeDatabaseConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeDatabaseConstants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -819,6 +824,7 @@
 				31D9251118509F8A00012197 /* Data Files */,
 				31D924E5184A97CA00012197 /* APBDataManager.h */,
 				31D924E6184A97CA00012197 /* APBDataManager.m */,
+				31E36B411856D6FA00A32D1A /* AppBladeDatabaseConstants.h */,
 			);
 			name = "Data Manager";
 			sourceTree = "<group>";
@@ -865,6 +871,7 @@
 				31D924E8184A97CA00012197 /* APBDataManager.h in Headers */,
 				31E36B251856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
 				311A21551794C79F007BF879 /* APBFeedbackBackgroundView.h in Headers */,
+				31E36B431856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */,
 				31562C4E17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				318C22BB17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
 				31E36B2F1856B2E300A32D1A /* AppBladeDatabaseObject.h in Headers */,
@@ -884,6 +891,7 @@
 				313064141794A866006DF03A /* APBFeedbackBackgroundView.h in Headers */,
 				311A22981794E633007BF879 /* APBFeedbackReportingManager.h in Headers */,
 				311A22A71795CFFF007BF879 /* APBCrashReportingManager.h in Headers */,
+				31E36B421856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */,
 				311A22AE1795D24A007BF879 /* APBSessionTrackingManager.h in Headers */,
 				311A22B21795D259007BF879 /* APBUpdatesManager.h in Headers */,
 				311A22B61795D26E007BF879 /* APBAuthenticationManager.h in Headers */,
@@ -912,6 +920,7 @@
 				31E36B271856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
 				31562C5017A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				318C22BD17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
+				31E36B451856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */,
 				31E36B3C1856C8A200A32D1A /* APBDatabaseFeedbackReport.h in Headers */,
 				311711BB17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
 				31D924EA184A97CA00012197 /* APBDataManager.h in Headers */,
@@ -929,6 +938,7 @@
 				31E36B261856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
 				31562C4F17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
 				31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
+				31E36B441856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */,
 				31E36B3B1856C8A200A32D1A /* APBDatabaseFeedbackReport.h in Headers */,
 				318C22BC17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
 				311711BA17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,

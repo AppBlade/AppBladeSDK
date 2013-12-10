@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "APBDataManager.h"
+#import "AppBladeDatabaseConstants.h"
+
+
 static NSString* const kAppBladeColumnDictName  = @"columnName";
 static NSString* const kAppBladeColumnDictContraints     = @"columnConstraints";
 static NSString* const kAppBladeColumnDictAdditionalArgs = @"columnAdditionalArgs";

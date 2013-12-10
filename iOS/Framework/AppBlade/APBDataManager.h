@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
 
+#import "AppBladeDatabaseColumn.h"
+#import "AppBladeDatabaseConstants.h"
+
 static NSString* const kAppBladeDatabaseName        = @"AppBlade.sqlite";
 static NSString* const kAppBladeDatabaseTextEncoding= @"UTF-8"; //Cannot currently be changed. Still here for prescience.
 static int const kAppBladeDatabaseVersion           = 0; //For internal use only. (should link to PRAGMA user_version;)
@@ -17,51 +20,10 @@ static int const kAppBladeDatabaseVersion           = 0; //For internal use only
 //every table has an index column for keyvalue and reference (preferably called id)
 //all columns can be null, though a default value can be declared (via additional args)
 
-//sqlite does not enforce types, they instead use affinities
-typedef NS_OPTIONS(NSUInteger, AppBladeColumnConstraint) {
-    AppBladeColumnConstraintNone                    = 0,  //if this is set, all other constraints are ignored
-    AppBladeColumnConstraintNotNull                 = 1 <<  1,
-    AppBladeColumnConstraintAffinityText             = 1 <<  2,
-    AppBladeColumnConstraintAffinityNumeric          = 1 <<  3,
-    AppBladeColumnConstraintAffinityInteger          = 1 <<  4,
-    AppBladeColumnConstraintAffinityReal             = 1 <<  5,
-    AppBladeColumnConstraintAffinityNone             = 1 <<  6, //no multiple affinities, please
-    AppBladeColumnConstraintPrimaryKey              = 1 <<  7, //too many primary keys can cause memory issues
-    AppBladeColumnConstraintUnique                  = 1 <<  8,
-    AppBladeColumnConstraintAutoincrement           = 1 <<  9
-};  //todo1: more sql-related datatypes.
-    //todo2: increment, sorting, maybe link foreign keys into this enum somehow
-
-static NSString* const kAppBladeColumnAffinityText      = @"TEXT";
-static NSString* const kAppBladeColumnAffinityNumeric   = @"NUMERIC";
-static NSString* const kAppBladeColumnAffinityInteger   = @"INTEGER";
-static NSString* const kAppBladeColumnAffinityReal      = @"REAL";
-static NSString* const kAppBladeColumnAffinityNone      = @"NONE";
-
-//Our supported column constraints
-static NSString* const kAppBladeColumnConstraintPrimaryKey      = @"PRIMARY KEY";
-static NSString* const kAppBladeColumnConstraintNotNull         = @"NOT NULL";
-static NSString* const kAppBladeColumnConstraintUnique          = @"UNIQUE";
-static NSString* const kAppBladeColumnConstraintAutoincrement   = @"AUTOINCREMENT";
-
-//Foreign Key
-static NSString* const kAppBladeDatabaseForeignKeyFormat  = @"FOREIGN KEY(%@) REFERENCES %@(%@)"; //existing_column_name, secondary_table_name, secondary_table_primary_key_column (almost always id)
-
-//default values must be handled separately, same with other CHECK functions, those can go in AdditionalArgs for now
-
-//in the case of AppBladeDatabaseColumnTypeReference, pass a dictionary with {reftype, reference-table-name, index-value(s)},
-typedef NS_OPTIONS(NSUInteger, AppBladeDatabaseRefType) {
-    AppBladeDatabaseRefTypeInvalid                      = 0,
-    AppBladeDatabaseRefTypeOneToOne                     = 1 << 1,
-    AppBladeDatabaseRefTypeManyToOne                    = 1 << 2,
-    AppBladeDatabaseRefTypeOneToMany                    = 1 << 3
-};
-
 
 @class APBDataManager;
 @protocol APBDataManagerDelegate <NSObject>
 
--(BOOL)dataBaseExists;
 -(APBDataManager *)getDataManager;
 
 @end
@@ -73,6 +35,8 @@ typedef NS_OPTIONS(NSUInteger, AppBladeDatabaseRefType) {
 +(NSError *)dataBaseErrorWithMessage:(NSString *)msg; //useful internal for all the error messages
 
 +(NSString *)defaultIdColumnDefinition; //the default id column definition dictionary, since it is used so widely elsewhere.
+
+-(AppBladeDatabaseColumn *)generateReferenceColumn:(NSString *)columnName forTable:(NSString *)tableName;
 
 //careful with this one
 -(NSError *)executeArbitrarySqlQuery:(NSString *)query;
