@@ -7,6 +7,7 @@
 //
 
 #import "APBCustomParametersManager.h"
+#import "APBDatabaseCustomParameter.h"
 
 @implementation APBCustomParametersManager
 @synthesize delegate;
@@ -16,7 +17,7 @@
     if((self = [super init])) {
         self.delegate = webOpAndDataManagerDelegate;
         self.dbMainTableName = kDbCustomParametersMainTableName;
-//       self.dbMainTableAdditionalColumns ;
+        self.dbMainTableAdditionalColumns = [APBDatabaseCustomParameter columnDeclarations];
         
         [self createTablesWithDelegate:webOpAndDataManagerDelegate];
     }
@@ -27,7 +28,13 @@
 
 -(void)createTablesWithDelegate:(id<APBDataManagerDelegate>)databaseDelegate
 {
-    
+    if([[databaseDelegate getDataManager] tableExistsWithName:self.dbMainTableName]){
+        //table exists, see if we need to update it
+#warning TODO: Feature-specific Table consistency check
+    }else{
+        //table doesn't exist! we need to create it.
+        [[databaseDelegate getDataManager] createTable:self.dbMainTableName withColumns:self.dbMainTableAdditionalColumns];
+    }
 }
 
 +(NSString *)getDefaultForeignKeyDefinition:(NSString *)referencingColumn
