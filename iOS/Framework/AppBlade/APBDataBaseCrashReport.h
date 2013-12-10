@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "AppBladeDatabaseColumn.h"
+#import "AppBladeDatabaseObject.h"
+
 
 //an APBDatabaseCrashReport object will represent a single row in the CrashReports database
-@interface APBDatabaseCrashReport : NSObject
-@property (nonatomic, strong) NSData *crashBlob;
+@interface APBDatabaseCrashReport : AppBladeDatabaseObject
++(NSArray *)columnDeclarations;
+
+@property (nonatomic, strong) NSData *crashBlob; // the entire feedback blob
 @property (nonatomic, strong) NSDate *crashReportedAt;
 @property (nonatomic, strong) NSData *crashDeliveredAt;
 
