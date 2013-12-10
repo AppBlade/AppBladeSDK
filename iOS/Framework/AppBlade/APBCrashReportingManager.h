@@ -20,7 +20,6 @@
  @discussion This manager contains the catchAndReportCrashes call and callbacks. When an AppBlade-SDK-enabled app enables crash reporting, the SDK listens through the PLCrashReporter library to catch and store the crash logs, which it subsequenty sends to AppBlade for processing once the app is resumed.
  */
 @interface APBCrashReportingManager : NSObject<APBBasicFeatureManager>
-@property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
 @property (nonatomic, strong) id<APBWebOperationDelegate, APBDataManagerDelegate> delegate;
 
 @property (nonatomic, strong, readonly) NSString *dbMainTableName;
