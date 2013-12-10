@@ -62,6 +62,39 @@
     {
         [toRet appendFormat:@" %@",[self columnType]];
     }
+
+
+    if((self.constraints & AppBladeColumnConstraintNone)){
+    
+    }else{
+        if(self.constraints & AppBladeColumnConstraintAffinityNone){
+         [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+        }
+        if(self.constraints & AppBladeColumnConstraintAffinityReal){
+            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+        }
+        if(self.constraints & AppBladeColumnConstraintAffinityInteger){
+            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+        }
+        if(self.constraints & AppBladeColumnConstraintAffinityNumeric){
+            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+        }
+        if(self.constraints & AppBladeColumnConstraintAffinityText){
+            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+        }
+        if(self.constraints & AppBladeColumnConstraintPrimaryKey){
+            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+        }
+        if(self.constraints & AppBladeColumnConstraintNotNull){
+            [toRet appendFormat:@" %@",@"NOT NULL"];
+        }
+        if(self.constraints & AppBladeColumnConstraintUnique){
+            [toRet appendFormat:@" %@",@"UNIQUE"];
+        }
+        if(self.constraints & AppBladeColumnConstraintAutoincrement){
+            [toRet appendFormat:@" %@", @"AUTOINCREMENT"];
+        }
+    }
     
     return toRet;
 }
