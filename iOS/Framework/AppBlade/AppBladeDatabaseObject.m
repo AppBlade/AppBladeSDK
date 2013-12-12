@@ -60,4 +60,16 @@
     return @"";
 }
 
+
+//column read
+-(NSString *)readStringAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
+{
+    return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, index)];
+}
+
+-(NSData *)readStringAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
+{
+    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, index) length:sqlite3_column_bytes(satement, index)];
+}
+
 @end

@@ -74,15 +74,21 @@ static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsI
 }
 
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement {
-    NSString *dbRowIdCheck = [[NSString alloc]
-                              initWithUTF8String:
-                              (const char *) sqlite3_column_text(statement, 0)];
-    if(dbRowIdCheck == nil) {
+    NSError *toRet = [super readFromSQLiteStatement:statement];
+    if(toRet != nil)
+        return toRet;
+    //self.dbRowId = dbRowIdCheck;
+    
+    NSArray *cols = [self columnNamesList];
+    
+    
+    if(dbRowIdCheck == nil){
         NSError *error = [[NSError alloc] initWithDomain:@"AppBladeDatabaseObject" code:0 userInfo:nil];
         return error;
     }
     
-    self.dbRowId = dbRowIdCheck;
+
+    
     return nil;
 }
 
