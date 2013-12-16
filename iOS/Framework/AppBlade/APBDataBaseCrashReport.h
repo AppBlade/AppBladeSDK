@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSData *stackTrace; // the entire stack trace (as a blob)
 @property (nonatomic, strong) NSDate *crashReportedAt; // time of crash
 #ifndef SKIP_CUSTOM_PARAMS
-@property (nonatomic, strong) NSString *customParameter;
+@property (nonatomic, strong) NSString *customParameterId;
 -(APBDatabaseCustomParameter *)customParameterObj;
 #endif
 

@@ -85,7 +85,6 @@
     }    
 }
 
-
 -(void)setCustomParam:(id)newObject withValue:(NSString*)key
 {
     NSDictionary* currentFields = [self getCustomParams];
@@ -137,5 +136,49 @@
     [self setCustomParams:nil];
 }
 
+
+
+/*
+ When do we need a custom parameter snapshot stored?
+ When the custom parameter has changed between feature calls.
+ When a feature is stored, make sure an up-to-date snapshot is stored as well.
+ For the sake of simplicity, keep 1 snapshot per stored feature call.
+ */
+-(NSError *)storeCustomParamSnapshot
+{
+    ABDebugLog_internal(@"custom parameter stored with id %@");
+}
+
+-(NSError *)removeCustomParamById:(NSString *)paramId
+{
+    
+}
+
+-(APBDatabaseCustomParameter *)getCustomParamById:(NSString *)paramId
+{
+    [[self.delegate getDataManager] getCustomParameterWithID:paramId ];
+}
+
+@end
+
+
+@implementation APBDataManager(CustomParameters)
+@dynamic db;
+
+-(NSError *)saveCustomParamSnapshot
+{
+
+}
+
+-(APBDatabaseCustomParameter *)getCustomParameterWithID:(NSString *)customParamId
+{
+    NSString *paramQuery = [NSString stringWithFormat:@"ID = %@", customParamId];
+   return [self findDataInTable:kDbCustomParametersMainTableName withParams:paramQuery];
+}
+
+-(NSError *)removeCustomParameterWithID:(NSString *)customParamId
+{
+
+}
 
 @end

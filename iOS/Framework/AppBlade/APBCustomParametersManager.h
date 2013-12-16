@@ -13,6 +13,7 @@
 #import "AppBlade+PrivateMethods.h"
 
 #import "APBDatabaseCustomParameter.h"
+#import "APBDataManager.h"
 
 static NSString* const kDbCustomParametersMainTableName = @"customparams";
 
@@ -22,12 +23,14 @@ static NSString* const kDbCustomParametersMainTableName = @"customparams";
  @discussion This manager contains the storage and retrieval of the custom paramter meta-feature. For the other primary "reporter" functions, custom parameters are uselful for containing metadata for third part integration or other analytical protocols. 
  */
 @interface APBCustomParametersManager : NSObject<APBBasicFeatureManager>
-@property (nonatomic, strong) id<APBWebOperationDelegate> delegate;
+@property (nonatomic, strong) id<APBWebOperationDelegate, APBDataManagerDelegate> delegate;
 
 @property (nonatomic, strong, readwrite) NSString *dbMainTableName;
 @property (nonatomic, strong, readwrite) NSArray  *dbMainTableAdditionalColumns;
 
 +(NSString *)getDefaultForeignKeyDefinition:(NSString *)referencingColumn;
+
+-(APBDatabaseCustomParameter *)getCustomParamById:(NSString *)paramId;
 
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
@@ -42,5 +45,16 @@ static NSString* const kDbCustomParametersMainTableName = @"customparams";
 @interface AppBlade (CustomParameters)
 
 @property (nonatomic, strong) APBCustomParametersManager* customParamsManager;
+
+@end
+
+
+
+@interface APBDataManager (CustomParameters)
+@property (nonatomic) sqlite3 *db;
+
+-(NSError *)saveCustomParamSnapshot;
+-(APBDatabaseCustomParameter *)getCustomParameterWithID:(NSString *)customParamId;
+-(NSError *)removeCustomParameterWithID:(NSString *)customParamId;
 
 @end

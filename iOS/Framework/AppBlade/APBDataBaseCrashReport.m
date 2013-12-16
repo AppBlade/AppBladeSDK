@@ -45,7 +45,7 @@ static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsI
 -(NSArray *)rowValuesList {
     return @[[self SqlFormattedProperty: self.stackTrace], [self SqlFormattedProperty: self.crashReportedAt],
 #ifndef SKIP_CUSTOM_PARAMS
-             [self SqlFormattedProperty:self.customParameter]
+             [self SqlFormattedProperty:self.customParameterId]
 #endif
               ];
 }
@@ -89,8 +89,21 @@ static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsI
     
 
     
+#ifndef SKIP_CUSTOM_PARAMS
+    self.customParameterId = [[NSString alloc] initWithUTF8String:
+                            (const char *) sqlite3_column_text(statement, kDbCrashReportColumnIndexCustomParamsRef)];
+#endif
+
     return nil;
 }
 
+#ifndef SKIP_CUSTOM_PARAMS
+-(APBDatabaseCustomParameter *)customParameterObj{
+    //lookup custom parameter obj
+    APBDatabaseCustomParameter *toRet = [[[AppBlade sharedManager] customParamsManager] getCustomParamById:self.customParameterId];
+    
+    return nil;
+}
+#endif
 
 @end
