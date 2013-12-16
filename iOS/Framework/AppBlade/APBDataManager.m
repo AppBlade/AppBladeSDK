@@ -101,6 +101,26 @@
     return @"id INTEGER PRIMARY KEY AUTOINCREMENT";
 }
 
++(NSString *)sqlQueryToTrimTable:(NSString *) origTable toColumns:(NSArray *)columns
+{
+    NSString *colNamesCommaSeparated = [columns componentsJoinedByString:@", "];
+    return [NSString stringWithFormat:
+             @"CREATE TEMPORARY TABLE %@_backup(%@);"
+               "INSERT INTO %@_backup SELECT %@ FROM %@;"
+               "DROP TABLE %@;"
+               "CREATE TABLE %@(%@);"
+               "INSERT INTO %@ SELECT %@ FROM %@_backup;"
+               "DROP TABLE %@_backup;"
+               "COMMIT;",
+               origTable, colNamesCommaSeparated,
+               origTable, colNamesCommaSeparated, origTable,
+               origTable,
+               origTable, colNamesCommaSeparated,
+               origTable, colNamesCommaSeparated, origTable,
+               origTable
+               ];
+}
+
 -(AppBladeDatabaseColumn *)generateReferenceColumn:(NSString *)columnName forTable:(NSString *)tableName{
     return [AppBladeDatabaseColumn initColumnNamed:columnName
                                     withContraints:AppBladeColumnConstraintAffinityInteger 

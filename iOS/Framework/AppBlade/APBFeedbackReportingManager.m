@@ -9,6 +9,10 @@
 
 #import "APBFeedbackReportingManager.h"
 
+#ifndef SKIP_CUSTOM_PARAMS
+#import "APBCustomParametersManager.h"
+#endif
+
 #import "AppBladeDatabaseColumn.h"
 
 #import "APBDatabaseFeedbackReport.h"
@@ -17,6 +21,9 @@
 #import "AppBlade+PrivateMethods.h"
 
 NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
+
+static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreports";
+
 
 @interface APBFeedbackReportingManager ()
 //redeclarations of readonly properties
@@ -37,7 +44,7 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 {
     if((self = [super init])) {
         self.delegate = webOpDataManagerDelegate;
-        self.dbMainTableName = @"feedbackreports";
+        self.dbMainTableName = kDbFeedbackReportDatabaseMainTableName;
         self.dbMainTableAdditionalColumns = [APBDatabaseFeedbackReport columnDeclarations];
         
         [self createTablesWithDelegate: webOpDataManagerDelegate];
@@ -51,7 +58,47 @@ NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 {
     if([[databaseDelegate getDataManager] tableExistsWithName:self.dbMainTableName]){
         //table exists, see if we need to update it
-#warning TODO: Table consistency check
+#ifndef SKIP_CUSTOM_PARAMS
+        //make sure we have a custom parameter column
+        if(![[databaseDelegate getDataManager] table:self.dbMainTableName containsColumn:kDbFeedbackReportColumnNameCustomParamsRef]){
+
+            __block NSString *blockSafeTableName = self.dbMainTableName;
+            APBDataTransaction addParameterColumn = ^(sqlite3 *dbRef){
+                NSString *alterTableSQL =  [NSString stringWithFormat:@"ALTER TABLE %@ ADD %@",
+                                            blockSafeTableName,
+                                            [APBCustomParametersManager getDefaultForeignKeyDefinition:kDbFeedbackReportColumnNameCustomParamsRef]];
+                const char *sqlStatement = [alterTableSQL UTF8String];
+                char *error;
+                sqlite3_exec(dbRef, sqlStatement, NULL, NULL, &error);
+                if(error != nil){
+                    NSLog(@"%s: ERROR Preparing: , %s", __FUNCTION__, sqlite3_errmsg(dbRef));
+                }
+            };
+            
+            [[databaseDelegate getDataManager] alterTable:self.dbMainTableName withTransaction:addParameterColumn];
+        }
+#else
+        //make sure we don't have a custom parameter column
+        if([[databaseDelegate getDataManager] table:self.dbMainTableName containsColumn:kDbCrashReportColumnNameCustomParamsRef]){
+            
+            APBDataTransaction removeParameterColumn = ^(sqlite3 *dbRef){
+                //Sqlite has "Limited support for ALTER TABLE", which makes the process of changing tables a bit arduous
+                NSArray *colsToKeep = @[@"id", @"text", @"screenshot", @"reportedAt"];
+                NSString *alterTableSQL = [APBDataManager sqlQueryToTrimTable:kDbFeedbackReportDatabaseMainTableName toColumns:colsToKeep];
+                
+                const char *sqlStatement = [alterTableSQL UTF8String];
+                char *error;
+                sqlite3_exec(dbRef, sqlStatement, NULL, NULL, &error);
+                if(error != nil){
+                    NSLog(@"%s: ERROR Preparing: , %s", __FUNCTION__, sqlite3_errmsg(dbRef));
+                }
+                
+                
+                return;
+            };
+            [[databaseDelegate getDataManager] alterTable:self.dbMainTableName withTransaction:addParameterColumn];
+        }
+#endif
     }else{
         //table doesn't exist! we need to create it.
         [[databaseDelegate getDataManager] createTable:self.dbMainTableName withColumns:self.dbMainTableAdditionalColumns];

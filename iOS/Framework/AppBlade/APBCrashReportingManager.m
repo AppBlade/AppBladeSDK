@@ -200,23 +200,14 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
         if([[databaseDelegate getDataManager] table:self.dbMainTableName containsColumn:kDbCrashReportColumnNameCustomParamsRef]){
             APBDataTransaction removeParameterColumn = ^(sqlite3 *dbRef){
                 //Sqlite has "Limited support for ALTER TABLE", which makes the process of changing tables a bit arduous
-                NSString *alterTableSQL =
-                @"CREATE TEMPORARY TABLE crash_reports_backup(id, stackTrace, reportedAt);"
-                "INSERT INTO crash_reports_backup SELECT id, stackTrace, reportedAt FROM crash_reports;"
-                "DROP TABLE crash_reports;"
-                "CREATE TABLE crash_reports(id, stackTrace, reportedAt);"
-                "INSERT INTO crash_reports SELECT id, stackTrace, reportedAt FROM crash_reports_backup;"
-                "DROP TABLE crash_reports_backup;"
-                "COMMIT;";
-                
+                NSString *colsToKeep = @[@"id", @"stackTrace", @"reportedAt"];
+                NSString *alterTableSQL = [APBDataManager sqlQueryToTrimTable:kDbCrashReportDatabaseMainTableName toColumns:colsToKeep];
                 const char *sqlStatement = [alterTableSQL UTF8String];
                 char *error;
                 sqlite3_exec(dbRef, sqlStatement, NULL, NULL, &error);
                 if(error != nil){
                     NSLog(@"%s: ERROR Preparing: , %s", __FUNCTION__, sqlite3_errmsg(dbRef));
                 }
-                
-                
                 return;
             };
             [[databaseDelegate getDataManager] alterTable:self.dbMainTableName withTransaction:addParameterColumn];

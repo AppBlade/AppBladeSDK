@@ -35,6 +35,8 @@ typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 
 +(NSString *)defaultIdColumnDefinition; //the default id column definition dictionary, since it is used so widely elsewhere.
 
++(NSString *)sqlQueryToTrimTable:(NSString *) origTable toColumns:(NSArray *)columns;
+
 -(AppBladeDatabaseColumn *)generateReferenceColumn:(NSString *)columnName forTable:(NSString *)tableName;
 
 //careful with this one
