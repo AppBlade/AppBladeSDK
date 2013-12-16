@@ -312,6 +312,17 @@
     }
 }
 
+-(NSError *)alterTable:(NSString *)tableName withTransaction:(APBDataTransaction) transactionBlock
+{
+    if ([self prepareTransaction] == SQLITE_OK) {
+        transactionBlock(_db);
+    }else{
+        return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
+    }
+    return nil;
+}
+
+
 -(NSError *)removeTable:(NSString *)tableName
 {
     if ([self prepareTransaction] == SQLITE_OK) {
@@ -335,30 +346,6 @@
     }else{
         return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
     }
-}
-
-
-#pragma mark Row functions
--(NSError *)addRow:(NSDictionary *)newRow toTable:(NSString *)tableName {
-#warning incomplete
-    return nil;
-}
-
--(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName {
-#warning incomplete
-    return nil;
-}
-
-
--(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName {
-#warning incomplete
-    return nil;
-}
-
--(NSError *)addOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName
-{
-#warning incomplete
-    return nil;
 }
 
 

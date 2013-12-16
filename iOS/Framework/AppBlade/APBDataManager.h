@@ -21,6 +21,7 @@ static int const kAppBladeDatabaseVersion           = 0; //For internal use only
 //every table has an index column for keyvalue and reference (preferably called id)
 //all columns can be null, though a default value can be declared (via additional args)
 
+typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 
 @class APBDataManager;
 @protocol APBDataManagerDelegate <NSObject>
@@ -44,12 +45,8 @@ static int const kAppBladeDatabaseVersion           = 0; //For internal use only
 -(BOOL)tableExistsWithName:(NSString *)tableName;
 -(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData;
 -(NSError *)removeTable:(NSString *)tableName;
-
 //row functions
--(NSError *)addOrUpdateRow:(NSDictionary *)row toTable:(NSString *)tableName; //returns error only if there's a write error
--(NSError *)addRow:(NSDictionary *)newRow toTable:(NSString *)tableName;      //returns error if row already exists
--(NSError *)updateRow:(NSDictionary *)row toTable:(NSString *)tableName;      //returns error if row doesn't exist yet
--(NSError *)removeRow:(NSDictionary *)row fromTable:(NSString *)tableName;    //error on DNE, error on write error
+-(NSError *)alterTable:(NSString *)tableName withTransaction:(APBDataTransaction) transactionBlock;
 
 -(int)prepareTransaction;
 -(int)finishTransaction;
