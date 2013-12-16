@@ -282,8 +282,34 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
     return [self writeData:crashReport toTable:kDbCrashReportDatabaseMainTableName];
 }
 
+/* returns first row result of the parameter, no order is specified*/
 -(APBDatabaseCrashReport *)getCrashReportFromParameters:(NSString *)params {
-    return (APBDatabaseCrashReport *)[self findDataInTable:kDbCrashReportDatabaseMainTableName withParams:params];
+    NSError *errorCheck = nil;
+    APBDatabaseCrashReport *toRet = nil;
+    sqlite3_stmt    *statement;
+    if ([self prepareTransaction]  == SQLITE_OK)
+    {
+        NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@", kDbCrashReportDatabaseMainTableName, params];
+        const char *query_stmt = [querySQL UTF8String];
+        if (sqlite3_prepare_v2(self.db, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                toRet = [[APBDatabaseCrashReport alloc] init];
+                errorCheck = [toRet readFromSQLiteStatement:statement];
+                if(errorCheck != nil){
+                    errorCheck = [APBDataManager dataBaseErrorWithMessage:@"error reading results"];
+                }
+            }
+            sqlite3_finalize(statement);
+        }
+        [self finishTransaction];
+    }
+    if(errorCheck != nil){
+        toRet = nil;
+        ABErrorLog(@"%@", errorCheck);
+    }
+    return  toRet;
 }
 
 -(NSArray *)crashReports {
