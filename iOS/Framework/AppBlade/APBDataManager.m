@@ -33,10 +33,14 @@
         if (![[NSFileManager defaultManager] fileExistsAtPath:dataFolder]){
             ABDebugLog_internal(@"Creating %@", dataFolder);
             [[NSFileManager defaultManager] createDirectoryAtPath:dataFolder withIntermediateDirectories:YES attributes:nil error:&error]; //Create folder
+            NSURL *pathURL = [NSURL URLWithString:dataFolder];
+            [pathURL setResourceValue:[NSNumber numberWithBool:YES]
+                               forKey:NSURLIsExcludedFromBackupKey
+                                error:nil]; //keep the database around, but exclude the AppBlade folder from iCloud backup
         }
         if(error != nil){
             ABErrorLog(@"Critical error! Could not create directory %@. Reason: %@", dataFolder, error.description);
-            #warning Directory creation failure should be handled gracefully, possibly by notifying the viewer
+            #warning Directory creation failure should be handled gracefully, possibly by notifying the developer
         }
         
         //create or migrate the database
