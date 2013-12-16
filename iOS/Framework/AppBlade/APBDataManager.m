@@ -40,7 +40,6 @@
         }
         if(error != nil){
             ABErrorLog(@"Critical error! Could not create directory %@. Reason: %@", dataFolder, error.description);
-            #warning Directory creation failure should be handled gracefully, possibly by notifying the developer
         }
         
         //create or migrate the database
@@ -58,7 +57,6 @@
             }
             if(error != nil){
                 ABErrorLog(@"Critical error! Could not create database %@. Reason: %@", dataFolder, error.description);
-                #warning Database creation failure shoud be handled gracefully, we might need to try completely replacing the database file
             }
         }else {
             if ([self shouldMigrateDatabase]){
@@ -254,6 +252,36 @@
     
     return (errorCheck == nil);
 }
+
+-(NSMutableDictionary*)tableInfo:(NSString *)table
+{
+    [self prepareTransaction];
+    sqlite3_stmt *sqlStatement;
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    const char *sqlTableInfoQuery = [[NSString stringWithFormat:@"pragma table_info('%s')",[table UTF8String]] UTF8String];
+    if(sqlite3_prepare_v2(_db, sqlTableInfoQuery, -1, &sqlStatement, NULL) != SQLITE_OK)
+    {
+        NSLog(@"Problem with prepare statement tableInfo %@",[NSString stringWithUTF8String:(const char *)sqlite3_errmsg(_db)]);
+        
+    }
+    while (sqlite3_step(sqlStatement)==SQLITE_ROW)
+    {
+        [result setObject:@"" forKey:[NSString stringWithUTF8String:(char*)sqlite3_column_text(sqlStatement, 1)]];
+        
+    }
+    [self finishTransaction];
+
+    return result;
+}
+
+
+-(BOOL)table:(NSString *)table containsColumn:(NSString *)columnName
+{
+    NSDictionary *tableDict = [self tableInfo:table];
+    return ([tableDict objectForKey:columnName] != nil);
+}
+
+
 
 -(NSError *)createTable:(NSString *)tableName
 {

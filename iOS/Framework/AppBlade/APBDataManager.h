@@ -20,7 +20,6 @@ static int const kAppBladeDatabaseVersion           = 0; //For internal use only
 //major design structure
 //every table has an index column for keyvalue and reference (preferably called id)
 //all columns can be null, though a default value can be declared (via additional args)
-
 typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 
 @class APBDataManager;
@@ -43,9 +42,12 @@ typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 
 //table functions (table will always create at least one column named "id" for the primary key
 -(BOOL)tableExistsWithName:(NSString *)tableName;
+-(BOOL)table:(NSString *)table containsColumn:(NSString *)columnName;
+-(NSMutableDictionary*)tableInfo:(NSString *)table;
+
+
 -(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData;
 -(NSError *)removeTable:(NSString *)tableName;
-//row functions
 -(NSError *)alterTable:(NSString *)tableName withTransaction:(APBDataTransaction) transactionBlock;
 
 -(int)prepareTransaction;
