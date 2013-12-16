@@ -45,9 +45,9 @@
 //Our additional requirements
 @interface AppBlade (CrashReporting)
 
-@property (nonatomic, strong) APBCrashReportingManager*         crashManager;
+@property (nonatomic, strong) APBCrashReportingManager*     crashManager;
 //hasPendingCrashReport in PLCrashReporter
-- (void)appBladeWebClientCrashReported:(APBWebOperation *)client;
+- (void)appBladeWebClientCrashReported:(APBWebOperation *)  client;
 
 
 @end

@@ -201,11 +201,11 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
             APBDataTransaction removeParameterColumn = ^(sqlite3 *dbRef){
                 //Sqlite has "Limited support for ALTER TABLE", which makes the process of changing tables a bit arduous
                 NSString *alterTableSQL =
-                @"CREATE TEMPORARY TABLE crash_reports_backup(a,b,c);"
-                "INSERT INTO crash_reports_backup SELECT a,b FROM crash_reports;"
+                @"CREATE TEMPORARY TABLE crash_reports_backup(id, stackTrace, reportedAt);"
+                "INSERT INTO crash_reports_backup SELECT id, stackTrace, reportedAt FROM crash_reports;"
                 "DROP TABLE crash_reports;"
-                "CREATE TABLE crash_reports(a,b);"
-                "INSERT INTO crash_reports SELECT a,b FROM crash_reports_backup;"
+                "CREATE TABLE crash_reports(id, stackTrace, reportedAt);"
+                "INSERT INTO crash_reports SELECT id, stackTrace, reportedAt FROM crash_reports_backup;"
                 "DROP TABLE crash_reports_backup;"
                 "COMMIT;";
                 
