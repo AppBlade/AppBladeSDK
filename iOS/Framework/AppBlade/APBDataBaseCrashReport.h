@@ -17,7 +17,7 @@
 
 static NSString* const kDbCrashReportColumnNameStackTrace = @"stackTrace";
 static int const kDbCrashReportColumnIndexStackTrace = 1;
-static NSString* const kDbCrashReportColumnNameReportedAt = @"reportedAt";
+static NSString* const kDbCrashReportColumnNameReportedAt = @"crashedAt";
 static int const kDbCrashReportColumnIndexReportedAt = 2;
 static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsId";
 static int const kDbCrashReportColumnIndexCustomParamsRef = 3;
