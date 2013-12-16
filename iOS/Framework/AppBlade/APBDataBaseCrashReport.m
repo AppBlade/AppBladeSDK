@@ -10,8 +10,11 @@
 
 
 static NSString* const kDbCrashReportColumnNameStackTrace = @"stackTrace";
+static int const kDbCrashReportColumnIndexStackTrace = 1;
 static NSString* const kDbCrashReportColumnNameReportedAt = @"reportedAt";
+static int const kDbCrashReportColumnIndexReportedAt = 2;
 static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsId";
+static int const kDbCrashReportColumnIndexCustomParamsRef = 3;
 
 @interface APBDatabaseCrashReport()
 @property (nonatomic, readwrite) NSString* dbRowId;
@@ -50,14 +53,6 @@ static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsI
               ];
 }
 
-
-#ifndef SKIP_CUSTOM_PARAMS
--(APBDatabaseCustomParameter *)customParameterObj{
-    //lookup custom parameter obj
-    return nil;
-}
-#endif
-
 -(NSString *)columnNames {
         return [[self columnNamesList] componentsJoinedByString:@", "];
     }
@@ -77,17 +72,9 @@ static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsI
     NSError *toRet = [super readFromSQLiteStatement:statement];
     if(toRet != nil)
         return toRet;
-    //self.dbRowId = dbRowIdCheck;
-    
-    NSArray *cols = [self columnNamesList];
-    
-    
-    if(dbRowIdCheck == nil){
-        NSError *error = [[NSError alloc] initWithDomain:@"AppBladeDatabaseObject" code:0 userInfo:nil];
-        return error;
-    }
-    
 
+    self.stackTrace = [self readStringAtColumn:kDbCrashReportColumnIndexStackTrace fromFromSQLiteStatement:statement];
+    self.crashReportedAt = [self readDateAtColumn:kDbCrashReportColumnIndexReportedAt fromFromSQLiteStatement:statement];
     
 #ifndef SKIP_CUSTOM_PARAMS
     self.customParameterId = [[NSString alloc] initWithUTF8String:

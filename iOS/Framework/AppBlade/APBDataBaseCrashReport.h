@@ -18,7 +18,7 @@
 @interface APBDatabaseCrashReport : AppBladeDatabaseObject
 +(NSArray *)columnDeclarations;
 
-@property (nonatomic, strong) NSData *stackTrace; // the entire stack trace (as a blob)
+@property (nonatomic, strong) NSString *stackTrace; // the entire stack trace file
 @property (nonatomic, strong) NSDate *crashReportedAt; // time of crash
 #ifndef SKIP_CUSTOM_PARAMS
 @property (nonatomic, strong) NSString *customParameterId;
