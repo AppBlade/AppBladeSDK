@@ -389,7 +389,7 @@
     sqlite3_stmt    *statement;
     if ([self prepareTransaction] == SQLITE_OK)
     {
-        NSString *insertSQL = [dataObject insertSqlIntoTable:tableName];
+        NSString *insertSQL = [dataObject sqlToInsertDataIntoTable:tableName];
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL);
         if (sqlite3_step(statement) == SQLITE_DONE)

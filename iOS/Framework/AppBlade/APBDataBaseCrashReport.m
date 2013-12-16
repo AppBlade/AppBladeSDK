@@ -51,6 +51,7 @@
           ];
 }
 
+
 -(NSString *)columnNames {
     return [[self columnNamesList] componentsJoinedByString:@", "];
 }
@@ -59,10 +60,6 @@
     return [[self rowValuesList] componentsJoinedByString:@", "];
 }
 
-
--(NSString *)insertSqlIntoTable:(NSString *)tableName {
-    return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)", tableName, [self columnNames], [self rowValues]];
-}
 
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement {
     NSError *toRet = [super readFromSQLiteStatement:statement];

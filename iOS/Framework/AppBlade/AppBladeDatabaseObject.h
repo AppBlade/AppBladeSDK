@@ -14,10 +14,11 @@
 //
 //    @property (nonatomic, strong) NSString *tableName; //the table this object currently resides
     @property (nonatomic, strong, readonly, getter = getId) NSString *dbRowId; //the id this row has in the table
-
+    //dbRowId is linked to column "id"
 -(NSString *)SqlFormattedProperty:(id)propertyValue;
 
--(NSString *)insertSqlIntoTable:(NSString *)tableName;
+-(NSString *)sqlToInsertDataIntoTable:(NSString *)tableName;
+-(NSString *)sqlToUpdateDataInTable:(NSString *)tableName;
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement;
 
 -(NSString *)readStringAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;

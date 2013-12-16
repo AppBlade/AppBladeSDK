@@ -15,7 +15,6 @@
 
 @implementation AppBladeDatabaseObject
 
-
 -(NSString *)SqlFormattedProperty:(id)propertyValue {
     //case check for whatever is passed?
     if(propertyValue == nil){
@@ -36,9 +35,14 @@
     }
 }
 
--(NSString *)insertSqlIntoTable:(NSString *)tableName
+-(NSString *)sqlToInsertDataIntoTable:(NSString *)tableName
 {
     return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)", tableName, [self columnNames], [self rowValues]];
+}
+
+-(NSString *)sqlToUpdateDataInTable:(NSString *)tableName
+{
+    return [NSString stringWithFormat:@"REPLACE INTO %@ (%@) VALUES (%@)", tableName, [self columnNamesAndId], [self rowValuesAndId]];
 }
 
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement
@@ -63,8 +67,28 @@
     return @"";
 }
 
+-(NSString *)columnNamesAndId {
+    NSMutableArray *toRet = [NSMutableArray arrayWithObject:@"id"];
+    [toRet addObjectsFromArray:[self columnNamesList]];
+    return [toRet componentsJoinedByString:@", "];//default column increments silently
+}
 
-//column read
+-(NSString *)rowValuesAndId {
+    NSMutableArray *toRet = [NSMutableArray arrayWithObject:self.dbRowId];
+    [toRet addObjectsFromArray:[self rowValuesList]];
+    return [toRet componentsJoinedByString:@", "];//default column increments silently
+}
+
+-(NSArray *)columnNamesList {
+    return @[];
+}
+
+-(NSArray *)rowValuesList {
+    return @[];
+}
+
+
+//column reads
 -(NSString *)readStringAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
     return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, index)];
