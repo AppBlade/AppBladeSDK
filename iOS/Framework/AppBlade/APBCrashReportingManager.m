@@ -20,6 +20,7 @@
 NSString *reportCrashURLFormat       = @"%@/api/3/crash_reports";
 
 static NSString* const kDbCrashReportDatabaseMainTableName = @"crashreports";
+//columns are inside APBDatabaseCrashReport interface
 
 static NSString* const kCrashDictCrashReportString  = @"_crashReportString";
 static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
@@ -184,26 +185,37 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
         //make sure we have a custom parameter column
         if(![[databaseDelegate getDataManager] table:self.dbMainTableName containsColumn:kDbCrashReportColumnNameCustomParamsRef]){
             APBDataTransaction addParameterColumn = ^(sqlite3 *dbRef){
-                //ALTER TABLE ADD COLUMN kDbCrashReportColumnNameCustomParamsRef REFERENCES customParams foreign-key-clause
-                //Sqlite has "Limited support for ALTER TABLE", which makes the process of changing tables a bit arduous
-                return;
+                NSString *alterTableSQL = @"ALTER TABLE crash_reports ADD FOREIGN KEY customParamsId REFERENCES custom_params(id) ON DELETE CASCADE";
+                const char *sqlStatement = [alterTableSQL UTF8String];
+                char *error;
+                sqlite3_exec(dbRef, sqlStatement, NULL, NULL, &error);
+                if(error != nil){
+                     NSLog(@"%s: ERROR Preparing: , %s", __FUNCTION__, sqlite3_errmsg(dbRef));
+                }
             };
-            
             [[databaseDelegate getDataManager] alterTable:self.dbMainTableName withTransaction:addParameterColumn];
         }
 #else
         //make sure we don't have a custom parameter column
         if([[databaseDelegate getDataManager] table:self.dbMainTableName containsColumn:kDbCrashReportColumnNameCustomParamsRef]){
-            APBDataTransaction addParameterColumn = ^(sqlite3 *dbRef){
+            APBDataTransaction removeParameterColumn = ^(sqlite3 *dbRef){
                 //Sqlite has "Limited support for ALTER TABLE", which makes the process of changing tables a bit arduous
+                NSString *alterTableSQL =
+                @"CREATE TEMPORARY TABLE crash_reports_backup(a,b,c);"
+                "INSERT INTO crash_reports_backup SELECT a,b FROM crash_reports;"
+                "DROP TABLE crash_reports;"
+                "CREATE TABLE crash_reports(a,b);"
+                "INSERT INTO crash_reports SELECT a,b FROM crash_reports_backup;"
+                "DROP TABLE crash_reports_backup;"
+                "COMMIT;";
                 
-                //CREATE TEMPORARY TABLE t1_backup(a,b);
-                //INSERT INTO t1_backup SELECT a,b FROM t1;
-                //DROP TABLE t1;
-                //CREATE TABLE t1(a,b);
-                //INSERT INTO t1 SELECT a,b FROM t1_backup;
-                //DROP TABLE t1_backup;
-                //COMMIT;
+                const char *sqlStatement = [alterTableSQL UTF8String];
+                char *error;
+                sqlite3_exec(dbRef, sqlStatement, NULL, NULL, &error);
+                if(error != nil){
+                    NSLog(@"%s: ERROR Preparing: , %s", __FUNCTION__, sqlite3_errmsg(dbRef));
+                }
+                
                 
                 return;
             };
