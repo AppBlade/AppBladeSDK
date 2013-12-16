@@ -38,7 +38,7 @@
 
 +(NSString *)getDefaultForeignKeyDefinition:(NSString *)referencingColumn
 {
-    return [NSString stringWithFormat:@"FOREIGN KEY(%@) REFERENCES %@(id)", referencingColumn, kDbCustomParametersMainTableName]; //existing_column_name, secondary_table_name
+    return [NSString stringWithFormat:@"FOREIGN KEY(%@) REFERENCES %@(id) ON DELETE CASCADE", referencingColumn, kDbCustomParametersMainTableName];
 }
 
 
