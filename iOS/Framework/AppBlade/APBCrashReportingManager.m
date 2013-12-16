@@ -180,7 +180,36 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
 {
     if([[databaseDelegate getDataManager] tableExistsWithName:self.dbMainTableName]){
         //table exists, see if we need to update it
-#warning TODO: Table consistency check
+#ifndef SKIP_CUSTOM_PARAMS
+        //make sure we have a custom parameter column
+        if(![[databaseDelegate getDataManager] table:self.dbMainTableName containsColumn:kDbCrashReportColumnNameCustomParamsRef]){
+            APBDataTransaction addParameterColumn = ^(sqlite3 *dbRef){
+                //ALTER TABLE ADD COLUMN kDbCrashReportColumnNameCustomParamsRef REFERENCES customParams foreign-key-clause
+                //Sqlite has "Limited support for ALTER TABLE", which makes the process of changing tables a bit arduous
+                return;
+            };
+            
+            [[databaseDelegate getDataManager] alterTable:self.dbMainTableName withTransaction:addParameterColumn];
+        }
+#else
+        //make sure we don't have a custom parameter column
+        if([[databaseDelegate getDataManager] table:self.dbMainTableName containsColumn:kDbCrashReportColumnNameCustomParamsRef]){
+            APBDataTransaction addParameterColumn = ^(sqlite3 *dbRef){
+                //Sqlite has "Limited support for ALTER TABLE", which makes the process of changing tables a bit arduous
+                
+                //CREATE TEMPORARY TABLE t1_backup(a,b);
+                //INSERT INTO t1_backup SELECT a,b FROM t1;
+                //DROP TABLE t1;
+                //CREATE TABLE t1(a,b);
+                //INSERT INTO t1 SELECT a,b FROM t1_backup;
+                //DROP TABLE t1_backup;
+                //COMMIT;
+                
+                return;
+            };
+            [[databaseDelegate getDataManager] alterTable:self.dbMainTableName withTransaction:addParameterColumn];
+        }
+#endif
     }else{
         //table doesn't exist! we need to create it.
         [[databaseDelegate getDataManager] createTable:self.dbMainTableName withColumns:self.dbMainTableAdditionalColumns];
