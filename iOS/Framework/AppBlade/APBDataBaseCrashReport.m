@@ -23,7 +23,7 @@ static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsI
     //will handle storing and retrieving the data format of the crash reports table
 +(NSArray *)columnDeclarations {
         return @[[AppBladeDatabaseColumn initColumnNamed:kDbCrashReportColumnNameStackTrace withContraints: (AppBladeColumnConstraintAffinityNone | AppBladeColumnConstraintNotNull) additionalArgs:nil],
-                 [AppBladeDatabaseColumn initColumnNamed:kDbCrashReportColumnNameReportedAt withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]
+                 [AppBladeDatabaseColumn initColumnNamed:kDbCrashReportColumnNameReportedAt withContraints:(AppBladeColumnConstraintAffinityReal | AppBladeColumnConstraintNotNull) additionalArgs:nil]
 #ifndef SKIP_CUSTOM_PARAMS
                  ,[AppBladeDatabaseColumn initColumnNamed:kDbCrashReportColumnNameCustomParamsRef
                                            withContraints:(AppBladeColumnConstraintAffinityInteger)
