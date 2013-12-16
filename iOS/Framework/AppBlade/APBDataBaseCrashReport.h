@@ -14,6 +14,14 @@
 #import "APBCustomParametersManager.h"
 #endif
 
+
+static NSString* const kDbCrashReportColumnNameStackTrace = @"stackTrace";
+static int const kDbCrashReportColumnIndexStackTrace = 1;
+static NSString* const kDbCrashReportColumnNameReportedAt = @"reportedAt";
+static int const kDbCrashReportColumnIndexReportedAt = 2;
+static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsId";
+static int const kDbCrashReportColumnIndexCustomParamsRef = 3;
+
 //an APBDatabaseCrashReport object will represent a single row in the CrashReports database
 @interface APBDatabaseCrashReport : AppBladeDatabaseObject
 +(NSArray *)columnDeclarations;

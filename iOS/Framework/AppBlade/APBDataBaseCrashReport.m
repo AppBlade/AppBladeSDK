@@ -9,12 +9,6 @@
 #import "APBDatabaseCrashReport.h"
 
 
-static NSString* const kDbCrashReportColumnNameStackTrace = @"stackTrace";
-static int const kDbCrashReportColumnIndexStackTrace = 1;
-static NSString* const kDbCrashReportColumnNameReportedAt = @"reportedAt";
-static int const kDbCrashReportColumnIndexReportedAt = 2;
-static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsId";
-static int const kDbCrashReportColumnIndexCustomParamsRef = 3;
 
 @interface APBDatabaseCrashReport()
 @property (nonatomic, readwrite) NSString* dbRowId;
