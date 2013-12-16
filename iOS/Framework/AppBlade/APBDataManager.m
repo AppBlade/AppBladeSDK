@@ -54,7 +54,7 @@
             }
             if(error != nil){
                 ABErrorLog(@"Critical error! Could not create database %@. Reason: %@", dataFolder, error.description);
-                #warning Database creation failure shoud be handled gracefully, we might need to try replacing the file with a completely new database
+                #warning Database creation failure shoud be handled gracefully, we might need to try completely replacing the database file
             }
         }else {
             if ([self shouldMigrateDatabase]){

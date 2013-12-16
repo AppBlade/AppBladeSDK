@@ -340,7 +340,7 @@ static AppBlade *s_sharedManager = nil;
     [APBSimpleKeychain sanitizeKeychain];
 }
 
-#pragma mark DataMAnager helper fuunctions
+#pragma mark DataManager helper fuunctions
 
 -(APBDataManager *)getDataManager{
     return self.dataManager;

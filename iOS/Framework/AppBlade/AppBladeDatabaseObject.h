@@ -19,4 +19,11 @@
 
 -(NSString *)insertSqlIntoTable:(NSString *)tableName;
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement;
+
+-(NSString *)readStringAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
+-(NSDate *)readDateAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
+-(NSTimeInterval)readTimeIntervalAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
+-(NSData *)readDataAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
+
+
 @end

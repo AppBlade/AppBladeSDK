@@ -25,7 +25,10 @@
     if([[propertyValue type] isKindOfClass:[NSString class]])
     {
         return (NSString *)propertyValue;
-    }else if([[propertyValue type] isKindOfClass:[AppBladeDatabaseObject class]]){
+    }else if([[propertyValue type] isKindOfClass:[NSDate class]]){
+        return [NSString stringWithFormat:@"%f", [(NSDate *)propertyValue timeIntervalSince1970] ];
+    }
+    else if([[propertyValue type] isKindOfClass:[AppBladeDatabaseObject class]]){
         return [(AppBladeDatabaseObject *)propertyValue getId];
     }
     else{
@@ -67,9 +70,19 @@
     return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, index)];
 }
 
--(NSData *)readStringAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSDate *)readDateAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, index) length:sqlite3_column_bytes(satement, index)];
+    return [NSDate dateWithTimeIntervalSince1970:[self readTimeIntervalAtColumn:index fromFromSQLiteStatement:statement]];
+}
+
+-(NSTimeInterval)readTimeIntervalAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
+{
+    return sqlite3_column_double(statement, index);
+}
+
+-(NSData *)readDataAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
+{
+    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, index) length:sqlite3_column_bytes(statement, index)];
 }
 
 @end
