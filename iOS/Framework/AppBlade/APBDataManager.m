@@ -115,7 +115,12 @@
 //preparation methods
 -(int)prepareTransaction
 {
-    return sqlite3_open([[self getDatabaseFilePath] UTF8String], &_db);
+     sqlite3_open([[self getDatabaseFilePath] UTF8String], &_db);
+    //enable foreign keys on every open, just to be thorough
+    sqlite3_stmt *enableForeignKey;
+    NSString *strsql = [NSString stringWithFormat:@"PRAGMA foreign_keys = ON"];
+    const char *sql=(char *)[strsql UTF8String];
+    return (sqlite3_prepare_v2(_db, sql,-1, &enableForeignKey, NULL) != SQLITE_OK);
 }
 -(int)finishTransaction
 {
