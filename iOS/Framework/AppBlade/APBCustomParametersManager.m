@@ -145,17 +145,20 @@
  */
 -(NSError *)storeCustomParamSnapshot
 {
-    ABDebugLog_internal(@"custom parameter stored with id %@");
+    ABDebugLog_internal(@"custom parameter stored");
+#pragma warning incomplete
+    return nil;
 }
 
 -(NSError *)removeCustomParamById:(NSString *)paramId
 {
-    
+#pragma warning incomplete
+    return nil;
 }
 
 -(APBDatabaseCustomParameter *)getCustomParamById:(NSString *)paramId
 {
-    [[self.delegate getDataManager] getCustomParameterWithID:paramId ];
+    return [[self.delegate getDataManager] getCustomParameterWithID:paramId ];
 }
 
 @end
@@ -166,18 +169,20 @@
 
 -(NSError *)saveCustomParamSnapshot
 {
-
+#pragma warning incomplete
+    return nil;
 }
 
 -(APBDatabaseCustomParameter *)getCustomParameterWithID:(NSString *)customParamId
 {
     NSString *paramQuery = [NSString stringWithFormat:@"ID = %@", customParamId];
-   return [self findDataInTable:kDbCustomParametersMainTableName withParams:paramQuery];
+   return (APBDatabaseCustomParameter *)[self findDataInTable:kDbCustomParametersMainTableName withParams:paramQuery];
 }
 
 -(NSError *)removeCustomParameterWithID:(NSString *)customParamId
 {
-
+#pragma warning incomplete
+    return nil;
 }
 
 @end
