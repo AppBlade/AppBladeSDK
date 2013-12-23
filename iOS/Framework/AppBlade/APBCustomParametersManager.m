@@ -176,7 +176,7 @@
 -(APBDatabaseCustomParameter *)getCustomParameterWithID:(NSString *)customParamId
 {
     NSString *paramQuery = [NSString stringWithFormat:@"ID = %@", customParamId];
-   return (APBDatabaseCustomParameter *)[self findDataInTable:kDbCustomParametersMainTableName withParams:paramQuery];
+    return (APBDatabaseCustomParameter *)[self findDataWithClass:[APBDatabaseCustomParameter class] inTable:kDbCustomParametersMainTableName withParams:paramQuery];
 }
 
 -(NSError *)removeCustomParameterWithID:(NSString *)customParamId

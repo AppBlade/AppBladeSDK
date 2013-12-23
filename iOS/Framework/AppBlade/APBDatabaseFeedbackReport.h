@@ -26,11 +26,5 @@ static NSString* const kDbFeedbackReportColumnNameCustomParamsRef = @"customPara
     @property (nonatomic, strong) NSString *customParameterId;
     -(APBDatabaseCustomParameter *)customParameterObj;
 #endif
-
     +(NSArray *)columnDeclarations;
-
-    -(NSArray *)columnNamesList;
-
-    -(NSArray *)rowValuesList;
-
 @end

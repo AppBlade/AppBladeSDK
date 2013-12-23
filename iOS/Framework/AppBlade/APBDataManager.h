@@ -58,7 +58,7 @@ typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 
 //basic table-agnostic find and write
 -(NSError *)writeData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName;
--(AppBladeDatabaseObject *)findDataInTable:(NSString *)tableName withParams:(NSString *)params;
+-(AppBladeDatabaseObject *)findDataWithClass:(Class) classToFind inTable:(NSString *)tableName withParams:(NSString *)params;
 
 
 @end

@@ -11,6 +11,7 @@
 
 
 @interface APBDatabaseCrashReport()
+
 @property (nonatomic, readwrite) NSString* dbRowId;
 
 @end
@@ -34,7 +35,9 @@
 }
 
 
--(NSArray *)columnNamesList {
+-(NSArray *)additionalColumnNames {
+#pragma overrides [super additionalColumnNames];
+
     return @[ kDbCrashReportColumnNameStackTrace, kDbCrashReportColumnNameReportedAt,
 #ifndef SKIP_CUSTOM_PARAMS
               kDbCrashReportColumnNameCustomParamsRef
@@ -43,21 +46,14 @@
 }
 
 
--(NSArray *)rowValuesList {
-    return @[[self SqlFormattedProperty: self.stackTrace], [self SqlFormattedProperty: self.crashReportedAt],
+-(NSArray *)additionalColumnValues {
+#pragma overrides [super additionalColumnValues];
+
+    return @[[self sqlFormattedProperty: self.stackTrace], [self sqlFormattedProperty: self.crashReportedAt],
 #ifndef SKIP_CUSTOM_PARAMS
-             [self SqlFormattedProperty:self.customParameterId]
+             [self sqlFormattedProperty:self.customParameterId]
 #endif
           ];
-}
-
-
--(NSString *)columnNames {
-    return [[self columnNamesList] componentsJoinedByString:@", "];
-}
-
--(NSString *)rowValues {
-    return [[self rowValuesList] componentsJoinedByString:@", "];
 }
 
 
@@ -66,10 +62,10 @@
     if(toRet != nil)
         return toRet;
 
-    self.stackTrace = [self readStringAtColumn:kDbCrashReportColumnIndexStackTrace fromFromSQLiteStatement:statement];
-    self.crashReportedAt = [self readDateAtColumn:kDbCrashReportColumnIndexReportedAt fromFromSQLiteStatement:statement];
+    self.stackTrace = [self readStringInAdditionalColumn:kDbCrashReportColumnIndexOffsetStackTrace fromFromSQLiteStatement:statement];
+    self.crashReportedAt = [self readDateInAdditionalColumn:kDbCrashReportColumnIndexOffsetReportedAt fromFromSQLiteStatement:statement];
 #ifndef SKIP_CUSTOM_PARAMS
-    self.customParameterId = [self readStringAtColumn:kDbCrashReportColumnIndexCustomParamsRef fromFromSQLiteStatement:statement];
+    self.customParameterId = [self readStringInAdditionalColumn:kDbCrashReportColumnIndexOffsetCustomParamsRef fromFromSQLiteStatement:statement];
 #endif
 
     return nil;

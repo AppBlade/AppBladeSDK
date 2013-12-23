@@ -8,6 +8,12 @@
 #import "AppBladeDatabaseObject.h"
 #import "AppBladeDatabaseColumn.h"
 
+//For the snapshot
+#import "AppBlade.h"
+#import "APBApplicationInfoManager.h"
+#import "APBDeviceInfoManager.h"
+
+
 @interface AppBladeDatabaseObject()
 @property (nonatomic, strong, readwrite, getter = getId) NSString *dbRowId; //we need to be able to set this
 
@@ -15,19 +21,20 @@
 
 @implementation AppBladeDatabaseObject
 
--(NSString *)SqlFormattedProperty:(id)propertyValue {
+-(NSString *)sqlFormattedProperty:(id)propertyValue
+{
     //case check for whatever is passed?
     if(propertyValue == nil){
         return @"NULL";
     }
     
-    if([[propertyValue type] isKindOfClass:[NSString class]])
+    if([propertyValue isKindOfClass:[NSString class]])
     {
         return (NSString *)propertyValue;
-    }else if([[propertyValue type] isKindOfClass:[NSDate class]]){
+    }else if([propertyValue isKindOfClass:[NSDate class]]){
         return [NSString stringWithFormat:@"%f", [(NSDate *)propertyValue timeIntervalSince1970] ];
     }
-    else if([[propertyValue type] isKindOfClass:[AppBladeDatabaseObject class]]){
+    else if([propertyValue isKindOfClass:[AppBladeDatabaseObject class]]){
         return [(AppBladeDatabaseObject *)propertyValue getId];
     }
     else{
@@ -35,14 +42,29 @@
     }
 }
 
--(NSString *)sqlToInsertDataIntoTable:(NSString *)tableName
+
+-(NSString *)formattedSelectSqlStringForTable: (NSString *)tableName
 {
-    return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)", tableName, [self columnNames], [self rowValues]];
+    return [NSString stringWithFormat:@"SELECT * FROM %@ WHERE id='%@'",
+            tableName,
+            [self getId ] ];
 }
 
--(NSString *)sqlToUpdateDataInTable:(NSString *)tableName
+
+-(NSString *)formattedInsertSqlStringForTable:(NSString *)tableName
 {
-    return [NSString stringWithFormat:@"REPLACE INTO %@ (%@) VALUES (%@)", tableName, [self columnNamesAndId], [self rowValuesAndId]];
+    return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
+            tableName,
+            [self removeIdColumn:[self columnNames]],
+            [self removeIdColumn:[self columnValues]]];
+}
+
+-(NSString *)formattedReplaceSqlStringForTable:(NSString *)tableName
+{
+    return [NSString stringWithFormat:@"REPLACE INTO %@ (%@) VALUES (%@)",
+            tableName,
+            [self columnNames],
+            [self columnValues]];
 }
 
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement
@@ -54,59 +76,65 @@
         NSError *error = [[NSError alloc] initWithDomain:@"AppBladeDatabaseObject" code:0 userInfo:nil];
         return error;
     }
+    
+    NSString *dbExecIdCheck = [[NSString alloc]
+                               initWithUTF8String:
+                               (const char *) sqlite3_column_text(statement, 1)];
+    if(dbExecIdCheck == nil){
+        self.executableIdentifier = [[AppBlade sharedManager] executableUUID];
+    }
   
     self.dbRowId = dbRowIdCheck;
     return nil;
 }
 
 -(NSString *)columnNames {
-    return @"";//default column increments silently
+    NSMutableArray *toRet = [NSMutableArray arrayWithArray:[self baseColumnNames] ];
+    [toRet addObjectsFromArray:[self additionalColumnNames]];
+    return [toRet componentsJoinedByString:@", "];
 }
 
--(NSString *)rowValues {
-    return @"";
-}
-
--(NSString *)columnNamesAndId {
-    NSMutableArray *toRet = [NSMutableArray arrayWithObject:@"id"];
-    [toRet addObjectsFromArray:[self columnNamesList]];
+-(NSString *)columnValues {
+    NSMutableArray *toRet = [NSMutableArray arrayWithArray:[self baseColumnValues] ];
+    [toRet addObjectsFromArray:[self additionalColumnValues]];
     return [toRet componentsJoinedByString:@", "];//default column increments silently
 }
 
--(NSString *)rowValuesAndId {
-    NSMutableArray *toRet = [NSMutableArray arrayWithObject:self.dbRowId];
-    [toRet addObjectsFromArray:[self rowValuesList]];
-    return [toRet componentsJoinedByString:@", "];//default column increments silently
+//usage [obj removeIdColumn:[obj columnValues]];
+-(NSString *)removeIdColumn:(NSString *)commaSeparatedList
+{
+    NSRange indexOfFirstComma = [commaSeparatedList rangeOfString:@","];
+    return [commaSeparatedList substringFromIndex:(indexOfFirstComma.location + indexOfFirstComma.length)];
 }
+//id column must always come first,
+-(NSArray *)baseColumnNames {  return @[ @"id",         @"snapshot_exec_id" ]; }
 
--(NSArray *)columnNamesList {
-    return @[];
-}
+-(NSArray *)baseColumnValues { return @[ self.dbRowId,  self.executableIdentifier ];  }
 
--(NSArray *)rowValuesList {
-    return @[];
-}
+-(NSArray *)additionalColumnNames {  return @[ ]; }
+
+-(NSArray *)additionalColumnValues { return @[ ];  }
 
 
 //column reads
--(NSString *)readStringAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSString *)readStringInAdditionalColumn:(int)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, index)];
+    return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, indexOffset)];
 }
 
--(NSDate *)readDateAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSDate *)readDateInAdditionalColumn:(int)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return [NSDate dateWithTimeIntervalSince1970:[self readTimeIntervalAtColumn:index fromFromSQLiteStatement:statement]];
+    return [NSDate dateWithTimeIntervalSince1970:[self readTimeIntervalInAdditionalColumn:index fromFromSQLiteStatement:statement]];
 }
 
--(NSTimeInterval)readTimeIntervalAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSTimeInterval)readTimeIntervalInAdditionalColumn:(int)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return sqlite3_column_double(statement, index);
+    return sqlite3_column_double(statement, indexOffset);
 }
 
--(NSData *)readDataAtColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSData *)readDataInAdditionalColumn:(int)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, index) length:sqlite3_column_bytes(statement, index)];
+    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, indexOffset) length:sqlite3_column_bytes(statement, indexOffset)];
 }
 
 @end

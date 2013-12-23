@@ -28,7 +28,7 @@
              ];
 }
 
--(NSArray *)columnNamesList {
+-(NSArray *)additionalColumnNames {
     return @[ kDbFeedbackReportColumnNameScreenshot, kDbFeedbackReportColumnNameText, kDbFeedbackReportColumnNameReportedAt
 #ifndef SKIP_CUSTOM_PARAMS
               , kDbFeedbackReportColumnNameCustomParamsRef
@@ -38,9 +38,9 @@
 
 
 -(NSArray *)rowValuesList {
-    return @[[self SqlFormattedProperty: self.screenshotURL], [self SqlFormattedProperty: self.text], [self SqlFormattedProperty: self.reportedAt]
+    return @[[self sqlFormattedProperty: self.screenshotURL], [self sqlFormattedProperty: self.text], [self sqlFormattedProperty: self.reportedAt]
 #ifndef SKIP_CUSTOM_PARAMS
-             , [self SqlFormattedProperty:self.customParameterId]
+             , [self sqlFormattedProperty:self.customParameterId]
 #endif
              ];
 }
@@ -56,10 +56,10 @@
     if(toRet != nil)
         return toRet;
     
-    self.text = [self readStringAtColumn:kDbFeedbackReportColumnNameText fromFromSQLiteStatement:statement];
-    self.screenshotURL = [self readStringAtColumn:kDbFeedbackReportColumnNameScreenshot fromFromSQLiteStatement:statement];
+    self.text = [self readStringInAdditionalColumn:kDbFeedbackReportColumnNameText fromFromSQLiteStatement:statement];
+    self.screenshotURL = [self readStringInAdditionalColumn:kDbFeedbackReportColumnNameScreenshot fromFromSQLiteStatement:statement];
 #ifndef SKIP_CUSTOM_PARAMS
-    self.customParameterId = [self readStringAtColumn:kDbFeedbackReportColumnNameCustomParamsRef fromFromSQLiteStatement:statement];
+    self.customParameterId = [self readStringInAdditionalColumn:kDbFeedbackReportColumnNameCustomParamsRef fromFromSQLiteStatement:statement];
 #endif
     
     return nil;

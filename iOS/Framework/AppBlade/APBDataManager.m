@@ -100,6 +100,10 @@
 {
     return @"id INTEGER PRIMARY KEY AUTOINCREMENT";
 }
++(NSString *)defaultBuildIdColumnDefinition
+{
+    return @"build_uuid TEXT";
+}
 
 +(NSString *)sqlQueryToTrimTable:(NSString *) origTable toColumns:(NSArray *)columns
 {
@@ -307,41 +311,22 @@
 }
 
 
-
--(NSError *)createTable:(NSString *)tableName
-{
-    return [self createTable:tableName withColumns:nil];
-}
-
-/*
- columnDict format :
- @[  @{@"columnName":@"id", @"columnType":@"NUMBER", @"columnConstraints":costraintEnum, @"columnAdditionalArgs":@""},
-     @{@"columnName":@"createdAt", @"columnType":@"TEXT", @"additionalArgs":@""},  
-     @{@"columnName":@"updatedAt", @"columnType":@"TEXT"}
- ]
-*/
 -(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData
-{
-    return [self createTable:tableName withColumns:columnData includeDefaultIndex:YES];
-}
-
-//be very careful when not including the default index, as foreign keys require a column with a primary key
--(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData includeDefaultIndex:(BOOL)includeId
 {
     ABDebugLog_internal(@"attempting to create %@ : %@", tableName, columnData);
 
     if ([self prepareTransaction] == SQLITE_OK) {
         //prepare the query given the params
         NSMutableString *createTableQuery = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(", tableName];
-        if(includeId){
-            [createTableQuery appendString:[APBDataManager defaultIdColumnDefinition]];
-        }
+        [createTableQuery appendString:[APBDataManager defaultIdColumnDefinition]];
+        [createTableQuery appendFormat:@", %@", [APBDataManager defaultBuildIdColumnDefinition]];
+        ABDebugLog_internal(@"added intenal id and exec column");
         for(AppBladeDatabaseColumn* col in columnData){
-            ABDebugLog_internal(@"%@", [col toDictionary]);
+            ABDebugLog_internal(@"adding column %@", [col toDictionary]);
             
             [createTableQuery appendFormat:@", %@", [col toSQLiteColumnDefinition]];
         }
-        [createTableQuery appendString:@")"];
+        [createTableQuery appendString:@")"];  //close paren
         
         int results = 0;
         //create all chars tables
@@ -403,13 +388,19 @@
 
 
 #pragma mark Data functions
+-(BOOL)data:(AppBladeDatabaseObject*)dataObject existsInTable: (NSString *)tableName
+{
+   AppBladeDatabaseObject *dataToFind = [self findDataWithClass:[dataObject class] inTable:tableName withParams:[NSString stringWithFormat:@"id = '%@'", dataObject.getId]];
+    return (dataToFind != nil);
+}
+
 -(NSError *)writeData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName
 {
     NSError *errorCheck = nil;
     sqlite3_stmt    *statement;
     if ([self prepareTransaction] == SQLITE_OK)
     {
-        NSString *insertSQL = [dataObject sqlToInsertDataIntoTable:tableName];
+        NSString *insertSQL = [dataObject formattedInsertSqlStringForTable:tableName];
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL);
         if (sqlite3_step(statement) == SQLITE_DONE)
@@ -424,22 +415,27 @@
     return errorCheck;
 }
 
--(AppBladeDatabaseObject *)findDataInTable:(NSString *)tableName withParams:(NSString *)params
+
+-(AppBladeDatabaseObject *)findDataWithClass:(Class)classToFind inTable:(NSString *)tableName withParams:(NSString *)params
 {
+    if (classToFind == nil || ![classToFind instancesRespondToSelector:@selector(getId)]) {
+        ABErrorLog(@"Class \"%@\" needs to exist and be a subclass of AppBladeDatabaseObject", NSStringFromClass(classToFind));
+        return nil;
+    }
+    AppBladeDatabaseObject *dataToFind = [[classToFind alloc] init];
+
     NSError *errorCheck = nil;
-    AppBladeDatabaseObject* toRet = [[AppBladeDatabaseObject alloc] init];
     sqlite3_stmt    *statement;
     if ([self prepareTransaction]  == SQLITE_OK)
     {
         NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@", tableName, params];
         const char *query_stmt = [querySQL UTF8String];
         
-        if (sqlite3_prepare_v2(_db,
-                               query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        if (sqlite3_prepare_v2(_db, query_stmt, -1, &statement, NULL) == SQLITE_OK)
         {
             if (sqlite3_step(statement) == SQLITE_ROW)
             {
-                errorCheck = [toRet readFromSQLiteStatement:statement];
+                errorCheck = [dataToFind readFromSQLiteStatement:statement];
                 //Match found (posssibly)
             } else {
                 //Match not found
@@ -450,10 +446,10 @@
         [self finishTransaction];
     }
     if(errorCheck != nil){
-        toRet = nil;
         ABErrorLog(@"%@", errorCheck);
+        return nil;
     }
-    return  toRet;
+    return  dataToFind;
 }
 
 
