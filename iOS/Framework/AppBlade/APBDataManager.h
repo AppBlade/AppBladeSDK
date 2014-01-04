@@ -57,7 +57,7 @@ typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 //basic table-agnostic create,update, delete and find
 -(BOOL)data:(AppBladeDatabaseObject*)dataObject existsInTable: (NSString *)tableName;
 -(BOOL)dataExistsInTable: (NSString *)tableName withId:(NSString *)rowId;
--(NSError *)upsertData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName;
+-(NSError *)upsertData:(AppBladeDatabaseObject * __autoreleasing *)dataObject toTable:(NSString *)tableName;
 -(NSError *)deleteData:(AppBladeDatabaseObject*)dataObject fromTable:(NSString *)tableName;
 -(AppBladeDatabaseObject *)findDataWithClass:(Class) classToFind inTable:(NSString *)tableName withParams:(NSString *)params;
 

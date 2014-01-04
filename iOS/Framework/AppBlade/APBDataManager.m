@@ -402,20 +402,27 @@
 
 
 //upsert: We either update data if it exists, or insert new data
--(NSError *)upsertData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName
+-(NSError *)upsertData:(AppBladeDatabaseObject * __autoreleasing *)dataObject toTable:(NSString *)tableName
 {
     NSError *errorCheck = nil;
+    if(dataObject == nil){
+        errorCheck = [APBDataManager dataBaseErrorWithMessage:@"no data object passed"];
+    }
+    
+    
     sqlite3_stmt    *statement;
     if ([self prepareTransaction] == SQLITE_OK)
     {
-        NSString *insertSQL = [dataObject formattedUpsertSqlStringForTable:tableName];
+        //create the actual sqlite command
+        NSString *insertSQL = [* dataObject formattedUpsertSqlStringForTable:tableName];
         const char *insert_stmt = [insertSQL UTF8String];
         if(sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL) == SQLITE_OK){
-            errorCheck = [dataObject bindDataToPreparedStatement:statement]; // might not do anything, given the specific data object.
+            //bind any additional data to the upsert statement (like blobs)
+            errorCheck = [* dataObject bindDataToPreparedStatement:statement]; // might not do anything, given the specific data object.
             if (errorCheck == nil && sqlite3_step(statement) == SQLITE_DONE){
-                if([dataObject getId] == nil){
+                if([* dataObject getId] == nil){
                     //then we have to update the data with the id
-                    [dataObject setIdFromDatabaseStatement:statement];
+                    [* dataObject setIdFromDatabaseStatement:statement];
                 }
                 errorCheck = nil;
             } else {
