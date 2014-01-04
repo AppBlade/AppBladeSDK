@@ -20,6 +20,12 @@
 @end
 
 @implementation AppBladeDatabaseObject
+-(void)takeFreshSnapshot
+{ //loads all snapshot data from their relevant locations
+    self.createdAt = [NSDate new];
+    self.executableIdentifier = [[AppBlade sharedManager] executableUUID];
+    self.deviceVersionSanitized = [[AppBlade sharedManager] iosVersionSanitized];
+}
 
 -(NSString *)sqlFormattedProperty:(id)propertyValue
 {

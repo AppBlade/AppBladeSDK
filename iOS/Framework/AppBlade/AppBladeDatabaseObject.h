@@ -23,6 +23,7 @@
     @property (nonatomic, strong) NSString *deviceVersionSanitized;  //the OS Version when this row was created
     @property (nonatomic, strong) NSString *deviceName;              //device name when this row was created
     @property (nonatomic, strong) NSString *activeToken;             //the token when this row was created
+    -(void)takeFreshSnapshot; //loads all snapshot data from their relevant locations
 
     //the database object subclasses are expected to override these methods
     -(NSArray *)additionalColumnNames; //default implementation is an empty array
