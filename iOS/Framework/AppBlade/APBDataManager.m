@@ -393,6 +393,13 @@
    AppBladeDatabaseObject *dataToFind = [self findDataWithClass:[dataObject class] inTable:tableName withParams:[NSString stringWithFormat:@"id = '%@'", dataObject.getId]];
     return (dataToFind != nil);
 }
+-(BOOL)dataExistsInTable: (NSString *)tableName withId:(NSString *)rowId {
+    //there'a a more efficient way of checking to see the data exists other than loading the entire object from the database
+    AppBladeDatabaseObject *dataToFind = [self findDataWithClass:[AppBladeDatabaseObject class] inTable:tableName withParams:[NSString stringWithFormat:@"id = '%@'", rowId]];
+    return (dataToFind != nil);
+}
+
+
 
 //upsert: We either update data if it exists, or insert new data
 -(NSError *)upsertData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName
