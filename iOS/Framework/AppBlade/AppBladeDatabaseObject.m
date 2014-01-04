@@ -136,7 +136,7 @@
 
 -(NSArray *)additionalColumnValues { return @[ ];  }
 
--(NSError *)bindDataToPreparedStatement:(sqlite3_stmt *)statement { return nil;  }
+-(NSError *)bindDataToPreparedStatement:(sqlite3_stmt *)statement { return nil;  } //default implementation does nothing
 
 
 -(void)setIdFromDatabaseStatement:(sqlite3_stmt *)statement
@@ -147,24 +147,27 @@
 }
 
 //column reads (writes have the values embedded into the sql statement, so we shouldn't need to bind them.)
--(NSString *)readStringInAdditionalColumn:(int)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSString *)readStringInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, indexOffset)];
+    int actualIndex = [[self baseColumnNames] count] + [indexOffset integerValue];
+    return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, actualIndex)];
 }
 
--(NSDate *)readDateInAdditionalColumn:(int)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSDate *)readDateInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return [NSDate dateWithTimeIntervalSince1970:[self readTimeIntervalInAdditionalColumn:index fromFromSQLiteStatement:statement]];
+    return [NSDate dateWithTimeIntervalSince1970:[self readTimeIntervalInAdditionalColumn:indexOffset fromFromSQLiteStatement:statement]];
 }
 
--(NSTimeInterval)readTimeIntervalInAdditionalColumn:(int)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSTimeInterval)readTimeIntervalInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return sqlite3_column_double(statement, indexOffset);
+    int actualIndex = [[self baseColumnNames] count] + [indexOffset integerValue]; //adding NSUinteger to an NSInteger and then blindly assuming it's an int
+    return sqlite3_column_double(statement, actualIndex);
 }
 
--(NSData *)readDataInAdditionalColumn:(int)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSData *)readDataInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, indexOffset) length:sqlite3_column_bytes(statement, indexOffset)];
+    int actualIndex = [[self baseColumnNames] count] + [indexOffset integerValue];
+    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, actualIndex) length:sqlite3_column_bytes(statement, indexOffset)];
 }
 
 @end

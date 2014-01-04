@@ -31,10 +31,10 @@
     //reads in and populates properties from the appropriate values in the sqlite statement
     -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement; //this method should 
     //helper methods for additional columns (subclasses shouldn't need to keep track of the offset)
-    -(NSString *)readStringInAdditionalColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
-    -(NSDate *)  readDateInAdditionalColumn:(int)index   fromFromSQLiteStatement:(sqlite3_stmt *)statement;
-    -(NSData *)  readDataInAdditionalColumn:(int)index   fromFromSQLiteStatement:(sqlite3_stmt *)statement;
-    -(NSTimeInterval)readTimeIntervalInAdditionalColumn:(int)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
+    -(NSString *)readStringInAdditionalColumn:(NSNumber *)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
+    -(NSDate *)  readDateInAdditionalColumn:(NSNumber *)index   fromFromSQLiteStatement:(sqlite3_stmt *)statement;
+    -(NSData *)  readDataInAdditionalColumn:(NSNumber *)index   fromFromSQLiteStatement:(sqlite3_stmt *)statement;
+    -(NSTimeInterval)readTimeIntervalInAdditionalColumn:(NSNumber *)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
 
     -(void)setIdFromDatabaseStatement:(sqlite3_stmt *)statement;
 

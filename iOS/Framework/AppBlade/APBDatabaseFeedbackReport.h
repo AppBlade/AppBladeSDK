@@ -9,11 +9,15 @@
 #import "AppBladeDatabaseObject.h"
 #import "APBDatabaseCustomParameter.h"
 
-static NSString* const kDbFeedbackReportColumnNameScreenshot = @"screenshotURL";
+static NSString* const kDbFeedbackReportColumnNameScreenshotURL = @"screenshotURL";
+static NSInteger const kDbFeedbackReportColumnIndexOffsetScreenshotURL = 1;
 static NSString* const kDbFeedbackReportColumnNameText       = @"text";
+static NSInteger const kDbFeedbackReportColumnIndexOffsetText = 2;
 static NSString* const kDbFeedbackReportColumnNameReportedAt = @"reportedAt";
+static NSInteger const kDbFeedbackReportColumnIndexOffsetReportedAt = 3;
 #ifndef SKIP_CUSTOM_PARAMS
 static NSString* const kDbFeedbackReportColumnNameCustomParamsRef = @"customParamsId";
+static NSInteger const kDbFeedbackReportColumnIndexOffsetCustomParamsRef = 4;
 #endif
 
 @interface APBDatabaseFeedbackReport : AppBladeDatabaseObject

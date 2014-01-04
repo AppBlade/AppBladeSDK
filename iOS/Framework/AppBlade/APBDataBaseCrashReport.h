@@ -18,12 +18,13 @@
 static NSString* const kDbCrashReportColumnNameStackTrace = @"stackTrace";
 static NSString* const kDbCrashReportColumnNameReportedAt = @"crashedAt";
 static NSString* const kDbCrashReportColumnNameCustomParamsRef = @"customParamsId";
+
+static NSInteger const kDbCrashReportColumnIndexOffsetStackTrace = 1;
+static NSInteger const kDbCrashReportColumnIndexOffsetReportedAt = 2;
+static NSInteger const kDbCrashReportColumnIndexOffsetCustomParamsRef = 3;
+
 //this is not the actual column index. this is the offset from the base class
 static NSArray*  kDbCrashReportAdditionalColumns;
-
-static int const kDbCrashReportColumnIndexOffsetStackTrace = 1;
-static int const kDbCrashReportColumnIndexOffsetReportedAt = 2;
-static int const kDbCrashReportColumnIndexOffsetCustomParamsRef = 3;
 
 //an APBDatabaseCrashReport object will represent a single row in the CrashReports database
 @interface APBDatabaseCrashReport : AppBladeDatabaseObject

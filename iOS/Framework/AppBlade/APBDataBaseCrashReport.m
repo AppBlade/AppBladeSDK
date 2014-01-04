@@ -62,10 +62,10 @@
     if(toRet != nil)
         return toRet;
 
-    self.stackTrace = [self readStringInAdditionalColumn:kDbCrashReportColumnIndexOffsetStackTrace fromFromSQLiteStatement:statement];
-    self.crashReportedAt = [self readDateInAdditionalColumn:kDbCrashReportColumnIndexOffsetReportedAt fromFromSQLiteStatement:statement];
+    self.stackTrace = [self readStringInAdditionalColumn:[NSNumber numberWithInt:kDbCrashReportColumnIndexOffsetStackTrace] fromFromSQLiteStatement:statement];
+    self.crashReportedAt = [self readDateInAdditionalColumn:[NSNumber numberWithInt:kDbCrashReportColumnIndexOffsetReportedAt] fromFromSQLiteStatement:statement];
 #ifndef SKIP_CUSTOM_PARAMS
-    self.customParameterId = [self readStringInAdditionalColumn:kDbCrashReportColumnIndexOffsetCustomParamsRef fromFromSQLiteStatement:statement];
+    self.customParameterId = [self readStringInAdditionalColumn:[NSNumber numberWithInt:kDbCrashReportColumnIndexOffsetCustomParamsRef] fromFromSQLiteStatement:statement];
 #endif
 
     return nil;
