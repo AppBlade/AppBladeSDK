@@ -10,5 +10,5 @@
 
 @interface APBDatabaseCustomParameter : AppBladeDatabaseObject
 +(NSArray *)columnDeclarations;
-
+-(NSDictionary *)asDictionary;
 @end

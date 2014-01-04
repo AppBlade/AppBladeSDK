@@ -15,4 +15,10 @@
                  [AppBladeDatabaseColumn initColumnNamed:@"createdAt" withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]];
 
     }
+
+-(NSDictionary *)asDictionary {
+    return @{};
+#pragma warning finish this
+}
+
 @end

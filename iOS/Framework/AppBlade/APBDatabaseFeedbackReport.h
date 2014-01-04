@@ -28,6 +28,7 @@ static NSInteger const kDbFeedbackReportColumnIndexOffsetCustomParamsRef = 4;
 -(UIImage *)screenshot;     //helper method for loading the screenshot
 @property (nonatomic, strong) NSDate   *reportedAt;     // time of report
 
+-(NSDictionary *)getCustomParams;
 #ifndef SKIP_CUSTOM_PARAMS
     @property (nonatomic, strong) NSString *customParameterId;
     -(APBDatabaseCustomParameter *)customParameterObj;

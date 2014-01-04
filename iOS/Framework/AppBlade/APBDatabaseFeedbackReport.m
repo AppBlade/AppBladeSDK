@@ -80,6 +80,14 @@
     return nil;
 }
 
+-(NSDictionary *)getCustomParams {
+#ifndef SKIP_CUSTOM_PARAMS
+    [self.customParameterObj asDictionary];
+#else
+    return @{};
+#endif
+}
+
 #ifndef SKIP_CUSTOM_PARAMS
 -(APBDatabaseCustomParameter *)customParameterObj{
     //lookup custom parameter obj, cache the resul in a property object if we use it too much. (we won't use it too much)
