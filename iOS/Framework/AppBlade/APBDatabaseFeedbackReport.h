@@ -21,6 +21,8 @@ static NSInteger const kDbFeedbackReportColumnIndexOffsetCustomParamsRef = 4;
 #endif
 
 @interface APBDatabaseFeedbackReport : AppBladeDatabaseObject
+-(id)initWithFeedbackDictionary:(NSDictionary *)feedbackDictionary;
+
 @property (nonatomic, strong) NSString *text;           // the entire stack trace file
 @property (nonatomic, strong) NSString *screenshotURL;  // screenshot location (no way are we storing images in a database)
 -(UIImage *)screenshot;     //helper method for loading the screenshot

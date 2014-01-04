@@ -16,12 +16,27 @@
 
 
 @implementation APBDatabaseFeedbackReport
+-(id)initWithFeedbackDictionary:(NSDictionary *)feedbackDictionary
+{
+    self = [super init];
+    if (self) {
+        [self takeFreshSnapshot];
+        [self setScreenshotURL:[feedbackDictionary valueForKey:kAppBladeFeedbackKeyScreenshot]];
+        [self setText:[feedbackDictionary valueForKey:kAppBladeFeedbackKeyNotes]];
+        [self setReportedAt:[NSDate new]];
+        
+        
+        [[AppBlade sharedManager] getCustomParams];
+    }
+    return self;
+}
+
 
 //will handle storing and retrieving the data format of the crash reports table
 +(NSArray *)columnDeclarations
 {
     return @[[AppBladeDatabaseColumn initColumnNamed:@"feedbackText" withContraints: (AppBladeColumnConstraintAffinityText) additionalArgs:nil],
-             [AppBladeDatabaseColumn initColumnNamed:@"reportedAt" withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]
+             [AppBladeDatabaseColumn initColumnNamed:@"reportedAt"   withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]
 #ifndef SKIP_CUSTOM_PARAMS
              , [AppBladeDatabaseColumn initColumnNamed:@"customParamId" withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:[APBCustomParametersManager getDefaultForeignKeyDefinition:@"customParamId"]]
 #endif
