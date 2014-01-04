@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 AppBlade. All rights reserved.
 //
 #import "APBWebOperation.h"
+#import "APBDataManager.h"
 /*!
  @header AppBlade+PrivateMethods
  @brief Header containing all the methods that we don't want to be publcaly used.
@@ -136,6 +137,12 @@
  @return the number of current APBWebOperation of that type
  */
 - (NSInteger)pendingRequestsOfType:(AppBladeWebClientAPI)clientType;
+
+
+-(APBDataManager *)getDataManager;
+
+
+
 
 /*!
  @brief An internal enum that keeps track of each feature that was called.

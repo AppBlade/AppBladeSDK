@@ -52,7 +52,7 @@ static NSString* const kAppBladeBacklogFileName         = @"AppBladeBacklog.plis
 static NSString* const kAppBladeFeedbackKeyNotes        = @"notes";
 static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
-static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
+static NSString* const kAppBladeFeedbackKeyBackupId       = @"feedback_row_id";
 
 static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";

@@ -342,7 +342,8 @@ static AppBlade *s_sharedManager = nil;
 
 #pragma mark DataManager helper fuunctions
 
--(APBDataManager *)getDataManager{
+-(APBDataManager *)getDataManager
+{
     return self.dataManager;
 }
 
