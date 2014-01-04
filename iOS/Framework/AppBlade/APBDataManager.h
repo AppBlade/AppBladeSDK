@@ -28,8 +28,8 @@ typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 @end
 
 @interface APBDataManager : NSObject
--(NSString *)getDatabaseFilePath;
--(NSString *)getDocumentsSubFolderPath; //the sql file is stored somewhere in documents
+-(NSString *)getDatabaseFilePath; //the location we store everything
+-(NSString *)getDocumentsSubFolderPath; //the sql file is stored somewhere in the database path
 
 +(NSError *)dataBaseErrorWithMessage:(NSString *)msg; //useful internal for all the error messages
 
@@ -39,14 +39,13 @@ typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 
 -(AppBladeDatabaseColumn *)generateReferenceColumn:(NSString *)columnName forTable:(NSString *)tableName;
 
-//careful with this one
+//careful with this one, will try to execute any string you pass
 -(NSError *)executeArbitrarySqlQuery:(NSString *)query;
 
 //table functions (table will always create at least one column named "id" for the primary key
 -(BOOL)tableExistsWithName:(NSString *)tableName;
 -(BOOL)table:(NSString *)table containsColumn:(NSString *)columnName;
 -(NSMutableDictionary*)tableInfo:(NSString *)table;
-
 
 -(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData;
 -(NSError *)removeTable:(NSString *)tableName;
@@ -55,9 +54,9 @@ typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 -(int)prepareTransaction;
 -(int)finishTransaction;
 
-
-//basic table-agnostic find and write
--(NSError *)writeData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName;
+//basic table-agnostic create,update, delete and find
+-(NSError *)upsertData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName;
+-(NSError *)deleteData:(AppBladeDatabaseObject*)dataObject fromTable:(NSString *)tableName;
 -(AppBladeDatabaseObject *)findDataWithClass:(Class) classToFind inTable:(NSString *)tableName withParams:(NSString *)params;
 
 

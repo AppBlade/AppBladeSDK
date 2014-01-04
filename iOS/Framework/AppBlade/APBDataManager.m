@@ -389,31 +389,64 @@
 
 #pragma mark Data functions
 -(BOOL)data:(AppBladeDatabaseObject*)dataObject existsInTable: (NSString *)tableName
-{
+{ //there'a a more efficient way of checking to see the data exists other than loading the entire object from the database
    AppBladeDatabaseObject *dataToFind = [self findDataWithClass:[dataObject class] inTable:tableName withParams:[NSString stringWithFormat:@"id = '%@'", dataObject.getId]];
     return (dataToFind != nil);
 }
 
--(NSError *)writeData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName
+//upsert: We either update data if it exists, or insert new data
+-(NSError *)upsertData:(AppBladeDatabaseObject*)dataObject toTable:(NSString *)tableName
 {
     NSError *errorCheck = nil;
     sqlite3_stmt    *statement;
     if ([self prepareTransaction] == SQLITE_OK)
     {
-        NSString *insertSQL = [dataObject formattedInsertSqlStringForTable:tableName];
+        NSString *insertSQL = [dataObject formattedUpsertSqlStringForTable:tableName];
         const char *insert_stmt = [insertSQL UTF8String];
-        sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL);
-        if (sqlite3_step(statement) == SQLITE_DONE)
-        {
-            errorCheck = nil;
-        } else {
-            errorCheck = [APBDataManager dataBaseErrorWithMessage:@"Data not added"];
+        if(sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL) == SQLITE_OK){
+            errorCheck = [dataObject bindDataToPreparedStatement:statement]; // might not do anything, given the specific data object.
+            if (errorCheck == nil && sqlite3_step(statement) == SQLITE_DONE){
+                if([dataObject getId] == nil){
+                    //then we have to update the data with the id
+                    [dataObject setIdFromDatabaseStatement:statement];
+                }
+                errorCheck = nil;
+            } else {
+                errorCheck = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: step %s", sqlite3_errmsg(_db)]];
+            }
+            sqlite3_finalize(statement);
+        }else {
+            errorCheck = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: prepare %s", sqlite3_errmsg(_db)]];
         }
-        sqlite3_finalize(statement);
         [self finishTransaction];
     }
     return errorCheck;
 }
+
+-(NSError *)deleteData:(AppBladeDatabaseObject*)dataObject fromTable:(NSString *)tableName
+{
+    NSError *errorCheck = nil;
+    sqlite3_stmt    *statement;
+    if ([self prepareTransaction] == SQLITE_OK)
+    {
+        NSString *insertSQL = [dataObject formattedUpsertSqlStringForTable:tableName];
+        const char *insert_stmt = [insertSQL UTF8String];
+        if(sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL) == SQLITE_OK){
+            errorCheck = [dataObject bindDataToPreparedStatement:statement]; // might not do anything, given the specific data object.
+            if (errorCheck == nil && sqlite3_step(statement) == SQLITE_DONE){
+                errorCheck = nil;
+            } else {writeData:
+                errorCheck = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: step %s", sqlite3_errmsg(_db)]];
+            }
+            sqlite3_finalize(statement);
+        }else {
+            errorCheck = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: prepare %s", sqlite3_errmsg(_db)]];
+        }
+        [self finishTransaction];
+    }
+    return errorCheck;
+}
+
 
 
 -(AppBladeDatabaseObject *)findDataWithClass:(Class)classToFind inTable:(NSString *)tableName withParams:(NSString *)params

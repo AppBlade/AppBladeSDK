@@ -42,16 +42,20 @@
     }
 }
 
-
+// we can't select a data object that hasn't yet been written to a table
 -(NSString *)formattedSelectSqlStringForTable: (NSString *)tableName
 {
+    if([self getId] == nil){
+        return nil;
+    }
+    
     return [NSString stringWithFormat:@"SELECT * FROM %@ WHERE id='%@'",
             tableName,
             [self getId ] ];
 }
 
 
--(NSString *)formattedInsertSqlStringForTable:(NSString *)tableName
+-(NSString *)formattedCreateSqlStringForTable:(NSString *)tableName
 {
     return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
             tableName,
@@ -59,41 +63,57 @@
             [self removeIdColumn:[self columnValues]]];
 }
 
--(NSString *)formattedReplaceSqlStringForTable:(NSString *)tableName
+-(NSString *)formattedUpsertSqlStringForTable:(NSString *)tableName
 {
-    return [NSString stringWithFormat:@"REPLACE INTO %@ (%@) VALUES (%@)",
+    if([self getId] == nil){ //no id means the object isn't in a table yet
+        return [self formattedCreateSqlStringForTable:tableName];
+    }else{    
+        return [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (%@) VALUES (%@)",
+                tableName,
+                [self columnNames],
+                [self columnValues]];
+    }
+}
+
+//will not return valid string if the ID is not defined
+-(NSString *)formattedDeleteSqlStringForTable:(NSString *)tableName
+{
+    if([self getId] == nil){
+        return nil;
+    }
+    
+    return [NSString stringWithFormat:@"DELETE * FROM %@ WHERE id='%@'",
             tableName,
-            [self columnNames],
-            [self columnValues]];
+            [self getId ] ];
 }
 
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-     NSString *dbRowIdCheck = [[NSString alloc]
-                              initWithUTF8String:
+     NSString *dbRowIdCheck = [[NSString alloc] initWithUTF8String:
                               (const char *) sqlite3_column_text(statement, 0)];
     if(dbRowIdCheck == nil){
         NSError *error = [[NSError alloc] initWithDomain:@"AppBladeDatabaseObject" code:0 userInfo:nil];
         return error;
     }
-    
-    NSString *dbExecIdCheck = [[NSString alloc]
-                               initWithUTF8String:
-                               (const char *) sqlite3_column_text(statement, 1)];
-    if(dbExecIdCheck == nil){
-        self.executableIdentifier = [[AppBlade sharedManager] executableUUID];
-    }
-  
     self.dbRowId = dbRowIdCheck;
+//read in the core values (TODO: only read them in when we need them)
+    self.createdAt = [NSDate dateWithTimeIntervalSince1970: sqlite3_column_double(statement, 1)];
+//    self.createdAt  = [NSDate date];
+    self.executableIdentifier = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+//    self.executableIdentifier = [[AppBlade sharedManager] executableUUID];
+    self.deviceVersionSanitized = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+//    self.deviceVersionSanitized = [[AppBlade sharedManager] iosVersionSanitized];
     return nil;
 }
 
+//will always begin with @"id", followed by our snapshot columns
 -(NSString *)columnNames {
     NSMutableArray *toRet = [NSMutableArray arrayWithArray:[self baseColumnNames] ];
     [toRet addObjectsFromArray:[self additionalColumnNames]];
     return [toRet componentsJoinedByString:@", "];
 }
 
+//will always begin with the id value, or null, followed by our snapshot values
 -(NSString *)columnValues {
     NSMutableArray *toRet = [NSMutableArray arrayWithArray:[self baseColumnValues] ];
     [toRet addObjectsFromArray:[self additionalColumnValues]];
@@ -101,22 +121,32 @@
 }
 
 //usage [obj removeIdColumn:[obj columnValues]];
--(NSString *)removeIdColumn:(NSString *)commaSeparatedList
+-(NSString *)removeIdColumn:(NSString *)commaSeparatedList //technically this function removes ANY column that begind the list, but we only use it for the case of id
 {
     NSRange indexOfFirstComma = [commaSeparatedList rangeOfString:@","];
     return [commaSeparatedList substringFromIndex:(indexOfFirstComma.location + indexOfFirstComma.length)];
 }
-//id column must always come first,
--(NSArray *)baseColumnNames {  return @[ @"id",         @"snapshot_exec_id" ]; }
 
--(NSArray *)baseColumnValues { return @[ self.dbRowId,  self.executableIdentifier ];  }
+//id column must always come first, unless the data hasn't been written yet
+-(NSArray *)baseColumnNames {  return @[ @"id",  @"snapshot_created_at",  @"snapshot_exec_id",  @"snapshot_device_version" ]; }
+
+-(NSArray *)baseColumnValues { return @[ self.dbRowId, self.createdAt, self.executableIdentifier,  self.deviceVersionSanitized ];  }
 
 -(NSArray *)additionalColumnNames {  return @[ ]; }
 
 -(NSArray *)additionalColumnValues { return @[ ];  }
 
+-(NSError *)bindDataToPreparedStatement:(sqlite3_stmt *)statement { return nil;  }
 
-//column reads
+
+-(void)setIdFromDatabaseStatement:(sqlite3_stmt *)statement
+{
+    NSString *idCheck = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+    
+    NSLog(@"%@", idCheck);
+}
+
+//column reads (writes have the values embedded into the sql statement, so we shouldn't need to bind them.)
 -(NSString *)readStringInAdditionalColumn:(int)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
     return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, indexOffset)];
