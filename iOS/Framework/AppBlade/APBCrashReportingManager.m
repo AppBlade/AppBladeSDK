@@ -311,7 +311,7 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
     @dynamic db;
 
 -(NSError *)addCrashReport:(APBDatabaseCrashReport *)crashReport {
-    return [self writeData:crashReport toTable:kDbCrashReportDatabaseMainTableName];
+    return nil;//[self upsertData:crashReport toTable:kDbCrashReportDatabaseMainTableName];
 }
 
 /* returns first row result of the parameter, no order is specified*/
