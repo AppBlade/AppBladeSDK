@@ -12,6 +12,9 @@
 
 #import "APBBasicFeatureManager.h"
 
+
+#import "APBDatabaseFeedbackReport.h"
+
 /*!
  @class APBFeedbackReportingManager
  @abstract The AppBlade Feedback Reporting feature
@@ -41,6 +44,9 @@
 - (void)handleBackloggedFeedback;
 - (BOOL)hasPendingFeedbackReports;
 - (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
+
+-(APBDatabaseFeedbackReport *)storeFeedbackDictionary:(NSDictionary *)feebackDict error:(NSError * __autoreleasing *)error;
+
 
 @end
 

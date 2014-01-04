@@ -15,8 +15,6 @@
 
 #import "AppBladeDatabaseColumn.h"
 
-#import "APBDatabaseFeedbackReport.h"
-
 #import "AppBlade.h"
 #import "AppBlade+PrivateMethods.h"
 
@@ -105,6 +103,33 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     }
 }
 
+-(APBDatabaseFeedbackReport *)storeFeedbackDictionary:(NSDictionary *)feebackDict error:(NSError * __autoreleasing *)error;
+{
+    //create a new row in the feedbacks table with the current dictionary
+    APBDatabaseFeedbackReport *newFeedback = [[APBDatabaseFeedbackReport alloc] initWithFeedbackDictionary:feebackDict];
+    if(newFeedback){
+        * error = [[self.delegate getDataManager] upsertData:&newFeedback toTable:kDbFeedbackReportDatabaseMainTableName];
+    }else {
+        * error = [APBDataManager dataBaseErrorWithMessage:@"feedback data object not initialized"];
+    }
+    return newFeedback;
+}
+
+-(APBDatabaseFeedbackReport *)storeFeedbackObject:(APBDatabaseFeedbackReport *)feedbackObj error:(NSError * __autoreleasing *)error {
+    if(error){
+        return nil;
+    }else{
+        * error = [[self.delegate getDataManager] upsertData:&feedbackObj toTable:kDbFeedbackReportDatabaseMainTableName];
+        if(error){
+            return nil;
+        }else{
+            return feedbackObj;
+        }
+    }
+}
+
+
+
 
 #pragma mark Stored Crash Handling
 
@@ -170,6 +195,11 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
 
 
 #pragma mark - Web Request Generators
+- (APBWebOperation*) generateFeedbackWithData:(APBDatabaseFeedbackReport *)feedbackData
+{
+    return [self generateFeedbackWithScreenshot:[feedbackData screenshotURL] note:[feedbackData text] console:nil params:[feedbackData getCustomParams]];
+}
+
 
 - (APBWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict
 {
@@ -201,7 +231,8 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     
     NSData* screenshotData = [[client encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
     [body appendData:screenshotData];
-    
+
+    //get custom params as a blob if the column exists
     if([NSPropertyListSerialization propertyList:paramsDict isValidForFormat:NSPropertyListXMLFormat_v1_0]){
         NSError* error = nil;
         NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:paramsDict format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
@@ -242,7 +273,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
         NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
         NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
         
-        NSString* fileName = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
+        NSString* fileName = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackupId];
         
         NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
         ABDebugLog_internal(@"Removing supporting feedback files and the feedback file herself");
@@ -268,30 +299,21 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     }];
     [client setFailBlock:^(id data, NSError* error){
         @synchronized (self){
+            //we failed to send, so store the data
             ABErrorLog(@"ERROR sending feedback");
-            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-            NSString *fileName = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackup];
-            BOOL isBacklog = ([[backupFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@",fileName]] count] > 0);
-            if (!isBacklog) {
-                NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-                NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-                NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-                [blockFeedbackDictionary writeToFile:feedbackPath atomically:YES];
-                
-                if (!backupFiles) {
-                    backupFiles = [NSMutableArray array];
-                }
-                
-                [backupFiles addObject:newFeedbackName];
-                
-                BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-                if(!success){
-                    ABErrorLog(@"Error writing backup file to %@", backupFilePath);
+            NSString *feedbackRowId = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackupId];
+            BOOL isInDatabase = [[[AppBlade sharedManager] getDataManager] dataExistsInTable:kDbFeedbackReportDatabaseMainTableName withId:feedbackRowId];
+            if (!isInDatabase) {
+                //initialize and write to the database from the failed web operation
+                NSError *errorCheck = nil;
+                APBDatabaseFeedbackReport *newObj = [[APBDatabaseFeedbackReport alloc] initWithFeedbackDictionary:blockFeedbackDictionary];
+                [[[AppBlade sharedManager] feedbackManager] storeFeedbackObject:newObj error:&errorCheck];
+                if(errorCheck != nil){
+                    ABErrorLog(@"Error writing to database %@", [errorCheck description]);
                 }
             }
             else {
-                ABDebugLog_internal(@"Unsuccesful feedback not found in backLog");
+                ABDebugLog_internal(@"feedback is already in the database");
             }
         }
 
@@ -404,7 +426,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
             bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
             if(screenShotFileExists){
                 APBWebOperation * client = [self generateFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[[AppBlade sharedManager] getCustomParams]];
-                client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackup, nil];
+                client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackupId, nil];
                 [[[AppBlade sharedManager] pendingRequests] addOperation:client];
             }
             else
@@ -504,26 +526,16 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     [self.feedbackManager.feedbackDictionary setObject:feedback forKey:kAppBladeFeedbackKeyNotes];
     
     ABDebugLog_internal(@"caching and attempting send of feedback %@", self.feedbackManager.feedbackDictionary);
-    
-    //store the feedback in the cache director in the event of a termination
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-    NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-    
-    [self.feedbackManager.feedbackDictionary writeToFile:feedbackPath atomically:YES];
-    NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-    NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-    if (!backupFiles) {
-        backupFiles = [NSMutableArray array];
+    //store the feedback in the database in the event of a termination
+    NSError *writeError = nil;
+    APBDatabaseFeedbackReport *feedbackObj = [self.feedbackManager storeFeedbackDictionary:self.feedbackManager.feedbackDictionary error:&writeError];
+    if(writeError != nil){
+        ABErrorLog(@"Error writing to feedback db: %@", [writeError description]);
+    }else{
+        ABDebugLog_internal(@"feedback object created with id %@", [feedbackObj getId]);
     }
-    [backupFiles addObject:newFeedbackName];
-    
-    BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-    if(!success){
-        ABErrorLog(@"Error writing backup file to %@", backupFilePath);
-    }
-    
-    APBWebOperation * client = [self.feedbackManager generateFeedbackWithScreenshot:[self.feedbackManager.feedbackDictionary objectForKey:kAppBladeFeedbackKeyScreenshot] note:feedback console:nil params:[self getCustomParams]];
+    //attempt to send what we can, even in the event of a db error.
+    APBWebOperation * client = [self.feedbackManager generateFeedbackWithData:feedbackObj];
     ABDebugLog_internal(@"Sending screenshot");
     [self.pendingRequests addOperation:client];
 #else
