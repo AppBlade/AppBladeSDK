@@ -36,7 +36,7 @@
     
     if([propertyValue isKindOfClass:[NSString class]])
     {
-        return (NSString *)propertyValue;
+        return [NSString stringWithFormat:@"\"%@\"", (NSString *)propertyValue];
     }else if([propertyValue isKindOfClass:[NSDate class]]){
         return [NSString stringWithFormat:@"%f", [(NSDate *)propertyValue timeIntervalSince1970] ];
     }
@@ -63,10 +63,11 @@
 
 -(NSString *)formattedCreateSqlStringForTable:(NSString *)tableName
 {
+    NSString *adjustedColumnNames = [self removeIdColumn:[self columnNames]];
+    NSString *adjustedColumnValues = [self removeIdColumn:[self columnValues]];
+    
     return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
-            tableName,
-            [self removeIdColumn:[self columnNames]],
-            [self removeIdColumn:[self columnValues]]];
+            tableName, adjustedColumnNames, adjustedColumnValues];
 }
 
 -(NSString *)formattedUpsertSqlStringForTable:(NSString *)tableName
@@ -136,7 +137,12 @@
 //id column must always come first, unless the data hasn't been written yet
 -(NSArray *)baseColumnNames {  return @[ @"id",  @"snapshot_created_at",  @"snapshot_exec_id",  @"snapshot_device_version" ]; }
 
--(NSArray *)baseColumnValues { return @[ self.dbRowId, self.createdAt, self.executableIdentifier,  self.deviceVersionSanitized ];  }
+-(NSArray *)baseColumnValues {
+        return @[ [self sqlFormattedProperty: self.dbRowId],
+                  [self sqlFormattedProperty: self.createdAt],
+                  [self sqlFormattedProperty: self.executableIdentifier],
+                  [self sqlFormattedProperty: self.deviceVersionSanitized]];
+}
 
 -(NSArray *)additionalColumnNames {  return @[ ]; }
 
@@ -145,11 +151,9 @@
 -(NSError *)bindDataToPreparedStatement:(sqlite3_stmt *)statement { return nil;  } //default implementation does nothing
 
 
--(void)setIdFromDatabaseStatement:(sqlite3_stmt *)statement
+-(void)setIdFromDatabaseStatement:(NSInteger)rowId
 {
-    NSString *idCheck = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
-    
-    NSLog(@"%@", idCheck);
+    self.dbRowId = [NSString stringWithFormat:@"%d", rowId];
 }
 
 //column reads (writes have the values embedded into the sql statement, so we shouldn't need to bind them.)

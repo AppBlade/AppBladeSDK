@@ -108,22 +108,30 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     //create a new row in the feedbacks table with the current dictionary
     APBDatabaseFeedbackReport *newFeedback = [[APBDatabaseFeedbackReport alloc] initWithFeedbackDictionary:feebackDict];
     if(newFeedback){
-        * error = [[self.delegate getDataManager] upsertData:&newFeedback toTable:kDbFeedbackReportDatabaseMainTableName];
+        NSError *errorCheck = nil;
+        APBDatabaseFeedbackReport *storedObj = (APBDatabaseFeedbackReport *)[[self.delegate getDataManager] upsertData:newFeedback toTable:kDbFeedbackReportDatabaseMainTableName error:&errorCheck];
+        if(errorCheck){
+            *error = errorCheck;
+            return nil;
+        }else{
+            return storedObj;
+        }
     }else {
         * error = [APBDataManager dataBaseErrorWithMessage:@"feedback data object not initialized"];
+        return nil;
     }
-    return newFeedback;
 }
 
 -(APBDatabaseFeedbackReport *)storeFeedbackObject:(APBDatabaseFeedbackReport *)feedbackObj error:(NSError * __autoreleasing *)error {
     if(error){
         return nil;
     }else{
-        * error = [[self.delegate getDataManager] upsertData:&feedbackObj toTable:kDbFeedbackReportDatabaseMainTableName];
-        if(error){
+        NSError *errorCheck = nil;
+        APBDatabaseFeedbackReport *storedObj = (APBDatabaseFeedbackReport *)[[self.delegate getDataManager] upsertData:feedbackObj toTable:kDbFeedbackReportDatabaseMainTableName error:&errorCheck];
+        if(errorCheck){
             return nil;
         }else{
-            return feedbackObj;
+            return storedObj;
         }
     }
 }
@@ -300,7 +308,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     [client setFailBlock:^(id data, NSError* error){
         @synchronized (self){
             //we failed to send, so store the data
-            ABErrorLog(@"ERROR sending feedback");
+            ABErrorLog(@"ERROR sending feedback %@", error);
             NSString *feedbackRowId = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackupId];
             BOOL isInDatabase = [[[AppBlade sharedManager] getDataManager] dataExistsInTable:kDbFeedbackReportDatabaseMainTableName withId:feedbackRowId];
             if (!isInDatabase) {
@@ -322,38 +330,16 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     [client setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *error){
         int status = [[responseHeaders valueForKey:@"statusCode"] intValue];
         BOOL succeeded = (status == 201 || status == 200);
-        
-        BOOL isBacklog = [[weakClient delegate] containsOperationInPendingRequests:weakClient];
         if (succeeded){
             if(weakClient.successBlock != nil) {
                 weakClient.successBlock(receivedData, nil);
             }
         }
-        else if (!isBacklog) {
-            ABDebugLog_internal(@"Unsuccesful feedback not found in backLog");
-            
-            // If we fail sending, add to backlog
-            // We do not remove backlogged files unless the request is sucessful
-            
-            NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-            NSString* newFeedbackName = [[NSString stringWithFormat:@"%0.0f", now] stringByAppendingPathExtension:@"plist"];
-            NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:newFeedbackName];
-            
-            [blockFeedbackDictionary writeToFile:feedbackPath atomically:YES];
-            
-            NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-            NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-            if (!backupFiles) {
-                backupFiles = [NSMutableArray array];
+        else {
+            if(weakClient.failBlock != nil) {
+                weakClient.failBlock(rawSentData, error);
             }
-            
-            [backupFiles addObject:newFeedbackName];
-            
-            BOOL success = [backupFiles writeToFile:backupFilePath atomically:YES];
-            if(!success){
-                ABErrorLog(@"Error writing backup file to %@", backupFilePath);
-            }
-        } //else it's failed and already in the backlog. Keep it there.
+        }
     }];
     
 

@@ -37,8 +37,7 @@
     -(NSData *)  readDataInAdditionalColumn:(NSNumber *)index   fromFromSQLiteStatement:(sqlite3_stmt *)statement;
     -(NSTimeInterval)readTimeIntervalInAdditionalColumn:(NSNumber *)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
 
-    -(void)setIdFromDatabaseStatement:(sqlite3_stmt *)statement;
-
+    -(void)setIdFromDatabaseStatement:(NSInteger)rowId;
 
     -(NSError *)bindDataToPreparedStatement:(sqlite3_stmt *)statement; //default implementation returns nil
 

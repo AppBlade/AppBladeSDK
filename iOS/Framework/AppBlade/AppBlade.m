@@ -864,7 +864,6 @@ static AppBlade *s_sharedManager = nil;
 #else
     NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
 #endif
-    ABDebugLog_internal(@"getting Custom Params %@", toRet);
     return toRet;
 }
 
