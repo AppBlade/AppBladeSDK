@@ -104,6 +104,12 @@
 {
     return @"build_uuid TEXT";
 }
++(NSString *)snapshotColumnsDefinitions
+{
+    return @"snapshot_created_at TEXT, snapshot_exec_id TEXT, snapshot_device_version TEXT";
+}
+
+
 
 +(NSString *)sqlQueryToTrimTable:(NSString *) origTable toColumns:(NSArray *)columns
 {
@@ -320,7 +326,8 @@
         NSMutableString *createTableQuery = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(", tableName];
         [createTableQuery appendString:[APBDataManager defaultIdColumnDefinition]];
         [createTableQuery appendFormat:@", %@", [APBDataManager defaultBuildIdColumnDefinition]];
-        ABDebugLog_internal(@"added intenal id and exec column");
+        [createTableQuery appendFormat:@", %@", [APBDataManager snapshotColumnsDefinitions]];
+        ABDebugLog_internal(@"added internal id, exec, and snapshot columns");
         for(AppBladeDatabaseColumn* col in columnData){
             ABDebugLog_internal(@"adding column %@", [col toDictionary]);
             
@@ -402,11 +409,10 @@
 
 
 //upsert: We either update data if it exists, or insert new data
--(NSError *)upsertData:(AppBladeDatabaseObject * __autoreleasing *)dataObject toTable:(NSString *)tableName
+-(AppBladeDatabaseObject *)upsertData:(AppBladeDatabaseObject *)dataObject toTable:(NSString *)tableName error:(NSError * __autoreleasing *)error
 {
-    NSError *errorCheck = nil;
     if(dataObject == nil){
-        errorCheck = [APBDataManager dataBaseErrorWithMessage:@"no data object passed"];
+        * error = [APBDataManager dataBaseErrorWithMessage:@"no data object passed"];
     }
     
     
@@ -414,27 +420,28 @@
     if ([self prepareTransaction] == SQLITE_OK)
     {
         //create the actual sqlite command
-        NSString *insertSQL = [* dataObject formattedUpsertSqlStringForTable:tableName];
+        NSString *insertSQL = [dataObject formattedUpsertSqlStringForTable:tableName];
         const char *insert_stmt = [insertSQL UTF8String];
         if(sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL) == SQLITE_OK){
             //bind any additional data to the upsert statement (like blobs)
-            errorCheck = [* dataObject bindDataToPreparedStatement:statement]; // might not do anything, given the specific data object.
+            NSError* errorCheck = [dataObject bindDataToPreparedStatement:statement]; // might not do anything, given the specific data object.
             if (errorCheck == nil && sqlite3_step(statement) == SQLITE_DONE){
-                if([* dataObject getId] == nil){
+                if([dataObject getId] == nil){
                     //then we have to update the data with the id
-                    [* dataObject setIdFromDatabaseStatement:statement];
+                    NSInteger lastRow = sqlite3_last_insert_rowid(_db);
+                    [dataObject setIdFromDatabaseStatement:lastRow];
                 }
-                errorCheck = nil;
+                * error = nil;
             } else {
-                errorCheck = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: step %s", sqlite3_errmsg(_db)]];
+                * error = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: step %s", sqlite3_errmsg(_db)]];
             }
             sqlite3_finalize(statement);
         }else {
-            errorCheck = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: prepare %s", sqlite3_errmsg(_db)]];
+            * error = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: prepare %s", sqlite3_errmsg(_db)]];
         }
         [self finishTransaction];
     }
-    return errorCheck;
+    return dataObject;
 }
 
 -(NSError *)deleteData:(AppBladeDatabaseObject*)dataObject fromTable:(NSString *)tableName
