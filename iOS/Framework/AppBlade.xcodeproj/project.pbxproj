@@ -155,6 +155,14 @@
 		318C22C017CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
 		318C22C117CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
 		31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
+		31AA325D1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */; };
+		31AA325E1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */; };
+		31AA325F1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */; };
+		31AA32601881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */; };
+		31AA32611881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */; };
+		31AA32621881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */; };
+		31AA32631881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */; };
+		31AA32641881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */; };
 		31BB3C7417E357E2007B8B28 /* APBAuthenticationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 31BB3C7317E357E2007B8B28 /* APBAuthenticationManagerTests.m */; };
 		31C4881B17A9847000EA75E8 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
@@ -373,6 +381,8 @@
 		318C22B817CFC0E50007FD5E /* APBTokenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBTokenManager.h; sourceTree = "<group>"; };
 		318C22B917CFC0E50007FD5E /* APBTokenManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBTokenManager.m; sourceTree = "<group>"; };
 		31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestAppBladeKeys.plist; sourceTree = "<group>"; };
+		31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBladeDatabaseObject+CustomParametersCompatibility.h"; sourceTree = "<group>"; };
+		31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppBladeDatabaseObject+ CustomParametersCompatibility.m"; sourceTree = "<group>"; };
 		31BB3C7217E357E2007B8B28 /* APBAuthenticationManagerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APBAuthenticationManagerTests.h; path = AppBladeTests/APBAuthenticationManagerTests.h; sourceTree = SOURCE_ROOT; };
 		31BB3C7317E357E2007B8B28 /* APBAuthenticationManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APBAuthenticationManagerTests.m; path = AppBladeTests/APBAuthenticationManagerTests.m; sourceTree = SOURCE_ROOT; };
 		31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBlade+PrivateMethods.h"; sourceTree = "<group>"; };
@@ -538,6 +548,8 @@
 				31E36B461856D86300A32D1A /* Data */,
 				311A22BA1795D313007BF879 /* APBCustomParametersManager.h */,
 				311A22BB1795D313007BF879 /* APBCustomParametersManager.m */,
+				31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */,
+				31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */,
 			);
 			name = "Custom Parameters";
 			sourceTree = "<group>";
@@ -891,6 +903,7 @@
 				311A21541794C79F007BF879 /* APBFileMD5Hash.h in Headers */,
 				31D924E8184A97CA00012197 /* APBDataManager.h in Headers */,
 				31E36B251856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
+				31AA325E1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */,
 				311A21551794C79F007BF879 /* APBFeedbackBackgroundView.h in Headers */,
 				31E36B431856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */,
 				31562C4E17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */,
@@ -915,6 +928,7 @@
 				31E36B421856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */,
 				311A22AE1795D24A007BF879 /* APBSessionTrackingManager.h in Headers */,
 				311A22B21795D259007BF879 /* APBUpdatesManager.h in Headers */,
+				31AA325D1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */,
 				311A22B61795D26E007BF879 /* APBAuthenticationManager.h in Headers */,
 				311A22BC1795D313007BF879 /* APBCustomParametersManager.h in Headers */,
 				31E36B391856C8A200A32D1A /* APBDatabaseFeedbackReport.h in Headers */,
@@ -944,6 +958,7 @@
 				318C22BD17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
 				31E36B451856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */,
 				31E36B3C1856C8A200A32D1A /* APBDatabaseFeedbackReport.h in Headers */,
+				31AA32601881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */,
 				311711BB17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
 				31D924EA184A97CA00012197 /* APBDataManager.h in Headers */,
 				31E36B4C1856D88700A32D1A /* APBDatabaseCustomParameter.h in Headers */,
@@ -963,6 +978,7 @@
 				31C4881F17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */,
 				31E36B441856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */,
 				31E36B3B1856C8A200A32D1A /* APBDatabaseFeedbackReport.h in Headers */,
+				31AA325F1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */,
 				318C22BC17CFC0E50007FD5E /* APBTokenManager.h in Headers */,
 				311711BA17D687B5004170B7 /* APBApplicationInfoManager.h in Headers */,
 				31E36B4B1856D88700A32D1A /* APBDatabaseCustomParameter.h in Headers */,
@@ -1185,6 +1201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				31E36B331856B2E300A32D1A /* AppBladeDatabaseObject.m in Sources */,
+				31AA32621881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */,
 				31E36B291856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */,
 				311A21591794C79F007BF879 /* AppBlade.m in Sources */,
 				31E36B4E1856D88700A32D1A /* APBDatabaseCustomParameter.m in Sources */,
@@ -1216,6 +1233,7 @@
 				313063C21794A357006DF03A /* APBFeedbackDialogue.m in Sources */,
 				313063C51794A357006DF03A /* APBFileMD5Hash.c in Sources */,
 				31D925211850BC1C00012197 /* APBDatabaseCrashReport.m in Sources */,
+				31AA32611881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */,
 				31E36B4D1856D88700A32D1A /* APBDatabaseCustomParameter.m in Sources */,
 				313062371794A357006DF03A /* CrashReporter.m in Sources */,
 				313062731794A357006DF03A /* PLCrashReporter.m in Sources */,
@@ -1282,6 +1300,7 @@
 				318189CD179E039D006EE07A /* APBSessionTrackingManager.m in Sources */,
 				31E36B2B1856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */,
 				31E36B501856D88700A32D1A /* APBDatabaseCustomParameter.m in Sources */,
+				31AA32641881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */,
 				318189CE179E039D006EE07A /* APBFeedbackReportingManager.m in Sources */,
 				318189CF179E039D006EE07A /* APBFeedbackBackgroundView.m in Sources */,
 				318189D0179E039D006EE07A /* APBFeedbackDialogue.m in Sources */,
@@ -1305,6 +1324,7 @@
 				318731F9179DE8C200E0D187 /* APBSimpleKeychain.m in Sources */,
 				31E36B2A1856A36D00A32D1A /* AppBladeDatabaseColumn.m in Sources */,
 				31D925221850BC1C00012197 /* APBDatabaseCrashReport.m in Sources */,
+				31AA32631881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */,
 				318731FA179DE8C200E0D187 /* APBWebOperation.m in Sources */,
 				318731FB179DE8C200E0D187 /* APBFeedbackBackgroundView.m in Sources */,
 				318731FC179DE8C200E0D187 /* APBFeedbackDialogue.m in Sources */,
