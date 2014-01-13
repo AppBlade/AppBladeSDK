@@ -40,6 +40,15 @@
     }else if([propertyValue isKindOfClass:[NSDate class]]){
         return [NSString stringWithFormat:@"%f", [(NSDate *)propertyValue timeIntervalSince1970] ];
     }
+//    else if([propertyValue isKindOfClass:[NSDictionary class]]){
+//        NSMutableString *resultString = [NSMutableString string];
+//        for (NSString* key in [(NSDictionary *) propertyValue allKeys]){
+//            if ([resultString length]>0)
+//                [resultString appendString:@"&"];
+//            [resultString appendFormat:@"%@=%@", key, [(NSDictionary *) propertyValue objectForKey:key]];
+//        }
+//        return [NSString stringWithFormat:@"%@", resultString];
+//    }
     else if([propertyValue isKindOfClass:[AppBladeDatabaseObject class]]){
         return [(AppBladeDatabaseObject *)propertyValue getId];
     }
