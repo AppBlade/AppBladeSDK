@@ -57,9 +57,8 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     if([[databaseDelegate getDataManager] tableExistsWithName:self.dbMainTableName]){
         //table exists, see if we need to update it
 #ifndef SKIP_CUSTOM_PARAMS
-        //make sure we have a custom parameter column
+        //make sure we HAVE a custom parameter column
         if(![[databaseDelegate getDataManager] table:self.dbMainTableName containsColumn:kDbFeedbackReportColumnNameCustomParamsRef]){
-
             __block NSString *blockSafeTableName = self.dbMainTableName;
             APBDataTransaction addParameterColumn = ^(sqlite3 *dbRef){
                 NSString *alterTableSQL =  [NSString stringWithFormat:@"ALTER TABLE %@ ADD %@",
@@ -76,9 +75,8 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
             [[databaseDelegate getDataManager] alterTable:self.dbMainTableName withTransaction:addParameterColumn];
         }
 #else
-        //make sure we don't have a custom parameter column
+        //make sure we DON'T HAVE a custom parameter column
         if([[databaseDelegate getDataManager] table:self.dbMainTableName containsColumn:kDbCrashReportColumnNameCustomParamsRef]){
-            
             APBDataTransaction removeParameterColumn = ^(sqlite3 *dbRef){
                 //Sqlite has "Limited support for ALTER TABLE", which makes the process of changing tables a bit arduous
                 NSArray *colsToKeep = @[@"id", @"text", @"screenshot", @"reportedAt"];
@@ -90,8 +88,6 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
                 if(error != nil){
                     NSLog(@"%s: ERROR Preparing: , %s", __FUNCTION__, sqlite3_errmsg(dbRef));
                 }
-                
-                
                 return;
             };
             [[databaseDelegate getDataManager] alterTable:self.dbMainTableName withTransaction:addParameterColumn];
@@ -203,15 +199,18 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
 
 
 #pragma mark - Web Request Generators
-- (APBWebOperation*) generateFeedbackWithData:(APBDatabaseFeedbackReport *)feedbackData
+- (APBWebOperation*) generateFeedbackCallWithFeedbackData:(APBDatabaseFeedbackReport *)feedbackData
 {
-    return [self generateFeedbackWithScreenshot:[feedbackData screenshotURL] note:[feedbackData text] console:nil params:[feedbackData getCustomParams]];
+    return [self generateFeedbackWithScreenshot:[feedbackData screenshotURL] note:[feedbackData text] console:nil params:[feedbackData getCustomParamSnapshot]];
 }
 
-
+/* 
+  returns a generated web operation of the passed parameters.
+    will assume this is a brand new feedback and will create a row in the database at the same time
+    for existing rows in the db, use generateFeedbackCallWithFeedbackData:
+ */
 - (APBWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict
 {
-    
     APBWebOperation *client = [[APBWebOperation alloc] initWithDelegate:self.delegate];
     [client setApi: AppBladeWebClientAPI_Feedback];
 
@@ -329,7 +328,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     
     [client setRequestCompletionBlock:^(NSMutableURLRequest *request, id rawSentData, NSDictionary* responseHeaders, NSMutableData* receivedData, NSError *error){
         int status = [[responseHeaders valueForKey:@"statusCode"] intValue];
-        BOOL succeeded = (status == 201 || status == 200);
+        BOOL succeeded = (status == 201 || status == 200); 
         if (succeeded){
             if(weakClient.successBlock != nil) {
                 weakClient.successBlock(receivedData, nil);
@@ -521,7 +520,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
         ABDebugLog_internal(@"feedback object created with id %@", [feedbackObj getId]);
     }
     //attempt to send what we can, even in the event of a db error.
-    APBWebOperation * client = [self.feedbackManager generateFeedbackWithData:feedbackObj];
+    APBWebOperation * client = [self.feedbackManager generateFeedbackCallWithFeedbackData:feedbackObj];
     ABDebugLog_internal(@"Sending screenshot");
     [self.pendingRequests addOperation:client];
 #else
@@ -550,7 +549,6 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
 
 - (UIImage*)getContentBelowView
 {
-    
     UIWindow* keyWindow = self.feedbackManager.feedbackWindow;
     if(keyWindow == nil){
         keyWindow = [[UIApplication sharedApplication] keyWindow];

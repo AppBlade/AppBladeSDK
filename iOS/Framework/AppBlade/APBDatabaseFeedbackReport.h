@@ -9,6 +9,10 @@
 #import "AppBladeDatabaseObject.h"
 #import "APBDatabaseCustomParameter.h"
 
+#import "AppBladeDatabaseObject+CustomParametersCompatibility.h"
+
+
+
 static NSString* const kDbFeedbackReportColumnNameScreenshotURL = @"screenshotURL";
 static NSInteger const kDbFeedbackReportColumnIndexOffsetScreenshotURL = 1;
 static NSString* const kDbFeedbackReportColumnNameText       = @"text";
@@ -21,18 +25,18 @@ static NSInteger const kDbFeedbackReportColumnIndexOffsetCustomParamsRef = 4;
 #endif
 
 @interface APBDatabaseFeedbackReport : AppBladeDatabaseObject
--(id)initWithFeedbackDictionary:(NSDictionary *)feedbackDictionary;
--(id)initWithText:(NSString *)feedbackText screenshotURL:(NSString *)feedbackScreenshotURL reportedAt:(NSDate *)feedbackReportedAt;
+    -(id)initWithFeedbackDictionary:(NSDictionary *)feedbackDictionary;
+    -(id)initWithText:(NSString *)feedbackText screenshotURL:(NSString *)feedbackScreenshotURL reportedAt:(NSDate *)feedbackReportedAt;
 
-@property (nonatomic, strong) NSString *text;           // the entire stack trace file
-@property (nonatomic, strong) NSString *screenshotURL;  // screenshot location (no way are we storing images in a database)
--(UIImage *)screenshot;     //helper method for loading the screenshot
-@property (nonatomic, strong) NSDate   *reportedAt;     // time of report
+    +(NSArray *)columnDeclarations;
 
--(NSDictionary *)getCustomParams;
+    @property (nonatomic, strong) NSString *text;           // the entire stack trace file
+    @property (nonatomic, strong) NSString *screenshotURL;  // screenshot location (no way are we storing images in a database)
+    @property (nonatomic, strong) NSDate   *reportedAt;     // time of report
+    -(UIImage *)screenshot;     //helper method for loading the screenshot
+
 #ifndef SKIP_CUSTOM_PARAMS
     @property (nonatomic, strong) NSString *customParameterId;
-    -(APBDatabaseCustomParameter *)customParameterObj;
 #endif
-    +(NSArray *)columnDeclarations;
+
 @end

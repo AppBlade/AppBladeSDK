@@ -24,7 +24,9 @@
         [self setScreenshotURL: feedbackScreenshotURL];
         [self setText:          feedbackText];
         [self setReportedAt:    feedbackReportedAt];
-        [[AppBlade sharedManager] getCustomParams];
+#ifndef SKIP_CUSTOM_PARAMS
+        [self setCustomParamSnapshot]; //current custom params are stored as a semi-readable string
+#endif
     }
     return self;
 }
@@ -38,7 +40,9 @@
         [self setScreenshotURL:[feedbackDictionary valueForKey:kAppBladeFeedbackKeyScreenshot]];
         [self setText:[feedbackDictionary valueForKey:kAppBladeFeedbackKeyNotes]];
         [self setReportedAt:[NSDate new]];
-        [[AppBlade sharedManager] getCustomParams];
+#ifndef SKIP_CUSTOM_PARAMS
+        [self setCustomParamSnapshot];
+#endif
     }
     return self;
 }
@@ -91,22 +95,5 @@
     
     return nil;
 }
-
--(NSDictionary *)getCustomParams {
-#ifndef SKIP_CUSTOM_PARAMS
-    return [self.customParameterObj asDictionary];
-#else
-    return @{};
-#endif
-}
-
-#ifndef SKIP_CUSTOM_PARAMS
--(APBDatabaseCustomParameter *)customParameterObj{
-    //lookup custom parameter obj, cache the resul in a property object if we use it too much. (we won't use it too much)
-    return [[[AppBlade sharedManager] customParamsManager] getCustomParamById:self.customParameterId];
-}
-#endif
-
-
 
 @end
