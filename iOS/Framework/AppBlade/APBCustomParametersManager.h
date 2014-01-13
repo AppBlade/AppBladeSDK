@@ -32,6 +32,8 @@ static NSString* const kDbCustomParametersMainTableName = @"customparams";
 
 -(APBDatabaseCustomParameter *)getCustomParamById:(NSString *)paramId;
 
+-(APBDatabaseCustomParameter *)generateCustomParameterFromCurrentParamsWithError:(NSError * __autoreleasing *) error;
+
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
 -(void)setCustomParam:(id)newObject withValue:(NSString*)key;
@@ -53,7 +55,7 @@ static NSString* const kDbCustomParametersMainTableName = @"customparams";
 @interface APBDataManager (CustomParameters)
 @property (nonatomic) sqlite3 *db;
 
--(NSError *)saveCustomParamSnapshot;
+-(APBDatabaseCustomParameter *)insertNewCustomParams:(NSDictionary *)paramsToStore error:(NSError * __autoreleasing *) error;
 -(APBDatabaseCustomParameter *)getCustomParameterWithID:(NSString *)customParamId;
 -(NSError *)removeCustomParameterWithID:(NSString *)customParamId;
 

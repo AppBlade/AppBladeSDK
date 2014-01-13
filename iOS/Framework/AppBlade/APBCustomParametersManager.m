@@ -141,19 +141,22 @@
  When do we need a custom parameter snapshot stored?
  When the custom parameter has changed between feature calls.
  When a feature is stored, make sure an up-to-date snapshot is stored as well.
- For the sake of simplicity, keep 1 snapshot per stored feature call.
+ For the sake of simplicity, keep 1 snapshot per stored data that would use it until we have time to get clever about it.
  */
--(NSError *)storeCustomParamSnapshot
+-(APBDatabaseCustomParameter *)generateCustomParameterFromCurrentParamsWithError:(NSError * __autoreleasing *) error
 {
-    ABDebugLog_internal(@"custom parameter stored");
-#pragma warning incomplete
+    NSError *errorCheck = nil;
+    NSDictionary *paramsSnapshot = [self getCustomParams];
+    [[self.delegate getDataManager] insertNewCustomParams:paramsSnapshot error:&errorCheck];
+    
+    
+    * error = [APBDataManager dataBaseErrorWithMessage:@"incomplete implementation"];
     return nil;
 }
 
--(NSError *)removeCustomParamById:(NSString *)paramId
+-(void)removeCustomParamById:(NSString *)paramId error:(NSError * __autoreleasing *) error
 {
-#pragma warning incomplete
-    return nil;
+    * error = [APBDataManager dataBaseErrorWithMessage:@"incomplete implementation"];
 }
 
 -(APBDatabaseCustomParameter *)getCustomParamById:(NSString *)paramId
@@ -167,9 +170,9 @@
 @implementation APBDataManager(CustomParameters)
 @dynamic db;
 
--(NSError *)saveCustomParamSnapshot
+-(APBDatabaseCustomParameter *)insertNewCustomParams:(NSDictionary *)paramsToStore error:(NSError * __autoreleasing *) error
 {
-#pragma warning incomplete
+    * error = [APBDataManager dataBaseErrorWithMessage:@"incomplete implementation"];
     return nil;
 }
 

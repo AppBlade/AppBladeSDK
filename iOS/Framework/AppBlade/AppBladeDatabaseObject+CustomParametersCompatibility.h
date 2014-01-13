@@ -22,6 +22,6 @@
     -(void)setCustomParamSnapshot;  //sets custom param object from the current parameters.
     @property (nonatomic, strong) NSString *customParameterId; //must be implemented in the class
 
--(APBDatabaseCustomParameter *)customParameterObj;
+    -(APBDatabaseCustomParameter *)customParameterObj;
 
 @end
