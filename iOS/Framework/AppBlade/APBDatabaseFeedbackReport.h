@@ -28,14 +28,15 @@ static NSInteger const kDbFeedbackReportColumnIndexOffsetCustomParamsRef = 4;
     -(id)initWithFeedbackDictionary:(NSDictionary *)feedbackDictionary;
     -(id)initWithText:(NSString *)feedbackText screenshotURL:(NSString *)feedbackScreenshotURL reportedAt:(NSDate *)feedbackReportedAt;
 
-    @property (nonatomic, strong) NSString *text;           // the entire stack trace file
+    +(NSArray *)columnDeclarations;
+    @property (nonatomic, strong) NSString *text;           // the entire feedback message typed by the user
     @property (nonatomic, strong) NSString *screenshotURL;  // screenshot location (no way are we storing images in a database)
     @property (nonatomic, strong) NSDate   *reportedAt;     // time of report
     -(UIImage *)screenshot;     //helper method for loading the screenshot
 
-
 #ifndef SKIP_CUSTOM_PARAMS
     @property (nonatomic, strong) NSString *customParameterId;
+    //@see AppBladeDatabaseObject+CustomParametersCompatibility.h for other variables
 #endif
 
 @end
