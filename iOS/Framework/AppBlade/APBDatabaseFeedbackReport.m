@@ -92,7 +92,6 @@
 #ifndef SKIP_CUSTOM_PARAMS
     self.customParameterId = [self readStringInAdditionalColumn:[NSNumber numberWithInt:kDbFeedbackReportColumnIndexOffsetCustomParamsRef] fromFromSQLiteStatement:statement];
 #endif
-    
     return nil;
 }
 

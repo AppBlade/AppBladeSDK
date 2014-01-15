@@ -20,7 +20,7 @@ static NSInteger const kDbFeedbackReportColumnIndexOffsetText = 2;
 static NSString* const kDbFeedbackReportColumnNameReportedAt = @"reportedAt";
 static NSInteger const kDbFeedbackReportColumnIndexOffsetReportedAt = 3;
 #ifndef SKIP_CUSTOM_PARAMS
-static NSString* const kDbFeedbackReportColumnNameCustomParamsRef = @"customParamsId";
+static NSString* const kDbFeedbackReportColumnNameCustomParamsRef = BASIC_CUSTOM_PARAMS_REF;
 static NSInteger const kDbFeedbackReportColumnIndexOffsetCustomParamsRef = 4;
 #endif
 
@@ -28,12 +28,11 @@ static NSInteger const kDbFeedbackReportColumnIndexOffsetCustomParamsRef = 4;
     -(id)initWithFeedbackDictionary:(NSDictionary *)feedbackDictionary;
     -(id)initWithText:(NSString *)feedbackText screenshotURL:(NSString *)feedbackScreenshotURL reportedAt:(NSDate *)feedbackReportedAt;
 
-    +(NSArray *)columnDeclarations;
-
     @property (nonatomic, strong) NSString *text;           // the entire stack trace file
     @property (nonatomic, strong) NSString *screenshotURL;  // screenshot location (no way are we storing images in a database)
     @property (nonatomic, strong) NSDate   *reportedAt;     // time of report
     -(UIImage *)screenshot;     //helper method for loading the screenshot
+
 
 #ifndef SKIP_CUSTOM_PARAMS
     @property (nonatomic, strong) NSString *customParameterId;
