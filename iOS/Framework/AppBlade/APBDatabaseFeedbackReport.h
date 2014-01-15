@@ -25,6 +25,7 @@ static NSInteger const kDbFeedbackReportColumnIndexOffsetCustomParamsRef = 4;
 #endif
 
 @interface APBDatabaseFeedbackReport : AppBladeDatabaseObject
+    -(id)initFromSQLiteStatement:(sqlite3_stmt *)statement;
     -(id)initWithFeedbackDictionary:(NSDictionary *)feedbackDictionary;
     -(id)initWithText:(NSString *)feedbackText screenshotURL:(NSString *)feedbackScreenshotURL reportedAt:(NSDate *)feedbackReportedAt;
 

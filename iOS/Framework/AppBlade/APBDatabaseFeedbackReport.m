@@ -16,6 +16,19 @@
 
 
 @implementation APBDatabaseFeedbackReport
+-(id)initFromSQLiteStatement:(sqlite3_stmt *)statement
+{
+    self = [super init];
+    if (self) {
+        NSError *errorCheck = [self readFromSQLiteStatement:statement];
+        if(errorCheck){
+            ABErrorLog(@"%@", [errorCheck debugDescription]);
+            return nil;
+        }
+    }
+    return self;
+}
+
 -(id)initWithText:(NSString *)feedbackText screenshotURL:(NSString *)feedbackScreenshotURL reportedAt:(NSDate *)feedbackReportedAt
 {
     self = [super init];
