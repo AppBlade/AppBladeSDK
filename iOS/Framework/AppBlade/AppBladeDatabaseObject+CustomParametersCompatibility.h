@@ -16,7 +16,7 @@
 
 #define BASIC_CUSTOM_PARAMS_REF @"customParamsId";
 
-@interface AppBladeDatabaseObject (CustomParamtersCompatibility)
+@interface AppBladeDatabaseObject (CustomParametersCompatibility)
     -(NSDictionary *)getCustomParamSnapshot; //Returns custom params when the feature is enabled. False otherwise.
     -(void)setCustomParamSnapshot;  //sets custom param object from the current parameters.
     @property (nonatomic, strong) NSString *customParameterId; //must be implemented in the class
