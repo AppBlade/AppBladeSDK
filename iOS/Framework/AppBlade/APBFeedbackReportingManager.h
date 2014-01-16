@@ -34,10 +34,10 @@
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options;
 - (void)showFeedbackDialogueWithOptions:(AppBladeFeedbackDisplayOptions)options;
-- (void)handleWebClientSentFeedback:(APBWebOperation *)client withSuccess:(BOOL)success;
 
 #pragma mark - Web Request Generators
-- (APBWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict;
+
+- (APBWebOperation*) generateFeedbackCallWithFeedbackData:(APBDatabaseFeedbackReport *)feedbackData;
 
 #pragma mark Stored Web Request Handling
 
@@ -55,6 +55,7 @@
 @interface AppBlade (FeedbackReporting)  <APBWebOperationDelegate, APBFeedbackDialogueDelegate>
 
 @property (nonatomic, retain) APBFeedbackReportingManager* feedbackManager;
+@property (nonatomic, retain) APBDataManager* dataManager;
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;//we want references to these private properties
 
 - (void)promptFeedbackDialogue;
@@ -64,6 +65,11 @@
 - (UIImage *) rotateImage:(UIImage *)img angle:(int)angle;
 
 
+@end
+
+@interface APBDataManager(FeedbackReporting)
+-(BOOL)deleteFeedbackWithId:(NSString *)feedbackId;
+-(APBDatabaseFeedbackReport *)oldestUnsentFeedbackReport;
 @end
 
 #endif
