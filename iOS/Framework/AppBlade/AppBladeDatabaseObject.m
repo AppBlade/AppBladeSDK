@@ -15,7 +15,7 @@
 
 
 @interface AppBladeDatabaseObject()
-@property (nonatomic, strong, readwrite, getter = getId) NSString *dbRowId; //we need to be able to set this
+//@property (nonatomic, strong, readwrite, getter = getId) NSString *dbRowId; //we need to be able to set this
 
 @end
 

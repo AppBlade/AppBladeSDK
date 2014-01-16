@@ -12,7 +12,7 @@
 //represents a single row in a table
 @interface AppBladeDatabaseObject : NSObject
     @property (nonatomic, strong) NSString *tableName; //the table this object was read from
-    @property (nonatomic, strong, readonly, getter = getId) NSString *dbRowId; //the id this row has in the table
+    @property (nonatomic, strong, getter = getId) NSString *dbRowId; //the id this row has in the table
                                                                                //dbRowId is linked to column "id"
     //snapshot datetime
     @property (nonatomic, strong) NSDate *createdAt;
@@ -46,4 +46,6 @@
     -(NSString *)formattedCreateSqlStringForTable: (NSString *)tableName;
     -(NSString *)formattedSelectSqlStringForTable: (NSString *)tableName;
     -(NSString *)formattedUpsertSqlStringForTable: (NSString *)tableName;
+    -(NSString *)formattedDeleteSqlStringForTable:(NSString *)tableName;
+
 @end
