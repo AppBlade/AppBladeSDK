@@ -9,6 +9,7 @@
 #import "AppBladeDatabaseColumn.h"
 
 //For the snapshot
+#import "AppBladeLogging.h"
 #import "AppBlade.h"
 #import "APBApplicationInfoManager.h"
 #import "APBDeviceInfoManager.h"
@@ -168,8 +169,16 @@
 //column reads (writes have the values embedded into the sql statement, so we shouldn't need to bind them.)
 -(NSString *)readStringInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    int actualIndex = [[self baseColumnNames] count] + [indexOffset integerValue];
-    return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, actualIndex)];
+    int actualIndex = ([[self baseColumnNames] count] - 1) + [indexOffset integerValue];
+    //confirm we have a column at that index
+    int totalColumns = sqlite3_column_count(statement);
+    if(totalColumns > actualIndex){
+        return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, actualIndex)];
+    }else
+    {
+        ABDebugLog_internal(@"Index out of bounds: %d", actualIndex);
+        return nil;
+    }
 }
 
 -(NSDate *)readDateInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
@@ -179,13 +188,13 @@
 
 -(NSTimeInterval)readTimeIntervalInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    int actualIndex = [[self baseColumnNames] count] + [indexOffset integerValue]; //adding NSUinteger to an NSInteger and then blindly assuming it's an int
+    int actualIndex = [[self baseColumnNames] count] - 1 + [indexOffset integerValue]; //adding NSUinteger to an NSInteger and then blindly assuming it's an int
     return sqlite3_column_double(statement, actualIndex);
 }
 
 -(NSData *)readDataInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    int actualIndex = [[self baseColumnNames] count] + [indexOffset integerValue];
+    int actualIndex = [[self baseColumnNames] count] - 1 + [indexOffset integerValue];
     return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, actualIndex) length:sqlite3_column_bytes(statement, indexOffset)];
 }
 
