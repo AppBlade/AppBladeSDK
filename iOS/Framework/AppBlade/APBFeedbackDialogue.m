@@ -147,11 +147,8 @@
 
 - (void)submitPressed:(UIButton*)sender{
     
-
     [self.delegate feedbackDidSubmitText:self.textView.text];
-    
     [self closeDialogue];
-    
 }
 
 - (void)closeDialogue

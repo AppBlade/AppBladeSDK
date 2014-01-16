@@ -51,7 +51,7 @@
 
 -(NSDictionary *)asDictionary {
     return self.storedParams;
-#pragma warning finish this
+#warning finish this
 }
 
 

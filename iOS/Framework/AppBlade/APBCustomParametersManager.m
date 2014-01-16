@@ -184,7 +184,7 @@
 
 -(NSError *)removeCustomParameterWithID:(NSString *)customParamId
 {
-#pragma warning incomplete
+#warning incomplete
     return nil;
 }
 

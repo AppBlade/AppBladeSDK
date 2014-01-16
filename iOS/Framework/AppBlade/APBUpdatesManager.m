@@ -55,7 +55,7 @@ NSString *updateURLFormat            = @"%@/api/3/updates";
 
 }
 
-#pragma AppBladeUpdatesManagerDelegate
+#pragma mark AppBladeUpdatesManagerDelegate
 
 -(void) appBlade:(AppBlade *)appBlade updateAvailable:(BOOL)update updateMessage:(NSString*)message updateURL:(NSString*)url
 {

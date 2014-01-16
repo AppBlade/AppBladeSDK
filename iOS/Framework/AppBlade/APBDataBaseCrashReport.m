@@ -36,7 +36,7 @@
 
 
 -(NSArray *)additionalColumnNames {
-#pragma overrides [super additionalColumnNames];
+//overrides [super additionalColumnNames];
 
     return @[ kDbCrashReportColumnNameStackTrace, kDbCrashReportColumnNameReportedAt,
 #ifndef SKIP_CUSTOM_PARAMS
@@ -47,7 +47,7 @@
 
 
 -(NSArray *)additionalColumnValues {
-#pragma overrides [super additionalColumnValues];
+//overrides [super additionalColumnValues];
 
     return @[[self sqlFormattedProperty: self.stackTrace], [self sqlFormattedProperty: self.crashReportedAt],
 #ifndef SKIP_CUSTOM_PARAMS

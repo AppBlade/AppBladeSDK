@@ -196,7 +196,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
 {
     NSString *screenshot = [feedbackData screenshotURL];
     NSString *note = [feedbackData text];
-    NSString *console = nil;
+//    NSString *console = nil;
     NSDictionary *paramsDict = [feedbackData getCustomParamSnapshot];
     APBWebOperation *client = [[APBWebOperation alloc] initWithDelegate:self.delegate];
     [client setApi: AppBladeWebClientAPI_Feedback];

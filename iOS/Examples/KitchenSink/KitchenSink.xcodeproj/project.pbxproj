@@ -701,6 +701,7 @@
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KitchenSink/KitchenSink-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				HEADER_SEARCH_PATHS = "../../Framework/**";
 				INFOPLIST_FILE = "KitchenSink/KitchenSink-Info.plist";
 				LIBRARY_SEARCH_PATHS = "";
@@ -717,6 +718,7 @@
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KitchenSink/KitchenSink-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				HEADER_SEARCH_PATHS = "../../Framework/**";
 				INFOPLIST_FILE = "KitchenSink/KitchenSink-Info.plist";
 				LIBRARY_SEARCH_PATHS = "";
