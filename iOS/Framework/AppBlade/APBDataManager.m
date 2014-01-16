@@ -1,4 +1,4 @@
-//
+ //
 //  APBDataManager.m
 //  AppBlade
 //
@@ -492,11 +492,18 @@
             {
                 errorCheck = [dataToFind readFromSQLiteStatement:statement];
                 //Match found (posssibly)
+                if(errorCheck == nil && dataToFind && [dataToFind getId]){
+                    ABDebugLog_internal(@"Match found with no errors");
+                }else{
+                    errorCheck = [APBDataManager dataBaseErrorWithMessage:@"row id not set"];
+                }
             } else {
                 //Match not found
                 errorCheck = [APBDataManager dataBaseErrorWithMessage:@"Match not found"];
             }
             sqlite3_finalize(statement);
+        }else{
+            errorCheck = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"error preparing statement %@ : %s", querySQL, sqlite3_errmsg(_db)]];
         }
         [self finishTransaction];
     }
