@@ -20,6 +20,7 @@
     -(NSDictionary *)getCustomParamSnapshot; //Returns custom params when the feature is enabled. False otherwise.
     -(void)setCustomParamSnapshot;  //sets custom param object from the current parameters.
     @property (nonatomic, strong) NSString *customParameterId; //must be implemented in the class
-
+#ifndef SKIP_CUSTOM_PARAMS
     -(APBDatabaseCustomParameter *)customParameterObj;
+#endif
 @end

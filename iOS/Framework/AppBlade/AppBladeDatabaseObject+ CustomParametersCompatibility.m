@@ -40,13 +40,6 @@
     //lookup custom parameter obj, this should occur rarely if ever.
     return [[[AppBlade sharedManager] customParamsManager] getCustomParamById:self.customParameterId];
 }
-
-
-
-
-
-
-
 #endif
 
 @end
