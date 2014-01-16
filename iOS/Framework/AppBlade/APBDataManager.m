@@ -15,7 +15,7 @@
 
 
 @interface APBDataManager()
-@property (nonatomic) sqlite3 *db;
+//@property (nonatomic) sqlite3 *db;
 @end
 
 /*!

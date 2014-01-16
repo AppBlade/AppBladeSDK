@@ -28,6 +28,8 @@ typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 @end
 
 @interface APBDataManager : NSObject
+@property (nonatomic) sqlite3 *db;
+
 -(NSString *)getDatabaseFilePath; //the location we store everything
 -(NSString *)getDocumentsSubFolderPath; //the sql file is stored somewhere in the database path
 
