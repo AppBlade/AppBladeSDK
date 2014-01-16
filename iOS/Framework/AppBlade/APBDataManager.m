@@ -449,17 +449,21 @@
     sqlite3_stmt    *statement;
     if ([self prepareTransaction] == SQLITE_OK)
     {
-        NSString *insertSQL = [dataObject formattedUpsertSqlStringForTable:tableName];
+        NSString *insertSQL = [dataObject formattedDeleteSqlStringForTable:tableName];
+        if(insertSQL == nil){
+            * error = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"SQL query string could not be formatted"]];
+        }else{
         const char *insert_stmt = [insertSQL UTF8String];
         if(sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL) == SQLITE_OK){
             if ([dataObject bindDataToPreparedStatement:statement] == nil && sqlite3_step(statement) == SQLITE_DONE){
                 * error = nil;
             } else {
-                * error = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: step %s", sqlite3_errmsg(_db)]];
+                * error = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during deleteData: step %s", sqlite3_errmsg(_db)]];
             }
             sqlite3_finalize(statement);
         }else {
-            * error = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during writeData: prepare %s", sqlite3_errmsg(_db)]];
+            * error = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Error during deleteData: prepare %s", sqlite3_errmsg(_db)]];
+        }
         }
         [self finishTransaction];
     }
