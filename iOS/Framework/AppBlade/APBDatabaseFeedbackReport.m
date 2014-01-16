@@ -53,9 +53,7 @@
         [self setScreenshotURL:[feedbackDictionary valueForKey:kAppBladeFeedbackKeyScreenshot]];
         [self setText:[feedbackDictionary valueForKey:kAppBladeFeedbackKeyNotes]];
         [self setReportedAt:[NSDate new]];
-#ifndef SKIP_CUSTOM_PARAMS
         [self setCustomParamSnapshot];
-#endif
     }
     return self;
 }
@@ -107,5 +105,43 @@
 #endif
     return nil;
 }
+
+#pragma mark - Custom Parameter methods
+
+-(NSDictionary *)getCustomParamSnapshot {
+#ifndef SKIP_CUSTOM_PARAMS
+    return [[[AppBlade sharedManager] customParamsManager] getCustomParams];
+#warning customParams incomplete
+    //[self.customParameterObj asDictionary];
+#else
+    return @{ };
+#endif
+}
+
+-(void)setCustomParamSnapshot {
+#ifndef SKIP_CUSTOM_PARAMS
+    if(self.customParameterId == nil){
+        NSError *error = nil;
+        APBDatabaseCustomParameter *newCustomParamDataObj = [[[AppBlade sharedManager] customParamsManager]  generateCustomParameterFromCurrentParamsWithError:&error];
+        self.customParameterId = [newCustomParamDataObj getId];
+    }//currently we only cover setting the custom parameter once.
+#endif
+    //if we don't have custom parameters enabled, this call does nothing
+}
+
+#ifndef SKIP_CUSTOM_PARAMS
+-(APBDatabaseCustomParameter *)customParameterObj{
+    //lookup custom parameter obj, this should occur rarely if ever.
+    if(self.customParameterId){
+    return [[[AppBlade sharedManager] customParamsManager] getCustomParamById:self.customParameterId];
+    }else{
+        NSError *errorCheck = nil;
+       APBDatabaseCustomParameter* customParam =[[[AppBlade sharedManager] customParamsManager] generateCustomParameterFromCurrentParamsWithError:&errorCheck];
+        self.customParameterId = [customParam getId];
+        return customParam;
+    }
+}
+#endif
+
 
 @end

@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 AppBlade Corporation. All rights reserved.
 //
 
-#import "AppBladeDatabaseObject.h"
 #import "APBDatabaseCustomParameter.h"
 
 #import "AppBladeDatabaseObject+CustomParametersCompatibility.h"
@@ -35,9 +34,13 @@ static NSInteger const kDbFeedbackReportColumnIndexOffsetCustomParamsRef = 4;
     @property (nonatomic, strong) NSDate   *reportedAt;     // time of report
     -(UIImage *)screenshot;     //helper method for loading the screenshot
 
+#pragma mark - Custom Parameter methods
+
+-(NSDictionary *)getCustomParamSnapshot; //Returns custom params when the feature is enabled. False otherwise.
+-(void)setCustomParamSnapshot;  //sets custom param object from the current parameters.
+@property (nonatomic, strong) NSString *customParameterId; //must be implemented in the class
 #ifndef SKIP_CUSTOM_PARAMS
-    @property (nonatomic, strong) NSString *customParameterId;
-    //@see AppBladeDatabaseObject+CustomParametersCompatibility.h for other variables
+-(APBDatabaseCustomParameter *)customParameterObj;
 #endif
 
 @end
