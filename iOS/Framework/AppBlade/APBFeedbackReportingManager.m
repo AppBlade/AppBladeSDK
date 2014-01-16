@@ -204,13 +204,17 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     return [self generateFeedbackWithScreenshot:[feedbackData screenshotURL] note:[feedbackData text] console:nil params:[feedbackData getCustomParamSnapshot]];
 }
 
-/* 
-  returns a generated web operation of the passed parameters.
-    will assume this is a brand new feedback and will create a row in the database at the same time
-    for existing rows in the db, use generateFeedbackCallWithFeedbackData:
+
+#pragma mark - Web Requests
+/*
+ we will only generate web requests for feedback reports that exist in the database
  */
-- (APBWebOperation*) generateFeedbackWithScreenshot:(NSString*)screenshot note:(NSString*)note console:(NSString*)console params:(NSDictionary*)paramsDict
+- (APBWebOperation*) generateFeedbackCallWithFeedbackData:(APBDatabaseFeedbackReport *)feedbackData
 {
+    NSString *screenshot = [feedbackData screenshotURL];
+    NSString *note = [feedbackData text];
+    NSString *console = nil;
+    NSDictionary *paramsDict = [feedbackData getCustomParamSnapshot];
     APBWebOperation *client = [[APBWebOperation alloc] initWithDelegate:self.delegate];
     [client setApi: AppBladeWebClientAPI_Feedback];
 
@@ -271,42 +275,14 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     NSDictionary *blockFeedbackDictionary = [[[NSDictionary alloc] initWithObjectsAndKeys:note, kAppBladeFeedbackKeyNotes, screenshot, kAppBladeFeedbackKeyScreenshot, nil] copy];
     [client setSuccessBlock:^(id data, NSError* error){
         ABDebugLog_internal(@"feedback Successful");
-        
-        NSDictionary* feedback = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyFeedback];
-        // Clean up
-        NSString* screenshotPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:[feedback objectForKey:kAppBladeFeedbackKeyScreenshot]];
-        [[NSFileManager defaultManager] removeItemAtPath:screenshotPath error:nil];
-        
-        NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-        NSMutableArray* backups = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-        
-        NSString* fileName = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackupId];
-        
-        NSString* filePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
-        ABDebugLog_internal(@"Removing supporting feedback files and the feedback file herself");
-        [self removeIntermediateFeedbackFiles:filePath];
-        
-        ABDebugLog_internal(@"Removing Successful feedback object from main feedback list");
-        [backups removeObject:fileName];
-        if (backups.count > 0) {
-            ABDebugLog_internal(@"writing pending feedback objects back to file");
-            [backups writeToFile:backupFilePath atomically:YES];
-        }
-        
-        ABDebugLog_internal(@"checking for more pending feedback");
-        if ([self hasPendingFeedbackReports]) {
-            ABDebugLog_internal(@"more pending feedback");
-            [[AppBlade sharedManager] handleBackloggedFeedback];
-        }
-        else
-        {
-            ABDebugLog_internal(@"no more pending feedback");
-        }
-
+        NSString* rowId = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackupId];
+        ABDebugLog_internal(@"Removing Successful feedback object from main feedback database");
+        [[[AppBlade sharedManager] dataManager] deleteFeedbackWithId:rowId];
+        [[AppBlade sharedManager] handleBackloggedFeedback];
     }];
     [client setFailBlock:^(id data, NSError* error){
         @synchronized (self){
-            //we failed to send, so store the data
+            //we failed to send, so make sure we stored the data
             ABErrorLog(@"ERROR sending feedback %@", error);
             NSString *feedbackRowId = [weakClient.userInfo objectForKey:kAppBladeFeedbackKeyBackupId];
             BOOL isInDatabase = [[[AppBlade sharedManager] getDataManager] dataExistsInTable:kDbFeedbackReportDatabaseMainTableName withId:feedbackRowId];
@@ -340,8 +316,6 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
             }
         }
     }];
-    
-
     
     return client;
 }
