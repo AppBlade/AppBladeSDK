@@ -98,7 +98,7 @@
         return nil;
     }
     
-    return [NSString stringWithFormat:@"DELETE * FROM %@ WHERE id='%@'",
+    return [NSString stringWithFormat:@"DELETE FROM %@ WHERE id='%@'",
             tableName,
             [self getId ] ];
 }
