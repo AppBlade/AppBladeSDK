@@ -37,6 +37,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
 @synthesize tapRecognizer;
 @synthesize feedbackWindow;
 
+#pragma mark Initialization and Setup
 
 - (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpDataManagerDelegate
 {
@@ -44,7 +45,6 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
         self.delegate = webOpDataManagerDelegate;
         self.dbMainTableName = kDbFeedbackReportDatabaseMainTableName;
         self.dbMainTableAdditionalColumns = [APBDatabaseFeedbackReport columnDeclarations];
-        
         [self createTablesWithDelegate: webOpDataManagerDelegate];
     }
     
@@ -99,43 +99,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     }
 }
 
--(APBDatabaseFeedbackReport *)storeFeedbackDictionary:(NSDictionary *)feebackDict error:(NSError * __autoreleasing *)error;
-{
-    //create a new row in the feedbacks table with the current dictionary
-    APBDatabaseFeedbackReport *newFeedback = [[APBDatabaseFeedbackReport alloc] initWithFeedbackDictionary:feebackDict];
-    if(newFeedback){
-        NSError *errorCheck = nil;
-        APBDatabaseFeedbackReport *storedObj = (APBDatabaseFeedbackReport *)[[self.delegate getDataManager] upsertData:newFeedback toTable:kDbFeedbackReportDatabaseMainTableName error:&errorCheck];
-        if(errorCheck){
-            *error = errorCheck;
-            return nil;
-        }else{
-            return storedObj;
-        }
-    }else {
-        * error = [APBDataManager dataBaseErrorWithMessage:@"feedback data object not initialized"];
-        return nil;
-    }
-}
-
--(APBDatabaseFeedbackReport *)storeFeedbackObject:(APBDatabaseFeedbackReport *)feedbackObj error:(NSError * __autoreleasing *)error {
-    if(error){
-        return nil;
-    }else{
-        NSError *errorCheck = nil;
-        APBDatabaseFeedbackReport *storedObj = (APBDatabaseFeedbackReport *)[[self.delegate getDataManager] upsertData:feedbackObj toTable:kDbFeedbackReportDatabaseMainTableName error:&errorCheck];
-        if(errorCheck){
-            return nil;
-        }else{
-            return storedObj;
-        }
-    }
-}
-
-
-
-
-#pragma mark Stored Crash Handling
+#pragma mark Options Logic
 
 
 - (void)allowFeedbackReportingForWindow:(UIWindow *)window withOptions:(AppBladeFeedbackSetupOptions)options
@@ -174,7 +138,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
         }
         else
         {
-            
+            [self.feedbackDictionary setObject:@"" forKey:kAppBladeFeedbackKeyScreenshot];
         }
         //other setup methods (like the reintroduction of the console log) will go here
         [delegateRef promptFeedbackDialogue];
@@ -183,25 +147,44 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     {
         ABDebugLog_internal(@"Feedback window already presenting, or a screenshot is trying to be captured");
         return;
-    }    
-}
-
-- (void)handleWebClientSentFeedback:(APBWebOperation *)client withSuccess:(BOOL)success
-{
-    if (success) {
-        ABDebugLog_internal(@"Feedback succeeded!");
-    }else{
-        ABDebugLog_internal(@"Feedback failed!");
     }
 }
 
 
 
+#pragma mark Data Storage
 
-#pragma mark - Web Request Generators
-- (APBWebOperation*) generateFeedbackCallWithFeedbackData:(APBDatabaseFeedbackReport *)feedbackData
+-(APBDatabaseFeedbackReport *)storeFeedbackDictionary:(NSDictionary *)feebackDict error:(NSError * __autoreleasing *)error;
 {
-    return [self generateFeedbackWithScreenshot:[feedbackData screenshotURL] note:[feedbackData text] console:nil params:[feedbackData getCustomParamSnapshot]];
+    //create a new row in the feedbacks table with the current dictionary
+    APBDatabaseFeedbackReport *newFeedback = [[APBDatabaseFeedbackReport alloc] initWithFeedbackDictionary:feebackDict];
+    if(newFeedback){
+        NSError *errorCheck = nil;
+        APBDatabaseFeedbackReport *storedObj = (APBDatabaseFeedbackReport *)[[self.delegate getDataManager] upsertData:newFeedback toTable:kDbFeedbackReportDatabaseMainTableName error:&errorCheck];
+        if(errorCheck){
+            *error = errorCheck;
+            return nil;
+        }else{
+            return storedObj;
+        }
+    }else {
+        * error = [APBDataManager dataBaseErrorWithMessage:@"feedback data object not initialized"];
+        return nil;
+    }
+}
+
+-(APBDatabaseFeedbackReport *)storeFeedbackObject:(APBDatabaseFeedbackReport *)feedbackObj error:(NSError * __autoreleasing *)error {
+    if(error){
+        return nil;
+    }else{
+        NSError *errorCheck = nil;
+        APBDatabaseFeedbackReport *storedObj = (APBDatabaseFeedbackReport *)[[self.delegate getDataManager] upsertData:feedbackObj toTable:kDbFeedbackReportDatabaseMainTableName error:&errorCheck];
+        if(errorCheck){
+            return nil;
+        }else{
+            return storedObj;
+        }
+    }
 }
 
 
@@ -327,6 +310,8 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
 {
     BOOL toRet = NO;
     @synchronized (self){
+        
+        
         NSString *feedbackBacklogFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
         if([[NSFileManager defaultManager] fileExistsAtPath:feedbackBacklogFilePath]){
             ABDebugLog_internal(@"found file at %@", feedbackBacklogFilePath);
@@ -369,43 +354,12 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
 - (void)handleBackloggedFeedback
 {
     ABDebugLog_internal(@"handleBackloggedFeedback");
-    NSString* backupFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeBacklogFileName];
-    NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:backupFilePath];
-    if (backupFiles.count > 0) {
-        NSString* fileName = [backupFiles objectAtIndex:0]; //get earliest unsent feedback
-        NSString* feedbackPath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:fileName];
-        
-        NSDictionary* feedback = [NSDictionary dictionaryWithContentsOfFile:feedbackPath];
-        if (feedback) {
-            ABDebugLog_internal(@"Feedback found at %@", feedbackPath);
-            ABDebugLog_internal(@"backlog Feedback dictionary %@", feedback);
-            NSString *screenshotFileName = [feedback objectForKey:kAppBladeFeedbackKeyScreenshot];
-            //validate that additional files exist
-            NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:screenshotFileName];
-            bool screenShotFileExists = [[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath];
-            if(screenShotFileExists){
-                APBWebOperation * client = [self generateFeedbackWithScreenshot:screenshotFileName note:[feedback objectForKey:kAppBladeFeedbackKeyNotes] console:nil params:[[AppBlade sharedManager] getCustomParams]];
-                client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:feedback, kAppBladeFeedbackKeyFeedback, fileName, kAppBladeFeedbackKeyBackupId, nil];
-                [[[AppBlade sharedManager] pendingRequests] addOperation:client];
-            }
-            else
-            {
-                //clean up files if one doesn't exist
-                [self removeIntermediateFeedbackFiles:feedbackPath];
-                ABDebugLog_internal(@"invalid feedback at %@, removing File and intermediate files", feedbackPath);
-                [backupFiles removeObject:fileName];
-                ABDebugLog_internal(@"writing valid pending feedback objects back to file");
-                [backupFiles writeToFile:backupFilePath atomically:YES];
-                
-            }
-        }
-        else
-        {
-            ABDebugLog_internal(@"No Feedback found at %@, invalid feedback, removing File", feedbackPath);
-            [backupFiles removeObject:fileName];
-            ABDebugLog_internal(@"writing valid pending feedback objects back to file");
-            [backupFiles writeToFile:backupFilePath atomically:YES];
-        }
+    APBDatabaseFeedbackReport* oldestUnsentFeedback = [[[AppBlade sharedManager] dataManager] oldestUnsentFeedbackReport]; //find all data in the feedback table, ordered by created_at
+    if (oldestUnsentFeedback) {
+        ABDebugLog_internal(@"Feedback found at %@", [oldestUnsentFeedback getId]);
+        APBWebOperation * client = [self generateFeedbackCallWithFeedbackData:oldestUnsentFeedback];
+        client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[oldestUnsentFeedback getId], kAppBladeFeedbackKeyBackupId, nil];
+        [[[AppBlade sharedManager] pendingRequests] addOperation:client];
     }
 }
 
@@ -414,6 +368,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
 #ifndef SKIP_FEEDBACK
 #pragma clang diagnostic ignored "-Wprotocol"
 @implementation AppBlade (FeedbackReporting)
+@dynamic dataManager;
 @dynamic feedbackManager;
 @dynamic pendingRequests;
 
@@ -495,6 +450,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     }
     //attempt to send what we can, even in the event of a db error.
     APBWebOperation * client = [self.feedbackManager generateFeedbackCallWithFeedbackData:feedbackObj];
+    client.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[feedbackObj getId], kAppBladeFeedbackKeyBackupId, nil];
     ABDebugLog_internal(@"Sending screenshot");
     [self.pendingRequests addOperation:client];
 #else
@@ -588,6 +544,48 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     UIGraphicsEndImageContext();
     return ret;
 }
+
+@end
+
+@implementation APBDataManager(FeedbackReporting)
+-(BOOL)deleteFeedbackWithId:(NSString *)feedbackId {
+    NSString *feedbackFilterParams = [NSString stringWithFormat:@"id = %@", feedbackId];
+    APBDatabaseFeedbackReport * toDelete = (APBDatabaseFeedbackReport *)[self findDataWithClass:[APBDatabaseFeedbackReport class] inTable:kDbFeedbackReportDatabaseMainTableName withParams:feedbackFilterParams];
+    NSError *errorCheck = nil;
+    if(toDelete == nil){
+        return true;
+    }
+    [self deleteData:toDelete fromTable:kDbFeedbackReportDatabaseMainTableName error:&errorCheck];
+    if(errorCheck){
+        ABErrorLog(@"error deleting data : %@", [errorCheck description]);
+        return false;
+    }else{
+        ABErrorLog(@"deletion returned no errors");
+        return true;
+    }
+}
+
+-(APBDatabaseFeedbackReport *)oldestUnsentFeedbackReport {
+    //get currently pending feedback requests
+    NSArray *feedbackRequestsInQueue = [[[[AppBlade sharedManager] pendingRequests] operations] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"api == %d", AppBladeWebClientAPI_Feedback ]];
+    __block NSMutableString *feedbackRequestIds = [NSMutableString stringWithString:@"("];
+    [feedbackRequestsInQueue enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         NSString *rowId = [[(APBWebOperation *)obj userInfo] objectForKey:kAppBladeFeedbackKeyBackupId];
+         if (rowId) {
+             [feedbackRequestIds appendFormat: idx == 0 ? @"%@" : @", %@", rowId];
+         }else{
+             ABErrorLog(@"No row id set in the web operation!");
+         }
+     }];
+    [feedbackRequestIds appendString:@")"];
+    //filter those requests from the database results, order by created_at
+    NSString *feedbackFilterParams = [NSString stringWithFormat:@"id NOT IN %@ ORDER BY %@", feedbackRequestIds, kDbFeedbackReportColumnNameReportedAt];
+    APBDatabaseFeedbackReport * toRet = (APBDatabaseFeedbackReport *)[self findDataWithClass:[APBDatabaseFeedbackReport class] inTable:kDbFeedbackReportDatabaseMainTableName withParams:feedbackFilterParams];
+    return  toRet;
+}
+
+
 
 @end
 
