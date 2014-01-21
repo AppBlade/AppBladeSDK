@@ -100,10 +100,7 @@
 {
     return @"id INTEGER PRIMARY KEY AUTOINCREMENT";
 }
-+(NSString *)defaultBuildIdColumnDefinition
-{
-    return @"build_uuid TEXT";
-}
+
 +(NSString *)snapshotColumnsDefinitions
 {
     return @"snapshot_created_at TEXT, snapshot_exec_id TEXT, snapshot_device_version TEXT";
@@ -325,7 +322,6 @@
         //prepare the query given the params
         NSMutableString *createTableQuery = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(", tableName];
         [createTableQuery appendString:[APBDataManager defaultIdColumnDefinition]];
-        [createTableQuery appendFormat:@", %@", [APBDataManager defaultBuildIdColumnDefinition]];
         [createTableQuery appendFormat:@", %@", [APBDataManager snapshotColumnsDefinitions]];
         ABDebugLog_internal(@"added internal id, exec, and snapshot columns");
         for(AppBladeDatabaseColumn* col in columnData){
