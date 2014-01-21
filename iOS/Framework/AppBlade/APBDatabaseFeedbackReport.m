@@ -110,7 +110,7 @@
 
 -(NSDictionary *)getCustomParamSnapshot {
 #ifndef SKIP_CUSTOM_PARAMS
-    return [self.customParameterObj asDictionary];
+    return [[self customParameterObj] asDictionary];
 #else
     return @{ };
 #endif

@@ -8,8 +8,8 @@
 
 #import "AppBladeDatabaseObject.h"
 
-static NSString* const kDbCustomParamColumnNameDictBlob = @"currentParams";
-static NSInteger const kDbCustomParamColumnIndexOffsetDictBlob = 1;
+static NSString* const kDbCustomParamColumnNameDictRaw = @"currentParams";
+static NSInteger const kDbCustomParamColumnIndexOffsetDictRaw = 1;
 static NSString* const kDbCustomParamColumnNameSnapshotDate = @"createdAt";
 static NSInteger const kDbCustomParamColumnIndexOffsetSnapshotDate = 2;
 

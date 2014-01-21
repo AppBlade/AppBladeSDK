@@ -147,11 +147,10 @@
 {
     NSError *errorCheck = nil;
     NSDictionary *paramsSnapshot = [self getCustomParams];
-    [[self.delegate getDataManager] insertNewCustomParams:paramsSnapshot error:&errorCheck];
-    
-    
-    * error = [APBDataManager dataBaseErrorWithMessage:@"incomplete implementation"];
-    return nil;
+    APBDatabaseCustomParameter* newCustomParamObj = [[self.delegate getDataManager] insertNewCustomParams:paramsSnapshot error:&errorCheck];
+    if(errorCheck)
+        * error = errorCheck;
+    return newCustomParamObj;
 }
 
 -(void)removeCustomParamById:(NSString *)paramId error:(NSError * __autoreleasing *) error
@@ -172,13 +171,21 @@
 
 -(APBDatabaseCustomParameter *)insertNewCustomParams:(NSDictionary *)paramsToStore error:(NSError * __autoreleasing *) error
 {
-    * error = [APBDataManager dataBaseErrorWithMessage:@"incomplete implementation"];
-    return nil;
+    NSError *errorCheck = nil;
+    APBDatabaseCustomParameter *newData = [[APBDatabaseCustomParameter alloc] initWithDictionary:paramsToStore];
+    APBDatabaseCustomParameter *generatedData = (APBDatabaseCustomParameter *)[self upsertData:newData
+                                                                                       toTable:kDbCustomParametersMainTableName
+                                                                                         error:&errorCheck];
+    if(errorCheck) {
+        ABErrorLog(@"error inserting custom params %@", [errorCheck description]);
+        return nil;
+    }
+    return generatedData;
 }
 
 -(APBDatabaseCustomParameter *)getCustomParameterWithID:(NSString *)customParamId
 {
-    NSString *paramQuery = [NSString stringWithFormat:@"ID = %@", customParamId];
+    NSString *paramQuery = [NSString stringWithFormat:@"id = %@", customParamId];
     return (APBDatabaseCustomParameter *)[self findDataWithClass:[APBDatabaseCustomParameter class] inTable:kDbCustomParametersMainTableName withParams:paramQuery];
 }
 
