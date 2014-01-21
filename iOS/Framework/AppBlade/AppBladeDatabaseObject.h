@@ -13,7 +13,8 @@
 @interface AppBladeDatabaseObject : NSObject
     @property (nonatomic, strong) NSString *tableName; //the table this object was read from
     @property (nonatomic, strong, getter = getId) NSString *dbRowId; //the id this row has in the table
-                                                                               //dbRowId is linked to column "id"
+                                                                               //rowid is linked to column "id"
+#pragma mark - Base Snapshot Info
     //snapshot datetime
     @property (nonatomic, strong) NSDate *createdAt;
     //snapshot data:
@@ -25,27 +26,34 @@
     @property (nonatomic, strong) NSString *activeToken;             //the token when this row was created
     -(void)takeFreshSnapshot; //loads all snapshot data from their relevant locations
 
+#pragma mark - Additional columns
     //the database object subclasses are expected to override these methods
     -(NSArray *)additionalColumnNames; //default implementation is an empty array
     -(NSArray *)additionalColumnValues; //default implementation is an empty array
 
+#pragma mark - Write methods
+-(NSString *)sqlFormattedProperty:(id)propertyValue; // this now depends on whether we read. write, or bind later.
+-(NSError *)bindDataToPreparedStatement:(sqlite3_stmt *)statement; //default implementation returns nil
+
+#pragma mark - Read methods
+    -(void)setIdFromDatabaseStatement:(NSInteger)rowId;
+
     //reads in and populates properties from the appropriate values in the sqlite statement
     -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement; //this method should 
     //helper methods for additional columns (subclasses shouldn't need to keep track of the offset)
+    -(NSData *)  readDataInAdditionalColumn:(NSNumber *)index   fromFromSQLiteStatement:(sqlite3_stmt *)statement;
     -(NSString *)readStringInAdditionalColumn:(NSNumber *)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
     -(NSDate *)  readDateInAdditionalColumn:(NSNumber *)index   fromFromSQLiteStatement:(sqlite3_stmt *)statement;
-    -(NSData *)  readDataInAdditionalColumn:(NSNumber *)index   fromFromSQLiteStatement:(sqlite3_stmt *)statement;
     -(NSTimeInterval)readTimeIntervalInAdditionalColumn:(NSNumber *)index fromFromSQLiteStatement:(sqlite3_stmt *)statement;
 
-    -(void)setIdFromDatabaseStatement:(NSInteger)rowId;
+#pragma mark - Delete methods
+    -(NSError *)cleanUpIntermediateData;
 
-    -(NSError *)bindDataToPreparedStatement:(sqlite3_stmt *)statement; //default implementation returns nil
-
-    -(NSString *)sqlFormattedProperty:(id)propertyValue; // this now depends on whether we read. write, or bind later.
-
-    -(NSString *)formattedCreateSqlStringForTable: (NSString *)tableName;
-    -(NSString *)formattedSelectSqlStringForTable: (NSString *)tableName;
-    -(NSString *)formattedUpsertSqlStringForTable: (NSString *)tableName;
+#pragma mark - Formatted sql statements
+    -(NSString *)formattedCreateSqlStringForTable:(NSString *)tableName;
+    -(NSString *)formattedSelectSqlStringForTable:(NSString *)tableName;
+    -(NSString *)formattedUpsertSqlStringForTable:(NSString *)tableName;
     -(NSString *)formattedDeleteSqlStringForTable:(NSString *)tableName;
+
 
 @end

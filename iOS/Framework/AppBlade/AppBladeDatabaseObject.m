@@ -21,106 +21,16 @@
 @end
 
 @implementation AppBladeDatabaseObject
+
+#pragma mark - Base Snapshot Info
+
 -(void)takeFreshSnapshot
 { //loads all snapshot data from their relevant locations
     self.createdAt = [NSDate new];
     self.executableIdentifier = [[AppBlade sharedManager] executableUUID];
     self.deviceVersionSanitized = [[AppBlade sharedManager] iosVersionSanitized];
-}
-
--(NSString *)sqlFormattedProperty:(id)propertyValue
-{
-    //case check for whatever is passed?
-    if(propertyValue == nil){
-        return @"NULL";
-    }
-    
-    if([propertyValue isKindOfClass:[NSString class]])
-    {
-        return [NSString stringWithFormat:@"\"%@\"", (NSString *)propertyValue];
-    }else if([propertyValue isKindOfClass:[NSDate class]]){
-        return [NSString stringWithFormat:@"%f", [(NSDate *)propertyValue timeIntervalSince1970] ];
-    }
-//    else if([propertyValue isKindOfClass:[NSDictionary class]]){
-//        NSMutableString *resultString = [NSMutableString string];
-//        for (NSString* key in [(NSDictionary *) propertyValue allKeys]){
-//            if ([resultString length]>0)
-//                [resultString appendString:@"&"];
-//            [resultString appendFormat:@"%@=%@", key, [(NSDictionary *) propertyValue objectForKey:key]];
-//        }
-//        return [NSString stringWithFormat:@"%@", resultString];
-//    }
-    else if([propertyValue isKindOfClass:[AppBladeDatabaseObject class]]){
-        return [(AppBladeDatabaseObject *)propertyValue getId];
-    }
-    else{
-        return @"NULL";
-    }
-}
-
-// we can't select a data object that hasn't yet been written to a table
--(NSString *)formattedSelectSqlStringForTable: (NSString *)tableName
-{
-    if([self getId] == nil){
-        return nil;
-    }
-    
-    return [NSString stringWithFormat:@"SELECT * FROM %@ WHERE id='%@'",
-            tableName,
-            [self getId ] ];
-}
-
-
--(NSString *)formattedCreateSqlStringForTable:(NSString *)tableName
-{
-    NSString *adjustedColumnNames = [self removeIdColumn:[self columnNames]];
-    NSString *adjustedColumnValues = [self removeIdColumn:[self columnValues]];
-    
-    return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
-            tableName, adjustedColumnNames, adjustedColumnValues];
-}
-
--(NSString *)formattedUpsertSqlStringForTable:(NSString *)tableName
-{
-    if([self getId] == nil){ //no id means the object isn't in a table yet
-        return [self formattedCreateSqlStringForTable:tableName];
-    }else{    
-        return [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (%@) VALUES (%@)",
-                tableName,
-                [self columnNames],
-                [self columnValues]];
-    }
-}
-
-//will not return valid string if the ID is not defined
--(NSString *)formattedDeleteSqlStringForTable:(NSString *)tableName
-{
-    if([self getId] == nil){
-        return nil;
-    }
-    
-    return [NSString stringWithFormat:@"DELETE FROM %@ WHERE id='%@'",
-            tableName,
-            [self getId ] ];
-}
-
--(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement
-{
-     NSString *dbRowIdCheck = [[NSString alloc] initWithUTF8String:
-                              (const char *) sqlite3_column_text(statement, 0)];
-    if(dbRowIdCheck == nil){
-        NSError *error = [[NSError alloc] initWithDomain:@"AppBladeDatabaseObject" code:0 userInfo:nil];
-        return error;
-    }
-    self.dbRowId = dbRowIdCheck;
-//read in the core values (TODO: only read them in when we need them)
-    self.createdAt = [NSDate dateWithTimeIntervalSince1970: sqlite3_column_double(statement, 1)];
-//    self.createdAt  = [NSDate date];
-    self.executableIdentifier = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
-//    self.executableIdentifier = [[AppBlade sharedManager] executableUUID];
-    self.deviceVersionSanitized = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
-//    self.deviceVersionSanitized = [[AppBlade sharedManager] iosVersionSanitized];
-    return nil;
+    self.deviceName  = [[UIDevice currentDevice] name];                  //device name when this row was created
+    self.activeToken = [[AppBlade sharedManager] appBladeDeviceSecret];  //the token when this row was created
 }
 
 //will always begin with @"id", followed by our snapshot columns
@@ -153,13 +63,58 @@
                   [self sqlFormattedProperty: self.executableIdentifier],
                   [self sqlFormattedProperty: self.deviceVersionSanitized]];
 }
+#pragma mark - Additional columns
 
 -(NSArray *)additionalColumnNames {  return @[ ]; }
 
 -(NSArray *)additionalColumnValues { return @[ ];  }
 
+#pragma mark - Write methods
+
+-(NSString *)sqlFormattedProperty:(id)propertyValue
+{
+    //case check for whatever is passed?
+    if(propertyValue == nil){
+        return @"NULL";
+    }
+    
+    if([propertyValue isKindOfClass:[NSString class]])
+    {
+        return [NSString stringWithFormat:@"\"%@\"", (NSString *)propertyValue];
+    }else if([propertyValue isKindOfClass:[NSDate class]]){
+        return [NSString stringWithFormat:@"%f", [(NSDate *)propertyValue timeIntervalSince1970] ];
+    }
+    else if([propertyValue isKindOfClass:[AppBladeDatabaseObject class]]){
+        return [(AppBladeDatabaseObject *)propertyValue getId];
+    }
+    else{
+        return @"NULL";
+    }
+}
+
 -(NSError *)bindDataToPreparedStatement:(sqlite3_stmt *)statement { return nil;  } //default implementation does nothing
 
+
+#pragma mark - Read methods
+
+-(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement
+{
+    NSString *dbRowIdCheck = [[NSString alloc] initWithUTF8String:
+                              (const char *) sqlite3_column_text(statement, 0)];
+    if(dbRowIdCheck == nil){
+        NSError *error = [[NSError alloc] initWithDomain:@"AppBladeDatabaseObject" code:0 userInfo:nil];
+        return error;
+    }
+    self.dbRowId = dbRowIdCheck;
+    //read in the core values (TODO: only read them in when we need them)
+    self.createdAt = [NSDate dateWithTimeIntervalSince1970: sqlite3_column_double(statement, 1)];
+    //    self.createdAt  = [NSDate date];
+    self.executableIdentifier = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+    //    self.executableIdentifier = [[AppBlade sharedManager] executableUUID];
+    self.deviceVersionSanitized = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+    //    self.deviceVersionSanitized = [[AppBlade sharedManager] iosVersionSanitized];
+    return nil;
+}
 
 -(void)setIdFromDatabaseStatement:(NSInteger)rowId
 {
@@ -167,6 +122,12 @@
 }
 
 //column reads (writes have the values embedded into the sql statement, so we shouldn't need to bind them.)
+-(NSData *)readDataInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+{
+    int actualIndex = [[self baseColumnNames] count] - 1 + [indexOffset integerValue];
+    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, actualIndex) length:sqlite3_column_bytes(statement, indexOffset)];
+}
+
 -(NSString *)readStringInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
     int actualIndex = ([[self baseColumnNames] count] - 1) + [indexOffset integerValue];
@@ -192,10 +153,58 @@
     return sqlite3_column_double(statement, actualIndex);
 }
 
--(NSData *)readDataInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+
+#pragma mark - Delete methods
+/* Current implementation does nothing. */
+-(NSError *)cleanUpIntermediateData {    return nil; }
+
+
+#pragma mark - Formatted sql statements
+// we can't select a data object that hasn't yet been written to a table
+-(NSString *)formattedSelectSqlStringForTable: (NSString *)tableName
 {
-    int actualIndex = [[self baseColumnNames] count] - 1 + [indexOffset integerValue];
-    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, actualIndex) length:sqlite3_column_bytes(statement, indexOffset)];
+    if([self getId] == nil){
+        return nil;
+    }
+    
+    return [NSString stringWithFormat:@"SELECT * FROM %@ WHERE id='%@'",
+            tableName,
+            [self getId ] ];
 }
+
+
+-(NSString *)formattedCreateSqlStringForTable:(NSString *)tableName
+{
+    NSString *adjustedColumnNames = [self removeIdColumn:[self columnNames]];
+    NSString *adjustedColumnValues = [self removeIdColumn:[self columnValues]];
+    
+    return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
+            tableName, adjustedColumnNames, adjustedColumnValues];
+}
+
+-(NSString *)formattedUpsertSqlStringForTable:(NSString *)tableName
+{
+    if([self getId] == nil){ //no id means the object isn't in a table yet
+        return [self formattedCreateSqlStringForTable:tableName];
+    }else{
+        return [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (%@) VALUES (%@)",
+                tableName,
+                [self columnNames],
+                [self columnValues]];
+    }
+}
+
+//will return nil if the getId is nil
+-(NSString *)formattedDeleteSqlStringForTable:(NSString *)tableName
+{
+    if([self getId] == nil){
+        return nil;
+    }
+    
+    return [NSString stringWithFormat:@"DELETE FROM %@ WHERE id='%@'",
+            tableName,
+            [self getId ] ];
+}
+
 
 @end
