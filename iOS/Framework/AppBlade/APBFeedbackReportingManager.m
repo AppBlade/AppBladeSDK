@@ -226,14 +226,14 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     NSData* screenshotData = [[client encodeBase64WithData:[NSData dataWithContentsOfFile:screenshotPath]] dataUsingEncoding:NSUTF8StringEncoding];
     [body appendData:screenshotData];
 
-    //get custom params as a blob if the column exists
-    if([NSPropertyListSerialization propertyList:paramsDict isValidForFormat:NSPropertyListXMLFormat_v1_0]){
+    //get custom params as a blob if the column exists and we can send it as json
+    if([NSJSONSerialization isValidJSONObject:paramsDict]){
         NSError* error = nil;
-        NSData *paramsData = [NSPropertyListSerialization dataWithPropertyList:paramsDict format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+        NSData *paramsData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&error];
         if(error == nil){
             [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",multipartBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"Content-Disposition: form-data; name=\"custom_params\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[@"Content-Type: text/xml\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Type: text/json\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:paramsData];
             ABDebugLog_internal(@"Parsed params! They were included.");
         }
