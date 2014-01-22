@@ -442,6 +442,11 @@
 
 -(void)deleteData:(AppBladeDatabaseObject*)dataObject fromTable:(NSString *)tableName error:(NSError *__autoreleasing *)error
 {
+    NSError *intermediateDataErrorCheck = [dataObject cleanUpIntermediateData];
+    if (intermediateDataErrorCheck) {
+        ABErrorLog(@"Error removing intermediate data : %@", [intermediateDataErrorCheck description]);
+        *error = intermediateDataErrorCheck;
+    }
     sqlite3_stmt    *statement;
     if ([self prepareTransaction] == SQLITE_OK)
     {

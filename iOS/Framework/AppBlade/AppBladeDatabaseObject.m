@@ -155,7 +155,7 @@
 
 
 #pragma mark - Delete methods
-/* Current implementation does nothing. */
+/*! Helper method to remove any external files (or other dependencies) right before the row is stricken from the database.  */
 -(NSError *)cleanUpIntermediateData {    return nil; }
 
 
