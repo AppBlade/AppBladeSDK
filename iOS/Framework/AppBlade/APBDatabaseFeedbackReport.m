@@ -106,6 +106,21 @@
     return nil;
 }
 
+
+-(NSError *)cleanUpIntermediateData
+{
+    NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:self.screenshotURL];
+    NSError *screenShotError = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:screenshotFilePath error:&screenShotError];
+    if(screenShotError){
+        //only filter for certain kinds of errors (e.g. "file not found" is not a critical error)
+    }
+    if([self removeCustomParamsSnapshot]) {
+
+    }
+    return  nil;
+}
+
 #pragma mark - Custom Parameter methods
 
 -(NSDictionary *)getCustomParamSnapshot {
@@ -125,6 +140,21 @@
     }//currently we only cover setting the custom parameter once per object.
 #endif
     //if we don't have custom parameters enabled, this call does nothing
+}
+
+-(NSError *)removeCustomParamsSnapshot
+{
+#ifndef SKIP_CUSTOM_PARAMS
+    if(self.customParameterId == nil){
+        NSError *errorCheck = nil;
+        [[[AppBlade sharedManager] customParamsManager] removeCustomParamById:self.customParameterId error:&errorCheck];
+        if(errorCheck != nil){
+            return errorCheck;
+        }
+    }//currently we only cover setting the custom parameter once per object.
+#endif
+    //if we don't have custom parameters enabled, stil try to remove whever data we are linked to
+    return nil;
 }
 
 #ifndef SKIP_CUSTOM_PARAMS
