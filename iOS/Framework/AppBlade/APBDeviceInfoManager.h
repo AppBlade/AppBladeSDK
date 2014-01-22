@@ -16,6 +16,12 @@
 @interface APBDeviceInfoManager : NSObject
 
 /*!
+ @return the user defined name of the current device (read only)
+*/
+-(NSString *)deviceName;
+
+
+/*!
  @return the alphanumeric build number of the operating system
  
  @discussion This method is not the same as [[UIDevice currentDevice] systemVersion], which woud return something human readable like 4.2.1 or 7.0.1
@@ -49,7 +55,10 @@
 
 @property (nonatomic, strong) APBDeviceInfoManager* deviceInfoManager;
 
-//helper getters for the inner functions
+/*!
+ @return the user defined name of the current device (read only)
+ */
+-(NSString*) userDefinedDeviceName;
 
 /*!
  @return the alphanumeric build number of the operating system

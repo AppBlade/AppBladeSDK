@@ -13,6 +13,11 @@
 
 @implementation APBDeviceInfoManager
 
+-(NSString *)deviceName
+{
+    return [[UIDevice currentDevice] name];
+}
+
 // From: http://stackoverflow.com/questions/4857195/how-to-get-programmatically-ioss-alphanumeric-version-string
 - (NSString *)osVersionBuild {
     if(_osVersionBuild == nil){
@@ -76,6 +81,12 @@
 @implementation AppBlade (DeviceInfo)
 
 @dynamic deviceInfoManager;
+
+-(NSString*) userDefinedDeviceName
+{
+    return self.deviceInfoManager.deviceName;
+}
+
 
 -(NSString*) osVersionBuild
 {
