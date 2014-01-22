@@ -155,13 +155,17 @@
 
 -(void)removeCustomParamById:(NSString *)paramId error:(NSError * __autoreleasing *) error
 {
-    * error = [APBDataManager dataBaseErrorWithMessage:@"incomplete implementation"];
+    NSError* errorCheck = [[self.delegate getDataManager] removeCustomParameterWithID:paramId];
+    if(errorCheck){
+        *error = errorCheck;
+    }
 }
 
 -(APBDatabaseCustomParameter *)getCustomParamById:(NSString *)paramId
 {
     return [[self.delegate getDataManager] getCustomParameterWithID:paramId ];
 }
+
 
 @end
 
@@ -191,7 +195,17 @@
 
 -(NSError *)removeCustomParameterWithID:(NSString *)customParamId
 {
-#warning incomplete
+    NSString *customParamObjFilterParams = [NSString stringWithFormat:@"id = %@", customParamId];
+    APBDatabaseCustomParameter * toDelete = (APBDatabaseCustomParameter *)[self findDataWithClass:[APBDatabaseCustomParameter class] inTable:kDbCustomParametersMainTableName withParams:customParamObjFilterParams];
+    NSError *errorCheck = nil;
+    if(toDelete == nil){
+        return [APBDataManager dataBaseErrorWithMessage:@"Custom Parameter no longer exists"];
+    }
+    [self deleteData:toDelete fromTable:kDbCustomParametersMainTableName error:&errorCheck];
+    if(errorCheck){
+        ABErrorLog(@"error deleting data : %@", [errorCheck description]);
+        return errorCheck;
+    }
     return nil;
 }
 

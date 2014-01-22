@@ -29,9 +29,7 @@ static NSString* const kDbCustomParametersMainTableName = @"customparams";
 @property (nonatomic, strong, readwrite) NSArray  *dbMainTableAdditionalColumns;
 
 +(NSString *)getDefaultForeignKeyDefinition:(NSString *)referencingColumn;
-
 -(APBDatabaseCustomParameter *)getCustomParamById:(NSString *)paramId;
-
 -(APBDatabaseCustomParameter *)generateCustomParameterFromCurrentParamsWithError:(NSError * __autoreleasing *) error;
 
 -(NSDictionary *)getCustomParams;
@@ -39,6 +37,9 @@ static NSString* const kDbCustomParametersMainTableName = @"customparams";
 -(void)setCustomParam:(id)newObject withValue:(NSString*)key;
 -(void)setCustomParam:(id)object forKey:(NSString*)key;
 -(void)clearAllCustomParams;
+
+
+-(void)removeCustomParamById:(NSString *)paramId error:(NSError * __autoreleasing *) error;
 
 @end
 
