@@ -155,6 +155,8 @@
 		318C22BF17CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
 		318C22C017CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
 		318C22C117CFC0E50007FD5E /* APBTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 318C22B917CFC0E50007FD5E /* APBTokenManager.m */; };
+		3196C8541897036600E6EBB3 /* NSData+Base64pre7.h in Headers */ = {isa = PBXBuildFile; fileRef = 3196C8521897036600E6EBB3 /* NSData+Base64pre7.h */; };
+		3196C8551897036600E6EBB3 /* NSData+Base64pre7.m in Sources */ = {isa = PBXBuildFile; fileRef = 3196C8531897036600E6EBB3 /* NSData+Base64pre7.m */; };
 		31A5655C17A93CF5000F9A24 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31AA325D1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */; };
 		31AA325E1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */; };
@@ -383,6 +385,8 @@
 		31873225179DE8C200E0D187 /* libAppBladeNoCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppBladeNoCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		318C22B817CFC0E50007FD5E /* APBTokenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBTokenManager.h; sourceTree = "<group>"; };
 		318C22B917CFC0E50007FD5E /* APBTokenManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBTokenManager.m; sourceTree = "<group>"; };
+		3196C8521897036600E6EBB3 /* NSData+Base64pre7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64pre7.h"; sourceTree = "<group>"; };
+		3196C8531897036600E6EBB3 /* NSData+Base64pre7.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64pre7.m"; sourceTree = "<group>"; };
 		31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestAppBladeKeys.plist; sourceTree = "<group>"; };
 		31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBladeDatabaseObject+CustomParametersCompatibility.h"; sourceTree = "<group>"; };
 		31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppBladeDatabaseObject+ CustomParametersCompatibility.m"; sourceTree = "<group>"; };
@@ -617,6 +621,8 @@
 				311A22A91795D121007BF879 /* AppBladeSimpleKeychain */,
 				3130640C1794A380006DF03A /* Hashing */,
 				313060821794A2A3006DF03A /* AppBlade-Prefix.pch */,
+				3196C8521897036600E6EBB3 /* NSData+Base64pre7.h */,
+				3196C8531897036600E6EBB3 /* NSData+Base64pre7.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -936,6 +942,7 @@
 				31AA325D1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */,
 				311A22B61795D26E007BF879 /* APBAuthenticationManager.h in Headers */,
 				311A22BC1795D313007BF879 /* APBCustomParametersManager.h in Headers */,
+				3196C8541897036600E6EBB3 /* NSData+Base64pre7.h in Headers */,
 				31E36B391856C8A200A32D1A /* APBDatabaseFeedbackReport.h in Headers */,
 				311A22C21796072C007BF879 /* AppBladeSharedConstants.h in Headers */,
 				311A22CA1796DE3B007BF879 /* APBBasicFeatureManager.h in Headers */,
@@ -1249,6 +1256,7 @@
 				313062521794A357006DF03A /* PLCrashFrameWalker_arm.c in Sources */,
 				313062551794A357006DF03A /* PLCrashFrameWalker_i386.c in Sources */,
 				313062581794A357006DF03A /* PLCrashFrameWalker_ppc.c in Sources */,
+				3196C8551897036600E6EBB3 /* NSData+Base64pre7.m in Sources */,
 				3130625B1794A357006DF03A /* PLCrashFrameWalker_x86_64.c in Sources */,
 				313062611794A357006DF03A /* PLCrashLogWriter.m in Sources */,
 				313062641794A357006DF03A /* PLCrashLogWriterEncoding.c in Sources */,
