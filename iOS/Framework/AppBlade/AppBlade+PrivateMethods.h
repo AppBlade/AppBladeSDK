@@ -142,8 +142,6 @@
 -(APBDataManager *)getDataManager;
 
 
-
-
 /*!
  @brief An internal enum that keeps track of each feature that was called.
  @discussion Used internally by our refresh timer. The relevant bit is set from the master method call. 
@@ -160,6 +158,9 @@ typedef NS_OPTIONS(NSUInteger, AppBladeEnabledFeaturesInternalEnum) {
     AppBladeFeaturesSessionTrackingEnabled                 = 1 <<  5,  //Session Tracking was used previously during app lifetime
     AppBladeFeaturesCustomParametersEnabled                = 1 <<  6 //Custom parameters were initialized
 };
+
+-(AppBladeEnabledFeaturesInternalEnum) initializedFeatures;
+
 
 @end
 

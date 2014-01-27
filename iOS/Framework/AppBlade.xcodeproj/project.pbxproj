@@ -113,6 +113,7 @@
 		3134652D17A86A9C009DDC86 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3134652C17A86A9C009DDC86 /* CoreGraphics.framework */; };
 		3134653117A86D9A009DDC86 /* APBSimpleKeychainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3134653017A86D9A009DDC86 /* APBSimpleKeychainTests.m */; };
 		3134653417A86DC4009DDC86 /* APBWebOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3134653317A86DC4009DDC86 /* APBWebOperationTests.m */; };
+		313711A318962BB0001BA25F /* APBCustomParametersTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 313711A218962BB0001BA25F /* APBCustomParametersTests.m */; };
 		31562C4D17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */; };
 		31562C4E17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */; };
 		31562C4F17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */; };
@@ -370,6 +371,8 @@
 		3134653017A86D9A009DDC86 /* APBSimpleKeychainTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APBSimpleKeychainTests.m; path = AppBladeTests/APBSimpleKeychainTests.m; sourceTree = SOURCE_ROOT; };
 		3134653217A86DC4009DDC86 /* APBWebOperationTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = APBWebOperationTests.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		3134653317A86DC4009DDC86 /* APBWebOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = APBWebOperationTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		313711A118962BB0001BA25F /* APBCustomParametersTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APBCustomParametersTests.h; path = AppBladeTests/APBCustomParametersTests.h; sourceTree = SOURCE_ROOT; };
+		313711A218962BB0001BA25F /* APBCustomParametersTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APBCustomParametersTests.m; path = AppBladeTests/APBCustomParametersTests.m; sourceTree = SOURCE_ROOT; };
 		31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "APBWebOperation+PrivateMethods.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		316C245B17DFABF800F8196F /* AppBladeTestConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeTestConstants.h; sourceTree = "<group>"; };
 		3179280E17E39AD500F73BB2 /* NSDate+MockData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MockData.h"; sourceTree = "<group>"; };
@@ -782,6 +785,8 @@
 		3134653817A86E33009DDC86 /* Custom Parameters Tests */ = {
 			isa = PBXGroup;
 			children = (
+				313711A118962BB0001BA25F /* APBCustomParametersTests.h */,
+				313711A218962BB0001BA25F /* APBCustomParametersTests.m */,
 			);
 			name = "Custom Parameters Tests";
 			sourceTree = "<group>";
@@ -1284,6 +1289,7 @@
 				3134457017DFC27500E5AF0B /* APBDeviceInfoManagerTest.m in Sources */,
 				3134457317DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m in Sources */,
 				31BB3C7417E357E2007B8B28 /* APBAuthenticationManagerTests.m in Sources */,
+				313711A318962BB0001BA25F /* APBCustomParametersTests.m in Sources */,
 				3179281017E39AD500F73BB2 /* NSDate+MockData.m in Sources */,
 				31D924EF184A97CA00012197 /* APBDataManager.m in Sources */,
 				3179281717E3A3E900F73BB2 /* NSObject+MethodSwizzling.m in Sources */,

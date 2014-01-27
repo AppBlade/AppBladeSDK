@@ -37,6 +37,7 @@
 		3133221D17E2422D008C835C /* DeviceFeatureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3133221B17E2422D008C835C /* DeviceFeatureViewController.xib */; };
 		3133222317E252F8008C835C /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3133222117E252F7008C835C /* RootViewController.m */; };
 		3133222417E252F9008C835C /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3133222217E252F8008C835C /* RootViewController.xib */; };
+		313711AC18963240001BA25F /* APBCustomParametersAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 313711AB18963240001BA25F /* APBCustomParametersAppTests.m */; };
 		314495E2183FFEFC00B2FC04 /* APBStatusBarUnderview.m in Sources */ = {isa = PBXBuildFile; fileRef = 314495E1183FFEFC00B2FC04 /* APBStatusBarUnderview.m */; };
 		3148A16917984505000332D4 /* appblade_logo_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16717984505000332D4 /* appblade_logo_red@2x.png */; };
 		3148A16A17984505000332D4 /* appblade_status_bar_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3148A16817984505000332D4 /* appblade_status_bar_icon.png */; };
@@ -153,6 +154,8 @@
 		3133222017E252F7008C835C /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		3133222117E252F7008C835C /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		3133222217E252F8008C835C /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		313711AA18963240001BA25F /* APBCustomParametersAppTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBCustomParametersAppTests.h; sourceTree = "<group>"; };
+		313711AB18963240001BA25F /* APBCustomParametersAppTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBCustomParametersAppTests.m; sourceTree = "<group>"; };
 		314495E0183FFEFC00B2FC04 /* APBStatusBarUnderview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBStatusBarUnderview.h; sourceTree = "<group>"; };
 		314495E1183FFEFC00B2FC04 /* APBStatusBarUnderview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBStatusBarUnderview.m; sourceTree = "<group>"; };
 		3148A16717984505000332D4 /* appblade_logo_red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appblade_logo_red@2x.png"; sourceTree = "<group>"; };
@@ -279,6 +282,7 @@
 		311A21DB1794DC1B007BF879 /* KitchenSinkTests */ = {
 			isa = PBXGroup;
 			children = (
+				313711A41896321C001BA25F /* Feature Tests */,
 				31BB3C6617E3450F007B8B28 /* APBDeviceInfoManagerTest.m */,
 				31BB3C6D17E345C9007B8B28 /* APBApplicationInfoManagerTest.m */,
 				311A21E11794DC1B007BF879 /* KitchenSinkTests.h */,
@@ -345,6 +349,15 @@
 			children = (
 			);
 			name = "Device Management Features";
+			sourceTree = "<group>";
+		};
+		313711A41896321C001BA25F /* Feature Tests */ = {
+			isa = PBXGroup;
+			children = (
+				313711AA18963240001BA25F /* APBCustomParametersAppTests.h */,
+				313711AB18963240001BA25F /* APBCustomParametersAppTests.m */,
+			);
+			name = "Feature Tests";
 			sourceTree = "<group>";
 		};
 		3148A16117983D52000332D4 /* Resources */ = {
@@ -575,6 +588,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				313711AC18963240001BA25F /* APBCustomParametersAppTests.m in Sources */,
 				311A21E31794DC1B007BF879 /* KitchenSinkTests.m in Sources */,
 				31D5360817D750350011B9A1 /* CrashReportingViewController.m in Sources */,
 				31D5360F17D750530011B9A1 /* CustomParametersViewController.m in Sources */,

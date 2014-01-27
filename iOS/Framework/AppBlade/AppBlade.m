@@ -168,6 +168,7 @@ static AppBlade *s_sharedManager = nil;
         self.delegate = self;
         //first time singleton is being called, so nothing is availible yet
         self.enabledFeaturesForRefresh = AppBladeFeaturesNone;
+        self.initializedFeatures = AppBladeFeaturesNone;
         //init the default values for the global options
         self.webReportingGlobalOptions = AppBladeWebReportingDefault;
         self.webReportingTimeout = 0; //not respected by default
@@ -202,6 +203,12 @@ static AppBlade *s_sharedManager = nil;
         self.sessionTrackingManager = [[APBSessionTrackingManager alloc] initWithDelegate:self];
         self.initializedFeatures = self.initializedFeatures | AppBladeFeaturesSessionTrackingEnabled;
 #endif
+        //check to see if any features changed availability since the last app start
+        
+        //resolve any problems caused by difference in feature availability
+        
+        //store new initialized features
+        
     }
     return self;
 }
