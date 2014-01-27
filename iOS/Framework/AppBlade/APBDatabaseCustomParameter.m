@@ -57,13 +57,13 @@
     NSError *error = nil;
     BOOL paramCheck = [NSJSONSerialization isValidJSONObject:self.storedParams];
     NSData *dataFromDictionary = (NSData *)[NSJSONSerialization dataWithJSONObject:self.storedParams options:0 error:&error]; //create NSData from JSONSerialization
-    NSString *stringFromData = [dataFromDictionary base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength]; //stringify the NSData
+    NSString *stringFromData = [dataFromDictionary base64EncodedString]; //stringify the NSData
     return stringFromData; //return stringified NSData
 }
 
 -(void)parseStringFromStorage:(NSString *)stringifiedParams {
     NSError *error = nil;
-    NSData *dataFromString = [[NSData alloc] initWithBase64EncodedString:stringifiedParams options:NSDataBase64DecodingIgnoreUnknownCharacters]; //Decode the stringified NSData back into NSData
+    NSData *dataFromString = [NSData dataFromBase64String:stringifiedParams]; //Decode the stringified NSData back into NSData
     NSDictionary *dictFromString = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:dataFromString options:NSJSONReadingMutableContainers error:&error];  //JSONSerialize the NSData back into an NSDictionary
     self.storedParams = dictFromString;
 }

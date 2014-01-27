@@ -7,6 +7,7 @@
 //
 
 #import "AppBladeDatabaseObject.h"
+#import "NSData+Base64pre7.h"
 
 static NSString* const kDbCustomParamColumnNameDictRaw = @"currentParams";
 static NSInteger const kDbCustomParamColumnIndexOffsetDictRaw = 1;
