@@ -136,7 +136,12 @@
 
 -(NSDictionary *)getCustomParamSnapshot {
 #ifndef SKIP_CUSTOM_PARAMS
-    return [[self customParameterObj] asDictionary];
+   APBDatabaseCustomParameter *paramObj = [self customParameterObj];
+    if (paramObj == nil) {  //custom param not found and could not be created
+        return [paramObj asDictionary];
+    }else{
+        return @{ };
+    }
 #else
     return @{ };
 #endif
@@ -164,7 +169,7 @@
         }
     }//currently we only cover setting the custom parameter once per object.
 #endif
-    //if we don't have custom parameters enabled, stil try to remove whever data we are linked to
+    //even if we don't have custom parameters enabled, still try to remove whatever data we are linked to
     return nil;
 }
 
@@ -176,7 +181,11 @@
     }else{
         NSError *errorCheck = nil;
        APBDatabaseCustomParameter* customParam =[[[AppBlade sharedManager] customParamsManager] generateCustomParameterFromCurrentParamsWithError:&errorCheck];
-        self.customParameterId = [customParam getId];
+        if(customParam){
+            self.customParameterId = [customParam getId];
+        }else{
+            ABErrorLog(@"Custom parameter snapshot could not be created.");
+        }
         return customParam;
     }
 }
