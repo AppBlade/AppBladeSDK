@@ -109,16 +109,27 @@
 
 -(NSError *)cleanUpIntermediateData
 {
-    NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:self.screenshotURL];
-    NSError *screenShotError = nil;
-    [[NSFileManager defaultManager] removeItemAtPath:screenshotFilePath error:&screenShotError];
-    if(screenShotError){
-        //only filter for certain kinds of errors (e.g. "file not found" is not a critical error)
+    NSError *cleanupError = nil;
+    if(self.screenshotURL){
+        NSString *screenshotFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:self.screenshotURL];
+        NSError *screenShotError = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:screenshotFilePath error:&screenShotError];
+        if(screenShotError){
+            ABErrorLog(@"error removing screenshot: %@", [screenShotError debugDescription]);
+            if([[NSFileManager defaultManager] fileExistsAtPath:screenshotFilePath]){
+               cleanupError = cleanupError ? cleanupError : [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"Screenshot file at %@ could not be removed!", screenshotFilePath]];
+            }
+        }
     }
-    if([self removeCustomParamsSnapshot]) {
-
+    NSError *customError = [self removeCustomParamsSnapshot];
+    if(customError) {
+        ABErrorLog(@"error removing custom parameter in database: %@", [customError debugDescription]);
+        //error removing custom params snapshot
+        if(![[self getCustomParamSnapshot]  isEqual: @{ }]){
+            cleanupError = cleanupError ? cleanupError : [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"custom parameter snapshot could not be removed!"]];
+        }
     }
-    return  nil;
+    return  cleanupError;
 }
 
 #pragma mark - Custom Parameter methods
