@@ -80,7 +80,7 @@
 
 -(NSString *)getDocumentsSubFolderPath
 {
-    return [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/AppBlade"];
+    return [NSHomeDirectory() stringByAppendingPathComponent:@"tmp/AppBlade"];
 }
 
 -(NSString *)getDatabaseFilePath
