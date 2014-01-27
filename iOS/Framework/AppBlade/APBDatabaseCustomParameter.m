@@ -55,7 +55,8 @@
 
 -(NSString *)paramsAsString {
     NSError *error = nil;
-    NSData *dataFromDictionary = [NSJSONSerialization dataWithJSONObject:self.storedParams options:0 error:&error]; //create NSData from JSONSerialization
+    BOOL paramCheck = [NSJSONSerialization isValidJSONObject:self.storedParams];
+    NSData *dataFromDictionary = (NSData *)[NSJSONSerialization dataWithJSONObject:self.storedParams options:0 error:&error]; //create NSData from JSONSerialization
     NSString *stringFromData = [dataFromDictionary base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength]; //stringify the NSData
     return stringFromData; //return stringified NSData
 }

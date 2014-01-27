@@ -84,6 +84,7 @@
     }    
 }
 
+#warning Deprecation imminent
 -(void)setCustomParam:(id)newObject withValue:(NSString*)key
 {
     NSDictionary* currentFields = [self getCustomParams];
