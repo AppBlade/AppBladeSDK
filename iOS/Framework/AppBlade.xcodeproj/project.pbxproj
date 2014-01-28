@@ -468,6 +468,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		310D1EC918983EF7003B0532 /* Base64Encoding */ = {
+			isa = PBXGroup;
+			children = (
+				310D1EBA1898341B003B0532 /* APBBase64Encoder.h */,
+				310D1EBB1898341B003B0532 /* APBBase64Encoder.m */,
+			);
+			name = Base64Encoding;
+			sourceTree = "<group>";
+		};
 		311A228F1794E58E007BF879 /* Features */ = {
 			isa = PBXGroup;
 			children = (
@@ -623,9 +632,8 @@
 				311A22AA1795D12F007BF879 /* AppBladeWebOperation */,
 				311A22A91795D121007BF879 /* AppBladeSimpleKeychain */,
 				3130640C1794A380006DF03A /* Hashing */,
+				310D1EC918983EF7003B0532 /* Base64Encoding */,
 				313060821794A2A3006DF03A /* AppBlade-Prefix.pch */,
-				310D1EBA1898341B003B0532 /* APBBase64Encoder.h */,
-				310D1EBB1898341B003B0532 /* APBBase64Encoder.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
