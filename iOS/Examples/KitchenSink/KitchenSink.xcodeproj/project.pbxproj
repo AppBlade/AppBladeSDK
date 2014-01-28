@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		310D1ECA189842F3003B0532 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D92509185098B300012197 /* libsqlite3.dylib */; };
 		311A21AF1794DC1B007BF879 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21AE1794DC1B007BF879 /* UIKit.framework */; };
 		311A21B11794DC1B007BF879 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21B01794DC1B007BF879 /* Foundation.framework */; };
 		311A21B31794DC1B007BF879 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21B21794DC1B007BF879 /* CoreGraphics.framework */; };
@@ -57,7 +58,6 @@
 		31D5360F17D750530011B9A1 /* CustomParametersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D5360C17D750530011B9A1 /* CustomParametersViewController.m */; };
 		31D5361017D750530011B9A1 /* CustomParametersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D5360D17D750530011B9A1 /* CustomParametersViewController.xib */; };
 		31D5361117D750530011B9A1 /* CustomParametersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D5360D17D750530011B9A1 /* CustomParametersViewController.xib */; };
-		31D92510185098E800012197 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D92509185098B300012197 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -182,7 +182,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31D92510185098E800012197 /* libsqlite3.dylib in Frameworks */,
+				310D1ECA189842F3003B0532 /* libsqlite3.dylib in Frameworks */,
 				311A22A417959E2F007BF879 /* libAppBlade.a in Frameworks */,
 				311A22A317959E2C007BF879 /* Security.framework in Frameworks */,
 				311A21AF1794DC1B007BF879 /* UIKit.framework in Frameworks */,
