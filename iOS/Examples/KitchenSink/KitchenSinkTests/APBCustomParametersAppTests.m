@@ -92,7 +92,35 @@
 
 -(void) test05CustomParameterSnapshotsStoredAndRemoved
 {
-    
+    //any parameters
+    NSString *storeTestString   = @"testValueString";
+    NSDictionary *storeTestDict = @{@"testDictValue":@"testDictKey"};
+    NSNumber *storeTestNumber   = @1;
+    [[AppBlade sharedManager] setCustomParam:storeTestString forKey:@"stringKeyTest"];
+    [[AppBlade sharedManager] setCustomParam:storeTestDict forKey:@"dictionaryKeyTest"];
+    [[AppBlade sharedManager] setCustomParam:storeTestNumber forKey:@"numberKeyTest"];
+
+    NSError *errorTest1 = nil;
+    APBDatabaseCustomParameter *customParam1 = [[[AppBlade sharedManager] customParamsManager] generateCustomParameterFromCurrentParamsWithError:&errorTest1];
+    STAssertNil(errorTest1, @"Storing Custom Params snapshot returned error: %@", [errorTest1 debugDescription]);
+    NSLog(@"%@", [errorTest1 debugDescription]);
+    STAssertNotNil(customParam1, @"Custom parameters should have been generated");
+    //storage test
+    STAssertEqualObjects([customParam1 asDictionary], [[AppBlade sharedManager] getCustomParams], @"all values should be stored");
+
+    //data retrieval
+    APBDatabaseCustomParameter *customParam1Compare = [[[AppBlade sharedManager] customParamsManager] getCustomParamById:[customParam1 getId]];
+    STAssertEqualObjects([customParam1 asDictionary], [customParam1Compare asDictionary], @"stored values should be equal to the original values");
+
+    //data removal
+    NSError *errorTest2 = nil;
+    [[[AppBlade sharedManager] customParamsManager] removeCustomParamById:[customParam1 getId] error:&errorTest2];
+    STAssertNil(errorTest1, @"removing Custom Params snapshot returned error: %@", [errorTest1 debugDescription]);
+
+    //data should not exist
+    APBDatabaseCustomParameter *customParam1Get = [[[AppBlade sharedManager] customParamsManager] getCustomParamById:[customParam1 getId]];
+    STAssertNil(customParam1Get, @"Custom Params snapshot should be removed");
+
 }
 
 @end
