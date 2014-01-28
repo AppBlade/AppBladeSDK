@@ -1,26 +1,12 @@
 //
-//  Base64pre7.m
+//  APBBase64Encoder.m
 //  AppBlade
 //
-//  Blatantly copied by AndrewTremblay on 1/27/14.
+//  Created by AndrewTremblay on 1/28/14.
 //  Copyright (c) 2014 AppBlade Corporation. All rights reserved.
 //
-//
-//  NSData+Base64.m
-//  base64
-//
-//  Created by Matt Gallagher on 2009/06/03.
-//  Copyright 2009 Matt Gallagher. All rights reserved.
-//
-//  Permission is given to use this source code file, free of charge, in any
-//  project, commercial or otherwise, entirely at your risk, with the condition
-//  that any redistribution (in part or whole) of source code must retain
-//  this copyright and permission notice. Attribution in compiled projects is
-//  appreciated but not required.
-//
 
-#import "NSData+Base64pre7.h"
-
+#import "APBBase64Encoder.h"
 
 //
 // Mapping from 6 bit pattern to ASCII character.
@@ -256,8 +242,9 @@ char *NewBase64Encode(
 	return outputBuffer;
 }
 
-#pragma mark -
-@implementation NSData(Base64pre7)
+
+@implementation APBBase64Encoder
+
 
 //
 // dataFromBase64String:
@@ -289,16 +276,16 @@ char *NewBase64Encode(
 // returns an autoreleased NSString being the base 64 representation of the
 //	receiver.
 //
-- (NSString *)base64EncodedString
++ (NSString *)base64EncodedStringFromData:(NSData *)aData;
 {
 	size_t outputLength;
 	char *outputBuffer =
-    NewBase64Encode([self bytes], [self length], true, &outputLength);
-	
-	NSString *result =
+    NewBase64Encode([aData bytes], [aData length], true, &outputLength);
+    NSString *result =
     [[NSString alloc] initWithBytes:outputBuffer length:outputLength encoding:NSASCIIStringEncoding];
 	free(outputBuffer);
 	return result;
 }
+
 
 @end

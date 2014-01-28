@@ -9,6 +9,7 @@
 #import "APBDatabaseCustomParameter.h"
 #import "AppBladeDatabaseColumn.h"
 #import "APBDataManager.h"
+#import "APBBase64Encoder.h"
 
 @implementation APBDatabaseCustomParameter
     -(id)initWithDictionary:(NSDictionary *)dictionary{
@@ -56,14 +57,14 @@
 -(NSString *)paramsAsString {
     NSError *error = nil;
     BOOL paramCheck = [NSJSONSerialization isValidJSONObject:self.storedParams];
-    NSData *dataFromDictionary = (NSData *)[NSJSONSerialization dataWithJSONObject:self.storedParams options:0 error:&error]; //create NSData from JSONSerialization
-    NSString *stringFromData = [dataFromDictionary base64EncodedString]; //stringify the NSData
+    NSData *dataFromDictionary = [NSJSONSerialization dataWithJSONObject:self.storedParams options:0 error:&error]; //create NSData from JSONSerialization
+    NSString *stringFromData = [APBBase64Encoder base64EncodedStringFromData:dataFromDictionary];
     return stringFromData; //return stringified NSData
 }
 
 -(void)parseStringFromStorage:(NSString *)stringifiedParams {
     NSError *error = nil;
-    NSData *dataFromString = [NSData dataFromBase64String:stringifiedParams]; //Decode the stringified NSData back into NSData
+    NSData *dataFromString = [APBBase64Encoder dataFromBase64String:stringifiedParams]; //Decode the stringified NSData back into NSData
     NSDictionary *dictFromString = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:dataFromString options:NSJSONReadingMutableContainers error:&error];  //JSONSerialize the NSData back into an NSDictionary
     self.storedParams = dictFromString;
 }
