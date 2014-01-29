@@ -7,6 +7,7 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
+
 #import "AppBlade.h"
 #import "APBCustomParametersManager.h"
 #import "AppBlade+PrivateMethods.h"

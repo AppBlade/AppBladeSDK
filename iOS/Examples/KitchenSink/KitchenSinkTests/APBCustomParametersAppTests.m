@@ -9,6 +9,23 @@
 #import "APBCustomParametersAppTests.h"
 
 @implementation APBCustomParametersAppTests
+- (void)setUp
+{
+    [super setUp];
+    // Set-up code here.
+    [[AppBlade sharedManager] clearAppBladeKeychain]; //start with nothing every time (logic for this stuff is handled in the SDK test)
+    [[AppBlade sharedManager] clearCacheDirectory];
+    [[AppBlade sharedManager] setDisabled:false]; //also make sure we start enabled
+}
+
+- (void)tearDown
+{
+    // Tear-down code here.
+    [[AppBlade sharedManager] clearAllCustomParams]; //clear any parameters we used during the test
+    
+    [super tearDown];
+}
+
 -(void)test01CustomParametersBehaviorInitialized
 {
     STAssertTrue(([[AppBlade sharedManager] initializedFeatures] && AppBladeFeaturesCustomParametersEnabled), @"Custom parameters feature must be enabled in order for tests to run.");
