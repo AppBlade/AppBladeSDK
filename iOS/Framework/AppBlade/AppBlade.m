@@ -888,21 +888,6 @@ static AppBlade *s_sharedManager = nil;
     
 }
 
--(void)setCustomParam:(id)newObject withValue:(NSString*)key
-{
-#ifndef SKIP_CUSTOM_PARAMS
-    if([[AppBlade sharedManager] isAllDisabled]){
-        ABDebugLog_internal(@"Can't %s, SDK disabled", __PRETTY_FUNCTION__);
-        return;
-    }
-    [[self customParamsManager] setCustomParam:newObject withValue:key];
-#else
-    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
-#endif
-    
-
-}
-
 
 -(void)setCustomParam:(id)object forKey:(NSString*)key
 {

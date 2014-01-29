@@ -34,7 +34,6 @@ static NSString* const kDbCustomParametersMainTableName = @"customparams";
 
 -(NSDictionary *)getCustomParams;
 -(void)setCustomParams:(NSDictionary *)newFieldValues;
--(void)setCustomParam:(id)newObject withValue:(NSString*)key;
 -(void)setCustomParam:(id)object forKey:(NSString*)key;
 -(void)clearAllCustomParams;
 

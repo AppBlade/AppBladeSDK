@@ -84,30 +84,6 @@
     }    
 }
 
-#warning Deprecation imminent
--(void)setCustomParam:(id)newObject withValue:(NSString*)key
-{
-    NSDictionary* currentFields = [self getCustomParams];
-    if (currentFields == nil) {
-        currentFields = [NSDictionary dictionary];
-    }
-    NSMutableDictionary* mutableFields = [currentFields  mutableCopy];
-    if(key && newObject){
-        [mutableFields setObject:newObject forKey:key];
-    }
-    else if(key && !newObject){
-        [mutableFields removeObjectForKey:key];
-    }
-    else
-    {
-        ABErrorLog(@"AppBlade: invalid nil key when setting custom parameters");
-    }
-    ABDebugLog_internal(@"setting to %@", mutableFields);
-    currentFields = (NSDictionary *)mutableFields;
-    [self setCustomParams:currentFields];
-}
-
-
 
 -(void)setCustomParam:(id)object forKey:(NSString*)key
 {
