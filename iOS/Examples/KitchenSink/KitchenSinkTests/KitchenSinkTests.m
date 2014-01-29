@@ -38,7 +38,7 @@
 -(void)disableAllWithAssert
 {
     [[AppBlade sharedManager] setDisabled:true];
-    STAssertTrue([[AppBlade sharedManager] isAllDisabled], @"Getter or setter doesn't work.");
+    STAssertTrue([[AppBlade sharedManager] isAllDisabled], @"isAllDisabled should have been set.");
 }
 
 -(void)assertNoPendingRequests:(NSString*)errorMessage
@@ -109,7 +109,7 @@
 -(void)test05isAllDisabledAffectsFeedback
 {
     [self disableAllWithAssert];
-
+    
 }
 
 -(void)test06isAllDisabledAffectsSessionLogging

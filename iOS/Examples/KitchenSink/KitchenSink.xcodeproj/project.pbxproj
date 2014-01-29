@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		310D1ECA189842F3003B0532 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 31D92509185098B300012197 /* libsqlite3.dylib */; };
+		310D1ECD18989967003B0532 /* APBFeedbackReportAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 310D1ECC18989967003B0532 /* APBFeedbackReportAppTests.m */; };
 		311A21AF1794DC1B007BF879 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21AE1794DC1B007BF879 /* UIKit.framework */; };
 		311A21B11794DC1B007BF879 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21B01794DC1B007BF879 /* Foundation.framework */; };
 		311A21B31794DC1B007BF879 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 311A21B21794DC1B007BF879 /* CoreGraphics.framework */; };
@@ -113,6 +114,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		310D1ECB18989967003B0532 /* APBFeedbackReportAppTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBFeedbackReportAppTests.h; sourceTree = "<group>"; };
+		310D1ECC18989967003B0532 /* APBFeedbackReportAppTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBFeedbackReportAppTests.m; sourceTree = "<group>"; };
 		311A21AB1794DC1B007BF879 /* KitchenSink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KitchenSink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		311A21AE1794DC1B007BF879 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		311A21B01794DC1B007BF879 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -356,6 +359,8 @@
 			children = (
 				313711AA18963240001BA25F /* APBCustomParametersAppTests.h */,
 				313711AB18963240001BA25F /* APBCustomParametersAppTests.m */,
+				310D1ECB18989967003B0532 /* APBFeedbackReportAppTests.h */,
+				310D1ECC18989967003B0532 /* APBFeedbackReportAppTests.m */,
 			);
 			name = "Feature Tests";
 			sourceTree = "<group>";
@@ -594,6 +599,7 @@
 				31D5360F17D750530011B9A1 /* CustomParametersViewController.m in Sources */,
 				31BB3C6717E3450F007B8B28 /* APBDeviceInfoManagerTest.m in Sources */,
 				31BB3C6E17E345C9007B8B28 /* APBApplicationInfoManagerTest.m in Sources */,
+				310D1ECD18989967003B0532 /* APBFeedbackReportAppTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
