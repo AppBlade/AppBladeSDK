@@ -19,8 +19,8 @@
 
 #ifndef AppBlade_AppBladeLogging_h
 //Add
-//#define APPBLADE_DEBUG_LOGGING 1
-//#define APPBLADE_ERROR_LOGGING 1
+#define APPBLADE_DEBUG_LOGGING 1
+#define APPBLADE_ERROR_LOGGING 1
 //To enable the AppBlade internal logs
 
 #define AppBlade_AppBladeLogging_h
