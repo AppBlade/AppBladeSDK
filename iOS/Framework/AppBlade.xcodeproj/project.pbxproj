@@ -174,6 +174,9 @@
 		31AD846F18A04BBB004BD6C2 /* PLCrashUncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AD83C718A04BBB004BD6C2 /* PLCrashUncaughtExceptionHandler.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		31AD847018A04BBB004BD6C2 /* PLCrashUncaughtExceptionHandlerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AD83C818A04BBB004BD6C2 /* PLCrashUncaughtExceptionHandlerTests.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		31AD847118A04BBB004BD6C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AD83CA18A04BBB004BD6C2 /* main.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		31AD847418A04D6E004BD6C2 /* protobuf-c-private.h in Headers */ = {isa = PBXBuildFile; fileRef = 31AD847218A04D6E004BD6C2 /* protobuf-c-private.h */; };
+		31AD847518A04D6E004BD6C2 /* protobuf-c.h in Headers */ = {isa = PBXBuildFile; fileRef = 31AD847318A04D6E004BD6C2 /* protobuf-c.h */; };
+		31AD847718A04D83004BD6C2 /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 31AD847618A04D83004BD6C2 /* protobuf-c.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		31B29E7813FC1BFC00AF9D5D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31B29E7713FC1BFC00AF9D5D /* Security.framework */; };
 		31BD74C213FF2AEA00C3B6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31BD74C113FF2AEA00C3B6AE /* UIKit.framework */; };
 		7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690DA31562A839009391BD /* FileMD5Hash.h */; };
@@ -382,6 +385,9 @@
 		31AD83C718A04BBB004BD6C2 /* PLCrashUncaughtExceptionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLCrashUncaughtExceptionHandler.m; sourceTree = "<group>"; };
 		31AD83C818A04BBB004BD6C2 /* PLCrashUncaughtExceptionHandlerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLCrashUncaughtExceptionHandlerTests.m; sourceTree = "<group>"; };
 		31AD83CA18A04BBB004BD6C2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		31AD847218A04D6E004BD6C2 /* protobuf-c-private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "protobuf-c-private.h"; path = "include/google/protobuf-c/protobuf-c-private.h"; sourceTree = "<group>"; };
+		31AD847318A04D6E004BD6C2 /* protobuf-c.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "protobuf-c.h"; path = "include/google/protobuf-c/protobuf-c.h"; sourceTree = "<group>"; };
+		31AD847618A04D83004BD6C2 /* protobuf-c.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "protobuf-c.c"; path = "include/google/protobuf-c/protobuf-c.c"; sourceTree = "<group>"; };
 		31B29E7713FC1BFC00AF9D5D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		31BD74C113FF2AEA00C3B6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		628A131E141EB60400EEB082 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE.md; path = AppBlade/LICENSE.md; sourceTree = "<group>"; };
@@ -619,6 +625,9 @@
 		CBF479ED13969C2B00949297 = {
 			isa = PBXGroup;
 			children = (
+				31AD847618A04D83004BD6C2 /* protobuf-c.c */,
+				31AD847218A04D6E004BD6C2 /* protobuf-c-private.h */,
+				31AD847318A04D6E004BD6C2 /* protobuf-c.h */,
 				628A131E141EB60400EEB082 /* LICENSE.md */,
 				CBF479FD13969C2B00949297 /* AppBlade */,
 				CBF479FA13969C2B00949297 /* Frameworks */,
@@ -691,6 +700,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31AD847418A04D6E004BD6C2 /* protobuf-c-private.h in Headers */,
+				31AD847518A04D6E004BD6C2 /* protobuf-c.h in Headers */,
 				31AD841618A04BBB004BD6C2 /* PLCrashCompatConstants.h in Headers */,
 				31AD83F418A04BBB004BD6C2 /* PLCrashAsyncLinkedList.hpp in Headers */,
 				31AD83EE18A04BBB004BD6C2 /* PLCrashAsyncDwarfPrimitives.hpp in Headers */,
@@ -869,6 +880,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31AD847718A04D83004BD6C2 /* protobuf-c.c in Sources */,
 				CBF47A1113969C8B00949297 /* AppBlade.m in Sources */,
 				31AD83EC18A04BBB004BD6C2 /* PLCrashAsyncDwarfFDETests.mm in Sources */,
 				31AD843218A04BBB004BD6C2 /* PLCrashMachExceptionPortTests.m in Sources */,
