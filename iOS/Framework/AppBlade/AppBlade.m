@@ -11,6 +11,8 @@
 #import "AppBladeSimpleKeychain.h"
 
 #import "PLCrashReporter.h"
+//#include "PLCrashReporter+AppBladePublic.h"
+
 #import "PLCrashReport.h"
 #import "AppBladeWebClient.h"
 #import "PLCrashReportTextFormatter.h"
@@ -28,6 +30,8 @@
 #import <mach-o/ldsyms.h>
 
 #include "FileMD5Hash.h"
+
+
 
 
 
