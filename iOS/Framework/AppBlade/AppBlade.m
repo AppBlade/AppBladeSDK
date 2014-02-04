@@ -575,7 +575,7 @@ static BOOL is_encrypted () {
         if (report != nil) {
             reportString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat: PLCrashReportTextFormatiOS];
             //send pending crash report to a unique file name in the the queue
-            queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
+            queuedFilePath = [self saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
             if(queuedFilePath == nil){
                 ABErrorLog(@"error saving crash report");
             }
@@ -597,7 +597,7 @@ static BOOL is_encrypted () {
 
     if(queuedFilePath == nil){
         //we had no immediate crash, or an invalid save, grab any stored crash report
-        queuedFilePath = [crashReporter getNextCrashReportPath];
+        queuedFilePath = [self getNextCrashReportPath];
         reportString = [NSString stringWithContentsOfFile:queuedFilePath encoding:NSUTF8StringEncoding error:&error];
     }
     
@@ -1896,6 +1896,45 @@ static BOOL is_encrypted () {
     
     return randomString;
 }
+
+//PLCrashReport backwards compatible methods
+//we require the following methods to be publically accessible
+//- (NSString *) crashReportDirectory;
+//- (NSString *) queuedCrashReportDirectory;
+
+- (NSString*)getNextCrashReportPath
+{
+	NSString *crashReportPath = nil;
+    
+	NSArray *files = [self queuedCrashReportFiles];
+	if(files && files.count > 0){
+		NSString *fileName =  [[self queuedCrashReportFiles] objectAtIndex:0];
+		crashReportPath = [[ [PLCrashReporter sharedReporter] queuedCrashReportDirectory] stringByAppendingPathComponent:fileName];
+	}//none left, or dir dne
+	return crashReportPath;
+}
+
+- (NSString *) saveCrashReportInQueue:(NSString*)reportString
+{
+	NSString *filePath = [[ [PLCrashReporter sharedReporter] queuedCrashReportDirectory] stringByAppendingPathComponent:[ [PLCrashReporter sharedReporter] makeRandomFileName]];
+	NSError *error = nil;
+	[reportString writeToFile:filePath atomically:NO encoding:NSUTF8StringEncoding error:&error];
+	if(error == nil)
+	{
+		return filePath;
+	}
+	else
+	{
+		NSLog(@"Error writing new crash report to queue directory: %@", error );
+		return nil;
+	}
+}
+
+- (NSArray *) queuedCrashReportFiles
+{
+	return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[[PLCrashReporter sharedReporter] queuedCrashReportDirectory] error:NULL];
+}
+
 
 
 @end
