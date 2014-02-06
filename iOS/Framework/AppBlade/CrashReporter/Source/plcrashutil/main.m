@@ -27,7 +27,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <CrashReporter/CrashReporter.h>
+#import <CrashReporter.h>
 
 #import <stdlib.h>
 #import <stdio.h>
