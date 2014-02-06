@@ -129,7 +129,6 @@
 		315EA85518A086D30061B277 /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 315EA85218A086D30061B277 /* protobuf-c.c */; };
 		315EA85618A086D30061B277 /* protobuf-c.h in Headers */ = {isa = PBXBuildFile; fileRef = 315EA85318A086D30061B277 /* protobuf-c.h */; };
 		31A563AC18A41E2A00138935 /* PLCrashReporter+AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = 31A563AA18A41E2A00138935 /* PLCrashReporter+AppBlade.h */; };
-		31A563AD18A41E2A00138935 /* PLCrashReporter+AppBlade.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A563AB18A41E2A00138935 /* PLCrashReporter+AppBlade.m */; };
 		31A563B018A44CDD00138935 /* crash_report.proto in Sources */ = {isa = PBXBuildFile; fileRef = 31A563AF18A44C9700138935 /* crash_report.proto */; };
 		31B29E7813FC1BFC00AF9D5D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31B29E7713FC1BFC00AF9D5D /* Security.framework */; };
 		31BD74C213FF2AEA00C3B6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31BD74C113FF2AEA00C3B6AE /* UIKit.framework */; };
@@ -293,7 +292,6 @@
 		315EA85318A086D30061B277 /* protobuf-c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "protobuf-c.h"; path = "AppBlade/CrashReporter/Dependencies/protobuf-2.0.3/src/protobuf-c.h"; sourceTree = "<group>"; };
 		319E5C5A175FDB5500B68107 /* AppBladeLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppBladeLogging.h; sourceTree = "<group>"; };
 		31A563AA18A41E2A00138935 /* PLCrashReporter+AppBlade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PLCrashReporter+AppBlade.h"; sourceTree = "<group>"; };
-		31A563AB18A41E2A00138935 /* PLCrashReporter+AppBlade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PLCrashReporter+AppBlade.m"; sourceTree = "<group>"; };
 		31A563AF18A44C9700138935 /* crash_report.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crash_report.proto; path = AppBlade/CrashReporter/Resources/crash_report.proto; sourceTree = "<group>"; };
 		31B29E7713FC1BFC00AF9D5D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		31BD74C113FF2AEA00C3B6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -543,7 +541,6 @@
 				CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */,
 				319E5C5A175FDB5500B68107 /* AppBladeLogging.h */,
 				31A563AA18A41E2A00138935 /* PLCrashReporter+AppBlade.h */,
-				31A563AB18A41E2A00138935 /* PLCrashReporter+AppBlade.m */,
 			);
 			path = AppBlade;
 			sourceTree = "<group>";
@@ -816,7 +813,6 @@
 				315EA83618A0866C0061B277 /* PLCrashReportStackFrameInfo.m in Sources */,
 				315EA81618A0866C0061B277 /* PLCrashProcessInfo.m in Sources */,
 				7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */,
-				31A563AD18A41E2A00138935 /* PLCrashReporter+AppBlade.m in Sources */,
 				CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */,
 				A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */,
 				CBF47A1113969C8B00949297 /* AppBlade.m in Sources */,

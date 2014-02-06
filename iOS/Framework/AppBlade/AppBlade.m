@@ -11,7 +11,7 @@
 #import "AppBladeSimpleKeychain.h"
 
 #import "PLCrashReporter.h"
-//#include "PLCrashReporter+AppBladePublic.h"
+#include "PLCrashReporter+AppBlade.h"
 
 #import "PLCrashReport.h"
 #import "AppBladeWebClient.h"
