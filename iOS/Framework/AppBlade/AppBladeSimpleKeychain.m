@@ -66,7 +66,7 @@
         return TRUE;
     }else{
         // If the keychain item already exists, modify it:
-        NSLog(@"Keychain error occured during keychain %@ test: %ld : %@", keychainInterimCodeLabel, keychainErrorCode, [AppBladeSimpleKeychain errorMessageFromCode:keychainErrorCode]);
+        NSLog(@"Keychain error occured during keychain %@ test: %d : %@", keychainInterimCodeLabel, (int)keychainErrorCode, [AppBladeSimpleKeychain errorMessageFromCode:keychainErrorCode]);
         NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
         return FALSE;
     }
@@ -116,7 +116,7 @@
     else
     {
         // If the keychain item already exists, modify it:
-        NSLog(@"Keychain error occured during keychain %@ test: %ld : %@", keychainInterimCodeLabel, keychainErrorCode, [AppBladeSimpleKeychain errorMessageFromCode:keychainErrorCode]);
+        NSLog(@"Keychain error occured during keychain %@ test: %d : %@", keychainInterimCodeLabel, (int)keychainErrorCode, [AppBladeSimpleKeychain errorMessageFromCode:keychainErrorCode]);
         NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
         if(secondTry){
             NSLog(@"We've confirmed this fails twice in a row.");
@@ -233,7 +233,7 @@
     [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(__bridge id)kSecValueData];
     resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
     if(resultCode != noErr){
-        NSLog(@"Error storing to keychain: %ld : %@", resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
+        NSLog(@"Error storing to keychain: %d : %@", (int)resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
         if(resultCode == errSecDuplicateItem){
             id dataExistenceCheck = [AppBladeSimpleKeychain load:service];
             NSLog(@"This exists instead: %@", dataExistenceCheck);
@@ -279,7 +279,7 @@
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef) keychainQuery);
     if(resultCode != noErr){
-        NSLog(@"Error deleting from keychain: %ld : %@", resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
+        NSLog(@"Error deleting from keychain: %d : %@", (int)resultCode, [AppBladeSimpleKeychain errorMessageFromCode:resultCode]);
         wasSuccessful = NO;
     }else{
         wasSuccessful = YES;
