@@ -132,6 +132,11 @@
 		31A563B018A44CDD00138935 /* crash_report.proto in Sources */ = {isa = PBXBuildFile; fileRef = 31A563AF18A44C9700138935 /* crash_report.proto */; };
 		31B29E7813FC1BFC00AF9D5D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31B29E7713FC1BFC00AF9D5D /* Security.framework */; };
 		31BD74C213FF2AEA00C3B6AE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31BD74C113FF2AEA00C3B6AE /* UIKit.framework */; };
+		31EFB9DC18A5937400996F25 /* dwarf_opstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31EFB9D718A5937400996F25 /* dwarf_opstream.cpp */; };
+		31EFB9DD18A5937400996F25 /* dwarf_opstream.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 31EFB9D818A5937400996F25 /* dwarf_opstream.hpp */; };
+		31EFB9DE18A5937400996F25 /* dwarf_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 31EFB9D918A5937400996F25 /* dwarf_private.h */; };
+		31EFB9DF18A5937400996F25 /* dwarf_stack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31EFB9DA18A5937400996F25 /* dwarf_stack.cpp */; };
+		31EFB9E018A5937400996F25 /* dwarf_stack.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 31EFB9DB18A5937400996F25 /* dwarf_stack.hpp */; };
 		7E690DA51562A839009391BD /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690DA31562A839009391BD /* FileMD5Hash.h */; };
 		7E690DA61562A839009391BD /* FileMD5Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E690DA31562A839009391BD /* FileMD5Hash.h */; };
 		7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E690DA41562A839009391BD /* FileMD5Hash.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -295,6 +300,11 @@
 		31A563AF18A44C9700138935 /* crash_report.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crash_report.proto; path = AppBlade/CrashReporter/Resources/crash_report.proto; sourceTree = "<group>"; };
 		31B29E7713FC1BFC00AF9D5D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		31BD74C113FF2AEA00C3B6AE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		31EFB9D718A5937400996F25 /* dwarf_opstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dwarf_opstream.cpp; path = AppBlade/CrashReporter/Source/dwarf_opstream.cpp; sourceTree = "<group>"; };
+		31EFB9D818A5937400996F25 /* dwarf_opstream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = dwarf_opstream.hpp; path = AppBlade/CrashReporter/Source/dwarf_opstream.hpp; sourceTree = "<group>"; };
+		31EFB9D918A5937400996F25 /* dwarf_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dwarf_private.h; path = AppBlade/CrashReporter/Source/dwarf_private.h; sourceTree = "<group>"; };
+		31EFB9DA18A5937400996F25 /* dwarf_stack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dwarf_stack.cpp; path = AppBlade/CrashReporter/Source/dwarf_stack.cpp; sourceTree = "<group>"; };
+		31EFB9DB18A5937400996F25 /* dwarf_stack.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = dwarf_stack.hpp; path = AppBlade/CrashReporter/Source/dwarf_stack.hpp; sourceTree = "<group>"; };
 		628A131E141EB60400EEB082 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE.md; path = AppBlade/LICENSE.md; sourceTree = "<group>"; };
 		7E690DA31562A839009391BD /* FileMD5Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMD5Hash.h; sourceTree = "<group>"; };
 		7E690DA41562A839009391BD /* FileMD5Hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FileMD5Hash.c; sourceTree = "<group>"; };
@@ -347,6 +357,7 @@
 		315EA84F18A086770061B277 /* CrashReporter */ = {
 			isa = PBXGroup;
 			children = (
+				31EFB9E118A5939000996F25 /* DWARF */,
 				31A563AE18A44C8200138935 /* proto */,
 				315EA7AD18A0866C0061B277 /* plcrashutil */,
 				315EA70D18A0866C0061B277 /* CrashReporter.h */,
@@ -488,6 +499,18 @@
 			name = proto;
 			sourceTree = "<group>";
 		};
+		31EFB9E118A5939000996F25 /* DWARF */ = {
+			isa = PBXGroup;
+			children = (
+				31EFB9D918A5937400996F25 /* dwarf_private.h */,
+				31EFB9D718A5937400996F25 /* dwarf_opstream.cpp */,
+				31EFB9D818A5937400996F25 /* dwarf_opstream.hpp */,
+				31EFB9DA18A5937400996F25 /* dwarf_stack.cpp */,
+				31EFB9DB18A5937400996F25 /* dwarf_stack.hpp */,
+			);
+			name = DWARF;
+			sourceTree = "<group>";
+		};
 		7E690DA91562AC51009391BD /* Hashing */ = {
 			isa = PBXGroup;
 			children = (
@@ -574,6 +597,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31EFB9DD18A5937400996F25 /* dwarf_opstream.hpp in Headers */,
 				315EA7C818A0866C0061B277 /* PLCrashAsyncDwarfFDE.hpp in Headers */,
 				315EA82B18A0866C0061B277 /* PLCrashReportMachineInfo.h in Headers */,
 				315EA81C18A0866C0061B277 /* PLCrashReportBinaryImageInfo.h in Headers */,
@@ -601,6 +625,7 @@
 				315EA7AF18A0866C0061B277 /* CrashReporter.h in Headers */,
 				315EA7F118A0866C0061B277 /* PLCrashAsyncThread.h in Headers */,
 				315EA7EA18A0866C0061B277 /* PLCrashAsyncThread_arm.h in Headers */,
+				31EFB9E018A5937400996F25 /* dwarf_stack.hpp in Headers */,
 				315EA7CE18A0866C0061B277 /* PLCrashAsyncImageList.h in Headers */,
 				315EA7C518A0866C0061B277 /* PLCrashAsyncDwarfExpression.hpp in Headers */,
 				315EA82618A0866C0061B277 /* PLCrashReportExceptionInfo.h in Headers */,
@@ -640,6 +665,7 @@
 				315EA83318A0866C0061B277 /* PLCrashReportSignalInfo.h in Headers */,
 				315EA82918A0866C0061B277 /* PLCrashReportMachExceptionInfo.h in Headers */,
 				315EA7CB18A0866C0061B277 /* PLCrashAsyncDwarfPrimitives.hpp in Headers */,
+				31EFB9DE18A5937400996F25 /* dwarf_private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -799,9 +825,11 @@
 				315EA7C118A0866C0061B277 /* PLCrashAsyncDwarfEncoding.cpp in Sources */,
 				315EA7D618A0866C0061B277 /* PLCrashAsyncMachOImage.c in Sources */,
 				315EA83F18A0866C0061B277 /* PLCrashReportThreadInfo.m in Sources */,
+				31EFB9DF18A5937400996F25 /* dwarf_stack.cpp in Sources */,
 				315EA83218A0866C0061B277 /* PLCrashReportRegisterInfo.m in Sources */,
 				315EA7C718A0866C0061B277 /* PLCrashAsyncDwarfFDE.cpp in Sources */,
 				315EA7B118A0866C0061B277 /* PLCrashAsync.c in Sources */,
+				31EFB9DC18A5937400996F25 /* dwarf_opstream.cpp in Sources */,
 				315EA7F018A0866C0061B277 /* PLCrashAsyncThread.c in Sources */,
 				315EA7ED18A0866C0061B277 /* PLCrashAsyncThread_current.S in Sources */,
 				315EA7EC18A0866C0061B277 /* PLCrashAsyncThread_current.c in Sources */,
