@@ -656,10 +656,38 @@ static BOOL is_encrypted () {
 
 
 //backwards-compatible crash report saving method. returns file path of saved report string
-- (NSString *)saveCrashReportInQueue:(NSString *)reportString
-{
 
+- (NSString *) saveCrashReportInQueue:(NSString*)reportString
+{
+    NSString *filePath = [[self queuedCrashReportDirectory] stringByAppendingPathComponent:[self makeRandomFileName]];
+    NSError *error = nil;
+    [reportString writeToFile:filePath atomically:NO encoding:NSUTF8StringEncoding error:&error];
+    if(error == nil)
+    {
+        return filePath;
+    }
+    else
+    {
+        NSLog(@"Error writing new crash report to queue directory: %@", error );
+        return nil;
+    }
 }
+
+- (NSString *) makeRandomFileName
+{
+    return [NSString stringWithFormat:@"%@.txt", [self randomString:13]];
+}
+
+- (NSString *) randomString: (int) len {
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [s_letters characterAtIndex: arc4random()%[s_letters length]]];
+    }
+    return randomString;
+}
+
+
+
 
 - (NSString*)hashFileOfPlist:(NSString *)filePath
 {
@@ -1934,22 +1962,6 @@ static BOOL is_encrypted () {
     return [[self appBladeDeviceSecret] length] == 0;
 }
 
--(NSString *) randomString: (int) len {
-    
-    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
-    
-    for (int i=0; i<len; i++) {
-        [randomString appendFormat: @"%C", [s_letters characterAtIndex: arc4random()%[s_letters length]]];
-    }
-    
-    return randomString;
-}
-
-//PLCrashReport backwards-required methods
-//we require the following methods to be publically accessible
-//- (NSString *) crashReportDirectory;
-//- (NSString *) queuedCrashReportDirectory;
-//saveCrashReportInQueue
 
 
 @end
