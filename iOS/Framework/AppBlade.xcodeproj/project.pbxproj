@@ -728,7 +728,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Version 2.0 (updated for Xcode 4, with some fixes)\n# Changes:\n#    - Works with xcode 4, even when running xcode 3 projects (Workarounds for apple bugs)\n#    - Faster / better: only runs lipo once, instead of once per recursion\n#    - Added some debugging statemetns that can be switched on/off by changing the DEBUG_THIS_SCRIPT variable to \"true\"\n#    - Fixed some typos\n# \n# Purpose:\n#   Create a static library for iPhone from within XCode\n#   Because Apple staff DELIBERATELY broke Xcode to make this impossible from the GUI (Xcode 3.2.3 specifically states this in the Release notes!)\n#   ...no, I don't understand why they did this!\n#\n# Author: Adam Martin - http://twitter.com/redglassesapps\n# Based on: original script from Eonil (main changes: Eonil's script WILL NOT WORK in Xcode GUI - it WILL CRASH YOUR COMPUTER)\n#\n# More info: see this Stack Overflow question: http://stackoverflow.com/questions/3520977/build-fat-static-library-device-simulator-using-xcode-and-sdk-4\n\n#################[ Tests: helps workaround any future bugs in Xcode ]########\n#\nDEBUG_THIS_SCRIPT=\"true\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\nfi\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\n\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\n\n# Next, work out if we're in SIM or DEVICE\n\nIPHONE_SDK=iphoneos${SDK_VERSION}\nSIMULATOR_SDK=iphonesimulator${SDK_VERSION}\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ]\nthen\nOTHER_SDK_TO_BUILD=iphoneos${SDK_VERSION}\nelse\nOTHER_SDK_TO_BUILD=iphonesimulator${SDK_VERSION}\nfi\n\necho \"Building with 2 SDKs: ${IPHONE_SDK} and ${SIMULATOR_SDK}\"\n\n\n################################################\n# Invoke the two builds that we want to generate\n################################################\nACTION=\"build\"\n\necho \"Building Device version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${IPHONE_SDK}\\\" ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${IPHONE_SDK}\" ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\necho \"Building Simulator version\"\necho \"About to invoke: xcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \\\"${SIMULATOR_SDK}\\\" -arch i386 ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\\\"${BUILD_DIR}\\\" BUILD_ROOT=\\\"${BUILD_ROOT}\\\"\"\n\nxcodebuild -workspace AppBlade.xcodeproj/project.xcworkspace/ -scheme AppBlade -sdk \"${SIMULATOR_SDK}\" -arch i386 ${ACTION} RUN_CLANG_STATIC_ANALYZER=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n\n\n# Calculate where the (multiple) built files are coming from:\nCURRENTCONFIG_DEVICE_DIR=${SYMROOT}/${CONFIGURATION}-iphoneos\nCURRENTCONFIG_SIMULATOR_DIR=${SYMROOT}/${CONFIGURATION}-iphonesimulator\nLIBRARY_NAME=libAppBlade.a\nUNIVERSAL_LIBRARY_NAME=libAppBladeUniversal.a\n\necho \"Taking device build from: ${CURRENTCONFIG_DEVICE_DIR}\"\necho \"Taking simulator build from: ${CURRENTCONFIG_SIMULATOR_DIR}\"\n\nCREATING_UNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}-universal\necho \"...I will output a universal build to: ${CREATING_UNIVERSAL_DIR}\"\n\n# ... remove the products of previous runs of this script\n#      NB: this directory is ONLY created by this script - it should be safe to delete!\n\n// Modified slightly to create and remove an executable-specific directory\nrm -rf \"${CREATING_UNIVERSAL_DIR}\"\nmkdir \"${CREATING_UNIVERSAL_DIR}\"\n\n#\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${LIBRARY_NAME}\"\nlipo -create -output \"${CREATING_UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\" \"${CURRENTCONFIG_DEVICE_DIR}/${LIBRARY_NAME}\" \"${CURRENTCONFIG_SIMULATOR_DIR}/${LIBRARY_NAME}\"\n\n\n\n#########\n#\n# Added: StackOverflow suggestion to also copy \"include\" files\n#    (untested, but should work OK)\n#\n# RZ: Modified to place in root of universal directory, though it looks in /usr/local/include.\n#\n#if [ -d \"${CURRENTCONFIG_DEVICE_DIR}/usr/local/include\" ]\n#then\n#mkdir -p \"${CREATING_UNIVERSAL_DIR}/usr/local/include\"\n# * needs to be outside the double quotes?\ncp \"${CONFIGURATION_BUILD_DIR}/usr/local/include/\"* \"${CREATING_UNIVERSAL_DIR}\"\n\n\nopen \"${CREATING_UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\necho \"${CREATING_UNIVERSAL_DIR}\"\n\n#to reduce confusion, you can remove the other libAppBladeUniversal.a binaries\nrm -f \"${CURRENTCONFIG_DEVICE_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\nrm -f \"${CURRENTCONFIG_SIMULATOR_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n#fi";
+			shellScript = "# Version 3.0 (updated for Xcode 5, with support for 64 bit)\n# Changes:\n#    - most output locations have changed! 3.0 has an entirely new directory structure.\n#    - updated for Xcode 5, backwards compatibility is yet to be checked\n#    - adding build steps for ARM64, as well as x64_86 (64-bit simulator)\n#    - lipo still called only once\n#\n#################v\n# Purpose:\n#   Create a static library for current iPhone & Simulator architectures from within XCode\n#\n#################[ Tests: helps workaround any future bugs in Xcode ]########\n#\nDEBUG_THIS_SCRIPT=\"true\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\necho \"########### TESTS #############\"\necho \"Use the following variables when debugging this script; note that they may change on recursions\"\necho \"BUILD_DIR = $BUILD_DIR\"\necho \"BUILD_ROOT = $BUILD_ROOT\"\necho \"CONFIGURATION_BUILD_DIR = $CONFIGURATION_BUILD_DIR\"\necho \"BUILT_PRODUCTS_DIR = $BUILT_PRODUCTS_DIR\"\necho \"CONFIGURATION_TEMP_DIR = $CONFIGURATION_TEMP_DIR\"\necho \"TARGET_BUILD_DIR = $TARGET_BUILD_DIR\"\necho \"SYMROOT = $SYMROOT\"\nfi\n\n\n#####################[ part 1 ]##################\n# First, work out the BASESDK version number (NB: Apple ought to report this, but they hide it)\n#    (incidental: searching for substrings in sh is a nightmare! Sob)\nSDK_VERSION=$(echo ${SDK_NAME} | grep -o '.\\{3\\}$')\nIPHONE_SDK=iphoneos${SDK_VERSION}\nSIMULATOR_SDK=iphonesimulator${SDK_VERSION}\n\n################################################\n# Invoke the builds\n################################################\nACTION=\"build clean\"\n\nif [ $DEBUG_THIS_SCRIPT = \"true\" ]\nthen\nrm -rf \"${SYMROOT}/${CONFIGURATION}\"\nACTION=\"build\" #faster\nfi\n\nLIBRARY_NAME=libAppBlade.a\nARM_TARGET_DIR=${SYMROOT}/${CONFIGURATION}/build-arm\ni386_TARGET_DIR=${SYMROOT}/${CONFIGURATION}/build-i386\nARM64_TARGET_DIR=${SYMROOT}/${CONFIGURATION}/build-arm64\nx6864_TARGET_DIR=${SYMROOT}/${CONFIGURATION}/build-x86_64\n\nUNIVERSAL_LIBRARY_NAME=libAppBladeUniversal.a\nUNIVERSAL_DIR=${SYMROOT}/${CONFIGURATION}/universal-build\n\n\nopen \"${UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\n\necho \"Building Device version\"\nxcodebuild -project 'AppBlade.xcodeproj' -configuration \"${CONFIGURATION}\" -sdk \"${IPHONE_SDK}\" ${ACTION} ARCHS='armv7 armv7s' IPHONEOS_DEPLOYMENT_TARGET='5.0' TARGET_BUILD_DIR=\"${ARM_TARGET_DIR}\" BUILT_PRODUCTS_DIR=\"${ARM_TARGET_DIR}\"\necho \"Building Simulator version\"\nxcodebuild -project 'AppBlade.xcodeproj' -configuration \"${CONFIGURATION}\" -sdk \"${SIMULATOR_SDK}\" ${ACTION} ARCHS='i386' IPHONEOS_DEPLOYMENT_TARGET='5.0' TARGET_BUILD_DIR=\"${i386_TARGET_DIR}\" BUILT_PRODUCTS_DIR=\"${i386_TARGET_DIR}\"\necho \"Building 64-bit Device version\"\nxcodebuild -project 'AppBlade.xcodeproj' -configuration \"${CONFIGURATION}\" -sdk \"${IPHONE_SDK}\" ${ACTION} ARCHS='arm64' IPHONEOS_DEPLOYMENT_TARGET='7.0' TARGET_BUILD_DIR=\"${ARM64_TARGET_DIR}\" BUILT_PRODUCTS_DIR=\"${ARM64_TARGET_DIR}\"\necho \"Building 64-bit Simulator version\"\nxcodebuild -project 'AppBlade.xcodeproj' -configuration \"${CONFIGURATION}\" -sdk \"${SIMULATOR_SDK}\" ${ACTION} ARCHS='x86_64' VALID_ARCHS='x86_64' IPHONEOS_DEPLOYMENT_TARGET='7.0' TARGET_BUILD_DIR=\"${x6864_TARGET_DIR}\" BUILT_PRODUCTS_DIR=\"${x6864_TARGET_DIR}\"\n\n\n# Calculate where the (multiple) built files are coming from:\nARM_TARGET_BUILD_DIR=${ARM_TARGET_DIR}/${LIBRARY_NAME}\ni386_TARGET_BUILD_DIR=${i386_TARGET_DIR}/${LIBRARY_NAME}\nARM64_TARGET_BUILD_DIR=${ARM64_TARGET_DIR}/${LIBRARY_NAME}\nx6864_TARGET_BUILD_DIR=${x6864_TARGET_DIR}/${LIBRARY_NAME}\n\necho \"Taking device build from: ${ARM_TARGET_BUILD_DIR}\"\necho \"Taking simulator build from: ${i386_TARGET_BUILD_DIR}\"\necho \"Taking 64bit device build from: ${ARM64_TARGET_BUILD_DIR}\"\necho \"Taking 64bit simulator build from: ${x6864_TARGET_BUILD_DIR}\"\n\n# ... remove ALL possible output of previous lipos of this script\nrm -rf \"${UNIVERSAL_DIR}\"\nmkdir \"${UNIVERSAL_DIR}\"\n\necho \"lipo: for current configuration (${CONFIGURATION}) creating output file: ${CREATING_UNIVERSAL_DIR}/${LIBRARY_NAME}\"\nlipo -create \"${ARM_TARGET_BUILD_DIR}\" \"${i386_TARGET_BUILD_DIR}\" \"${ARM64_TARGET_BUILD_DIR}\" \"${x6864_TARGET_BUILD_DIR}\" -output \"${UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n\nlipo -info \"${UNIVERSAL_DIR}/${UNIVERSAL_LIBRARY_NAME}\"\n\n# also copy \"include\" files\ncp \"${CONFIGURATION_BUILD_DIR}/usr/local/include/\"* \"${UNIVERSAL_DIR}\"\necho \"...I will output a universal build with header files to: ${UNIVERSAL_DIR}\"\n\n#########\n# Helpful bonus stuff\nrm -rf \"./build/AppBlade.build\" //just remove the intermediate build folder\n\n#open the finder window on completion\nopen \"${UNIVERSAL_DIR}\" #comment this line out to skip the (annoying) finder window opening\n\n#to reduce confusion, remove the other build folders\n#rm -rf \"${ARM_TARGET_DIR}\"\n#rm -rf \"${i386_TARGET_DIR}\"\n#rm -rf \"${ARM64_TARGET_DIR}\"\n#rm -rf \"${x6864_TARGET_DIR}\"\n#fi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -751,9 +751,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				31A563B018A44CDD00138935 /* crash_report.proto in Sources */,
+				315EA85518A086D30061B277 /* protobuf-c.c in Sources */,
+				315EA84E18A0866C0061B277 /* main.m in Sources */,
+				315EA7B018A0866C0061B277 /* CrashReporter.m in Sources */,
 				315EA7BB18A0866C0061B277 /* PLCrashAsyncDwarfCFAStateEvaluation.cpp in Sources */,
 				315EA82A18A0866C0061B277 /* PLCrashReportMachExceptionInfo.m in Sources */,
-				315EA7ED18A0866C0061B277 /* PLCrashAsyncThread_current.S in Sources */,
 				315EA84118A0866C0061B277 /* PLCrashSignalHandler.mm in Sources */,
 				315EA7DF18A0866C0061B277 /* PLCrashAsyncObjCSection.cpp in Sources */,
 				315EA82118A0866C0061B277 /* PLCrashReporterConfig.m in Sources */,
@@ -771,50 +773,48 @@
 				315EA7F818A0866C0061B277 /* PLCrashFrameDWARFUnwind.cpp in Sources */,
 				315EA83018A0866C0061B277 /* PLCrashReportProcessorInfo.m in Sources */,
 				315EA7E518A0866C0061B277 /* PLCrashAsyncSymbolication.c in Sources */,
-				315EA7F018A0866C0061B277 /* PLCrashAsyncThread.c in Sources */,
 				315EA83818A0866C0061B277 /* PLCrashReportSymbolInfo.m in Sources */,
 				315EA7DC18A0866C0061B277 /* PLCrashAsyncMObject.c in Sources */,
 				315EA7FE18A0866C0061B277 /* PLCrashFrameWalker.c in Sources */,
 				315EA7B918A0866C0061B277 /* PLCrashAsyncDwarfCFAState.cpp in Sources */,
 				315EA7F518A0866C0061B277 /* PLCrashFrameCompactUnwind.c in Sources */,
 				315EA7D918A0866C0061B277 /* PLCrashAsyncMachOString.c in Sources */,
-				CBF47A1C1396BC9700949297 /* AppBladeSimpleKeychain.m in Sources */,
 				315EA80B18A0866C0061B277 /* PLCrashMachExceptionPort.m in Sources */,
 				315EA81D18A0866C0061B277 /* PLCrashReportBinaryImageInfo.m in Sources */,
 				315EA80518A0866C0061B277 /* PLCrashLogWriter.m in Sources */,
 				315EA7D018A0866C0061B277 /* PLCrashAsyncLinkedList.cpp in Sources */,
 				315EA80218A0866C0061B277 /* PLCrashHostInfo.m in Sources */,
-				315EA7EC18A0866C0061B277 /* PLCrashAsyncThread_current.c in Sources */,
 				315EA7B318A0866C0061B277 /* PLCrashAsyncAllocator.c in Sources */,
 				315EA7C418A0866C0061B277 /* PLCrashAsyncDwarfExpression.cpp in Sources */,
 				315EA7CA18A0866C0061B277 /* PLCrashAsyncDwarfPrimitives.cpp in Sources */,
-				315EA7B118A0866C0061B277 /* PLCrashAsync.c in Sources */,
 				315EA7B618A0866C0061B277 /* PLCrashAsyncCompactUnwindEncoding.c in Sources */,
 				315EA82C18A0866C0061B277 /* PLCrashReportMachineInfo.m in Sources */,
 				315EA83418A0866C0061B277 /* PLCrashReportSignalInfo.m in Sources */,
 				315EA84318A0866C0061B277 /* PLCrashSysctl.c in Sources */,
-				315EA7E918A0866C0061B277 /* PLCrashAsyncThread_arm.c in Sources */,
-				315EA7B018A0866C0061B277 /* CrashReporter.m in Sources */,
 				315EA81918A0866C0061B277 /* PLCrashReport.m in Sources */,
-				315EA85518A086D30061B277 /* protobuf-c.c in Sources */,
 				315EA84C18A0866C0061B277 /* PLCrashUncaughtExceptionHandler.m in Sources */,
-				315EA84E18A0866C0061B277 /* main.m in Sources */,
 				315EA82318A0866C0061B277 /* PLCrashReporterNSError.m in Sources */,
 				315EA83A18A0866C0061B277 /* PLCrashReportSystemInfo.m in Sources */,
-				7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
 				315EA7E218A0866C0061B277 /* PLCrashAsyncSignalInfo.c in Sources */,
 				315EA7C118A0866C0061B277 /* PLCrashAsyncDwarfEncoding.cpp in Sources */,
 				315EA7D618A0866C0061B277 /* PLCrashAsyncMachOImage.c in Sources */,
 				315EA83F18A0866C0061B277 /* PLCrashReportThreadInfo.m in Sources */,
 				315EA83218A0866C0061B277 /* PLCrashReportRegisterInfo.m in Sources */,
 				315EA7C718A0866C0061B277 /* PLCrashAsyncDwarfFDE.cpp in Sources */,
+				315EA7B118A0866C0061B277 /* PLCrashAsync.c in Sources */,
+				315EA7F018A0866C0061B277 /* PLCrashAsyncThread.c in Sources */,
+				315EA7ED18A0866C0061B277 /* PLCrashAsyncThread_current.S in Sources */,
+				315EA7EC18A0866C0061B277 /* PLCrashAsyncThread_current.c in Sources */,
+				315EA7E918A0866C0061B277 /* PLCrashAsyncThread_arm.c in Sources */,
 				315EA7EE18A0866C0061B277 /* PLCrashAsyncThread_x86.c in Sources */,
 				315EA81118A0866C0061B277 /* PLCrashMachExceptionServer.m in Sources */,
 				315EA83618A0866C0061B277 /* PLCrashReportStackFrameInfo.m in Sources */,
 				315EA81618A0866C0061B277 /* PLCrashProcessInfo.m in Sources */,
+				CBF47A1C1396BC9700949297 /* AppBladeSimpleKeychain.m in Sources */,
+				A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */,
+				7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */,
 				7E690DA71562A839009391BD /* FileMD5Hash.c in Sources */,
 				CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */,
-				A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */,
 				CBF47A1113969C8B00949297 /* AppBlade.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -863,7 +863,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv7 armv7s arm64 i386";
+				VALID_ARCHS = "armv7 arm64 i386";
 			};
 			name = Release_Production;
 		};
@@ -911,7 +911,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv7 armv7s arm64 i386";
+				VALID_ARCHS = "armv7 arm64 i386";
 			};
 			name = Debug_Staging;
 		};
@@ -956,7 +956,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv7 armv7s arm64 i386";
+				VALID_ARCHS = "armv7 arm64 i386";
 			};
 			name = Release_Staging;
 		};
@@ -987,7 +987,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv7 armv7s i386 arm64";
+				VALID_ARCHS = "armv7 i386 arm64";
 			};
 			name = Debug_Production;
 		};
@@ -1018,7 +1018,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv7 armv7s i386 arm64";
+				VALID_ARCHS = "armv7 i386 arm64";
 			};
 			name = Debug_Staging;
 		};
@@ -1043,7 +1043,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv7s i386 arm64";
+				VALID_ARCHS = "armv7 i386 arm64";
 			};
 			name = Release_Production;
 		};
@@ -1068,7 +1068,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv7s i386 arm64";
+				VALID_ARCHS = "armv7 i386 arm64";
 			};
 			name = Release_Staging;
 		};
@@ -1115,7 +1115,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv7 armv7s arm64 i386";
+				VALID_ARCHS = "armv7 arm64 i386";
 			};
 			name = Debug_Production;
 		};
