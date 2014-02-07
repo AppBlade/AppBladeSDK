@@ -10,4 +10,7 @@
 // these once-public, now-private methods are required by AppBlade for backwards compatibility
 @interface PLCrashReporter ()
 - (NSString *) queuedCrashReportDirectory;
+-(NSString *)crashReportDirectory;
+-(NSString *)crashReportPath;
+
 @end
