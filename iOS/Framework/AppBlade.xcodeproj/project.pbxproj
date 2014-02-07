@@ -145,7 +145,7 @@
 		7EE6A17B1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		7EE6A17C1562DBAF00D78B84 /* FeedbackBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE6A1781562DBAF00D78B84 /* FeedbackBackgroundView.m */; };
 		A13A94E31533BA86002CDC12 /* FeedbackDialogue.h in Headers */ = {isa = PBXBuildFile; fileRef = A13A94E11533BA86002CDC12 /* FeedbackDialogue.h */; };
-		A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A13A94E41533BA86002CDC12 /* FeedbackDialogue.m in Sources */ = {isa = PBXBuildFile; fileRef = A13A94E21533BA86002CDC12 /* FeedbackDialogue.m */; };
 		CB18A57013ACE77C00091131 /* AppBladeWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18A56E13ACE77C00091131 /* AppBladeWebClient.m */; };
 		CB51D33514293D0600A43CB5 /* AppBlade.h in Headers */ = {isa = PBXBuildFile; fileRef = CBF47A0E13969C8B00949297 /* AppBlade.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CBF479FC13969C2B00949297 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF479FB13969C2B00949297 /* Foundation.framework */; };
