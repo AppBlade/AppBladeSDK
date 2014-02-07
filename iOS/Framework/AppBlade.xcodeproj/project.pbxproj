@@ -688,7 +688,7 @@
 		CBF479EF13969C2B00949297 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Raizlabs Corporation";
 			};
 			buildConfigurationList = CBF479F213969C2B00949297 /* Build configuration list for PBXProject "AppBlade" */;
