@@ -582,7 +582,7 @@ const int kNonceRandomStringLength = 74;
     [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
     
     [apiRequest setHTTPBody:body];
-    [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+    [apiRequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forHTTPHeaderField:@"Content-Length"];
 
     [self addSecurityToRequest:apiRequest];
 
@@ -641,7 +641,7 @@ const int kNonceRandomStringLength = 74;
         [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [apiRequest setHTTPBody:body];
-        [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+        [apiRequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forHTTPHeaderField:@"Content-Length"];
         
         [self addSecurityToRequest:apiRequest];
         
@@ -682,7 +682,7 @@ const int kNonceRandomStringLength = 74;
         [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [request setHTTPBody:body];
-        [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forHTTPHeaderField:@"Content-Length"];
 
         [self addSecurityToRequest:request];
         //request is a retained reference to the _request ivar.
