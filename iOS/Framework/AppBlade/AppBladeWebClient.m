@@ -852,7 +852,7 @@ const int kNonceRandomStringLength = 74;
 	char * objPointer;
 	char * strResult;
 	// Get the Raw Data length and ensure we actually have data
-	int intLength = [objData length];
+	int intLength = (int)[objData length];
 	if (intLength == 0) return nil;
 	// Setup the String-based Result placeholder and pointer within that placeholder
 	strResult = (char *)calloc(((intLength + 2) / 3) * 4, sizeof(char));
