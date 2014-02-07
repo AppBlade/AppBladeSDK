@@ -55,6 +55,8 @@ static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
+static NSString *PLCRASH_QUEUED_DIR = @"queued_reports";  //from PLCrashReporter.m
+
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
 
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
@@ -557,17 +559,41 @@ static BOOL is_encrypted () {
         ABDebugLog_internal(@"Can't catch and report crashes, SDK disabled");
         return;
     }
-[[PLCrashReporter sharedReporter] hasPendingCrashReport]
     // Check if we previously crashed
     if ([self hasPendingCrashReport]){
         [self handleCrashReport];
     }
 }
 
-- (void)hasPendingCrashReport
+- (BOOL)hasPendingCrashReport
 {
-    
+    /* Check for a live crash report file */
+    if(![[NSFileManager defaultManager] fileExistsAtPath: [[PLCrashReporter sharedReporter] crashReportPath]]){
+        return ([self hasQueuedCrashReports]); //check queue
+    }
+    return YES;
 }
+
+- (BOOL) hasQueuedCrashReports
+{
+    BOOL toRet = NO;
+    NSArray *files = [self queuedCrashReportFiles];
+    if(files != nil){
+        toRet = [files count] > 0;
+    }
+    return toRet;
+}
+
+- (NSArray *) queuedCrashReportFiles
+{
+    return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self queuedCrashReportDirectory] error:NULL];
+}
+
+- (NSString *) queuedCrashReportDirectory {
+    return [[[PLCrashReporter sharedReporter] crashReportDirectory] stringByAppendingPathComponent: PLCRASH_QUEUED_DIR];
+}
+
+
 
 
 - (void)handleCrashReport
