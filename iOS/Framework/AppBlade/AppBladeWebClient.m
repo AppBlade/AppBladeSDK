@@ -839,7 +839,7 @@ const int kNonceRandomStringLength = 74;
 - (NSString*)SHA_Base64:(NSString*)raw
 {
     unsigned char hashedChars[CC_SHA256_DIGEST_LENGTH];
-    CC_SHA256([raw UTF8String], [raw lengthOfBytesUsingEncoding:NSASCIIStringEncoding], hashedChars);
+    CC_SHA256([raw UTF8String], (CC_LONG)[raw lengthOfBytesUsingEncoding:NSASCIIStringEncoding], hashedChars);
     NSData *toEncode = [[NSData alloc] initWithBytes:hashedChars length:sizeof(hashedChars)];
     return [self encodeBase64WithData:toEncode];
 }
