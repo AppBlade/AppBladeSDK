@@ -29,14 +29,28 @@
 #import "GTMSenTestCase.h"
 
 #import "PLCrashSignalHandler.h"
+#import "PLCrashProcessInfo.h"
 
-@interface PLCrashSignalHandlerTests : SenTestCase @end
+#import <sys/mman.h>
 
-static void crash_callback (int signal, siginfo_t *siginfo, ucontext_t *uap, void *context) {
-    // Do nothing
+@interface PLCrashSignalHandlerTests : SenTestCase {
+}
+@end
+
+/* Page-aligned to allow us to tweak memory protections for test purposes. */
+static uint8_t crash_page[PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
+
+static bool crash_callback (int signal, siginfo_t *siginfo, ucontext_t *uap, void *context, PLCrashSignalHandlerCallback *next) {
+    return true;
 }
 
 @implementation PLCrashSignalHandlerTests
+
+- (void) setUp {
+    /* Ensure that handlers registered in each test are not automatically chained by the PLCrashSignalHandler. This
+     * includes any saved references to previously registered signal handlers. */
+    [PLCrashSignalHandler resetHandlers];
+}
 
 - (void) testSharedHandler {
     STAssertNotNil([PLCrashSignalHandler sharedHandler], @"Nil shared handler");
@@ -45,17 +59,92 @@ static void crash_callback (int signal, siginfo_t *siginfo, ucontext_t *uap, voi
 - (void) testRegisterSignalHandlers {
     NSError *error;
     struct sigaction action;
+
+    /* Register the signal handler */
+    STAssertTrue([[PLCrashSignalHandler sharedHandler] registerHandlerForSignal: SIGBUS
+                                                                       callback: &crash_callback
+                                                                        context: NULL
+                                                                          error: &error], @"Could not register signal handler: %@", error);
     
-    /* Ensure that no signal handler is registered for one of the fatal signals */
-    sigaction (SIGSEGV, NULL, &action);
-    STAssertEquals(action.sa_handler, SIG_DFL, @"Action already registered for SIGSEGV");
-    
-    /* Register the signal handlers */
-    STAssertTrue([[PLCrashSignalHandler sharedHandler] registerHandlerWithCallback: &crash_callback context: NULL error: &error], @"Could not register signal handler: %@", error);
-    
-    /* Check for SIGSEGV registration */
-    sigaction (SIGSEGV, NULL, &action);
-    STAssertNotEquals(action.sa_handler, SIG_DFL, @"Action not registered for SIGSEGV");
+    /* Check for SIGBUS registration */
+    sigaction (SIGBUS, NULL, &action);
+    STAssertNotEquals(action.sa_handler, SIG_DFL, @"Action not registered for SIGBUS");
 }
+
+static void sa_action_cb (int signo, siginfo_t *info, void *uapVoid) {
+    /* Note that we ran */
+    crash_page[1] = 0xFB;
+}
+
+static bool noop_crash_cb (int signal, siginfo_t *siginfo, ucontext_t *uap, void *context, PLCrashSignalHandlerCallback *next) {
+    /* Note that we ran */
+    crash_page[0] = 0xFA;
+    
+    // Let the original signal handler run
+    return PLCrashSignalHandlerForward(next, signal, siginfo, uap);
+}
+
+/**
+ * Verify that PLCrashSignalHandler correctly passes signals to the original sa_sigaction handler(s).
+ */
+- (void) testHandlerActionPassthrough {
+    NSError *error;
+
+    /* Register a standard POSIX handler */
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_flags = SA_SIGINFO;
+    sa.sa_sigaction = sa_action_cb;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGBUS, &sa, NULL);
+
+    /* Register our callback */
+    STAssertTrue([[PLCrashSignalHandler sharedHandler] registerHandlerForSignal: SIGBUS
+                                                                       callback: &noop_crash_cb
+                                                                        context: NULL
+                                                                          error: &error], @"Could not register signal handler: %@", error);
+
+    /* Verify that the callbacks are dispatched */
+    siginfo_t si;
+    ucontext_t uc;
+    plcrash_signal_handler(SIGBUS, &si, &uc);
+
+    STAssertEquals(crash_page[0], (uint8_t)0xFA, @"Crash callback did not run");
+    STAssertEquals(crash_page[1], (uint8_t)0xFB, @"Signal handler did not run");
+}
+
+static void sa_handler_cb (int signo) {
+    /* Note that we ran. */
+    crash_page[1] = 0xF0;
+}
+
+/**
+ * Verify that PLCrashSignalHandler correctly passes signals to the original sa_handler handler(s).
+ */
+- (void) testHandlerNonActionPassthrough {
+    NSError *error;
+    
+    /* Register a standard POSIX handler */
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_handler = sa_handler_cb;
+    sigemptyset(&sa.sa_mask);
+    STAssertEquals(0, sigaction(SIGBUS, &sa, NULL), @"Failed to set signal handler: %s", strerror(errno));
+
+    /* Register our callback */
+    STAssertTrue([[PLCrashSignalHandler sharedHandler] registerHandlerForSignal: SIGBUS
+                                                                       callback: &noop_crash_cb
+                                                                        context: NULL
+                                                                          error: &error], @"Could not register signal handler: %@", error);
+    
+    /* Verify that the callbacks are dispatched */
+    siginfo_t si;
+    ucontext_t uc;
+    plcrash_signal_handler(SIGBUS, &si, &uc);
+    
+    STAssertEquals(crash_page[0], (uint8_t)0xFA, @"Crash callback did not run");
+    STAssertEquals(crash_page[1], (uint8_t)0xF0, @"Signal handler did not run");
+}
+
 
 @end

@@ -2,7 +2,7 @@
  * Author: Damian Morris <damian@moso.com.au>
  *
  * Copyright (c) 2010 MOSO Corporation, Pty Ltd.
- * Copyright (c) 2010 Plausible Labs Cooperative, Inc.
+ * Copyright (c) 2010-2013 Plausible Labs Cooperative, Inc.
  *
  * All rights reserved.
  *
@@ -44,14 +44,16 @@
  * @param processName Process name. May be nil.
  * @param processID Process PID.
  * @param processPath Full path to the process' binary. May be nil.
+ * @param processStartTime Date and time that the crashing process was started. May be nil.
  * @param parentProcessName Parent process' name. May be nil.
  * @param parentProcessID Parent process' PID.
- * @param process Flag designating whether this process is native. If false, the process is being run via process-level
+ * @param native Flag designating whether this process is native. If false, the process is being run via process-level
  * CPU emulation (such as Rosetta).
  */
 - (id) initWithProcessName: (NSString *) processName
                  processID: (NSUInteger) processID
                processPath: (NSString *) processPath
+          processStartTime: (NSDate *) processStartTime
          parentProcessName: (NSString *) parentProcessName
            parentProcessID: (NSUInteger) parentProcessID
                     native: (BOOL) native
@@ -62,6 +64,7 @@
     _processName = [processName retain];
     _processID = processID;
     _processPath = [processPath retain];
+    _processStartTime = [processStartTime retain];
     _parentProcessName = [parentProcessName retain];
     _parentProcessID = parentProcessID;
     _native = native;
@@ -72,6 +75,7 @@
 - (void) dealloc {
     [_processName release];
     [_processPath release];
+    [_processStartTime release];
     [_parentProcessName release];
     [super dealloc];
 }
@@ -79,6 +83,7 @@
 @synthesize processName = _processName;
 @synthesize processID = _processID;
 @synthesize processPath = _processPath;
+@synthesize processStartTime = _processStartTime;
 @synthesize parentProcessName = _parentProcessName;
 @synthesize parentProcessID = _parentProcessID;
 @synthesize native = _native;

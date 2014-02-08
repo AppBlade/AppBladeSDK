@@ -582,7 +582,7 @@ const int kNonceRandomStringLength = 74;
     [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
     
     [apiRequest setHTTPBody:body];
-    [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+    [apiRequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forHTTPHeaderField:@"Content-Length"];
 
     [self addSecurityToRequest:apiRequest];
 
@@ -641,7 +641,7 @@ const int kNonceRandomStringLength = 74;
         [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [apiRequest setHTTPBody:body];
-        [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+        [apiRequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forHTTPHeaderField:@"Content-Length"];
         
         [self addSecurityToRequest:apiRequest];
         
@@ -682,7 +682,7 @@ const int kNonceRandomStringLength = 74;
         [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [request setHTTPBody:body];
-        [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forHTTPHeaderField:@"Content-Length"];
 
         [self addSecurityToRequest:request];
         //request is a retained reference to the _request ivar.
@@ -708,7 +708,7 @@ const int kNonceRandomStringLength = 74;
 {
     NSMutableString *asciiCharacters = [NSMutableString string];
     for (NSInteger i = 32; i < 127; i++)  {
-        [asciiCharacters appendFormat:@"%c", i];
+        [asciiCharacters appendFormat:@"%ld", (long)i];
     }
     NSCharacterSet *nonAsciiCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:asciiCharacters] invertedSet];
     NSString *rawVersionString = [self osVersionBuild];
@@ -839,7 +839,7 @@ const int kNonceRandomStringLength = 74;
 - (NSString*)SHA_Base64:(NSString*)raw
 {
     unsigned char hashedChars[CC_SHA256_DIGEST_LENGTH];
-    CC_SHA256([raw UTF8String], [raw lengthOfBytesUsingEncoding:NSASCIIStringEncoding], hashedChars);
+    CC_SHA256([raw UTF8String], (CC_LONG)[raw lengthOfBytesUsingEncoding:NSASCIIStringEncoding], hashedChars);
     NSData *toEncode = [[NSData alloc] initWithBytes:hashedChars length:sizeof(hashedChars)];
     return [self encodeBase64WithData:toEncode];
 }
@@ -852,7 +852,7 @@ const int kNonceRandomStringLength = 74;
 	char * objPointer;
 	char * strResult;
 	// Get the Raw Data length and ensure we actually have data
-	int intLength = [objData length];
+	int intLength = (int)[objData length];
 	if (intLength == 0) return nil;
 	// Setup the String-based Result placeholder and pointer within that placeholder
 	strResult = (char *)calloc(((intLength + 2) / 3) * 4, sizeof(char));

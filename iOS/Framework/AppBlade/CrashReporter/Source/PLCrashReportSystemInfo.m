@@ -51,6 +51,9 @@ PLCrashReportOperatingSystem PLCrashReportHostOperatingSystem =
  * @ingroup constants
  *
  * The current host's architecture.
+ *
+ * @deprecated This value has been deprecated, and will return PLCrashReportArchitectureUnknown
+ * on unsupported architectures.
  */
 PLCrashReportArchitecture PLCrashReportHostArchitecture =
 #ifdef __x86_64__
@@ -61,12 +64,10 @@ PLCrashReportArchitecture PLCrashReportHostArchitecture =
     PLCrashReportArchitectureARMv6;
 #elif defined(__ARM_ARCH_7A__)
     PLCrashReportArchitectureARMv7;
-#elif defined(__ARM_ARCH_7S__)
-    PLCrashReportArchitectureARMv7s;
 #elif defined(__ppc__)
     PLCrashReportArchitecturePPC;
 #else
-    #error Unknown machine architecture
+    PLCrashReportArchitectureUnknown;
 #endif
 
 

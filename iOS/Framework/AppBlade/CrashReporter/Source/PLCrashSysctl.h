@@ -1,7 +1,7 @@
 /*
  * Author: Landon Fuller <landonf@plausiblelabs.com>
  *
- * Copyright (c) 2008-2011 Plausible Labs Cooperative, Inc.
+ * Copyright (c) 2008-2013 Plausible Labs Cooperative, Inc.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -26,6 +26,13 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#ifndef PLCRASH_SYSCTL_H
+#define PLCRASH_SYSCTL_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -45,3 +52,9 @@ bool plcrash_sysctl_int (const char *name, int *result);
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* PLCRASH_SYSCTL_H */

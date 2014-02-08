@@ -11,6 +11,8 @@
 #import "AppBladeSimpleKeychain.h"
 
 #import "PLCrashReporter.h"
+#include "PLCrashReporter+AppBlade.h"
+
 #import "PLCrashReport.h"
 #import "AppBladeWebClient.h"
 #import "PLCrashReportTextFormatter.h"
@@ -31,7 +33,9 @@
 
 
 
-static NSString* const s_sdkVersion                     = @"0.5.1";
+
+
+static NSString* const s_sdkVersion                     = @"0.6.0";
 
 NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
 const int kAppBladeOfflineError                         = 1200;
@@ -51,6 +55,8 @@ static NSString* const kAppBladeFeedbackKeyScreenshot   = @"screenshot";
 static NSString* const kAppBladeFeedbackKeyFeedback     = @"feedback";
 static NSString* const kAppBladeFeedbackKeyBackup       = @"backupFileName";
 static NSString* const kAppBladeCrashReportKeyFilePath  = @"queuedFilePath";
+static NSString *PLCRASH_QUEUED_DIR = @"queued_reports";  //from PLCrashReporter.m
+
 static NSString* const kAppBladeCustomFieldsFile        = @"AppBladeCustomFields.plist";
 
 static NSString* const kAppBladeDefaultHost             = @"https://appblade.com";
@@ -117,7 +123,6 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 - (NSString*)randomString:(int)length;
 
 - (BOOL)hasPendingSessions;
-//hasPendingCrashReport in PLCrashReporter
 - (BOOL)hasPendingFeedbackReports;
 - (void)handleBackloggedFeedback;
 - (void)removeIntermediateFeedbackFiles:(NSString *)feedbackPath;
@@ -131,6 +136,11 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 - (void) cancelAllPendingRequests;
 - (void) cancelPendingRequestsByToken:(NSString *)token;
+
+//For the PLCrashReport upgrade, the following methods are now required
+- (NSString *)saveCrashReportInQueue:(NSString *)reportString;
+- (BOOL)hasPendingCrashReport;// in PLCrashReporter
+
 
 - (NSString*)hashFileOfPlist:(NSString *)filePath;
 
@@ -522,6 +532,7 @@ static BOOL is_encrypted () {
     [self.pendingRequests addOperation:client];
 }
 
+#pragma mark Crash Reporting
 
 - (void)catchAndReportCrashes
 {
@@ -548,13 +559,42 @@ static BOOL is_encrypted () {
         ABDebugLog_internal(@"Can't catch and report crashes, SDK disabled");
         return;
     }
-
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     // Check if we previously crashed
-    if ([crashReporter hasPendingCrashReport]){
+    if ([self hasPendingCrashReport]){
         [self handleCrashReport];
     }
 }
+
+- (BOOL)hasPendingCrashReport
+{
+    /* Check for a live crash report file */
+    if(![[NSFileManager defaultManager] fileExistsAtPath: [[PLCrashReporter sharedReporter] crashReportPath]]){
+        return ([self hasQueuedCrashReports]); //check queue
+    }
+    return YES;
+}
+
+- (BOOL) hasQueuedCrashReports
+{
+    BOOL toRet = NO;
+    NSArray *files = [self queuedCrashReportFiles];
+    if(files != nil){
+        toRet = [files count] > 0;
+    }
+    return toRet;
+}
+
+- (NSArray *) queuedCrashReportFiles
+{
+    return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self queuedCrashReportDirectory] error:NULL];
+}
+
+- (NSString *) queuedCrashReportDirectory {
+    return [[[PLCrashReporter sharedReporter] crashReportDirectory] stringByAppendingPathComponent: PLCRASH_QUEUED_DIR];
+}
+
+
+
 
 - (void)handleCrashReport
 {
@@ -575,7 +615,7 @@ static BOOL is_encrypted () {
         if (report != nil) {
             reportString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat: PLCrashReportTextFormatiOS];
             //send pending crash report to a unique file name in the the queue
-            queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
+             queuedFilePath = [self saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
             if(queuedFilePath == nil){
                 ABErrorLog(@"error saving crash report");
             }
@@ -597,7 +637,8 @@ static BOOL is_encrypted () {
 
     if(queuedFilePath == nil){
         //we had no immediate crash, or an invalid save, grab any stored crash report
-        queuedFilePath = [crashReporter getNextCrashReportPath];
+        [[PLCrashReporter sharedReporter] loadPendingCrashReportData];
+
         reportString = [NSString stringWithContentsOfFile:queuedFilePath encoding:NSUTF8StringEncoding error:&error];
     }
     
@@ -612,6 +653,41 @@ static BOOL is_encrypted () {
         ABDebugLog_internal(@"No crashes to report");
     }
 }
+
+
+//backwards-compatible crash report saving method. returns file path of saved report string
+
+- (NSString *) saveCrashReportInQueue:(NSString*)reportString
+{
+    NSString *filePath = [[self queuedCrashReportDirectory] stringByAppendingPathComponent:[self makeRandomFileName]];
+    NSError *error = nil;
+    [reportString writeToFile:filePath atomically:NO encoding:NSUTF8StringEncoding error:&error];
+    if(error == nil)
+    {
+        return filePath;
+    }
+    else
+    {
+        NSLog(@"Error writing new crash report to queue directory: %@", error );
+        return nil;
+    }
+}
+
+- (NSString *) makeRandomFileName
+{
+    return [NSString stringWithFormat:@"%@.txt", [self randomString:13]];
+}
+
+- (NSString *) randomString: (int) len {
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [s_letters characterAtIndex: arc4random()%[s_letters length]]];
+    }
+    return randomString;
+}
+
+
+
 
 - (NSString*)hashFileOfPlist:(NSString *)filePath
 {
@@ -1886,16 +1962,6 @@ static BOOL is_encrypted () {
     return [[self appBladeDeviceSecret] length] == 0;
 }
 
--(NSString *) randomString: (int) len {
-    
-    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
-    
-    for (int i=0; i<len; i++) {
-        [randomString appendFormat: @"%C", [s_letters characterAtIndex: arc4random()%[s_letters length]]];
-    }
-    
-    return randomString;
-}
 
 
 @end

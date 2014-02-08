@@ -1,7 +1,7 @@
 /*
  * Author: Landon Fuller <landonf@plausiblelabs.com>
  *
- * Copyright (c) 2008-2010 Plausible Labs Cooperative, Inc.
+ * Copyright (c) 2008-2013 Plausible Labs Cooperative, Inc.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -49,6 +49,7 @@ struct _PLCrashReportDecoder {
 - (NSArray *) extractImageInfo: (Plcrash__CrashReport *) crashReport error: (NSError **) outError;
 - (PLCrashReportExceptionInfo *) extractExceptionInfo: (Plcrash__CrashReport__Exception *) exceptionInfo error: (NSError **) outError;
 - (PLCrashReportSignalInfo *) extractSignalInfo: (Plcrash__CrashReport__Signal *) signalInfo error: (NSError **) outError;
+- (PLCrashReportMachExceptionInfo *) extractMachExceptionInfo: (Plcrash__CrashReport__Signal__MachException *) machExceptionInfo error: (NSError **) outError;
 
 @end
 
@@ -92,6 +93,24 @@ static void populate_nserror (NSError **error, PLCrashReporterError code, NSStri
         goto error;
     }
 
+    /* Report info (optional) */
+    _uuid = NULL;
+    if (_decoder->crashReport->report_info != NULL) {
+        /* Report UUID (optional)
+         * If our minimum supported target is bumped to (10.8+, iOS 6.0+), NSUUID should
+         * be used instead. */
+        if (_decoder->crashReport->report_info->has_uuid) {
+            /* Validate the UUID length */
+            if (_decoder->crashReport->report_info->uuid.len != sizeof(uuid_t)) {
+                populate_nserror(outError, PLCrashReporterErrorCrashReportInvalid , @"Report UUID value is not a standard 16 bytes");
+                goto error;
+            }
+
+            CFUUIDBytes uuid_bytes;
+            memcpy(&uuid_bytes, _decoder->crashReport->report_info->uuid.data, _decoder->crashReport->report_info->uuid.len);
+            _uuid = CFUUIDCreateFromUUIDBytes(NULL, uuid_bytes);
+        }
+    }
 
     /* System info */
     _systemInfo = [[self extractSystemInfo: _decoder->crashReport->system_info error: outError] retain];
@@ -122,6 +141,13 @@ static void populate_nserror (NSError **error, PLCrashReporterError code, NSStri
     if (!_signalInfo)
         goto error;
 
+    /* Mach exception info */
+    if (_decoder->crashReport->signal != NULL && _decoder->crashReport->signal->mach_exception != NULL) {
+        _machExceptionInfo = [[self extractMachExceptionInfo: _decoder->crashReport->signal->mach_exception error: outError] retain];
+        if (!_machExceptionInfo)
+            goto error;
+    }
+
     /* Thread info */
     _threads = [[self extractThreadInfo: _decoder->crashReport error: outError] retain];
     if (!_threads)
@@ -149,12 +175,17 @@ error:
 - (void) dealloc {
     /* Free the data objects */
     [_systemInfo release];
+    [_machineInfo release];
     [_applicationInfo release];
     [_processInfo release];
     [_signalInfo release];
+    [_machExceptionInfo release];
     [_threads release];
     [_images release];
     [_exceptionInfo release];
+    
+    if (_uuid != NULL)
+        CFRelease(_uuid);
 
     /* Free the decoder state */
     if (_decoder != NULL) {
@@ -211,9 +242,11 @@ error:
 @synthesize applicationInfo = _applicationInfo;
 @synthesize processInfo = _processInfo;
 @synthesize signalInfo = _signalInfo;
+@synthesize machExceptionInfo = _machExceptionInfo;
 @synthesize threads = _threads;
 @synthesize images = _images;
 @synthesize exceptionInfo = _exceptionInfo;
+@synthesize uuidRef = _uuid;
 
 @end
 
@@ -329,7 +362,7 @@ error:
  */
 - (PLCrashReportMachineInfo *) extractMachineInfo: (Plcrash__CrashReport__MachineInfo *) machineInfo error: (NSError **) outError {
     NSString *model = nil;
-    PLCrashReportProcessorInfo *processorInfo;
+    PLCrashReportProcessorInfo *processorInfo = nil;
 
     /* Validate */
     if (machineInfo == NULL) {
@@ -344,9 +377,11 @@ error:
         model = [NSString stringWithUTF8String: machineInfo->model];
 
     /* Set up the processor info. */
-    processorInfo = [self extractProcessorInfo: machineInfo->processor error: outError];
-    if (processorInfo == nil)
-        return nil;
+    if (machineInfo->processor != NULL) {
+        processorInfo = [self extractProcessorInfo: machineInfo->processor error: outError];
+        if (processorInfo == nil)
+            return nil;
+    }
 
     /* Done */
     return [[[PLCrashReportMachineInfo alloc] initWithModelName: model
@@ -417,6 +452,11 @@ error:
     NSString *processPath = nil;
     if (processInfo->process_path != NULL)
         processPath = [NSString stringWithUTF8String: processInfo->process_path];
+
+    /* Start time available? */
+    NSDate *startTime = nil;
+    if (processInfo->has_start_time)
+        startTime = [NSDate dateWithTimeIntervalSince1970: processInfo->start_time];
     
     /* Parent Name available? */
     NSString *parentProcessName = nil;
@@ -431,9 +471,28 @@ error:
     return [[[PLCrashReportProcessInfo alloc] initWithProcessName: processName
                                                         processID: processID
                                                       processPath: processPath
+                                                 processStartTime: startTime
                                                 parentProcessName: parentProcessName
                                                   parentProcessID: parentProcessID
                                                            native: processInfo->native] autorelease];
+}
+
+/**
+ * Extract symbol information from the crash log. Returns nil on error, or a PLCrashReportSymbolInfo
+ * instance on success.
+ */
+- (PLCrashReportSymbolInfo *) extractSymbolInfo: (Plcrash__CrashReport__Symbol *) symbol error: (NSError **) outError {
+    if (symbol == NULL) {
+        populate_nserror(outError, PLCrashReporterErrorCrashReportInvalid,
+                         NSLocalizedString(@"Crash report is missing symbol information",
+                                           @"Missing symbol info in crash report"));
+        return nil;
+    }
+    
+    NSString *name = [NSString stringWithUTF8String: symbol->name];
+    return [[[PLCrashReportSymbolInfo alloc] initWithSymbolName: name
+                                                   startAddress: symbol->start_address
+                                                     endAddress: symbol->has_end_address ? symbol->end_address : 0] autorelease];
 }
 
 /**
@@ -449,7 +508,14 @@ error:
         return nil;
     }
     
-    return [[[PLCrashReportStackFrameInfo alloc] initWithInstructionPointer: stackFrame->pc] autorelease];
+    PLCrashReportSymbolInfo *symbolInfo = nil;
+    if (stackFrame->symbol != NULL) {
+        if ((symbolInfo = [self extractSymbolInfo: stackFrame->symbol error: outError]) == NULL)
+            return NULL;
+    }
+
+    return [[[PLCrashReportStackFrameInfo alloc] initWithInstructionPointer: stackFrame->pc
+                                                                 symbolInfo: symbolInfo] autorelease];
 }
 
 /**
@@ -546,8 +612,10 @@ error:
         
         /* Extract code type (if available). */
         PLCrashReportProcessorInfo *codeType = nil;
-        if ((codeType = [self extractProcessorInfo: image->code_type error: outError]) == nil)
-            return nil;
+        if (image->code_type != NULL) {
+            if ((codeType = [self extractProcessorInfo: image->code_type error: outError]) == nil)
+                return nil;
+        }
 
 
         imageInfo = [[[PLCrashReportBinaryImageInfo alloc] initWithCodeType: codeType
@@ -655,6 +723,38 @@ error:
     return [[[PLCrashReportSignalInfo alloc] initWithSignalName: name code: code address: signalInfo->address] autorelease];
 }
 
+/**
+ * Extract Mach exception information from the crash log. Returns nil on error.
+ */
+- (PLCrashReportMachExceptionInfo *) extractMachExceptionInfo: (Plcrash__CrashReport__Signal__MachException *) machExceptionInfo
+                                                        error: (NSError **) outError
+{
+    /* Validate */
+    if (machExceptionInfo == NULL) {
+        populate_nserror(outError, PLCrashReporterErrorCrashReportInvalid,
+                         NSLocalizedString(@"Crash report is missing Mach Exception Information section",
+                                           @"Missing mach exception info in crash report"));
+        return nil;
+    }
+    
+    /* Sanity check; there should really only ever be 2 */
+    if (machExceptionInfo->n_codes > UINT8_MAX) {
+        populate_nserror(outError, PLCrashReporterErrorCrashReportInvalid,
+                         NSLocalizedString(@"Crash report includes too many Mach Exception codes",
+                                           @"Invalid mach exception info in crash report"));
+        return nil;
+    }
+    
+    /* Extract the codes */
+    NSMutableArray *codes = [NSMutableArray arrayWithCapacity: machExceptionInfo->n_codes];
+    for (size_t i = 0; i < machExceptionInfo->n_codes; i++) {
+        [codes addObject: [NSNumber numberWithUnsignedLongLong: machExceptionInfo->codes[i]]];
+    }
+    
+    /* Done */
+    return [[[PLCrashReportMachExceptionInfo alloc] initWithType: machExceptionInfo->type codes: codes] autorelease];
+}
+
 @end
 
 /**
@@ -669,7 +769,7 @@ error:
  * @param cause The underlying cause, if any. May be nil.
  */
 static void populate_nserror (NSError **error, PLCrashReporterError code, NSString *description) {
-    NSMutableDictionary *userInfo;
+    NSDictionary *userInfo;
     
     if (error == NULL)
         return;

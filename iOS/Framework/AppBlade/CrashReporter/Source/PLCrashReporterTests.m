@@ -27,7 +27,11 @@
  */
 
 #import "GTMSenTestCase.h"
+
+#import "PLCrashReport.h"
 #import "PLCrashReporter.h"
+#import "PLCrashFrameWalker.h"
+#import "PLCrashTestThread.h"
 
 @interface PLCrashReporterTests : SenTestCase
 @end
@@ -37,6 +41,45 @@
 - (void) testSingleton {
     STAssertNotNil([PLCrashReporter sharedReporter], @"Returned nil singleton instance");
     STAssertTrue([PLCrashReporter sharedReporter] == [PLCrashReporter sharedReporter], @"Crash reporter did not return singleton instance");
+}
+
+/**
+ * Test generation of a 'live' crash report for a specific thread.
+ */
+- (void) testGenerateLiveReportWithThread {
+    NSError *error;
+    NSData *reportData;
+    plcrash_test_thread_t thr;
+
+    /* Spawn a thread and generate a report for it */
+    plcrash_test_thread_spawn(&thr);
+    reportData = [[PLCrashReporter sharedReporter] generateLiveReportWithThread: pthread_mach_thread_np(thr.thread)
+                                                                              error: &error];
+    plcrash_test_thread_stop(&thr);
+    STAssertNotNil(reportData, @"Failed to generate live report: %@", error);
+
+    /* Try parsing the result */
+    PLCrashReport *report = [[PLCrashReport alloc] initWithData: reportData error: &error];
+    STAssertNotNil(report, @"Could not parse geneated live report: %@", error);
+
+    /* Sanity check the signal info */
+    STAssertEqualStrings([[report signalInfo] name], @"SIGTRAP", @"Incorrect signal name");
+    STAssertEqualStrings([[report signalInfo] code], @"TRAP_TRACE", @"Incorrect signal code");
+}
+
+/**
+ * Test generation of a 'live' crash report.
+ */
+- (void) testGenerateLiveReport {
+    NSError *error;
+    NSData *reportData = [[PLCrashReporter sharedReporter] generateLiveReportAndReturnError: &error];
+    STAssertNotNil(reportData, @"Failed to generate live report: %@", error);
+    
+    PLCrashReport *report = [[PLCrashReport alloc] initWithData: reportData error: &error];
+    STAssertNotNil(report, @"Could not parse geneated live report: %@", error);
+
+    STAssertEqualStrings([[report signalInfo] name], @"SIGTRAP", @"Incorrect signal name");
+    STAssertEqualStrings([[report signalInfo] code], @"TRAP_TRACE", @"Incorrect signal code");
 }
 
 @end

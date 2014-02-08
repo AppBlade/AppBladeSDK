@@ -1,6 +1,6 @@
 //
 //  AppBlade.h
-//  AppBlade iOS SDK v0.5.0
+//  AppBlade iOS SDK v0.6.0
 //
 //  Created by Craig Spitzkoff on 6/1/11.
 //  Copyright 2011 AppBlade. All rights reserved.

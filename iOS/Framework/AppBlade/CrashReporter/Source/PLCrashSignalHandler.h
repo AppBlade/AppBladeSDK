@@ -27,6 +27,30 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "PLCrashMacros.h"
+
+PLCR_C_BEGIN_DECLS
+
+typedef struct PLCrashSignalHandlerCallback PLCrashSignalHandlerCallback;
+
+/**
+ * @internal
+ * Signal handler callback function
+ *
+ * @param signo The received signal.
+ * @param info The signal info.
+ * @param uap The signal thread context.
+ * @param context The previously specified context for this handler.
+ * @param next A borrowed reference to the next signal handler's callback, or NULL if this is the final registered callback.
+ * May be used to forward the signal via PLCrashSignalHandlerForward.
+ *
+ * @return Return true if the signal was handled and execution should continue, false if the signal was not handled.
+ */
+typedef bool (*PLCrashSignalHandlerCallbackFunc)(int signo, siginfo_t *info, ucontext_t *uap, void *context, PLCrashSignalHandlerCallback *next);
+
+void plcrash_signal_handler (int signo, siginfo_t *info, void *uapVoid);
+
+bool PLCrashSignalHandlerForward (PLCrashSignalHandlerCallback *next, int signal, siginfo_t *info, ucontext_t *uap);
 
 @interface PLCrashSignalHandler : NSObject {
 @private
@@ -34,13 +58,16 @@
     stack_t _sigstk;
 }
 
-/**
- * @internal
- * Signal handler callback.
- */
-typedef void (*PLCrashSignalHandlerCallback)(int signal, siginfo_t *info, ucontext_t *uap, void *context);
 
 + (PLCrashSignalHandler *) sharedHandler;
-- (BOOL) registerHandlerWithCallback: (PLCrashSignalHandlerCallback) crashCallback context: (void *) context error: (NSError **) outError;
+
++ (void) resetHandlers;
+
+- (BOOL) registerHandlerForSignal: (int) signo
+                         callback: (PLCrashSignalHandlerCallbackFunc) callback
+                          context: (void *) context
+                            error: (NSError **) outError;
 
 @end
+
+PLCR_C_END_DECLS

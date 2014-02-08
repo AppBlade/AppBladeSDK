@@ -1,7 +1,7 @@
 /*
  * Author: Landon Fuller <landonf@plausiblelabs.com>
  *
- * Copyright (c) 2008-2011 Plausible Labs Cooperative, Inc.
+ * Copyright (c) 2008-2013 Plausible Labs Cooperative, Inc.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -31,10 +31,10 @@
 
 /**
  * @internal
- * @defgroup plcrash_host Gather Host Statistics
- * @ingroup plcrash_host
+ * @defgroup plcrash_host Host and Process Info
+ * @ingroup plcrash_internal
  *
- * Implements general utility functions for gathering host statistics.
+ * Implements general utility functions for gathering host/process statistics.
  * @{
  */
 
