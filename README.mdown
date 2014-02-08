@@ -1,7 +1,7 @@
 #AppBlade SDK#
 *An easy-to-use, drop-in library to help you get the most out of Appblade.*
 
-###Clone in our repo, or [Download our compiled SDK v0.6.0](http://appblade.com/sdk/download) 
+###Clone in our repo, or [Download our compiled SDK v0.6.1](http://appblade.com/sdk/download) 
 ###[Put our SDK in your project](https://github.com/AppBlade/SDK/wiki/Embedding-our-SDK)
 ###[Check out how to put in our features](https://github.com/AppBlade/SDK/wiki/Feature-Implementation-Guide)
 
