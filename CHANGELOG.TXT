@@ -1,5 +1,12 @@
 2014-02-08 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
 	iOS
+	 * Version 0.6.1 
+	 * Added PLCF_RELEASE_BUILD=1 to the build flags. Consider migrating PLCrashReporter even further in the future. 
+	Android
+	* No changes
+
+2014-02-08 	Andrew Tremblay   <andrew.tremblay@raizlabs.com>
+	iOS
 	 * Version 0.6.0 
 	 * Added support for 64-bit devices
 	 * Updated PLCrashReporter source to latest release (v1.2-rc2)
