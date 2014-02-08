@@ -880,6 +880,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "PLCF_RELEASE_BUILD=1";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
 				LIBRARY_SEARCH_PATHS = (
@@ -928,6 +929,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PLCF_RELEASE_BUILD=1",
+					"DEBUG=1",
+				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
 				LIBRARY_SEARCH_PATHS = (
@@ -973,6 +978,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "PLCF_RELEASE_BUILD=1";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
 				LIBRARY_SEARCH_PATHS = (
@@ -1133,6 +1139,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppBlade/AppBlade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PLCF_RELEASE_BUILD=1",
+					"DEBUG=1",
+				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/AppBlade/CrashReporter/**";
 				LIBRARY_SEARCH_PATHS = (
