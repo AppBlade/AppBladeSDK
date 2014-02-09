@@ -249,7 +249,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
     
     [apiRequest setHTTPBody:body];
-    [apiRequest setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+    [apiRequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forHTTPHeaderField:@"Content-Length"];
     
     //set our weak/block references
     __weak APBWebOperation *weakClient = client;
@@ -320,7 +320,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
             ABDebugLog_internal(@"found file at %@", feedbackBacklogFilePath);
             NSMutableArray* backupFiles = [NSMutableArray arrayWithContentsOfFile:feedbackBacklogFilePath];
             if (backupFiles.count > 0) {
-                ABDebugLog_internal(@"found %d files at feedbackBacklogFilePath", backupFiles.count);
+                ABDebugLog_internal(@"found %lu files at feedbackBacklogFilePath", (unsigned long)backupFiles.count);
                 toRet = YES;
             }
             else

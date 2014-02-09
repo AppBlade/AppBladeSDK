@@ -79,7 +79,7 @@
         return TRUE;
     }else{
         // If the keychain item already exists, modify it:
-        NSLog(@"Keychain error occured during keychain %@ test: %ld : %@", keychainInterimCodeLabel, keychainErrorCode, [APBSimpleKeychain errorMessageFromCode:keychainErrorCode]);
+        NSLog(@"Keychain error occured during keychain %@ test: %d : %@", keychainInterimCodeLabel, (int)keychainErrorCode, [APBSimpleKeychain errorMessageFromCode:keychainErrorCode]);
         NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
         return FALSE;
     }
@@ -129,7 +129,7 @@
     else
     {
         // If the keychain item already exists, modify it:
-        NSLog(@"Keychain error occured during keychain %@ test: %ld : %@", keychainInterimCodeLabel, keychainErrorCode, [APBSimpleKeychain errorMessageFromCode:keychainErrorCode]);
+        NSLog(@"Keychain error occured during keychain %@ test: %d : %@", keychainInterimCodeLabel, (int)keychainErrorCode, [APBSimpleKeychain errorMessageFromCode:keychainErrorCode]);
         NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
         if(secondTry){
             NSLog(@"We've confirmed this fails twice in a row.");
@@ -248,7 +248,7 @@
     resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
     if(resultCode != noErr){
         NSLog(@"Attempting to store %@ failed", data);
-        NSLog(@"Error storing to keychain: %ld : %@", resultCode, [APBSimpleKeychain errorMessageFromCode:resultCode]);
+        NSLog(@"Error storing to keychain: %d : %@", (int)resultCode, [APBSimpleKeychain errorMessageFromCode:resultCode]);
         if(resultCode == errSecDuplicateItem){
             id dataExistenceCheck = [APBSimpleKeychain load:service];
             NSLog(@"This exists instead: %@", dataExistenceCheck);
@@ -295,7 +295,7 @@
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef) keychainQuery);
     if(resultCode != noErr){
-        NSLog(@"Error deleting from keychain: %ld : %@", resultCode, [APBSimpleKeychain errorMessageFromCode:resultCode]);
+        NSLog(@"Error deleting from keychain: %d : %@", (int)resultCode, [APBSimpleKeychain errorMessageFromCode:resultCode]);
         wasSuccessful = NO;
     }else{
         wasSuccessful = YES;

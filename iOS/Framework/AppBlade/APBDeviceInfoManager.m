@@ -45,7 +45,7 @@
 {
     NSMutableString *asciiCharacters = [NSMutableString string];
     for (NSInteger i = 32; i < 127; i++)  {
-        [asciiCharacters appendFormat:@"%c", i];
+        [asciiCharacters appendFormat:@"%ld", (long)i];
     }
     NSCharacterSet *nonAsciiCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:asciiCharacters] invertedSet];
     NSString *rawVersionString = [self osVersionBuild];

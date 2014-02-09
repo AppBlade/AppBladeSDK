@@ -118,26 +118,26 @@
 
 -(void)setIdFromDatabaseStatement:(NSInteger)rowId
 {
-    self.dbRowId = [NSString stringWithFormat:@"%d", rowId];
+    self.dbRowId = [NSString stringWithFormat:@"%ld", (long)rowId];
 }
 
 //column reads (writes have the values embedded into the sql statement, so we shouldn't need to bind them.)
 -(NSData *)readDataInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    int actualIndex = [[self baseColumnNames] count] - 1 + [indexOffset integerValue];
-    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, actualIndex) length:sqlite3_column_bytes(statement, indexOffset)];
+    NSNumber *actualIndex = [NSNumber numberWithUnsignedLong:([[self baseColumnNames] count] - (NSUInteger)1 + [indexOffset integerValue])];
+    return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, [actualIndex intValue]) length:sqlite3_column_bytes(statement, indexOffset)];
 }
 
 -(NSString *)readStringInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    int actualIndex = ([[self baseColumnNames] count] - 1) + [indexOffset integerValue];
+    NSNumber *actualIndex = [NSNumber numberWithUnsignedLong:(([[self baseColumnNames] count] - 1) + [indexOffset integerValue])];
     //confirm we have a column at that index
     int totalColumns = sqlite3_column_count(statement);
-    if(totalColumns > actualIndex){
+    if(totalColumns > [actualIndex intValue]){
         return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, actualIndex)];
     }else
     {
-        ABDebugLog_internal(@"Index out of bounds: %d", actualIndex);
+        ABDebugLog_internal(@"Index out of bounds: %d", [actualIndex intValue]);
         return nil;
     }
 }
@@ -149,8 +149,9 @@
 
 -(NSTimeInterval)readTimeIntervalInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    int actualIndex = [[self baseColumnNames] count] - 1 + [indexOffset integerValue]; //adding NSUinteger to an NSInteger and then blindly assuming it's an int
-    return sqlite3_column_double(statement, actualIndex);
+    NSNumber *actualIndex = [NSNumber numberWithUnsignedLong:([[self baseColumnNames] count] - 1 + [indexOffset integerValue])];
+    //adding NSUinteger to an NSInteger and then blindly assuming it's an int
+    return sqlite3_column_double(statement, [actualIndex intValue]);
 }
 
 

@@ -379,7 +379,7 @@ const int kNonceRandomStringLength = 74;
     NSString* ext = [self.delegate appBladeDeviceSecret];
     
     NSString *requestBodyHash = [self SHA_Base64:requestBodyRaw];
-    ABDebugLog_internal(@"%d", [requestBodyRaw length]);
+    ABDebugLog_internal(@"%lu", (unsigned long)[requestBodyRaw length]);
     
     // Compose the normalized request body.
     NSMutableString* request_body = [NSMutableString stringWithFormat:@"%@\n%@\n%@\n%@\n%@\n%@\n%@\n",
@@ -428,7 +428,7 @@ const int kNonceRandomStringLength = 74;
 - (NSString*)SHA_Base64:(NSString*)raw
 {
     unsigned char hashedChars[CC_SHA256_DIGEST_LENGTH];
-    CC_SHA256([raw UTF8String], [raw lengthOfBytesUsingEncoding:NSASCIIStringEncoding], hashedChars);
+    CC_SHA256([raw UTF8String], (CC_LONG)[raw lengthOfBytesUsingEncoding:NSASCIIStringEncoding], hashedChars);
     NSData *toEncode = [[NSData alloc] initWithBytes:hashedChars length:sizeof(hashedChars)];
     return [self encodeBase64WithData:toEncode];
 }
@@ -441,7 +441,7 @@ const int kNonceRandomStringLength = 74;
 	char * objPointer;
 	char * strResult;
 	// Get the Raw Data length and ensure we actually have data
-	int intLength = [objData length];
+	NSUInteger intLength = [objData length];
 	if (intLength == 0) return nil;
 	// Setup the String-based Result placeholder and pointer within that placeholder
 	strResult = (char *)calloc(((intLength + 2) / 3) * 4, sizeof(char));

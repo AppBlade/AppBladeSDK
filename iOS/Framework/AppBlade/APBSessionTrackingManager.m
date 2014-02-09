@@ -71,7 +71,7 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:sessionFilePath]) {
         NSArray* sessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
-        ABDebugLog_internal(@"%d stored Sessions Exist", [sessions count]);
+        ABDebugLog_internal(@"%lu stored Sessions Exist", (unsigned long)[sessions count]);
         
         if(![self hasPendingSessions] && [sessions count] > 0){
             APBWebOperation * client = [[AppBlade sharedManager] generateWebOperation];
@@ -154,7 +154,7 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
         [body appendData:[[[@"\r\n--" stringByAppendingString:multipartBoundary] stringByAppendingString:@"--"] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [request setHTTPBody:body];
-        [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[body length]] forHTTPHeaderField:@"Content-Length"];
         
         //request is a retained reference to the _request ivar.
     }
@@ -197,7 +197,8 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
             NSArray* allSessions = (NSArray*)[[AppBlade sharedManager] readFile:sessionFilePath];
             NSMutableArray* freshSessions = [allSessions mutableCopy]; //most we'll have is all sessions
             for(NSDictionary *sentSession in sentSessions){
-                for (int i = freshSessions.count-1; i >= 0; i--) {
+                int initialIndex = (int)freshSessions.count - 1;
+                for (int i = initialIndex; i >= 0; i--) {
                     NSDictionary* session = (NSDictionary *)[freshSessions objectAtIndex:i];
                     if ([session isEqualToDictionary:sentSession]) {
                         [freshSessions removeObjectAtIndex:i];

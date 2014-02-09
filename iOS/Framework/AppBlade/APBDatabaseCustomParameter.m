@@ -56,7 +56,12 @@
 
 -(NSString *)paramsAsString {
     NSError *error = nil;
-    BOOL paramCheck = [NSJSONSerialization isValidJSONObject:self.storedParams];
+    BOOL paramIsValid = [NSJSONSerialization isValidJSONObject:self.storedParams];
+    if (!paramIsValid) {
+        NSLog(@"Something is very wrong with your params, they could not be conerted to json");
+        return @"";
+    }
+    
     NSData *dataFromDictionary = [NSJSONSerialization dataWithJSONObject:self.storedParams options:0 error:&error]; //create NSData from JSONSerialization
     NSString *stringFromData = [APBBase64Encoder base64EncodedStringFromData:dataFromDictionary];
     return stringFromData; //return stringified NSData
