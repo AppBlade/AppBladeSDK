@@ -255,7 +255,8 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
         if (report != nil) {
             reportString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat: PLCrashReportTextFormatiOS];
             //send pending crash report to a unique file name in the the queue
-            queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
+//            queuedFilePath = [crashReporter saveCrashReportInQueue:reportString]; //file will stay in the queue until it's sent
+#warning fix PLCrashReporter imlpementation
             if(queuedFilePath == nil){
                 ABErrorLog(@"error saving crash report");
             }
@@ -277,7 +278,8 @@ static NSString* const kCrashDictQueuedFilePath     = @"_queuedFilePath";
     
     if(queuedFilePath == nil){
         //we had no immediate crash, or an invalid save, grab any stored crash report
-        queuedFilePath = [crashReporter getNextCrashReportPath];
+//        queuedFilePath = [crashReporter getNextCrashReportPath];
+#warning fix PLCrashReporter imlpementation
         reportString = [NSString stringWithContentsOfFile:queuedFilePath encoding:NSUTF8StringEncoding error:&error];
     }
     if(queuedFilePath != nil){

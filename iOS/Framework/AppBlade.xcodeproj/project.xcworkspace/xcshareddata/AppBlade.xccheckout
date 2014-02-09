@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>6358411C-86B4-4A79-A97E-70609EDCC949</string>
+	<string>66F86974-0C7B-470D-83F8-7A159AAA9EC0</string>
 	<key>IDESourceControlProjectName</key>
 	<string>AppBlade</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>47B9878F-55C4-4F5F-8CAD-D00A3BA5617B</key>
-		<string>ssh://github.com/AppBlade/SDK.git</string>
+		<key>A3A043C9-D7C4-4DAE-A80E-AAF76762A37D</key>
+		<string>ssh://github.com/AppBlade/AppBladeSDK.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>iOS/Framework/AppBlade.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>47B9878F-55C4-4F5F-8CAD-D00A3BA5617B</key>
+		<key>A3A043C9-D7C4-4DAE-A80E-AAF76762A37D</key>
 		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/AppBlade/SDK.git</string>
+	<string>ssh://github.com/AppBlade/AppBladeSDK.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>47B9878F-55C4-4F5F-8CAD-D00A3BA5617B</string>
+	<string>A3A043C9-D7C4-4DAE-A80E-AAF76762A37D</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>47B9878F-55C4-4F5F-8CAD-D00A3BA5617B</string>
+			<string>A3A043C9-D7C4-4DAE-A80E-AAF76762A37D</string>
 			<key>IDESourceControlWCCName</key>
 			<string>SDK</string>
 		</dict>
