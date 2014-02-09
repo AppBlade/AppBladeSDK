@@ -59,7 +59,7 @@
         
         // header text
         self.feedbackTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, feedbackWidthMin, 44) ] ;
-        [self.feedbackTitle setTextAlignment:UITextAlignmentCenter ];
+        [self.feedbackTitle setTextAlignment:NSTextAlignmentCenter ];
         self.feedbackTitle.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18.0f];
         self.feedbackTitle.text = @"Feedback";
         self.feedbackTitle.textColor = [UIColor colorWithRed:175/255.0f green:33/255.0f blue:41/255.0f alpha:1.0];
