@@ -1,5 +1,5 @@
 //
-//  AppBladeWebClient.m
+//  AppBladeWebOperation.m
 //  AppBlade
 //
 //  Created by Craig Spitzkoff on 6/18/11.
@@ -7,7 +7,7 @@
 //
 
 #import "APBWebOperation.h"
-#import "PLCrashReporter.h"
+//#import "PLCrashReporter.h"
 
 #import "AppBlade.h"
 #import "AppBladeLogging.h"
