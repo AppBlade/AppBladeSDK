@@ -172,6 +172,11 @@
  @functiongroup Session Tracking
  */
 
+/*!
+ @method
+ @abstract Starts tracking sessions and reporting them incrementally. */
+- (void)trackSessions;
+
 /*!  
  @method
  @abstract Starts a new Session Tracking session. */
