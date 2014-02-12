@@ -134,7 +134,10 @@
     //confirm we have a column at that index
     int totalColumns = sqlite3_column_count(statement);
     if(totalColumns > [actualIndex intValue]){
-        return [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, actualIndex)];
+        NSString *retrievedString = ((char *)sqlite3_column_text(statement, actualIndex)) ?
+        [NSString stringWithUTF8String:(char *)sqlite3_column_text(statement, actualIndex)] :
+        nil;
+        return retrievedString;
     }else
     {
         ABDebugLog_internal(@"Index out of bounds: %d", [actualIndex intValue]);
