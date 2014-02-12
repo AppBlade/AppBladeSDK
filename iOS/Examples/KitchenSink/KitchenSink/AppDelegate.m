@@ -62,6 +62,11 @@
     //[blade showFeedbackDialogue];
     //[blade showFeedbackDialogue:takeScreenshot]; has an optional takeScreenshot BOOL variable if you don't want to send a screnshot to AppBlade.
     
+    /******************************************
+     SESSION TRACKING SETUP CALL
+     Will incrementally ping the server about this app being open. As well as any data that might be available regarding the session.
+     ******************************************/
+    [blade trackSessions];
     
     /******************************************
      CUSTOM PARAMETERS CALL
