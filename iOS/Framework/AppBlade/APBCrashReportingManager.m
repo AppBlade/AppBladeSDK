@@ -13,6 +13,7 @@
 
 #import "AppBladeDatabaseColumn.h"
 
+#import "PLCrashNamespace.h"
 #import "PLCrashReporter.h"
 #import "PLCrashReport.h"
 #import "PLCrashReportTextFormatter.h"
