@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "APBBasicFeatureManager.h"
 
-
+#define APPBLADE_SESSION_TRACKING_INTERVAL 30.0 //seconds
 
 extern NSString *sessionURLFormat;
 extern NSString *kSessionStartDate;
 extern NSString *kSessionEndDate;
 extern NSString *kSessionTimeElapsed;
+
 
 /*!
  @class APBSessionTrackingManager
@@ -26,12 +27,42 @@ extern NSString *kSessionTimeElapsed;
 @property (nonatomic, retain) NSDate *sessionStartDate;
 @property (nonatomic, retain) NSDate *sessionEndDate;
 
-- (void)logSessionEnd;
+/*!
+ @brief the AppBladeSessionTrackingBlock for tracking appblade sessions automatically
+ @discussion sessionTrackingBlock is our primary tracking block and is meant for cases where the state of the app must be perpetually tracked, such as when the app enters Guided Access or Kiosk mode.
+ */
+@property (nonatomic, retain) NSTimer *sessionTrackingTimer;
+
+/*!
+ session tracking methods
+ */
+- (void)trackSessions;
+- (void)checkSessions:(NSTimer *)timer;
+- (void)stopTrackingSessions;
+
+/*!
+ Starts a session.
+ */
 - (void)logSessionStart;
+
+/*! 
+ Stops a session.
+ */
+- (void)logSessionEnd;
+
+/*!
+ A dictionary containing data bout the current session.
+ */
 - (NSDictionary*)currentSession;
 
--(void)checkForAndPostSessions
-;
+/*!
+ Send the next finished session.
+ */
+-(void)checkForAndPostSessions;
+
+/*!
+ A useful function for checking if there is session data available to be sent
+ */
 - (BOOL)hasPendingSessions;
 - (void)handleWebClientSentSessions:(APBWebOperation *)client withSuccess:(BOOL)success;
 - (void)sessionTrackingCallbackFailed:(APBWebOperation *)client withErrorString:(NSString*)errorString;

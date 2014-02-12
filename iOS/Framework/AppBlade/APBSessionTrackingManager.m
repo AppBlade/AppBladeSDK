@@ -19,17 +19,49 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 @synthesize delegate;
 @synthesize sessionStartDate;
 @synthesize sessionEndDate;
-
+@synthesize sessionTrackingTimer;
 
 
 - (id)initWithDelegate:(id<APBWebOperationDelegate, APBDataManagerDelegate>)webOpDataManagerDelegate
 {
     if((self = [super init])) {
         self.delegate = webOpDataManagerDelegate;
+        self.sessionTrackingTimer = nil;
     }
     
     return self;
 }
+
+-(void)trackSessions
+{
+    if(self.sessionTrackingTimer == nil){
+        self.sessionTrackingTimer = [NSTimer
+               scheduledTimerWithTimeInterval:APPBLADE_SESSION_TRACKING_INTERVAL
+                                       target:self
+                                     selector:@selector(checkSessions:)
+                                     userInfo:nil
+                                      repeats:YES];
+    }
+}
+
+-(void)checkSessions:(NSTimer *)timer
+{
+    if (self.sessionStartDate != nil) { //check first if we even HAVE a session
+        [self logSessionEnd];
+    }else{
+        [self logSessionStart];
+    }
+    //check if there are any additional things the timer
+}
+
+-(void)stopTrackingSessions
+{
+    //kill our loop and finish up any session data
+    
+    //dealloc the timer
+    self.sessionTrackingTimer = nil;
+}
+
 
 - (void)logSessionStart
 {
@@ -41,6 +73,7 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 
 - (void)logSessionEnd
 {
+    
     if (self.sessionStartDate != nil) { //check first if we even HAVE a session
         self.sessionEndDate = [NSDate date];
         NSDictionary* sessionDict = [NSDictionary dictionaryWithObjectsAndKeys:[self sessionStartDate], @"started_at", [self sessionEndDate], @"ended_at", [[AppBlade sharedManager] getCustomParams], @"custom_params", nil];
@@ -65,7 +98,6 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 
 -(void)checkForAndPostSessions
 {
-#warning session tracking is still unstable in guided access mode 
     NSString* sessionFilePath = [[AppBlade cachesDirectoryPath] stringByAppendingPathComponent:kAppBladeSessionFile];
     ABDebugLog_internal(@"Checking Session Path: %@", sessionFilePath);
     
