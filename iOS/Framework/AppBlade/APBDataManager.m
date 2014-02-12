@@ -496,7 +496,9 @@
                 if(errorCheck == nil && dataToFind && [dataToFind getId]){
                     ABDebugLog_internal(@"Match found with no errors");
                 }else{
-                    errorCheck = [APBDataManager dataBaseErrorWithMessage:@"row id not set"];
+                    if (![dataToFind getId]) {
+                        errorCheck = [APBDataManager dataBaseErrorWithMessage:@"row id not set"]; //id errors take precedence
+                    }//otherwise use what's in the errorCheck value
                 }
             } else {
                 //Match not found
@@ -506,6 +508,9 @@
         }else{
             errorCheck = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"error preparing statement %@ : %s", querySQL, sqlite3_errmsg(_db)]];
         }
+        if(errorCheck)
+            ABErrorLog(@"error finding data %@", [errorCheck debugDescription]);
+        
         [self finishTransaction];
     }
     if(errorCheck != nil){
