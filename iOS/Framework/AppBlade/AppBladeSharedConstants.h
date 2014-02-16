@@ -114,8 +114,9 @@ typedef NS_OPTIONS(NSUInteger, AppBladeWebReportingGlobalOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackSetupOptions) {
     AppBladeFeedbackSetupDefault                 = 0,      // default behavior
-    AppBladeFeedbackSetupTripleFingerDoubleTap   = 1 <<  0,   // on all touch downs
-    AppBladeFeedbackSetupCustomPrompt            = 1 <<  1    // on multiple touchdowns (tap count > 1)
+    AppBladeFeedbackSetupPromptThreeFingersTwoTaps = 1 <<  0,   // on all touch downs
+    AppBladeFeedbackSetupPromptShake               = 1 <<  1,   // on all touch downs
+    AppBladeFeedbackSetupPromptCustom              = 1 <<  2    // on multiple touchdowns (tap count > 1)
 };
 
 typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackDisplayOptions) {

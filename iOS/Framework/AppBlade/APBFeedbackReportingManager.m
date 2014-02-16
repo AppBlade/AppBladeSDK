@@ -107,7 +107,7 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
     AppBlade *delegateRef = (AppBlade *)self.delegate;
     self.feedbackWindow = window;
     
-    if (options == AppBladeFeedbackSetupTripleFingerDoubleTap || options == AppBladeFeedbackSetupDefault) {
+    if (options == AppBladeFeedbackSetupPromptThreeFingersTwoTaps || options == AppBladeFeedbackSetupDefault) {
         //Set up our custom triple finger double-tap
         self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:delegateRef action:@selector(showFeedbackDialogue)] ;
         self.tapRecognizer.numberOfTapsRequired = 2;
@@ -115,6 +115,8 @@ static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreport
         self.tapRecognizer.delegate = delegateRef;
         [self.feedbackWindow addGestureRecognizer:self.tapRecognizer];
     }
+#warning AppBladeFeedbackSetupPromptShake not implemented
+    
     [delegateRef checkAndCreateAppBladeCacheDirectory];
     
     if ([self hasPendingFeedbackReports]) {
