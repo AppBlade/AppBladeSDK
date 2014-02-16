@@ -788,6 +788,21 @@ static AppBlade *s_sharedManager = nil;
 #endif
 }
 
+- (void)trackSessionsWithOptions:(AppBladeSessionTrackingSetupOptions)options
+{
+#ifndef SKIP_SESSIONS
+    ABDebugLog_internal(@"Ended Session Logging");
+    if([[AppBlade sharedManager] isAllDisabled]){
+        ABDebugLog_internal(@"Can't track sessions, SDK disabled");
+        return;
+    }
+    
+    [[self sessionTrackingManager] trackSessionsWithOptions:options];
+#else
+    NSLog(@"%s has been disabled in this build of AppBlade.", __PRETTY_FUNCTION__)
+#endif
+}
+
 
 + (void)startSession
 {

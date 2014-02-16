@@ -34,13 +34,18 @@ NSString *kSessionTimeElapsed         = @"session_time_elapsed";
 
 -(void)trackSessions
 {
+    [self trackSessionsWithOptions:AppBladeSessionTrackSetupDefault];
+}
+
+- (void)trackSessionsWithOptions:(AppBladeSessionTrackingSetupOptions)options
+{
     if(self.sessionTrackingTimer == nil){
         self.sessionTrackingTimer = [NSTimer
-               scheduledTimerWithTimeInterval:APPBLADE_SESSION_TRACKING_INTERVAL
-                                       target:self
+                                     scheduledTimerWithTimeInterval:APPBLADE_SESSION_TRACKING_INTERVAL
+                                     target:self
                                      selector:@selector(checkSessions:)
                                      userInfo:nil
-                                      repeats:YES];
+                                     repeats:YES];
     }
 }
 

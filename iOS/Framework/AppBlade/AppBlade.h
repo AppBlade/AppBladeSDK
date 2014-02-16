@@ -177,7 +177,13 @@
  @abstract Starts tracking sessions and reporting them incrementally. */
 - (void)trackSessions;
 
-/*!  
+/*!
+ @method
+ @abstract Starts tracking sessions with separate options. */
+- (void)trackSessionsWithOptions:(AppBladeSessionTrackingSetupOptions)options;
+
+
+/*!
  @method
  @abstract Starts a new Session Tracking session. */
 - (void)logSessionStart;

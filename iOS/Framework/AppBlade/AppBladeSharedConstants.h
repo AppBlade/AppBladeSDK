@@ -124,4 +124,14 @@ typedef NS_OPTIONS(NSUInteger, AppBladeFeedbackDisplayOptions) {
     AppBladeFeedbackDisplayWithoutScreenshot       = 1 <<  1    // Do not take a screenshot
 };
 
+typedef NS_OPTIONS(NSUInteger, AppBladeSessionTrackingSetupOptions){
+    AppBladeSessionTrackSetupDefault                 = 0,      // default behavior
+    AppBladeSessionTrackSetupCustomParamsTrackChangesDisabled   = 1 <<  0,   // We do not track changes made to the custom parameters by default
+    AppBladeSessionTrackSetupCustomParamsTrackChangesEnabled    = 1 <<  1,   // Changes made to custom parameters are reported to AppBlade
+    AppBladeSessionTrackSetupViewStateDoNotTrackChanges           = 2 <<  0,    // We do not try to report view state by default
+    AppBladeSessionTrackSetupViewStateTrackDeclaredChanges        = 2 <<  1,    // Track only the view changes that the user sets up (allows for naming).
+    AppBladeSessionTrackSetupViewStateTrackViewControllerChanges  = 2 <<  2,    // Track changes in the main view controller hierarcy, but no lower
+    AppBladeSessionTrackSetupViewStateTrackAllChanges             = 2 <<  3     // Track as much as we can: The entire view stack
+};
+
 #endif
