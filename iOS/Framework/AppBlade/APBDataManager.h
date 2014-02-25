@@ -53,6 +53,8 @@ typedef void (^APBDataTransaction)(sqlite3 *dbRef);
 -(NSError *)removeTable:(NSString *)tableName;
 -(NSError *)alterTable:(NSString *)tableName withTransaction:(APBDataTransaction) transactionBlock;
 
+-(NSString *)currentDbErrorMsg;
+
 -(int)prepareTransaction;
 -(int)finishTransaction;
 

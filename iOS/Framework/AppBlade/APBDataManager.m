@@ -390,6 +390,15 @@
 }
 
 
+-(NSString *)currentDbErrorMsg
+{
+    const char *err = sqlite3_errmsg(_db);
+    NSString *errMsg = [NSString stringWithFormat:@"%s",err];
+    ABErrorLog(@"%@", errMsg);
+    return errMsg;
+}
+
+
 #pragma mark Data functions
 -(BOOL)data:(AppBladeDatabaseObject*)dataObject existsInTable: (NSString *)tableName
 { //there'a a more efficient way of checking to see the data exists other than loading the entire object from the database
