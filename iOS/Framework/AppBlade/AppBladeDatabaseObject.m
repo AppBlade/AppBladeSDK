@@ -8,6 +8,8 @@
 #import "AppBladeDatabaseObject.h"
 #import "AppBladeDatabaseColumn.h"
 
+#import "APBDataManager.h"
+
 //For the snapshot
 #import "AppBladeLogging.h"
 #import "AppBlade.h"
@@ -134,9 +136,11 @@
     //confirm we have a column at that index
     int totalColumns = sqlite3_column_count(statement);
     if(totalColumns > [actualIndex intValue]){
-        NSString *retrievedString = ((char *)sqlite3_column_text(statement, actualIndex)) ?
-        [NSString stringWithUTF8String:(char *)sqlite3_column_text(statement, actualIndex)] :
-        nil;
+        char *sqlite_text = (char *)sqlite3_column_text(statement, actualIndex);
+        NSString *retrievedString = (sqlite_text) ? [NSString stringWithUTF8String:sqlite_text] : nil; //"safe"
+        if(!retrievedString) {
+            ABErrorLog(@"ERROR: String should never be nil");
+        }
         return retrievedString;
     }else
     {
