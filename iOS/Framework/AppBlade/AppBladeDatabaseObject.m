@@ -124,22 +124,31 @@
 }
 
 //column reads (writes have the values embedded into the sql statement, so we shouldn't need to bind them.)
--(NSData *)readDataInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSData *)readDataInAdditionalColumn:(NSNumber *)indexOffset fromSQLiteStatement:(sqlite3_stmt *)statement
 {
     NSNumber *actualIndex = [NSNumber numberWithUnsignedLong:([[self baseColumnNames] count] - (NSUInteger)1 + [indexOffset integerValue])];
     return [[NSData alloc] initWithBytes:(const char *) sqlite3_column_blob(statement, [actualIndex intValue]) length:sqlite3_column_bytes(statement, indexOffset)];
 }
 
--(NSString *)readStringInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSString *)readStringInAdditionalColumn:(NSNumber *)indexOffset fromSQLiteStatement:(sqlite3_stmt *)statement
 {
     NSNumber *actualIndex = [NSNumber numberWithUnsignedLong:(([[self baseColumnNames] count] - 1) + [indexOffset integerValue])];
     //confirm we have a column at that index
+    ABDebugLog_internal(@"DB READ ADDIT'L STRING AT INDEX OFFSET: %ld ( Actual: %ld )", (long)[indexOffset integerValue], (long)[actualIndex integerValue]);
+    
     int totalColumns = sqlite3_column_count(statement);
     if(totalColumns > [actualIndex intValue]){
-        char *sqlite_text = (char *)sqlite3_column_text(statement, actualIndex);
-        NSString *retrievedString = (sqlite_text) ? [NSString stringWithUTF8String:sqlite_text] : nil; //"safe"
-        if(!retrievedString) {
-            ABErrorLog(@"ERROR: String should never be nil");
+        NSString *retrievedString = nil;
+        if([self columnTypeAtIndex:actualIndex fromSQLiteStatement:statement] == SQLITE_TEXT){
+            char *sqlite_text = (char *)sqlite3_column_text(statement, actualIndex);
+            NSString *retrievedString = (sqlite_text) ? [NSString stringWithUTF8String:sqlite_text] : nil; //"safe"
+            if(!retrievedString) {
+                ABErrorLog(@"DB ERROR: String should never be nil");
+            }else{
+                ABDebugLog_internal(@"DB READ STRING %@", retrievedString);
+            }
+        }else{
+            ABErrorLog(@"DB ERROR: column is not text");
         }
         return retrievedString;
     }else
@@ -149,12 +158,12 @@
     }
 }
 
--(NSDate *)readDateInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSDate *)readDateInAdditionalColumn:(NSNumber *)indexOffset fromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    return [NSDate dateWithTimeIntervalSince1970:[self readTimeIntervalInAdditionalColumn:indexOffset fromFromSQLiteStatement:statement]];
+    return [NSDate dateWithTimeIntervalSince1970:[self readTimeIntervalInAdditionalColumn:indexOffset fromSQLiteStatement:statement]];
 }
 
--(NSTimeInterval)readTimeIntervalInAdditionalColumn:(NSNumber *)indexOffset fromFromSQLiteStatement:(sqlite3_stmt *)statement
+-(NSTimeInterval)readTimeIntervalInAdditionalColumn:(NSNumber *)indexOffset fromSQLiteStatement:(sqlite3_stmt *)statement
 {
     NSNumber *actualIndex = [NSNumber numberWithUnsignedLong:([[self baseColumnNames] count] - 1 + [indexOffset integerValue])];
     //adding NSUinteger to an NSInteger and then blindly assuming it's an int

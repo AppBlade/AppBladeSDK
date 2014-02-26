@@ -42,16 +42,21 @@
 
 
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement {
+    ABDebugLog_internal(@"READING IN CUSTOM PARAM VALUES");
     NSError *toRet = [super readFromSQLiteStatement:statement];
-    if(toRet != nil)
+    if(toRet != nil){
+        ABErrorLog(@"DB: error reading base values %@", [toRet debugDescription]);
         return toRet;
-    self.snapshotDate = [self readDateInAdditionalColumn:[NSNumber numberWithInt:kDbCustomParamColumnIndexOffsetSnapshotDate] fromFromSQLiteStatement:statement];
-    NSString *paramsText = [self readStringInAdditionalColumn:[NSNumber numberWithInt:kDbCustomParamColumnIndexOffsetDictRaw] fromFromSQLiteStatement:statement];
+    }
+    NSString *paramsText = [self readStringInAdditionalColumn:[NSNumber numberWithInt:kDbCustomParamColumnIndexOffsetDictRaw] fromSQLiteStatement:statement];
     if(paramsText){
         [self parseStringFromStorage:paramsText];
     }else{
         toRet = [APBDataManager dataBaseErrorWithMessage:@"stored param data could not be parsed"];
     }
+
+    self.snapshotDate = [self readDateInAdditionalColumn:[NSNumber numberWithInt:kDbCustomParamColumnIndexOffsetSnapshotDate] fromSQLiteStatement:statement];
+
     return toRet;
 }
 
@@ -66,7 +71,9 @@
     
     NSData *dataFromDictionary = [NSJSONSerialization dataWithJSONObject:self.storedParams options:0 error:&error]; //create NSData from JSONSerialization
     NSString *stringFromData = [APBBase64Encoder base64EncodedStringFromData:dataFromDictionary];
-    return stringFromData; //return stringified NSData
+    //newlines separate every 64 characters
+    NSString *stringforStorage = [stringFromData stringByReplacingOccurrencesOfString:@"\r\n" withString:@""];
+    return stringforStorage; //return stringified NSData
 }
 
 -(void)parseStringFromStorage:(NSString *)stringifiedParams {
