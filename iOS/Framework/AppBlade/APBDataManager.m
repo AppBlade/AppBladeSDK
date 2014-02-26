@@ -424,18 +424,19 @@
     if(dataObject == nil){
         * error = [APBDataManager dataBaseErrorWithMessage:@"no data object passed"];
     }
-    
-    
     sqlite3_stmt    *statement;
     if ([self prepareTransaction] == SQLITE_OK)
     {
         //create the actual sqlite command
         NSString *insertSQL = [dataObject formattedUpsertSqlStringForTable:tableName];
+        
+        ABDebugLog_internal(@"AB DB : %@", insertSQL);
         const char *insert_stmt = [insertSQL UTF8String];
         if(sqlite3_prepare_v2(_db, insert_stmt, -1, &statement, NULL) == SQLITE_OK){
             //bind any additional data to the upsert statement (like blobs)
             NSError* errorCheck = [dataObject bindDataToPreparedStatement:statement]; // might not do anything, given the specific data object.
-            if (errorCheck == nil && sqlite3_step(statement) == SQLITE_DONE){
+            NSString* databaseErrorMessage = [NSString stringWithFormat:@"%s", sqlite3_errmsg(_db)];
+            if (errorCheck == nil && [databaseErrorMessage isEqualToString:@"not an error"] && sqlite3_step(statement) == SQLITE_DONE){
                 if([dataObject getId] == nil){
                     //then we have to update the data with the id
                     NSInteger lastRow = sqlite3_last_insert_rowid(_db);
@@ -492,27 +493,36 @@
         ABErrorLog(@"Class \"%@\" needs to exist and be a subclass of AppBladeDatabaseObject", NSStringFromClass(classToFind));
         return nil;
     }
-    AppBladeDatabaseObject *dataToFind = [[classToFind alloc] init];
+    AppBladeDatabaseObject *dataToFind = [[classToFind alloc] init]; //initialize the class
 
     NSError *errorCheck = nil;
     sqlite3_stmt    *statement;
     if ([self prepareTransaction]  == SQLITE_OK)
     {
         NSString *querySQL = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@", tableName, params];
+        ABDebugLog_internal(@"AB DB query: %@", querySQL); //build the statement that we need to find the data to read
         const char *query_stmt = [querySQL UTF8String];
         
         if (sqlite3_prepare_v2(_db, query_stmt, -1, &statement, NULL) == SQLITE_OK)
         {
             if (sqlite3_step(statement) == SQLITE_ROW)
             {
-                errorCheck = [dataToFind readFromSQLiteStatement:statement];
                 //Match found (posssibly)
+                errorCheck = [dataToFind readFromSQLiteStatement:statement]; //read in the data (using the class we overrode)
                 if(errorCheck == nil && dataToFind && [dataToFind getId]){
                     ABDebugLog_internal(@"Match found with no errors");
                 }else{
                     if (![dataToFind getId]) {
+                        //if an id was not set, we did not actually find a match (or complete a read) and no error was thrown (!)
                         errorCheck = [APBDataManager dataBaseErrorWithMessage:@"row id not set"]; //id errors take precedence
+                    }else {
+                        ABDebugLog_internal(@"DB Error: %s",sqlite3_errmsg(_db));
+                        NSString *errMsgFromSql = [NSString stringWithFormat:@"%s", sqlite3_errmsg(_db)];
+                        if(errMsgFromSql){
+                            errorCheck = [APBDataManager dataBaseErrorWithMessage:errMsgFromSql];
+                        }
                     }//otherwise use what's in the errorCheck value
+                    ABDebugLog_internal(@"DB ERROR finding match! %@", [errorCheck debugDescription]);
                 }
             } else {
                 //Match not found
@@ -520,10 +530,10 @@
             }
             sqlite3_finalize(statement);
         }else{
-            errorCheck = [APBDataManager dataBaseErrorWithMessage:[NSString stringWithFormat:@"error preparing statement %@ : %s", querySQL, sqlite3_errmsg(_db)]];
+            errorCheck = [APBDataManager dataBaseErrorWithMessage: [NSString stringWithFormat:@"error preparing statement %@ : %s", querySQL, sqlite3_errmsg(_db)]];
         }
         if(errorCheck)
-            ABErrorLog(@"error finding data %@", [errorCheck debugDescription]);
+            ABErrorLog(@"DB error finding data %@", [errorCheck debugDescription]);
         
         [self finishTransaction];
     }
