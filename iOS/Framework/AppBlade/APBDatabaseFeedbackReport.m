@@ -136,6 +136,7 @@
 
 -(NSDictionary *)getCustomParamSnapshot {
 #ifndef SKIP_CUSTOM_PARAMS
+    ABDebugLog_internal(@"Getting Custom Parameter : %@", self.customParameterId);
    APBDatabaseCustomParameter *paramObj = [self customParameterObj];
     if (paramObj == nil) {  //custom param not found and could not be created
         return [paramObj asDictionary];

@@ -101,6 +101,8 @@
 
 -(NSError *)readFromSQLiteStatement:(sqlite3_stmt *)statement
 {
+    ABDebugLog_internal(@"READING IN BASE DATABASE OBJECT VALUES");
+
     NSString *dbRowIdCheck = [[NSString alloc] initWithUTF8String:
                               (const char *) sqlite3_column_text(statement, 0)];
     if(dbRowIdCheck == nil){

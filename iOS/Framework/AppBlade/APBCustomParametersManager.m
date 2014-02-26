@@ -160,6 +160,8 @@
     if(errorCheck) {
         ABErrorLog(@"error inserting custom params %@", [errorCheck description]);
         return nil;
+    }else{
+        ABDebugLog_internal(@"generated parameters ID:%@  paramHash:%@", [generatedData getId], [generatedData paramsAsString]);
     }
     return generatedData;
 }
