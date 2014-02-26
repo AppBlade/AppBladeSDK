@@ -488,7 +488,7 @@
 
 -(AppBladeDatabaseObject *)findDataWithClass:(Class)classToFind inTable:(NSString *)tableName withParams:(NSString *)params
 {
-    if (classToFind == nil || ![classToFind instancesRespondToSelector:@selector(getId)]) {
+    if (classToFind == nil || ![classToFind isSubclassOfClass:[AppBladeDatabaseObject class]]) { //confirm we passed the right class
         ABErrorLog(@"Class \"%@\" needs to exist and be a subclass of AppBladeDatabaseObject", NSStringFromClass(classToFind));
         return nil;
     }
