@@ -13,6 +13,9 @@
 
 #import "AppBlade.h"
 
+#import "APBDatabaseCustomParameter.h" //for debugging only  
+
+#import "AppBlade.h"
 
 @interface APBDataManager()
 //@property (nonatomic) sqlite3 *db;
@@ -353,16 +356,6 @@
     }
 }
 
--(NSError *)alterTable:(NSString *)tableName withTransaction:(APBDataTransaction) transactionBlock
-{
-    if ([self prepareTransaction] == SQLITE_OK) {
-        transactionBlock(_db);
-    }else{
-        return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
-    }
-    return nil;
-}
-
 
 -(NSError *)removeTable:(NSString *)tableName
 {
@@ -387,6 +380,18 @@
     }else{
         return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
     }
+}
+
+
+
+-(NSError *)alterTable:(NSString *)tableName withTransaction:(APBDataTransaction) transactionBlock
+{
+    if ([self prepareTransaction] == SQLITE_OK) {
+        transactionBlock(_db);
+    }else{
+        return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
+    }
+    return nil;
 }
 
 
