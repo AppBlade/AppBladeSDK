@@ -10,6 +10,8 @@
 #import "AppBladeDatabaseColumn.h"
 #import "APBDataManager.h"
 #import "APBBase64Encoder.h"
+#import "AppBladeLogging.h"
+
 
 @implementation APBDatabaseCustomParameter
     -(id)initWithDictionary:(NSDictionary *)dictionary{
@@ -24,7 +26,7 @@
 
 
     +(NSArray *)columnDeclarations {
-        return @[[AppBladeDatabaseColumn initColumnNamed:kDbCustomParamColumnNameDictRaw withContraints: (AppBladeColumnConstraintAffinityNone) additionalArgs:nil],
+        return @[[AppBladeDatabaseColumn initColumnNamed:kDbCustomParamColumnNameDictRaw withContraints: (AppBladeColumnConstraintAffinityText) additionalArgs:nil],
                  [AppBladeDatabaseColumn initColumnNamed:kDbCustomParamColumnNameSnapshotDate withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]];
 
     }
