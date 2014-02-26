@@ -284,6 +284,7 @@ char *NewBase64Encode(
     NSString *result =
     [[NSString alloc] initWithBytes:outputBuffer length:outputLength encoding:NSASCIIStringEncoding];
 	free(outputBuffer);
+    [result stringByReplacingOccurrencesOfString:@"\r\n" withString:@""];
 	return result;
 }
 
