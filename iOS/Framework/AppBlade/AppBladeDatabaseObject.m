@@ -162,6 +162,11 @@
 }
 
 
+-(int)columnTypeAtIndex:(NSNumber *)columnIndex fromSQLiteStatement:(sqlite3_stmt *)statement
+{
+    return sqlite3_column_type(statement, columnIndex);
+}
+
 #pragma mark - Delete methods
 /*! Helper method to remove any external files (or other dependencies) right before the row is stricken from the database.  */
 -(NSError *)cleanUpIntermediateData {    return nil; }
