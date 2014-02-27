@@ -59,14 +59,19 @@
 }
 
 
-//will handle storing and retrieving the data format of the crash reports table
+//will handle storing and retrieving the data format of the feedback table
 +(NSArray *)columnDeclarations
 {
-    return @[[AppBladeDatabaseColumn initColumnNamed:kDbFeedbackReportColumnNameScreenshotURL withContraints: (AppBladeColumnConstraintAffinityText) additionalArgs:nil],
-             [AppBladeDatabaseColumn initColumnNamed:kDbFeedbackReportColumnNameText withContraints: (AppBladeColumnConstraintAffinityText) additionalArgs:nil],
-             [AppBladeDatabaseColumn initColumnNamed:kDbFeedbackReportColumnNameReportedAt  withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]
+    return @[[AppBladeDatabaseColumn initColumnNamed:kDbFeedbackReportColumnNameScreenshotURL
+                                      withContraints: (AppBladeColumnConstraintAffinityText) additionalArgs:nil],
+             [AppBladeDatabaseColumn initColumnNamed:kDbFeedbackReportColumnNameText
+                                      withContraints: (AppBladeColumnConstraintAffinityText) additionalArgs:nil],
+             [AppBladeDatabaseColumn initColumnNamed:kDbFeedbackReportColumnNameReportedAt
+                                      withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]
 #ifndef SKIP_CUSTOM_PARAMS
-             , [AppBladeDatabaseColumn initColumnNamed:kDbFeedbackReportColumnNameCustomParamsRef withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:[APBCustomParametersManager getDefaultForeignKeyDefinition:kDbFeedbackReportColumnNameCustomParamsRef]]
+             , [AppBladeDatabaseColumn initColumnNamed:kDbFeedbackReportColumnNameCustomParamsRef
+                                        withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull)
+                                        additionalArgs:[APBCustomParametersManager getDefaultForeignKeyDefinition:kDbFeedbackReportColumnNameCustomParamsRef]]
 #endif
              ];
 }
