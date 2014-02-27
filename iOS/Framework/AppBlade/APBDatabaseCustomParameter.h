@@ -9,6 +9,8 @@
 #import "AppBladeDatabaseObject.h"
 #import "APBBase64Encoder.h"
 
+static NSString* const kDbCustomParametersMainTableName = @"customparams";
+
 static NSString* const kDbCustomParamColumnNameDictRaw = @"currentParams";
 static NSInteger const kDbCustomParamColumnIndexOffsetDictRaw = 1;
 static NSString* const kDbCustomParamColumnNameSnapshotDate = @"createdAt";

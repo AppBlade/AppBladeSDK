@@ -18,6 +18,7 @@
         self = [super init];
         if (self) {
             [self takeFreshSnapshot];
+            self.tableName = kDbCustomParametersMainTableName;
             self.snapshotDate = [NSDate new];
             self.storedParams = dictionary;
         }
