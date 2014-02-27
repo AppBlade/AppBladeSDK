@@ -96,14 +96,13 @@
     
     //data retrieval
     APBDatabaseCustomParameter *customParam1Compare = [[[AppBlade sharedManager] customParamsManager] getCustomParamById:[customParam1 getId]];
+    STAssertNotNil(customParam1Compare, @"custom params could not be retrieved.");
     STAssertEqualObjects([customParam1 asDictionary], [customParam1Compare asDictionary], @"stored values should be equal to the original values");
-    
     STAssertFalse([[customParam1Compare asDictionary] isEqualToDictionary:[[AppBlade sharedManager] getCustomParams]], @"custom parameters should be different from the snapshot");
     
     APBDatabaseCustomParameter *customParam2Compare = [[[AppBlade sharedManager] customParamsManager] getCustomParamById:[customParam2 getId]];
+    STAssertNotNil(customParam2Compare, @"custom params could not be retrieved.");
     STAssertEqualObjects([customParam2 asDictionary], [customParam2Compare asDictionary], @"stored values should be equal to the original values");
-    
-
 }
 
 
