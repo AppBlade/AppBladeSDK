@@ -319,7 +319,7 @@
 
 -(NSError *)createTable:(NSString *)tableName withColumns:(NSArray *)columnData
 {
-    ABDebugLog_internal(@"attempting to create %@ : %@", tableName, columnData);
+  //  ABDebugLog_internal(@"attempting to create %@ : %@", tableName, columnData);
 
     if ([self prepareTransaction] == SQLITE_OK) {
         //prepare the query given the params
@@ -333,7 +333,8 @@
             [createTableQuery appendFormat:@", %@", [col toSQLiteColumnDefinition]];
         }
         [createTableQuery appendString:@")"];  //close paren
-        
+
+        ABDebugLog_internal(@"AB DB: %@", createTableQuery);
         int results = 0;
         //create all chars tables
         const char *createTableQuerySQL = [createTableQuery UTF8String];
