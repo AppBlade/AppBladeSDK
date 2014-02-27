@@ -56,23 +56,23 @@
     //otherwise it's business as usual
     NSMutableString *toRet = [NSMutableString stringWithString:[self columnName]];
 
-    if(!(self.constraints & AppBladeColumnConstraintNone)){
-        // for when we start updating columns, we should put better logic here
-    }else{
+//    if(!(self.constraints & AppBladeColumnConstraintNone)){
+//        // for when we start updating columns, we should put better logic here
+//    }else{
         if(self.constraints & AppBladeColumnConstraintAffinityNone){
          [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
         }
         if(self.constraints & AppBladeColumnConstraintAffinityReal){
-            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+            [toRet appendFormat:@" %@",kAppBladeColumnAffinityInteger];
         }
         if(self.constraints & AppBladeColumnConstraintAffinityInteger){
-            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+            [toRet appendFormat:@" %@",kAppBladeColumnAffinityInteger];
         }
         if(self.constraints & AppBladeColumnConstraintAffinityNumeric){
-            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNumeric];
         }
         if(self.constraints & AppBladeColumnConstraintAffinityText){
-            [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
+            [toRet appendFormat:@" %@",kAppBladeColumnAffinityText];
         }
         if(self.constraints & AppBladeColumnConstraintPrimaryKey){
             [toRet appendFormat:@" %@",kAppBladeColumnAffinityNone];
@@ -86,7 +86,7 @@
         if(self.constraints & AppBladeColumnConstraintAutoincrement){
             [toRet appendFormat:@" %@", kAppBladeColumnConstraintAutoincrement];
         }
-    }
+//    }
     
     return toRet;
 }
