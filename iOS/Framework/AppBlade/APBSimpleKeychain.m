@@ -70,7 +70,6 @@
 //        errSecInteractionNotAllowed  = -25308,	/* User interaction is not allowed. */
 //        errSecDecode                 = -26275,  /* Unable to decode the provided data. */
 //        errSecAuthFailed             = -25293,	/* The user name or passphrase you entered is not correct. */
-
     
     // If the keychain item already exists, modify it:
     if (keychainErrorCode == noErr)
@@ -153,6 +152,8 @@
     //        errSecInteractionNotAllowed  = -25308,	/* User interaction is not allowed. */
     //        errSecDecode                 = -26275,  /* Unable to decode the provided data. */
     //        errSecAuthFailed             = -25293,	/* The user name or passphrase you entered is not correct. */
+    // -34018 client has neither application-identifier nor keychain-access-groups entitlements
+
         NSString *errorMessage = @"";
         //SecCopyErrorMessageString doesn't work in iOS! Consternation!
         switch (keychainErrorCode) {
@@ -182,6 +183,9 @@
                 break;
             case errSecDecode:
                 errorMessage = @"Unable to decode the provided data.";
+                break;
+            case -34018:
+                errorMessage = @"client has neither application-identifier nor keychain-access-groups entitlements";
                 break;
             default:
                 errorMessage = @"(unknown error)";
