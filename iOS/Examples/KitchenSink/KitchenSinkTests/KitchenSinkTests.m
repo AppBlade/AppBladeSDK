@@ -71,7 +71,7 @@
     [[AppBlade sharedManager] registerWithAppBladePlist];
     [[AppBlade sharedManager] checkApproval];
     NSInteger approvalCheck = [[AppBlade  sharedManager] pendingRequestsOfType:AppBladeWebClientAPI_Permissions];
-    NSString *errorString = [NSString stringWithFormat:@"Found %d queued aprovals", approvalCheck];
+    NSString *errorString = [NSString stringWithFormat:@"Found %d queued approvals", approvalCheck];
     STAssertTrue((approvalCheck == 1), errorString);
     APB_WAIT_WHILE(([[AppBlade  sharedManager] pendingRequestsOfType:AppBladeWebClientAPI_Permissions] > 0), kNetworkPatience);
     NSString *deviceString = [[AppBlade sharedManager] appBladeDeviceSecret];
