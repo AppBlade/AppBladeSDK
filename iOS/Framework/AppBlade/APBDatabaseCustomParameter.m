@@ -26,8 +26,12 @@
 
 
     +(NSArray *)columnDeclarations {
-        return @[[AppBladeDatabaseColumn initColumnNamed:kDbCustomParamColumnNameDictRaw withContraints: (AppBladeColumnConstraintAffinityText) additionalArgs:nil],
-                 [AppBladeDatabaseColumn initColumnNamed:kDbCustomParamColumnNameSnapshotDate withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull) additionalArgs:nil]];
+        return @[[AppBladeDatabaseColumn initColumnNamed:kDbCustomParamColumnNameDictRaw
+                                          withContraints: (AppBladeColumnConstraintAffinityText)
+                                          additionalArgs:nil],
+                 [AppBladeDatabaseColumn initColumnNamed:kDbCustomParamColumnNameSnapshotDate
+                                          withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull)
+                                          additionalArgs:nil]];
 
     }
 
@@ -65,7 +69,7 @@
     NSError *error = nil;
     BOOL paramIsValid = [NSJSONSerialization isValidJSONObject:self.storedParams];
     if (!paramIsValid) {
-        NSLog(@"Something is very wrong with your params, they could not be conerted to json");
+        NSLog(@"Something is very wrong with your params, they could not be converted to json");
         return @"";
     }
     
