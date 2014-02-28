@@ -66,7 +66,7 @@
      SESSION TRACKING SETUP CALL
      Will incrementally ping the server about this app being open. As well as any data that might be available regarding the session.
      ******************************************/
-    [blade trackSessions];
+//    [blade trackSessions];
     
     /******************************************
      CUSTOM PARAMETERS CALL
