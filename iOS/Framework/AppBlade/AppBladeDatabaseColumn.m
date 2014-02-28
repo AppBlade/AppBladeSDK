@@ -54,7 +54,7 @@
         return @"";
     }
     //otherwise it's business as usual
-    NSMutableString *toRet = [NSMutableString stringWithString:[self columnName]];
+    NSMutableString *toRet = [NSMutableString stringWithFormat:@"%@", [self columnName]];
 
 //    if(!(self.constraints & AppBladeColumnConstraintNone)){
 //        // for when we start updating columns, we should put better logic here
