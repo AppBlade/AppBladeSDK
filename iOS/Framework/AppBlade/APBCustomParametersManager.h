@@ -15,7 +15,7 @@
 #import "APBDatabaseCustomParameter.h"
 #import "APBDataManager.h"
 
-static NSString* const kDbCustomParametersMainTableName = @"customparams";
+//static NSString* const kDbCustomParametersMainTableName = @"customparams";
 
 /*!
  @class APBCustomParametersManager
