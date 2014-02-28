@@ -512,6 +512,7 @@
                 errorCheck = [dataToFind readFromSQLiteStatement:statement]; //read in the data (using the class we overrode)
                 if(errorCheck == nil && dataToFind && [dataToFind getId]){
                     ABDebugLog_internal(@"Match found with no errors");
+                    dataToFind.tableName = tableName;
                 }else{
                     if (![dataToFind getId]) {
                         //if an id was not set, we did not actually find a match (or complete a read) and no error was thrown (!)
