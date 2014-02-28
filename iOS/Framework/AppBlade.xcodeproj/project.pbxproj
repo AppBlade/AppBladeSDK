@@ -147,6 +147,7 @@
 		31AA32621881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */; };
 		31AA32631881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */; };
 		31AA32641881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */; };
+		31B7889718BF438C00FC82B1 /* AppBladeDatabaseObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 31B7889618BF438C00FC82B1 /* AppBladeDatabaseObjectTests.m */; };
 		31BB3C7417E357E2007B8B28 /* APBAuthenticationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 31BB3C7317E357E2007B8B28 /* APBAuthenticationManagerTests.m */; };
 		31C4881B17A9847000EA75E8 /* TestAppBladeKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */; };
 		31C4881E17A9868200EA75E8 /* AppBlade+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */; };
@@ -394,6 +395,8 @@
 		31A5655B17A93CF5000F9A24 /* TestAppBladeKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestAppBladeKeys.plist; sourceTree = "<group>"; };
 		31AA325B1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBladeDatabaseObject+CustomParametersCompatibility.h"; sourceTree = "<group>"; };
 		31AA325C1881DC77005AF8E7 /* AppBladeDatabaseObject+ CustomParametersCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppBladeDatabaseObject+ CustomParametersCompatibility.m"; sourceTree = "<group>"; };
+		31B7889518BF438C00FC82B1 /* AppBladeDatabaseObjectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppBladeDatabaseObjectTests.h; sourceTree = "<group>"; };
+		31B7889618BF438C00FC82B1 /* AppBladeDatabaseObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppBladeDatabaseObjectTests.m; sourceTree = "<group>"; };
 		31BB3C7217E357E2007B8B28 /* APBAuthenticationManagerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APBAuthenticationManagerTests.h; path = AppBladeTests/APBAuthenticationManagerTests.h; sourceTree = SOURCE_ROOT; };
 		31BB3C7317E357E2007B8B28 /* APBAuthenticationManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APBAuthenticationManagerTests.m; path = AppBladeTests/APBAuthenticationManagerTests.m; sourceTree = SOURCE_ROOT; };
 		31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBlade+PrivateMethods.h"; sourceTree = "<group>"; };
@@ -693,6 +696,8 @@
 				3134457117DFC2D800E5AF0B /* APBApplicationInfoManagerTest.h */,
 				3134457217DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m */,
 				3179281817E3A3F300F73BB2 /* Method Swizzling */,
+				31B7889518BF438C00FC82B1 /* AppBladeDatabaseObjectTests.h */,
+				31B7889618BF438C00FC82B1 /* AppBladeDatabaseObjectTests.m */,
 			);
 			path = AppBladeTests;
 			sourceTree = "<group>";
@@ -1340,6 +1345,7 @@
 				3134457017DFC27500E5AF0B /* APBDeviceInfoManagerTest.m in Sources */,
 				3134457317DFC2D800E5AF0B /* APBApplicationInfoManagerTest.m in Sources */,
 				31BB3C7417E357E2007B8B28 /* APBAuthenticationManagerTests.m in Sources */,
+				31B7889718BF438C00FC82B1 /* AppBladeDatabaseObjectTests.m in Sources */,
 				313711A318962BB0001BA25F /* APBCustomParametersTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
