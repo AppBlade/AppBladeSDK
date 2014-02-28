@@ -106,7 +106,7 @@
 
 +(NSString *)snapshotColumnsDefinitions
 {
-    return @"snapshot_created_at TEXT, snapshot_exec_id TEXT, snapshot_device_version TEXT";
+    return @"snapshot_created_at TEXT, snapshot_exec_id TEXT, snapshot_device_version TEXT, snapshot_device_name TEXT, snapshot_active_token TEXT";
 }
 
 
