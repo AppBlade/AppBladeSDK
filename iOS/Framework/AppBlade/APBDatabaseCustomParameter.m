@@ -14,6 +14,20 @@
 
 
 @implementation APBDatabaseCustomParameter
+    -(id)initFromSQLiteStatement:(sqlite3_stmt *)statement
+    {
+        self = [super init];
+        if (self) {
+            self.tableName = kDbCustomParametersMainTableName;
+            NSError *errorCheck = [self readFromSQLiteStatement:statement];
+            if(errorCheck){
+                ABErrorLog(@"%@", [errorCheck debugDescription]);
+                return nil;
+            }
+        }
+        return self;
+    }
+
     -(id)initWithDictionary:(NSDictionary *)dictionary{
         self = [super init];
         if (self) {
