@@ -57,13 +57,15 @@
 }
 
 //id column must always come first, unless the data hasn't been written yet
--(NSArray *)baseColumnNames {  return @[ @"id",  @"snapshot_created_at",  @"snapshot_exec_id",  @"snapshot_device_version" ]; }
+-(NSArray *)baseColumnNames {  return @[ @"id",  @"snapshot_created_at",  @"snapshot_exec_id",  @"snapshot_device_version", @"snapshot_device_name", @"snapshot_active_token" ]; }
 
 -(NSArray *)baseColumnValues {
         return @[ [self sqlFormattedProperty: self.dbRowId],
                   [self sqlFormattedProperty: self.createdAt],
                   [self sqlFormattedProperty: self.executableIdentifier],
-                  [self sqlFormattedProperty: self.deviceVersionSanitized]];
+                  [self sqlFormattedProperty: self.deviceVersionSanitized],
+                  [self sqlFormattedProperty: self.deviceName],
+                  [self sqlFormattedProperty: self.activeToken]];
 }
 #pragma mark - Additional columns
 
@@ -117,6 +119,10 @@
     //    self.executableIdentifier = [[AppBlade sharedManager] executableUUID];
     self.deviceVersionSanitized = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
     //    self.deviceVersionSanitized = [[AppBlade sharedManager] iosVersionSanitized];
+    self.deviceName = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+
+    self.activeToken = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+    
     return nil;
 }
 
