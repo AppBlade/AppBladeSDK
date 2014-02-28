@@ -20,8 +20,6 @@
 
 NSString *reportFeedbackURLFormat    = @"%@/api/3/feedback";
 
-static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreports";
-
 
 @interface APBFeedbackReportingManager ()
 //redeclarations of readonly properties

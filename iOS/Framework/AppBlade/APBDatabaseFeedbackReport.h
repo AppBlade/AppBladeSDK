@@ -10,6 +10,7 @@
 
 #import "AppBladeDatabaseObject+CustomParametersCompatibility.h"
 
+static NSString* const kDbFeedbackReportDatabaseMainTableName = @"feedbackreports";
 
 
 static NSString* const kDbFeedbackReportColumnNameScreenshotURL = @"screenshotURL";

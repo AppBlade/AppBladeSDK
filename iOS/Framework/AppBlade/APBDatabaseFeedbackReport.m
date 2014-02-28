@@ -20,6 +20,8 @@
 {
     self = [super init];
     if (self) {
+        self.tableName = kDbFeedbackReportDatabaseMainTableName;
+
         NSError *errorCheck = [self readFromSQLiteStatement:statement];
         if(errorCheck){
             ABErrorLog(@"%@", [errorCheck debugDescription]);
@@ -34,6 +36,8 @@
     self = [super init];
     if (self) {
         [self takeFreshSnapshot];
+        self.tableName = kDbFeedbackReportDatabaseMainTableName;
+
         [self setScreenshotURL: feedbackScreenshotURL];
         [self setText:          feedbackText];
         [self setReportedAt:    feedbackReportedAt];
