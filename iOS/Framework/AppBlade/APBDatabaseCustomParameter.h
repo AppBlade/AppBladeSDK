@@ -11,9 +11,9 @@
 
 static NSString* const kDbCustomParametersMainTableName = @"customparams";
 
-static NSString* const kDbCustomParamColumnNameDictRaw = @"currentParams";
+static NSString* const kDbCustomParamColumnNameDictRaw = @"current_params";
 static NSInteger const kDbCustomParamColumnIndexOffsetDictRaw = 1;
-static NSString* const kDbCustomParamColumnNameSnapshotDate = @"createdAt";
+static NSString* const kDbCustomParamColumnNameSnapshotDate = @"created_at";
 static NSInteger const kDbCustomParamColumnIndexOffsetSnapshotDate = 2;
 
 
