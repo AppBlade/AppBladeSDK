@@ -34,7 +34,7 @@ extern NSString *kSessionTimeElapsed;
 @property (nonatomic, retain) NSTimer *sessionTrackingTimer;
 
 @property (nonatomic, assign) AppBladeSessionTrackingSetupOptions trackingOptions;
-#warning trackingOptions are unimplemented
+//#warning trackingOptions are unimplemented
 
 /*!
  session tracking methods
