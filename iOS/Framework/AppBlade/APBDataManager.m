@@ -326,9 +326,9 @@
         NSMutableString *createTableQuery = [NSMutableString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@(", tableName];
         [createTableQuery appendString:[APBDataManager defaultIdColumnDefinition]];
         [createTableQuery appendFormat:@", %@", [APBDataManager snapshotColumnsDefinitions]];
-        ABDebugLog_internal(@"added internal id, exec, and snapshot columns");
+        ABDebugLog_internal(@"AB DB: added internal id and snapshot columns");
         for(AppBladeDatabaseColumn* col in columnData){
-            ABDebugLog_internal(@"adding column %@", [col toDictionary]);
+            ABDebugLog_internal(@"AB DB: adding column %@", [col toDictionary]);
             
             [createTableQuery appendFormat:@", %@", [col toSQLiteColumnDefinition]];
         }
@@ -347,10 +347,11 @@
                 return [APBDataManager dataBaseErrorWithMessage:errMsg];
             }
         }
-        
         sqlite3_finalize(createTableQueryStatement);
         [self finishTransaction];
         
+        ABDebugLog_internal(@"AB DB: table created %@", [self tableInfo:tableName]);
+
         return nil;
     }else{
         return [APBDataManager dataBaseErrorWithMessage:@"database not opened"];
@@ -495,7 +496,6 @@
         return nil;
     }
     AppBladeDatabaseObject *dataToFind = [[classToFind alloc] init]; //initialize the class
-
     NSError *errorCheck = nil;
     sqlite3_stmt    *statement;
     if ([self prepareTransaction]  == SQLITE_OK)
