@@ -42,7 +42,7 @@
 
     +(NSArray *)columnDeclarations {
         return @[[AppBladeDatabaseColumn initColumnNamed:kDbCustomParamColumnNameDictRaw
-                                          withContraints: (AppBladeColumnConstraintAffinityText)
+                                          withContraints: (AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull)
                                           additionalArgs:nil],
                  [AppBladeDatabaseColumn initColumnNamed:kDbCustomParamColumnNameSnapshotDate
                                           withContraints:(AppBladeColumnConstraintAffinityText | AppBladeColumnConstraintNotNull)
