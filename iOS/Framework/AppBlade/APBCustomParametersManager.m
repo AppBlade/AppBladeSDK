@@ -158,10 +158,10 @@
                                                                                        toTable:kDbCustomParametersMainTableName
                                                                                          error:&errorCheck];
     if(errorCheck) {
-        ABErrorLog(@"error inserting custom params %@", [errorCheck description]);
+        ABErrorLog(@"AB DB: error inserting custom params %@", [errorCheck description]);
         return nil;
     }else{
-        ABDebugLog_internal(@"generated parameters ID:%@  paramHash:%@", [generatedData getId], [generatedData paramsAsString]);
+        ABDebugLog_internal(@"AB DB: generated parameters ID:%@  paramHash:%@", [generatedData getId], [generatedData paramsAsString]);
     }
     return generatedData;
 }
@@ -174,11 +174,15 @@
 
 -(NSError *)removeCustomParameterWithID:(NSString *)customParamId
 {
+    if([customParamId length] < 1){
+        return [APBDataManager dataBaseErrorWithMessage:@"Custom Parameter ID must be non-empty"];
+    }
+    
     NSString *customParamObjFilterParams = [NSString stringWithFormat:@"id = %@", customParamId];
     APBDatabaseCustomParameter * toDelete = (APBDatabaseCustomParameter *)[self findDataWithClass:[APBDatabaseCustomParameter class] inTable:kDbCustomParametersMainTableName withParams:customParamObjFilterParams];
     NSError *errorCheck = nil;
     if(toDelete == nil){
-        return [APBDataManager dataBaseErrorWithMessage:@"Custom Parameter no longer exists"];
+        return [APBDataManager dataBaseErrorWithMessage:@"Custom Parameter no longer exists, but we were trying to remove it?"];
     }
     [self deleteData:toDelete fromTable:kDbCustomParametersMainTableName error:&errorCheck];
     if(errorCheck){
