@@ -81,7 +81,7 @@
     if(propertyValue == nil){
         return @"NULL";
     }
-    
+
     if([propertyValue isKindOfClass:[NSString class]])
     {
         return [NSString stringWithFormat:@"\"%@\"", (NSString *)propertyValue];
@@ -140,28 +140,32 @@
 
 -(NSString *)readStringInAdditionalColumn:(NSNumber *)indexOffset fromSQLiteStatement:(sqlite3_stmt *)statement
 {
-    NSNumber *actualIndex = [NSNumber numberWithUnsignedLong:(([[self baseColumnNames] count] - 1) + [indexOffset integerValue])];
-    //confirm we have a column at that index
-    ABDebugLog_internal(@"DB READ ADDIT'L STRING AT INDEX OFFSET: %ld ( Actual: %ld )", (long)[indexOffset integerValue], (long)[actualIndex integerValue]);
+    int baseColumnCount = (int)[[self baseColumnNames] count];
+    if(baseColumnCount == 0)
+    {
+        ABErrorLog(@"Base Columns should never be zero");
+        return @"";
+    }
     
+    int indexOffsetAsInt = [indexOffset intValue];
+    int actualIndex = (baseColumnCount - 1) + indexOffsetAsInt;
+    //confirm we have a column at that index
+    ABDebugLog_internal(@"DB READ ADDIT'L STRING AT INDEX OFFSET: %d ( Actual: %d )", indexOffsetAsInt, actualIndex);
     int totalColumns = sqlite3_column_count(statement);
-    if(totalColumns > [actualIndex intValue]){
-        NSString *retrievedString = nil;
-        if([self columnTypeAtIndex:actualIndex fromSQLiteStatement:statement] == SQLITE_TEXT){
-            char *sqlite_text = (char *)sqlite3_column_text(statement, actualIndex);
-            NSString *retrievedString = (sqlite_text) ? [NSString stringWithUTF8String:sqlite_text] : nil; //"safe"
-            if(!retrievedString) {
-                ABErrorLog(@"DB ERROR: String should never be nil");
-            }else{
-                ABDebugLog_internal(@"DB READ STRING %@", retrievedString);
-            }
-        }else{
-            ABErrorLog(@"DB ERROR: column is not text");
+    if(totalColumns > actualIndex)
+    {
+        NSString *retrievedString = @"";
+        // Pull out the given column as a text result
+        const unsigned char *c = sqlite3_column_text(statement, actualIndex);
+        if (c)
+        {
+            retrievedString = [NSString stringWithUTF8String:(char *)c];
         }
+        ABDebugLog_internal(@"DB READ STRING %@", retrievedString);
         return retrievedString;
     }else
     {
-        ABDebugLog_internal(@"Index out of bounds: %d", [actualIndex intValue]);
+        ABErrorLog(@"Index out of bounds: %d", actualIndex);
         return nil;
     }
 }
