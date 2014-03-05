@@ -9,6 +9,6 @@
 #ifndef KitchenSink_KitchenSinkTestConstants_h
 #define KitchenSink_KitchenSinkTestConstants_h
 
-#define kNetworkPatience 5.0
+#define kNetworkPatience 7.0
 
 #endif
