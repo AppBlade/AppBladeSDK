@@ -34,6 +34,7 @@
  @return Returns true if no errors occcurred on deletion
  */
 + (BOOL)delete:(NSString *)service;
++ (BOOL)delete:(NSString *)service error:(NSError * __autoreleasing *)error;
 
 /*!
  @abstract Accepts service name and NSCoding-complaint data object and storeds it to the local keychain.
@@ -41,6 +42,7 @@
  @return Returns true if no errors occcurred on save
  */
 + (BOOL)save:(NSString *)service data:(id)data;
++ (BOOL)save:(NSString *)service data:(id)data error:(NSError * __autoreleasing *)error;
 
 /*!
  @abstract Loads the stored keychain data from the entered service
@@ -48,6 +50,7 @@
  @return An object inflated from the data stored in the keychain entry for the given service.
  */
 + (id)load:(NSString *)service;
++ (id)load:(NSString *)service error:(NSError * __autoreleasing *)error;
 
 /*!
  @abstract Provides a human-readable error message from the OSErrorCode

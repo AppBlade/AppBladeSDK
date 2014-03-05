@@ -244,6 +244,16 @@
 //Returns true on success
 + (BOOL)save:(NSString *)service data:(id)data
 {
+    NSError *errorCheck = nil;
+    BOOL result = [APBSimpleKeychain save:service data:data error:&errorCheck];
+    if(errorCheck)
+        NSLog(@"Save attempt to keychain failed : %@", [errorCheck description]);
+
+    return result;
+}
+
++ (BOOL)save:(NSString *)service data:(id)data error:(NSError * __autoreleasing *)error
+{
     
     BOOL wasSuccessful = YES;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
@@ -251,12 +261,15 @@
     [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(__bridge id)kSecValueData];
     resultCode =  SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
     if(resultCode != noErr){
-        NSLog(@"Attempting to store %@ failed", data);
-        NSLog(@"Error storing to keychain: %d : %@", (int)resultCode, [APBSimpleKeychain errorMessageFromCode:resultCode]);
+        NSMutableString *errorMsg = [[APBSimpleKeychain errorMessageFromCode:resultCode] mutableCopy];
         if(resultCode == errSecDuplicateItem){
             id dataExistenceCheck = [APBSimpleKeychain load:service];
-            NSLog(@"This exists instead: %@", dataExistenceCheck);
+            [errorMsg appendFormat:@"This exists instead: %@", dataExistenceCheck];
         }
+        
+        * error = [NSError errorWithDomain:@"APBSimpleKeychain"
+                                      code:(int)resultCode
+                                  userInfo:@{errorMsg  : NSLocalizedDescriptionKey }];
          wasSuccessful = NO;
     }else{
         wasSuccessful = YES;
@@ -268,26 +281,39 @@
 // Returns an object inflated from the data stored in the keychain entry for the given service.
 + (id)load:(NSString *)service
 {
+    NSError *errorCheck = nil;
+    id result = [APBSimpleKeychain load:service error:&errorCheck];
+    if(errorCheck)
+        NSLog(@"Load from keychain attempt failed : %@", [errorCheck description]);
+    return result;
+}
+
++ (id)load:(NSString *)service error:(NSError * __autoreleasing *)error
+{
     id ret = nil;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     [keychainQuery setObject:(id)kCFBooleanTrue forKey:(__bridge id)kSecReturnData];
     [keychainQuery setObject:(__bridge id)kSecMatchLimitOne forKey:(__bridge id)kSecMatchLimit];
     
-    //NSLog(@"load with query: %@", keychainQuery  );
-
     CFDataRef keyData = NULL;
     if (SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData) == noErr) {
         @try {
             ret = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)keyData];
-            if(ret == nil){ NSLog(@"Keychain data not found." ); }
+            if(ret == nil){
+                * error = [NSError errorWithDomain:@"APBSimpleKeychain"
+                                              code:404
+                                          userInfo:@{@"Keychain data not found." : NSLocalizedDescriptionKey }];
+            }
         }
         @catch (NSException *e) {
-            NSLog(@"Unarchive of %@ failed: %@", service, e);
+            NSString *errMsg = [NSString stringWithFormat:@"Unarchive of %@ failed: %@", service, e];
+            * error = [NSError errorWithDomain:@"APBSimpleKeychain"
+                                          code:500
+                                      userInfo:@{ errMsg : NSLocalizedDescriptionKey }];
         }
         @finally {}
     }
     
-    //NSLog(@"what do we have %@", ret);
     if (keyData) CFRelease(keyData);
     return ret;
 }
@@ -295,11 +321,23 @@
 // Removes the entry for the given service from keychain.
 + (BOOL)delete:(NSString *)service
 {
+    NSError *errorCheck = nil;
+    BOOL result = [APBSimpleKeychain delete:service error:&errorCheck];
+    if(errorCheck)
+        NSLog(@"Load from keychain attempt failed : %@", [errorCheck description]);
+    return result;
+}
+
++ (BOOL)delete:(NSString *)service error:(NSError * __autoreleasing *)error
+{
     BOOL wasSuccessful = YES;
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     OSStatus resultCode = SecItemDelete((__bridge CFDictionaryRef) keychainQuery);
     if(resultCode != noErr){
-        NSLog(@"Error deleting from keychain: %d : %@", (int)resultCode, [APBSimpleKeychain errorMessageFromCode:resultCode]);
+        NSString *errMsg = [NSString stringWithFormat:@"Error deleting from keychain: %@", [APBSimpleKeychain errorMessageFromCode:resultCode]];
+        * error = [NSError errorWithDomain:@"APBSimpleKeychain"
+                                      code:(int)resultCode
+                                  userInfo:@{errMsg  : NSLocalizedDescriptionKey }];
         wasSuccessful = NO;
     }else{
         wasSuccessful = YES;
