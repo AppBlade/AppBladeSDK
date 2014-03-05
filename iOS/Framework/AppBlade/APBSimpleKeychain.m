@@ -47,38 +47,30 @@
     [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:@"Delete This Thing"] forKey:(__bridge id)kSecValueData];
     keychainInterimCode = SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
     keychainErrorCode = keychainInterimCode;
-    keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"writing";
+    keychainInterimCodeLabel = (keychainErrorCode == noErr) ? keychainInterimCodeLabel : @"writing";
     
     //test reading
     keychainInterimCode = SecItemCopyMatching((__bridge CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData);
     keychainErrorCode = (keychainErrorCode != noErr) ? keychainErrorCode : keychainInterimCode;
-    keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"reading";
+    keychainInterimCodeLabel = (keychainErrorCode == noErr || [keychainInterimCodeLabel length] != 0) ? keychainInterimCodeLabel : @"reading";
     if (keyData) CFRelease(keyData);
 
     //test deleting
     keychainQuery = [self getKeychainQuery:@"AppBladeKeychainTest"];
     keychainInterimCode = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
     keychainErrorCode = (keychainErrorCode != noErr) ? keychainErrorCode : keychainInterimCode;
-    keychainInterimCodeLabel = (keychainErrorCode != noErr) ? keychainInterimCodeLabel : @"deleting";
-//        errSecSuccess                = 0,       /* No error. */
-//        errSecUnimplemented          = -4,      /* Function or operation not implemented. */
-//        errSecParam                  = -50,     /* One or more parameters passed to a function where not valid. */
-//        errSecAllocate               = -108,    /* Failed to allocate memory. */
-//        errSecNotAvailable           = -25291,	/* No keychain is available. You may need to restart your computer. */
-//        errSecDuplicateItem          = -25299,	/* The specified item already exists in the keychain. */
-//        errSecItemNotFound           = -25300,	/* The specified item could not be found in the keychain. */
-//        errSecInteractionNotAllowed  = -25308,	/* User interaction is not allowed. */
-//        errSecDecode                 = -26275,  /* Unable to decode the provided data. */
-//        errSecAuthFailed             = -25293,	/* The user name or passphrase you entered is not correct. */
+    keychainInterimCodeLabel = (keychainErrorCode == noErr || [keychainInterimCodeLabel length] != 0) ? keychainInterimCodeLabel : @"deleting";
     
     // If the keychain item already exists, modify it:
     if (keychainErrorCode == noErr)
     {
-        //TODO: more tests for all the writing, reading,
         return TRUE;
     }else{
         // If the keychain item already exists, modify it:
-        NSLog(@"Keychain error occured during keychain %@ test: %d : %@", keychainInterimCodeLabel, (int)keychainErrorCode, [APBSimpleKeychain errorMessageFromCode:keychainErrorCode]);
+        NSLog(@"Keychain error occured during keychain %@ test (and possibly other places, but occurred there first): %d : %@",
+                                keychainInterimCodeLabel,
+                                (int)keychainErrorCode,
+                                [APBSimpleKeychain errorMessageFromCode:keychainErrorCode]);
         NSLog(@"The AppBlade SDK needs keychain access to store credentials.");
         return FALSE;
     }
