@@ -16,7 +16,6 @@
 #import "APBApplicationInfoManager.h"
 #import "APBDeviceInfoManager.h"
 
-
 @interface AppBladeDatabaseObject()
 //@property (nonatomic, strong, readwrite, getter = getId) NSString *dbRowId; //we need to be able to set this
 
@@ -211,7 +210,8 @@
 {
     NSString *adjustedColumnNames = [self removeIdColumn:[self columnNames]];
     NSString *adjustedColumnValues = [self removeIdColumn:[self columnValues]];
-    
+    ABDebugLog_internal(@"AB DB %@", [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
+                          tableName, adjustedColumnNames, adjustedColumnValues]);
     return [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
             tableName, adjustedColumnNames, adjustedColumnValues];
 }
