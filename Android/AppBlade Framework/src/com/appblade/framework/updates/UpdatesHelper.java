@@ -21,7 +21,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
-import android.app.ProgressDialog;
 //import android.app.Notification;
 import android.app.NotificationManager;
 //import android.app.PendingIntent;
@@ -38,7 +37,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.util.Log;
 
 import com.appblade.framework.AppBlade;
 //import com.appblade.framework.R;
@@ -122,8 +120,8 @@ public class UpdatesHelper {
 			shouldUpdate = false;
 		}
 
-		Log.v(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
-		Log.v(AppBlade.LogTag, String.format("UpdatesHelper.shouldUpdate? %b", shouldUpdate));
+		AppBlade.Log(String.format("UpdatesHelper.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
+		AppBlade.Log(String.format("UpdatesHelper.shouldUpdate? %b", shouldUpdate));
 		
 		
 		//check if the activity is already in the process of checking/downloading/confirming the download 
@@ -255,7 +253,7 @@ public class UpdatesHelper {
 public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
 	HttpResponse response = null;
 	HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
-	String urlPath = String.format(WebServiceHelper.ServicePathUpdateFormat, AppBlade.appInfo.AppId);
+	String urlPath = String.format(WebServiceHelper.ServicePathUpdateFormat);
 	String url = WebServiceHelper.getUrl(urlPath);
 	String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, null, HttpMethod.GET);
 	try {
@@ -267,14 +265,14 @@ public static synchronized HttpResponse getUpdateResponse(boolean authorize) {
 		}
 		WebServiceHelper.addCommonHeaders(request);
 		
-		Log.v(AppBlade.LogTag, "DEVICE_FINGERPRINT: " + request.getFirstHeader("DEVICE_FINGERPRINT"));
-		Log.v(AppBlade.LogTag, "android_id: " + request.getFirstHeader("android_id"));
+		AppBlade.Log("DEVICE_FINGERPRINT: " + request.getFirstHeader("DEVICE_FINGERPRINT"));
+		AppBlade.Log("android_id: " + request.getFirstHeader("android_id"));
 	    response = client.execute(request);
-		Log.e(AppBlade.LogTag, String.format("%s", request.getURI() ) );
+	    AppBlade.Log_e(String.format("%s", request.getURI() ) );
 	}
 	catch(Exception ex)
 	{
-		Log.e(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+		AppBlade.Log_e(String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 	}
 
 	return response;
@@ -335,21 +333,21 @@ public static void processUpdate(Activity activity, JSONObject update, DownloadP
 	{
 		if(UpdatesHelper.appCanDownload()) {
 			notifyDownloading(activity);
-			Log.v(AppBlade.LogTag, "UpdatesHelper.processUpdate - permission to write to sd, processing download");
+			AppBlade.Log("UpdatesHelper.processUpdate - permission to write to sd, processing download");
 			downloadUpdate(activity, update, delegate);
 		}
 		else {
-			Log.v(AppBlade.LogTag, "UpdatesHelper.processUpdate - download available but there are no permissions to write to sd, notifying...");
+			AppBlade.Log("UpdatesHelper.processUpdate - download available but there are no permissions to write to sd, notifying...");
 			notifyUpdate(activity, update);
 		}
 	}else{
-		Log.v(AppBlade.LogTag, "UpdatesHelper.processUpdate - download available and already exists");
+		AppBlade.Log("UpdatesHelper.processUpdate - download available and already exists");
 		//we have this file already, open it/notify
 		try {
 			File downloadedFile = UpdatesHelper.fileFromUpdateJSON(update);		
 			UpdatesHelper.handleDownloadedFile(activity, downloadedFile);
 		} catch (JSONException e) {
-			Log.w(AppBlade.LogTag, "Error opening file from update for installation! ", e);
+			AppBlade.Log_w("Error opening file from update for installation! ", e);
 		}
 	}
 }
@@ -409,7 +407,7 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 		url = update.getString("url");	
 		
 		expectedFileSize = HttpUtils.getHeaderAsLong(url, HttpUtils.HeaderContentLength);
-		Log.v(AppBlade.LogTag, String.format("Downloading %d bytes from %s", expectedFileSize, url));
+		AppBlade.Log(String.format("Downloading %d bytes from %s", expectedFileSize, url));
 		
 		HttpGet request = new HttpGet();
 		request.setURI(new URI(url));
@@ -430,7 +428,7 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 			
 	    	fileOutput = new FileOutputStream(fileDownloadLocation);
 	    	bufferedOutput = new BufferedOutputStream(fileOutput);
-			Log.v(AppBlade.LogTag, String.format("Downloading to %s ", fileDownloadLocation.getAbsolutePath()));
+	    	AppBlade.Log(String.format("Downloading to %s ", fileDownloadLocation.getAbsolutePath()));
 	    	
 	        byte[] buffer = new byte[1024 * 16];
 	        totalBytesRead = 0;
@@ -471,8 +469,8 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 		    		//check md5 of the local file with the one we expect from the server, don't bother if we already know the bytestream was interrupted
 		    		String md5OnServer = update.getString("md5");
 		    		String md5Local = StringUtils.md5FromFile(fileDownloadLocation);
-		    		Log.v(AppBlade.LogTag, "" + fileDownloadLocation.getAbsolutePath() + " " + (fileDownloadLocation.exists() ? "exists" : "does not exist" ) );
-		    		Log.v(AppBlade.LogTag, "does md5 " +  md5OnServer + " = " + md5Local + "  ? " + (md5OnServer.equals(md5Local) ? "equal" : "not equal" ));
+		    	    AppBlade.Log("" + fileDownloadLocation.getAbsolutePath() + " " + (fileDownloadLocation.exists() ? "exists" : "does not exist" ) );
+		    		AppBlade.Log("does md5 " +  md5OnServer + " = " + md5Local + "  ? " + (md5OnServer.equals(md5Local) ? "equal" : "not equal" ));
 		    		savedSuccessfully = md5OnServer.equals(md5Local);
 		    		if(!savedSuccessfully){
 		    			notifyRetryDownload(context, update);
@@ -487,10 +485,10 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 			notifyRetryDownload(context, update);
 		}
 	}
-	catch(JSONException ex) { Log.w(AppBlade.LogTag, "JSON error when downloading update ", ex); }
-	catch(URISyntaxException ex) { Log.w(AppBlade.LogTag, "URI Syntax error when downloading update ", ex); }
-	catch(ClientProtocolException ex) { Log.w(AppBlade.LogTag, "Client protocol error when downloading update ", ex); }
-	catch(IOException ex) { Log.w(AppBlade.LogTag, "IO error when downloading update ", ex); }
+	catch(JSONException ex) { AppBlade.Log_w("JSON error when downloading update ", ex); }
+	catch(URISyntaxException ex) { AppBlade.Log_w("URI Syntax error when downloading update ", ex); }
+	catch(ClientProtocolException ex) { AppBlade.Log_w("Client protocol error when downloading update ", ex); }
+	catch(IOException ex) { AppBlade.Log_w("IO error when downloading update ", ex); }
 	finally
 	{
 		if (delegate != null) {
@@ -500,7 +498,7 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 				(NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(NotificationNewVersionDownloading);		
 		if(savedSuccessfully && fileDownloadLocation != null) {
-			Log.v(AppBlade.LogTag, String.format("Download succeeded, opening file at %s", fileDownloadLocation.getAbsolutePath()));
+			AppBlade.Log(String.format("Download succeeded, opening file at %s", fileDownloadLocation.getAbsolutePath()));
 			UpdatesHelper.handleDownloadedFile(context, fileDownloadLocation);
 		}
 	}
@@ -508,7 +506,7 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 	
 	private static void notifyRetryDownload(final Activity context, final JSONObject update) 
 	{
-		Log.v(AppBlade.LogTag, "Download failed, notify the user");
+		AppBlade.Log("Download failed, notify the user");
 
 		context.runOnUiThread(new Runnable() {
 			public void run() {
@@ -517,7 +515,7 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 				builder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						if(updateTask != null && updateTask.cancel(true)){ 
-							Log.v(AppBlade.LogTag, "Cancelling existing UpdateTask!"); //ensure the previous task is finished
+							AppBlade.Log("Cancelling existing UpdateTask!"); //ensure the previous task is finished
 						}
 						updateTask = new UpdateTask(context, false, false);
 						updateTask.execute();
@@ -588,7 +586,7 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 	
 	private static File getRootDirectory() {
 		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-		Log.d(AppBlade.LogTag, "getRootDirectory " + path);
+		AppBlade.Log("getRootDirectory " + path);
 		File dir = new File(path);
 		if(!dir.exists()){
 			dir.mkdirs();
@@ -669,10 +667,10 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 		File currentFile = UpdatesHelper.downloadedFile();
 		if(UpdatesHelper.deleteFileAndNotifyDownloadManager(currentFile, context))
 		{
-			Log.v(AppBlade.LogTag, "Deleted now-unnecessary apk: " + currentFile.getName());
+			AppBlade.Log("Deleted now-unnecessary apk: " + currentFile.getName());
 			
 		}
-		Log.v(AppBlade.LogTag, "Everything up-to-date");		
+		AppBlade.Log("Everything up-to-date");		
 	}
 	
 	//Notifiers
@@ -764,7 +762,7 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 				}
 			}
 		} catch (JSONException e) {
-			Log.w(AppBlade.LogTag, "Couldn't check file at update JSON", e);
+			AppBlade.Log_w( "Couldn't check file at update JSON", e);
 		}
 		return notDownloadedYet;
 	}

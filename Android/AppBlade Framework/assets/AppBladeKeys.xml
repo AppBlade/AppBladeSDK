@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- THIS IS SIMPLY AN EXAMPLE FILE. LIBRARY PROJECTS DO NOT SHARE FILES IN THE /ASSETS/ FOLDER  -->
+	<!-- NOTE: THIS FILE WILL BE CHANGED ON APK DOWNLOAD. DO NOT RELY ON ANY VALUES IN THIS FILE -->
+	<api_keys>
+	  <host>https://appblade.com:3001</host>
+	  <project_secret>7b8d05dd90f463736766591ce2654d88</project_secret> 
+	  <device_secret>bb44445a0d021dbbb8086f32675b993806184c89761cfa72f31de5b84f53738e</device_secret>
+	</api_keys>
+</resources>

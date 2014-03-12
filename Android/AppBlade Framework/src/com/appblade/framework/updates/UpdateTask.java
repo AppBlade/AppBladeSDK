@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
-import android.util.Log;
+
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.updates.DownloadProgressDialog.DownloadProgressDelegate;
@@ -80,7 +80,7 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> implements DownloadP
 		HttpResponse response = UpdatesHelper.getUpdateResponse(this.requireAuthCredentials);
 		
 		if(response != null){
-			Log.v(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+			AppBlade.Log( String.format("Response status:%s", response.getStatusLine()));
 		}
 		handleResponse(response);
 		return null;
@@ -95,7 +95,7 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> implements DownloadP
 		if(HttpUtils.isOK(response)) {
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.v(AppBlade.LogTag, String.format("UpdateTask response OK %s", data));
+				AppBlade.Log( String.format("UpdateTask response OK %s", data));
 				JSONObject json = new JSONObject(data);
 				long timeToLive = json.getLong("ttl")*1000;//update ttl (this comes in as seconds, not millis)
 				UpdatesHelper.saveTtl(timeToLive, this.taskActivity);
@@ -122,8 +122,8 @@ public class UpdateTask extends AsyncTask<Void, Void, Void> implements DownloadP
 					UpdatesHelper.deleteCurrentFile(this.taskActivity);
 				}
 			}
-			catch (IOException ex) { Log.w(AppBlade.LogTag, "IO error when handling update response", ex); }
-			catch (JSONException ex) { Log.w(AppBlade.LogTag, "JSON error when handling update response ", ex); }
+			catch (IOException ex) { AppBlade.Log_w( "IO error when handling update response", ex); }
+			catch (JSONException ex) { AppBlade.Log_w( "JSON error when handling update response ", ex); }
 		}
 	}
 }

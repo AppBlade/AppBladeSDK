@@ -7,7 +7,7 @@ import com.appblade.framework.customparams.CustomParamDataHelper;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+
 import android.widget.Toast;
 
 /**
@@ -36,7 +36,7 @@ public class PostFeedbackTask extends AsyncTask<FeedbackData, Void, Boolean>{
 		if(params.length == 1){
 			FeedbackData data = params[0];
 			CustomParamData paramData = CustomParamDataHelper.getCurrentCustomParams();
-			Log.v(AppBlade.LogTag, "customParams " + paramData.toString());
+			AppBlade.Log( "customParams " + paramData.toString());
 			success = FeedbackHelper.postFeedbackWithCustomParams(data, paramData);
 			
 			if(success){

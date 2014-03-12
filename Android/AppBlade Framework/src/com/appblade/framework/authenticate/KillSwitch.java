@@ -18,7 +18,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
-import android.util.Log;
+
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.WebServiceHelper;
@@ -95,8 +95,8 @@ public class KillSwitch {
 		else if((ttlLastUpdated + ttl) > now)
 			shouldUpdate = false;
 
-		Log.v(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
-		Log.v(AppBlade.LogTag, String.format("KillSwitch.shouldUpdate? %b", shouldUpdate));
+		AppBlade.Log( String.format("KillSwitch.shouldUpdate, ttl:%d, last updated:%d now:%d", ttl, ttlLastUpdated, now));
+		AppBlade.Log( String.format("KillSwitch.shouldUpdate? %b", shouldUpdate));
 		
 		return shouldUpdate;
 	}
@@ -122,7 +122,7 @@ public class KillSwitch {
 	public static synchronized HttpResponse getKillSwitchResponse() {
 		HttpResponse response = null;
 		HttpClient client = HttpClientProvider.newInstance(SystemUtils.UserAgent);
-		String urlPath = String.format(WebServiceHelper.ServicePathKillSwitchFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+		String urlPath = String.format(WebServiceHelper.ServicePathKillSwitchFormat);
 		String url = WebServiceHelper.getUrl(urlPath);
 		String authHeader = WebServiceHelper.getHMACAuthHeader(AppBlade.appInfo, urlPath, null, HttpMethod.GET);
 		try {
@@ -134,7 +134,7 @@ public class KillSwitch {
 		}
 		catch(Exception ex)
 		{
-			Log.v(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+			AppBlade.Log( String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
 		
 		return response;
@@ -172,7 +172,7 @@ public class KillSwitch {
 		protected Void doInBackground(Void... params) {
 			HttpResponse response = getKillSwitchResponse();
 			if(response != null){
-				Log.v(AppBlade.LogTag, String.format("Response status:%s", response.getStatusLine()));
+				AppBlade.Log( String.format("Response status:%s", response.getStatusLine()));
 			}
 			handleResponse(response);
 			return null;
@@ -202,7 +202,7 @@ public class KillSwitch {
 			if(HttpUtils.isOK(response)) {
 				try {
 					String data = StringUtils.readStream(response.getEntity().getContent());
-					Log.v(AppBlade.LogTag, String.format("KillSwitch response OK %s", data));
+					AppBlade.Log( String.format("KillSwitch response OK %s", data));
 					JSONObject json = new JSONObject(data);
 					int timeToLive = json.getInt("ttl");
 					save(timeToLive);
@@ -230,10 +230,10 @@ public class KillSwitch {
 			String message = null;
 			try {
 				String data = StringUtils.readStream(response.getEntity().getContent());
-				Log.v(AppBlade.LogTag, String.format("KillSwitch response unauthorized %s", data));
+				AppBlade.Log( String.format("KillSwitch response unauthorized %s", data));
 				JSONObject json = new JSONObject(data);
 				message = json.getString("error");
-				Log.v(AppBlade.LogTag, json.toString());
+				AppBlade.Log( json.toString());
 			}
 			catch (IOException ex) { }
 			catch (JSONException ex) { }

@@ -1,11 +1,13 @@
 package com.appblade.framework;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URL;
 import java.util.Random;
 
 import org.json.JSONException;
+import org.xmlpull.v1.XmlPullParser;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,9 +17,14 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.Xml;
 import android.view.View;
+import android.widget.Toast;
 
 import com.appblade.framework.authenticate.AuthHelper;
 import com.appblade.framework.authenticate.KillSwitch;
@@ -30,10 +37,16 @@ import com.appblade.framework.feedback.FeedbackData;
 import com.appblade.framework.feedback.FeedbackHelper;
 import com.appblade.framework.feedback.OnFeedbackDataAcquiredListener;
 import com.appblade.framework.feedback.PostFeedbackTask;
+import com.appblade.framework.servicebinding.AppBladeServiceConstants.Keys;
+import com.appblade.framework.servicebinding.AppBladeServiceManager;
+import com.appblade.framework.servicebinding.BlockingTwoWayMessage;
+import com.appblade.framework.servicebinding.BlockingTwoWayMessage.ResponseDelegate;
+import com.appblade.framework.servicebinding.GetTokenMessage;
+import com.appblade.framework.stats.AppBladeSessionLoggingService;
 import com.appblade.framework.stats.SessionData;
 import com.appblade.framework.stats.SessionHelper;
-import com.appblade.framework.stats.AppBladeSessionLoggingService;
 import com.appblade.framework.updates.UpdatesHelper;
+import com.appblade.framework.utils.LogLevel;
 import com.appblade.framework.utils.StringUtils;
 
 /**
@@ -49,9 +62,17 @@ import com.appblade.framework.utils.StringUtils;
  * @author andrew.tremblay@raizlabs 
  */
 public class AppBlade {
-	public static String LogTag = "AppBlade";
+	private static String LogTag = "AppBlade";
 	public static boolean makeToast = false;  //for toast display in the device, not desired by default
 
+	public static final int SDKVersion = 940;
+	
+	/**
+	 * A bitmap for displaying internal AppBlade Logs.
+	 * For the possible values, see {@link com.appblade.framework.utils.LogLevel } 
+	 */
+	public static int mLogFlags = LogLevel.NONE;  	
+	
 	/**
 	 * Contains basic anonymous information about the application and the device running it after a successful register() call. 
 	 * See AppInfo class for more details.
@@ -85,6 +106,144 @@ public class AppBlade {
 	 * Methods to help assign the app with the necessary information to communicate with AppBlade. A register call should be made before all other calls, and only once. 
 	 */
 	
+	
+	public static void registerViaService(Context context, String projectSecret) {
+		AppBladeServiceManager serviceManager = AppBladeServiceManager.get();
+		if (serviceManager.bind(context)) {
+
+			AppInfo appInfo = new AppInfo();
+
+
+			appInfo.DeviceSecret = RemoteAuthHelper.getAccessToken(context);
+			appInfo.ProjectSecret = projectSecret;
+			appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+			serviceManager.obtainToken(projectSecret, appInfo);
+		} else {
+			AppBlade.Log_i("Failed to bind to the AppBlade Service");
+			// TODO - Fallback
+		}
+	}
+	
+	
+	
+	public static void demoServiceBlocking(final Context context, final String projectSecret) {
+		new AsyncTask<Void, Void, String>() {
+			String token;
+			
+			@Override
+			protected String doInBackground(Void... params) {
+				AppInfo appInfo = new AppInfo();
+				
+				
+				appInfo.DeviceSecret = RemoteAuthHelper.getAccessToken(context);
+				appInfo.ProjectSecret = projectSecret;
+				appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+				
+				GetTokenMessage getToken = new GetTokenMessage(projectSecret, appInfo);
+				BlockingTwoWayMessage blockingTest = new BlockingTwoWayMessage(getToken, new ResponseDelegate() {
+					public boolean handleMessage(Message msg) {
+						// Look, a token!
+						Bundle data = msg.getData();
+						if (data != null) {					
+							token = data.getString(Keys.Token);
+						}
+						
+						return true;
+					}
+				});
+				boolean success = blockingTest.sendAndAwaitResponse();
+				
+				AppBlade.Log_i("Success: " + success);
+				
+				return token;
+			}
+			
+			protected void onPostExecute(String result) {
+				AppBlade.Log_i("Result: " + result);
+				Toast.makeText(context, "Look a token!: (" + result + ")", Toast.LENGTH_SHORT).show();
+			}
+			
+		}.execute();
+	}
+	
+	
+	
+	
+	public static void registerWithAssetFile(Context context)
+	{
+		// Check parameters
+		if(context == null)
+		{
+			throw new IllegalArgumentException("Invalid context passed when trying to register with AppBlade");
+		}
+
+		String host = "";
+		String project_secret = "";			 
+		String device_secret = "";
+		String appbladekeys_filename = "AppBladeKeys.xml";
+		try {
+			final InputStream is = context.getResources().getAssets().open(appbladekeys_filename);
+            XmlPullParser parser = Xml.newPullParser();
+			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+			parser.setInput(is, null);
+			parser.nextTag();
+			parser.require(XmlPullParser.START_TAG, null, "root");
+			String lastNameSeen  = "";
+			while (parser.next() != XmlPullParser.END_DOCUMENT) {
+
+			  int eventType = parser.getEventType();
+			   if(eventType != XmlPullParser.TEXT){
+		              String name = parser.getName();
+					   if(name != null){
+						   lastNameSeen = name;
+					   }
+				   continue;
+			   }
+			   String text = parser.getText();
+			   if(text.trim().length() == 0)
+			   {
+				   continue;
+			   }
+			   
+               if (lastNameSeen.equals("host")) {
+            	   host = text;
+               }
+               else if (lastNameSeen.equals("project_secret")) {
+            	   project_secret = text;
+               }
+               else if (lastNameSeen.equals("device_secret")) {
+               	device_secret = text;
+         	   }
+               else {
+            	   Log.d(AppBlade.LogTag, "Unknown/unused keyvalue passed in "+appbladekeys_filename+": "+lastNameSeen);
+               }
+            }  
+		} catch (Exception e1) {
+			Log.w(AppBlade.LogTag, "Failed to parse "+appbladekeys_filename, e1);
+			e1.printStackTrace();
+		}
+		
+		register(context, device_secret, project_secret, host);
+	}
+
+	
+	public static void register(Context context, String projectSecret) {
+		// Check parameters
+		if(context == null)
+		{
+			throw new IllegalArgumentException("Invalid context registered with AppBlade");
+		}
+
+		if(StringUtils.isNullOrEmpty(projectSecret)) 
+		{
+			throw new IllegalArgumentException("Invalid application info registered with AppBlade");
+		}
+		
+		
+		
+	}
+	
 	/**
 	 * Static entry point for registering with AppBlade (must be called before anything else).
 	 * Find your API keys on your project page at http://www.appblade.com
@@ -94,10 +253,11 @@ public class AppBlade {
 	 * @param uuid String value of the project uuid.
 	 * @param issuance String value of the timestamp value.
 	 */	
-	public static void register(Context context, String token, String secret, String uuid, String issuance)
+	public static void register(Context context, String device_secret, String project_secret)
 	{
-		register(context, token, secret, uuid, issuance, null);		
+		register(context, device_secret, project_secret, null);		
 	}
+	
 	
 	/**
 	 * Static entry point for registering with AppBlade (must be called before anything else)
@@ -108,7 +268,7 @@ public class AppBlade {
 	 * @param issuance String value of the timestamp value.
 	 * @param customHost String value of the custom endpoint to use. Will determine port automatically if not defined from the given protocol (http/https), falls back to default values of protocol and port if neither included.
 	 */	
-	public static void register(Context context, String token, String secret, String uuid, String issuance, String customHost)
+	public static void register(Context context, String device_secret, String project_secret, String customHost)
 	{
 		// Check parameters
 		if(context == null)
@@ -116,7 +276,7 @@ public class AppBlade {
 			throw new IllegalArgumentException("Invalid context registered with AppBlade");
 		}
 
-		if(StringUtils.isNullOrEmpty(token) || StringUtils.isNullOrEmpty(secret) || StringUtils.isNullOrEmpty(uuid) || StringUtils.isNullOrEmpty(issuance))
+		if(StringUtils.isNullOrEmpty(device_secret) || StringUtils.isNullOrEmpty(project_secret) || StringUtils.isNullOrEmpty(customHost))
 		{
 			throw new IllegalArgumentException("Invalid application info registered with AppBlade");
 		}
@@ -124,10 +284,17 @@ public class AppBlade {
 		
 		// Initialize App Info
 		appInfo = new AppInfo();
-		appInfo.AppId = uuid;
-		appInfo.Token = token;
-		appInfo.Secret = secret;
-		appInfo.Issuance = issuance;
+		String existingAccessToken = RemoteAuthHelper.getAccessToken(context);
+		if(StringUtils.isNullOrEmpty(existingAccessToken)){
+			
+			appInfo.DeviceSecret = device_secret;
+			RemoteAuthHelper.setAccessToken(context, device_secret);
+		}
+		else
+		{
+			appInfo.DeviceSecret = existingAccessToken;
+		}
+		appInfo.ProjectSecret = project_secret;
 		appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 		
 
@@ -160,9 +327,6 @@ public class AppBlade {
 		Log.d(LogTag, String.format("Using a endpoint URL, %s%s", appInfo.CurrentServiceScheme, appInfo.CurrentEndpoint));
 
 		
-		// Set the device ID for exception reporting requests
-		String accessToken = RemoteAuthHelper.getAccessToken(context);
-		setDeviceId(accessToken);
 
 		try
 		{
@@ -290,7 +454,7 @@ public class AppBlade {
 		// close the activity context
 		else if (fromLoopBack)
 		{
-			Log.v(AppBlade.LogTag,
+			AppBlade.Log(
 			String.format("AppBlade.authorize: user is authorized, closing activity: %s", activity.getLocalClassName()));
 			activity.finish();
 		}
@@ -306,7 +470,7 @@ public class AppBlade {
 		hardCheckIsRegistered();
 
 		String accessToken = RemoteAuthHelper.getAccessToken(activity);
-		setDeviceId(accessToken);
+		AppBlade.appInfo.DeviceSecret = accessToken;
 
 		Log.v("AppBlade MDM",  !StringUtils.isNullOrEmpty(accessToken) ? "Access Token exists" : "Access Token does not exist"); 
 
@@ -324,7 +488,7 @@ public class AppBlade {
 		hardCheckIsRegistered();
 
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
-		setDeviceId(accessToken);
+		AppBlade.appInfo.DeviceSecret = accessToken;
 
 		boolean isTtlValid = !KillSwitch.shouldUpdate(); 
 		return  !StringUtils.isNullOrEmpty(accessToken) && isTtlValid;
@@ -624,7 +788,7 @@ public class AppBlade {
 		if(e != null && canWriteToDisk)
 		{
 			if(e.getLocalizedMessage() != null){
-				Log.v(AppBlade.LogTag, e.getLocalizedMessage());
+				AppBlade.Log( e.getLocalizedMessage());
 			}
 			CrashReportData data = new CrashReportData(e);
 			new PostCrashReportTask(null).execute(data);
@@ -711,21 +875,6 @@ public class AppBlade {
 		return null;	
 	}
 
-
-	/**
-	 * Static helper call to set the device ID (ext) for the device running this app.
-	 * @param accessToken the access token to that will be the new deviceID, defaults to AppInfo.DefaultUDID if null or an empty string
-	 */
-	public static void setDeviceId(String accessToken) {
-		hardCheckIsRegistered();
-
-		Log.v(AppBlade.LogTag, String.format("AppBlade.setDeviceId: %s", accessToken));
-
-		if(!StringUtils.isNullOrEmpty(accessToken))
-			AppBlade.appInfo.Ext = accessToken;
-		else
-			AppBlade.appInfo.Ext = AppInfo.DefaultUDID;
-	}
 	
 	/**
 	 * Static helper call to generate a dynamic boundary for webservice calls.
@@ -757,5 +906,47 @@ public class AppBlade {
 		fileDirectory.mkdirs();
 		return toRet;
 	}
+	
+	/*
+	 * Log methods for AppBlade. Use these for AppBlade development or if you think something's wrong with AppBlade. (AppBlade, of course, is never worng).
+	 */
+	
+	public static void Log(String message)
+	{
+		Log_d(message);
+	}
+	
+	public static void Log_v(String message) {
+		if((mLogFlags & LogLevel.VERBOSE) > 0){
+			Log.v(LogTag, message);
+		}
+	}
+	
+	public static void Log_d(String message) {
+		if((mLogFlags & LogLevel.DEBUG) > 0){  
+			Log.d(LogTag, message);
+		}
+	}
+	
+	public static void Log_i(String message) {
+		if((mLogFlags & LogLevel.INFO) > 0) {
+			Log.i(LogTag, message);
+		}
+	}
+	
+	public static void Log_w(String message, Exception ex)
+	{
+		if((mLogFlags & LogLevel.WARNINGS) > 0){  
+			Log.w(LogTag, message, ex);
+		}
+	}
 
+	public static void Log_e(String message) {
+		if((mLogFlags & LogLevel.ERRORS) > 0){
+			Log.e(LogTag, message);		
+		}
+	}
+	
+	
+	
 }

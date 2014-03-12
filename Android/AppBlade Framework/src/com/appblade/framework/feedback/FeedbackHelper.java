@@ -32,7 +32,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Color;
-import android.util.Log;
+
 import android.view.Gravity;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -69,10 +69,10 @@ public class FeedbackHelper {
 
 		try
 		{
-			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat, AppBlade.appInfo.AppId, AppBlade.appInfo.Ext);
+			String urlPath = String.format(WebServiceHelper.ServicePathFeedbackFormat);
 			String url = WebServiceHelper.getUrl(urlPath);
 
-			Log.v(AppBlade.LogTag, (paramData == null ? "no paramData" : "Param Data " + paramData.toString()));
+			AppBlade.Log( (paramData == null ? "no paramData" : "Param Data " + paramData.toString()));
 
 			final MultipartEntity content = FeedbackHelper.getPostFeedbackBody(data, paramData, sharedBoundary);
 
@@ -99,19 +99,19 @@ public class FeedbackHelper {
 				int statusCode = response.getStatusLine().getStatusCode();
 				int statusCategory = statusCode / 100;
 
-				Log.v(AppBlade.LogTag, "Feedback returned: " + statusCode);
+				AppBlade.Log( "Feedback returned: " + statusCode);
 
 				
 				if(statusCategory == 2)
 					success = true;
 			}else{
-				Log.v(AppBlade.LogTag, "Feedback returned null response ");
+				AppBlade.Log( "Feedback returned null response ");
 			}
 
 		}
 		catch(Exception ex)
 		{
-			Log.w(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()), ex);
+			AppBlade.Log_w( String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()), ex);
 		}
 
 		IOUtils.safeClose(client);
@@ -165,7 +165,7 @@ public class FeedbackHelper {
 		dialog.setView(wrapperView);
 		
 		final FeedbackData fData = data;
-		Log.v(AppBlade.LogTag, "feedback data : "+ fData.FileName + " is " + (fData.Screenshot != null ? "here" : "not here") );
+		AppBlade.Log( "feedback data : "+ fData.FileName + " is " + (fData.Screenshot != null ? "here" : "not here") );
 
 		dialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -214,7 +214,7 @@ public class FeedbackHelper {
 			}
 		} 
 		catch (IOException e) {
-			Log.v(AppBlade.LogTag, e.toString());
+			AppBlade.Log( e.toString());
 		}
 		
 		return entity;
@@ -247,7 +247,7 @@ public class FeedbackHelper {
 	public static String formatNewScreenshotFileLocation() {
 		String toRet = "";
 		toRet = AppBlade.rootDir + "/" + formatNewScreenshotFileName();
-		Log.v(AppBlade.LogTag, toRet);
+		AppBlade.Log( toRet);
 		return toRet ;
 	}
 

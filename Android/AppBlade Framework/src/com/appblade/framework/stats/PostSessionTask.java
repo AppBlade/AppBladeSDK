@@ -6,7 +6,7 @@ import com.appblade.framework.AppBlade;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+
 import android.widget.Toast;
 
 /**
@@ -49,20 +49,20 @@ public class PostSessionTask extends AsyncTask<List<SessionData>, Void, Void>{
 		if (success) {
 			toastMessage = SUCCESS_MESSAGE;
 			if(context != null){
-				Log.v(AppBlade.LogTag, "session posting success. remove successful sessions");
+				AppBlade.Log( "session posting success. remove successful sessions");
 				if(data.size() > 0){
 				SessionData lastSession = data.get(data.size()-1);
 				SessionHelper.removeSessionsEndedBefore(context, lastSession.ended);
 				}
 			}
 		}else{
-			Log.v(AppBlade.LogTag, "error posting session. response Code " + responseCode);					
+			AppBlade.Log( "error posting session. response Code " + responseCode);					
 			if(responseCode == 408){
-				Log.v(AppBlade.LogTag, "Timeout, store for later");					
+				AppBlade.Log( "Timeout, store for later");					
 			}else if(responseCode == 0){
-				Log.v(AppBlade.LogTag, "no data to send, store for later");					
+				AppBlade.Log( "no data to send, store for later");					
 			}else{
-				Log.v(AppBlade.LogTag, "Bad request, blow away the data");					
+				AppBlade.Log( "Bad request, blow away the data");					
 				if(data.size() > 0){
 				SessionData lastSession = data.get(data.size()-1);
 				SessionHelper.removeSessionsEndedBefore(context, lastSession.ended);

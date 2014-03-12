@@ -11,8 +11,9 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
+import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+
 
 /**
  * AppInfo
@@ -25,11 +26,8 @@ public class AppInfo {
 	public static String DefaultAppBladeHost = "AppBlade.com";
 	public static String DefaultServiceScheme = "https://";
 
-	public String Token;
-	public String Secret;
-	public String AppId;
-	public String Issuance;
-	public String Ext = DefaultUDID;
+	public String DeviceSecret;
+	public String ProjectSecret;
 	public String CurrentEndpoint = DefaultAppBladeHost;
 	public String CurrentEndpointNoPort = DefaultAppBladeHost;
 	public String CurrentServiceScheme = DefaultServiceScheme;
@@ -37,6 +35,10 @@ public class AppInfo {
 	PackageInfo PackageInfo;
 	private String systemInfo;
 	public String storedANDROID_ID;
+	
+
+	
+	
 	
 	/**
 	 * Initializes systemInfo string if it does not yet exist.
@@ -116,7 +118,7 @@ public class AppInfo {
 		boolean toRet = false;
 		TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		String networkOperator = tm.getNetworkOperatorName();
-		Log.v(AppBlade.LogTag, "networkOperator "+networkOperator);
+		AppBlade.Log( "networkOperator "+networkOperator);
 		if("Android".equals(networkOperator)) {
 		    // Emulator
 			toRet = true;
@@ -133,10 +135,85 @@ public class AppInfo {
 	 */
 	public boolean isValid() {
 		return
-				!StringUtils.isNullOrEmpty(AppId) &&
-				!StringUtils.isNullOrEmpty(Token) &&
-				!StringUtils.isNullOrEmpty(Secret) &&
-				!StringUtils.isNullOrEmpty(Issuance);
+				!StringUtils.isNullOrEmpty(DeviceSecret) &&
+				!StringUtils.isNullOrEmpty(ProjectSecret);
 	}
 
+	
+	
+	
+	// **********************
+	// ****** Bundling ******
+	// **********************	
+	
+	// THESE CONSTANTS SHOULD NEVER CHANGE
+	// Otherwise there may be incompatibilities between SDK and the AppBlade App
+	// If the structure changes, keys should be added, but old ones should probably be kept
+	// for compatibility in case we ever need them
+	//
+	// The functions should stay the same as well, or at least consider that keys may be
+	// missing in future/previous versions of the bundling
+
+	/**
+	 * Class of key constants used for bundling {@linkd AppInfo}s.
+	 * @author Dylan James
+	 *
+	 */
+	public static final class BundleKeys {
+		public static final String DeviceSecret = "DeviceSecret";
+		public static final String ProjectSecret = "ProjectSecret";
+		public static final String CurrentEndpoint = "CurrentEndpoint";
+		public static final String CurrentEndpointNoPort = "CurrentEndpointNoPort";
+		public static final String CurrentServiceScheme = "CurrentServiceScheme";
+		
+		public static final String PackageInfo = "PackageInfo";
+		public static final String SystemInfo = "SystemInfo";
+		public static final String StoredAndroidID = "StoredAndroidID";		
+	}
+	
+	/**
+	 * Creates a bundle containing all the persistent information in the given
+	 * {@link AppInfo}. This can be used for persistence or for IPC.
+	 *  
+	 * @param appInfo The {@link AppInfo} to convert into a bundle.
+	 * @return A {@link Bundle} which contains the information needed to recreate
+	 * the {@link AppInfo}.
+	 */
+	public static Bundle toBundle(AppInfo appInfo) {
+		Bundle bundle = new Bundle();
+		
+		bundle.putString(BundleKeys.DeviceSecret, appInfo.DeviceSecret);
+		bundle.putString(BundleKeys.ProjectSecret, appInfo.ProjectSecret);
+		bundle.putString(BundleKeys.CurrentEndpoint, appInfo.CurrentEndpoint);
+		bundle.putString(BundleKeys.CurrentEndpointNoPort, appInfo.CurrentEndpointNoPort);
+		bundle.putString(BundleKeys.CurrentServiceScheme, appInfo.CurrentServiceScheme);
+
+		bundle.putParcelable(BundleKeys.PackageInfo, appInfo.PackageInfo);
+		bundle.putString(BundleKeys.SystemInfo, appInfo.systemInfo);
+		bundle.putString(BundleKeys.StoredAndroidID, appInfo.storedANDROID_ID);
+		
+		return bundle;
+	}
+	
+	/**
+	 * Reads an {@link AppInfo} out of the information contained inside the given
+	 * {@link Bundle}. This can be used to restore persisted {@link AppInfo}s.
+	 * @param bundle The {@link Bundle} to read the data from.
+	 * @return The {@link AppInfo} representing the data inside the given bundle.
+	 */
+	public static AppInfo fromBundle(Bundle bundle) {
+		AppInfo appInfo = new AppInfo();
+		
+		appInfo.DeviceSecret = bundle.getString(BundleKeys.DeviceSecret);
+		appInfo.ProjectSecret = bundle.getString(BundleKeys.ProjectSecret);
+		appInfo.CurrentEndpoint = bundle.getString(BundleKeys.CurrentEndpoint);
+		appInfo.CurrentEndpointNoPort = bundle.getString(BundleKeys.CurrentEndpointNoPort);
+		appInfo.CurrentServiceScheme = bundle.getString(BundleKeys.CurrentServiceScheme);
+		
+		appInfo.PackageInfo = bundle.getParcelable(BundleKeys.PackageInfo);
+		appInfo.systemInfo = bundle.getString(BundleKeys.PackageInfo);
+		appInfo.storedANDROID_ID = bundle.getString(BundleKeys.StoredAndroidID);
+		
+		return appInfo;
+	}
 }

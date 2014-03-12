@@ -1,6 +1,7 @@
 package com.appblade.example;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -11,12 +12,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.appblade.framework.stats.AppBladeSessionActivity;
+//import com.appblade.framework.stats.AppBladeSessionActivity;
 import com.appblade.framework.authenticate.KillSwitch;
 import com.appblade.framework.authenticate.RemoteAuthHelper;
 import com.appblade.framework.AppBlade;
 
-public class MainActivity extends AppBladeSessionActivity {
+public class MainActivity extends Activity {
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -35,7 +36,7 @@ public class MainActivity extends AppBladeSessionActivity {
 		//AppBlade.authorize(this); //moved to a button call, but it would usually be here
 		//AppBlade.checkForUpdates(MainActivity.this); //moved to a button call, but it would usually be here
 		
-		AppBlade.setCustomParameter(getApplicationContext(), "AppState", "Resumed");
+//		AppBlade.setCustomParameter(getApplicationContext(), "AppState", "Resumed");
 	}
 
 	public void onPause() {
@@ -130,15 +131,8 @@ public class MainActivity extends AppBladeSessionActivity {
 				AppBlade.checkForUpdates(MainActivity.this, false);
 			}
 		});
-		
-
 	}
 
-	
-	
-	
-	
-	
 	
 	
 	@Override
