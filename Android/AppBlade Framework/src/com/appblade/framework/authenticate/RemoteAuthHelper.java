@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 import com.appblade.framework.AppBlade;
 import com.appblade.framework.utils.IOUtils;
@@ -32,6 +33,8 @@ public class RemoteAuthHelper {
 		String packageName = context.getPackageName();
 		String basename = String.format("%s::%s", packageName, defaultFileName);
 		String filename = StringUtils.md5(basename);
+		String basename = String.format(Locale.US, "%s::%s", packageName, defaultFileName);
+		String filename = String.format(Locale.US, "app_%s.txt", StringUtils.md5(basename));
 		
 		return filename;
 	}	

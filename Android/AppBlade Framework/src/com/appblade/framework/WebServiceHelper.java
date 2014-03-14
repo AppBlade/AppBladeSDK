@@ -24,6 +24,7 @@ import android.util.Log;
  * @author rich.stern@raizlabs
  */
 public class WebServiceHelper {
+	
 	public enum HttpMethod {
 		POST,
 		GET, 
@@ -51,6 +52,8 @@ public class WebServiceHelper {
 	 * @return String of an HMAC header in the format <br><code>HMAC id="...", nonce="...", body-hash="...", ext="...", mac="..."</code>
 	 */
 	public static String getHMACAuthHeader(AppInfo appInfo, String urlPath, String contents, HttpMethod method) {
+		Log.v(AppBlade.LogTag, String.format("Token? : %s", appInfo.Token));
+		
 		//do we need this AppInfo to be passed here since AppBlade already has what we declared within AppBlade.appInfo? Probably not, but well keep in the event that we'll have larger services in place that will need it. 
 			String requestBodyRaw = null;
 		if(!StringUtils.isNullOrEmpty(contents))
@@ -127,7 +130,7 @@ public class WebServiceHelper {
 		}
 		
 		request.addHeader("android_release", Build.VERSION.RELEASE);
-		request.addHeader("android_api", Build.VERSION.SDK);
+		request.addHeader("android_api", String.format(Locale.US, "%d", Build.VERSION.SDK_INT));
 		request.addHeader("device_mfg", Build.MANUFACTURER);
 		request.addHeader("device_model", Build.MODEL);
 		request.addHeader("device_id", Build.ID);

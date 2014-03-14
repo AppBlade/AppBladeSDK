@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Locale;
 import java.util.Random;
 
 import org.apache.http.HttpResponse;
@@ -138,7 +139,7 @@ public class CrashReportHelper {
 				{
 					int statusCode = response.getStatusLine().getStatusCode();
 					int statusCategory = statusCode / 100;
-
+					Log.v(AppBlade.LogTag, String.format("crash response status code %d ", statusCode));
 					if(statusCategory == 2)
 						success = true;
 				}
@@ -146,7 +147,7 @@ public class CrashReportHelper {
 		}
 		catch(Exception ex)
 		{
-			Log.v(AppBlade.LogTag, String.format("%s %s", ex.getClass().getSimpleName(), ex.getMessage()));
+			Log.v(AppBlade.LogTag, String.format("crash send error %s %s", ex.getClass().getSimpleName(), ex.getMessage()));
 		}
 
 		IOUtils.safeClose(client);
@@ -183,7 +184,7 @@ public class CrashReportHelper {
 	private static String newCrashFileName()
 	{
 		int r = new Random().nextInt(9999);
-		String filename = String.format("%s%sex-%d-%d.txt",
+		String filename = String.format(Locale.US, "%s%sex-%d-%d.txt",
 				AppBlade.exceptionsDir, "/", System.currentTimeMillis(), r);
 		return filename;
 	}
