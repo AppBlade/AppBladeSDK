@@ -13,6 +13,6 @@ static NSString* const kDbSubSessionTrackColumnNameEndedAt   = @"endedSubSession
 static NSString* const kDbSubSessionTrackColumnNameParentSession = @"parentSessionId";
 static NSString* const kDbSubSessionTrackColumnNameEventHash   = @"event";
 
-@interface APBDataBaseSubSession : AppBladeDatabaseObject
+@interface APBDatabaseSubSession : AppBladeDatabaseObject
 
 @end

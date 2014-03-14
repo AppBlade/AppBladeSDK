@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 AppBlade Corporation. All rights reserved.
 //
 
-#import "APBDataBaseSubSession.h"
+#import "APBDatabaseSubSession.h"
 
-@implementation APBDataBaseSubSession
+@implementation APBDatabaseSubSession
 
 @end
