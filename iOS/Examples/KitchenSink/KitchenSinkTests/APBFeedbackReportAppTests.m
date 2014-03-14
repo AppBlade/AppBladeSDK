@@ -31,7 +31,11 @@
 
 -(void)test01FeedbackBehaviorInitialized
 {
+    STAssertTrue(([[AppBlade sharedManager] initializedFeatures] && AppBladeFeaturesFeedbackReportingEnabled), @"Feedback Reporting feature must be enabled in order for tests to run.");
 }
 
+-(void) test02FeedbackReportsAreStoredInSnapshots
+{
+}
 
 @end
