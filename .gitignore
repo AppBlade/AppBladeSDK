@@ -24,3 +24,5 @@ local.properties
 
 /Android/AppBlade Framework/bin/appblade framework.jar
 Android/.DS_Store
+
+Android/AppBlade Framework/gen/com/appblade/framework/R.java
