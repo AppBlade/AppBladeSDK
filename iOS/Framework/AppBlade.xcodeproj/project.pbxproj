@@ -94,7 +94,7 @@
 		3134653117A86D9A009DDC86 /* APBSimpleKeychainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3134653017A86D9A009DDC86 /* APBSimpleKeychainTests.m */; };
 		3134653417A86DC4009DDC86 /* APBWebOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3134653317A86DC4009DDC86 /* APBWebOperationTests.m */; };
 		3136969818A705C100E95AB8 /* libCrashReporter-iphoneos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3136966918A7049200E95AB8 /* libCrashReporter-iphoneos.a */; };
-		3136969918A705C100E95AB8 /* libCrashReporter-iphonesimulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3136966B18A7049200E95AB8 /* libCrashReporter-iphonesimulator.a */; };
+		3136969918A705C100E95AB8 /* libCrashReporter-iphoneos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3136966B18A7049200E95AB8 /* libCrashReporter-iphoneos.a */; };
 		313711A318962BB0001BA25F /* APBCustomParametersTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 313711A218962BB0001BA25F /* APBCustomParametersTests.m */; };
 		31562C4D17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */; };
 		31562C4E17A95E7900090C81 /* APBWebOperation+PrivateMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 31562C4B17A95E7900090C81 /* APBWebOperation+PrivateMethods.h */; };
@@ -160,14 +160,14 @@
 		31C891D218C7B10C0060F90B /* APBDatabaseSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891CC18C7B10B0060F90B /* APBDatabaseSession.m */; };
 		31C891D318C7B10C0060F90B /* APBDatabaseSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891CC18C7B10B0060F90B /* APBDatabaseSession.m */; };
 		31C891D418C7B10C0060F90B /* APBDatabaseSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891CC18C7B10B0060F90B /* APBDatabaseSession.m */; };
-		31C891D718C7C73F0060F90B /* APBDataBaseSubSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C891D518C7C73F0060F90B /* APBDataBaseSubSession.h */; };
-		31C891D818C7C73F0060F90B /* APBDataBaseSubSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C891D518C7C73F0060F90B /* APBDataBaseSubSession.h */; };
-		31C891D918C7C73F0060F90B /* APBDataBaseSubSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C891D518C7C73F0060F90B /* APBDataBaseSubSession.h */; };
-		31C891DA18C7C73F0060F90B /* APBDataBaseSubSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C891D518C7C73F0060F90B /* APBDataBaseSubSession.h */; };
-		31C891DB18C7C73F0060F90B /* APBDataBaseSubSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891D618C7C73F0060F90B /* APBDataBaseSubSession.m */; };
-		31C891DC18C7C73F0060F90B /* APBDataBaseSubSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891D618C7C73F0060F90B /* APBDataBaseSubSession.m */; };
-		31C891DD18C7C73F0060F90B /* APBDataBaseSubSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891D618C7C73F0060F90B /* APBDataBaseSubSession.m */; };
-		31C891DE18C7C73F0060F90B /* APBDataBaseSubSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891D618C7C73F0060F90B /* APBDataBaseSubSession.m */; };
+		31C891D718C7C73F0060F90B /* APBDatabaseSubSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C891D518C7C73F0060F90B /* APBDatabaseSubSession.h */; };
+		31C891D818C7C73F0060F90B /* APBDatabaseSubSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C891D518C7C73F0060F90B /* APBDatabaseSubSession.h */; };
+		31C891D918C7C73F0060F90B /* APBDatabaseSubSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C891D518C7C73F0060F90B /* APBDatabaseSubSession.h */; };
+		31C891DA18C7C73F0060F90B /* APBDatabaseSubSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 31C891D518C7C73F0060F90B /* APBDatabaseSubSession.h */; };
+		31C891DB18C7C73F0060F90B /* APBDatabaseSubSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891D618C7C73F0060F90B /* APBDatabaseSubSession.m */; };
+		31C891DC18C7C73F0060F90B /* APBDatabaseSubSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891D618C7C73F0060F90B /* APBDatabaseSubSession.m */; };
+		31C891DD18C7C73F0060F90B /* APBDatabaseSubSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891D618C7C73F0060F90B /* APBDatabaseSubSession.m */; };
+		31C891DE18C7C73F0060F90B /* APBDatabaseSubSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 31C891D618C7C73F0060F90B /* APBDatabaseSubSession.m */; };
 		31D924E7184A97CA00012197 /* APBDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D924E5184A97CA00012197 /* APBDataManager.h */; };
 		31D924E8184A97CA00012197 /* APBDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D924E5184A97CA00012197 /* APBDataManager.h */; };
 		31D924E9184A97CA00012197 /* APBDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 31D924E5184A97CA00012197 /* APBDataManager.h */; };
@@ -418,8 +418,8 @@
 		31C4881C17A9868200EA75E8 /* AppBlade+PrivateMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppBlade+PrivateMethods.h"; sourceTree = "<group>"; };
 		31C891CB18C7B10B0060F90B /* APBDatabaseSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDatabaseSession.h; sourceTree = "<group>"; };
 		31C891CC18C7B10B0060F90B /* APBDatabaseSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDatabaseSession.m; sourceTree = "<group>"; };
-		31C891D518C7C73F0060F90B /* APBDataBaseSubSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDataBaseSubSession.h; sourceTree = "<group>"; };
-		31C891D618C7C73F0060F90B /* APBDataBaseSubSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDataBaseSubSession.m; sourceTree = "<group>"; };
+		31C891D518C7C73F0060F90B /* APBDatabaseSubSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDatabaseSubSession.h; sourceTree = "<group>"; };
+		31C891D618C7C73F0060F90B /* APBDatabaseSubSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDatabaseSubSession.m; sourceTree = "<group>"; };
 		31D5361417D7B61C0011B9A1 /* AsyncTestMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AsyncTestMacros.h; sourceTree = "<group>"; };
 		31D924E5184A97CA00012197 /* APBDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APBDataManager.h; sourceTree = "<group>"; };
 		31D924E6184A97CA00012197 /* APBDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APBDataManager.m; sourceTree = "<group>"; };
@@ -450,7 +450,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3136969818A705C100E95AB8 /* libCrashReporter-iphoneos.a in Frameworks */,
-				3136969918A705C100E95AB8 /* libCrashReporter-iphonesimulator.a in Frameworks */,
+				3136969918A705C100E95AB8 /* libCrashReporter-iphoneos.a in Frameworks */,
 				31D924FC184AA68700012197 /* libsqlite3.dylib in Frameworks */,
 				313464BB17A86248009DDC86 /* SenTestingKit.framework in Frameworks */,
 				3130640F1794A403006DF03A /* UIKit.framework in Frameworks */,
@@ -787,7 +787,7 @@
 				3136966518A7049200E95AB8 /* CrashReporter.framework */,
 				3136966718A7049200E95AB8 /* CrashReporter.framework */,
 				3136966918A7049200E95AB8 /* libCrashReporter-iphoneos.a */,
-				3136966B18A7049200E95AB8 /* libCrashReporter-iphonesimulator.a */,
+				3136966B18A7049200E95AB8 /* libCrashReporter-iphoneos.a */,
 				3136966D18A7049200E95AB8 /* plcrashutil */,
 				3136966F18A7049200E95AB8 /* Tests-MacOSX.octest */,
 				3136967118A7049200E95AB8 /* Tests-iOS-Simulator.app */,
@@ -828,8 +828,8 @@
 			children = (
 				31C891CB18C7B10B0060F90B /* APBDatabaseSession.h */,
 				31C891CC18C7B10B0060F90B /* APBDatabaseSession.m */,
-				31C891D518C7C73F0060F90B /* APBDataBaseSubSession.h */,
-				31C891D618C7C73F0060F90B /* APBDataBaseSubSession.m */,
+				31C891D518C7C73F0060F90B /* APBDatabaseSubSession.h */,
+				31C891D618C7C73F0060F90B /* APBDatabaseSubSession.m */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -912,7 +912,7 @@
 				3193FD4B18AAE6B3002239F5 /* AppBlade+PrivateMethods.h in Headers */,
 				3193FD5A18AAE6C4002239F5 /* AppBladeSharedConstants.h in Headers */,
 				318731CB179DAC0500E0D187 /* AppBladeLogging.h in Headers */,
-				31C891D818C7C73F0060F90B /* APBDataBaseSubSession.h in Headers */,
+				31C891D818C7C73F0060F90B /* APBDatabaseSubSession.h in Headers */,
 				31C891CE18C7B10C0060F90B /* APBDatabaseSession.h in Headers */,
 				311A21541794C79F007BF879 /* APBFileMD5Hash.h in Headers */,
 				31D924E8184A97CA00012197 /* APBDataManager.h in Headers */,
@@ -947,7 +947,7 @@
 				31AA325D1881DC77005AF8E7 /* AppBladeDatabaseObject+CustomParametersCompatibility.h in Headers */,
 				311A22B61795D26E007BF879 /* APBAuthenticationManager.h in Headers */,
 				311A22BC1795D313007BF879 /* APBCustomParametersManager.h in Headers */,
-				31C891D718C7C73F0060F90B /* APBDataBaseSubSession.h in Headers */,
+				31C891D718C7C73F0060F90B /* APBDatabaseSubSession.h in Headers */,
 				31E36B391856C8A200A32D1A /* APBDatabaseFeedbackReport.h in Headers */,
 				311A22C21796072C007BF879 /* AppBladeSharedConstants.h in Headers */,
 				311A22CA1796DE3B007BF879 /* APBBasicFeatureManager.h in Headers */,
@@ -971,7 +971,7 @@
 				318189C8179E0337006EE07A /* AppBlade.h in Headers */,
 				318189C9179E0343006EE07A /* AppBladeSharedConstants.h in Headers */,
 				3193FD5B18AAE806002239F5 /* AppBlade+PrivateMethods.h in Headers */,
-				31C891DA18C7C73F0060F90B /* APBDataBaseSubSession.h in Headers */,
+				31C891DA18C7C73F0060F90B /* APBDatabaseSubSession.h in Headers */,
 				31E36B451856D6FA00A32D1A /* AppBladeDatabaseConstants.h in Headers */,
 				31C891D018C7B10C0060F90B /* APBDatabaseSession.h in Headers */,
 				31D924EA184A97CA00012197 /* APBDataManager.h in Headers */,
@@ -994,7 +994,7 @@
 				31D925201850BC1C00012197 /* APBDatabaseCrashReport.h in Headers */,
 				31D924E9184A97CA00012197 /* APBDataManager.h in Headers */,
 				310D1EBD1898341B003B0532 /* APBBase64Encoder.h in Headers */,
-				31C891D918C7C73F0060F90B /* APBDataBaseSubSession.h in Headers */,
+				31C891D918C7C73F0060F90B /* APBDatabaseSubSession.h in Headers */,
 				31E36B301856B2E300A32D1A /* AppBladeDatabaseObject.h in Headers */,
 				31C891CF18C7B10C0060F90B /* APBDatabaseSession.h in Headers */,
 				31E36B261856A36D00A32D1A /* AppBladeDatabaseColumn.h in Headers */,
@@ -1178,10 +1178,10 @@
 			remoteRef = 3136966818A7049200E95AB8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3136966B18A7049200E95AB8 /* libCrashReporter-iphonesimulator.a */ = {
+		3136966B18A7049200E95AB8 /* libCrashReporter-iphoneos.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = "libCrashReporter-iphonesimulator.a";
+			path = "libCrashReporter-iphoneos.a";
 			remoteRef = 3136966A18A7049200E95AB8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1289,7 +1289,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+			shellScript = "# Ensure we're codesigned the same in our test target as our main folder\ncodesign --verify --force --sign \"$CODE_SIGN_IDENTITY\" \"$CODESIGNING_FOLDER_PATH\"\n# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
 		318731E3179DE03300E0D187 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1332,7 +1332,7 @@
 				31E36B4E1856D88700A32D1A /* APBDatabaseCustomParameter.m in Sources */,
 				311A215A1794C79F007BF879 /* APBSimpleKeychain.m in Sources */,
 				311A215B1794C79F007BF879 /* APBWebOperation.m in Sources */,
-				31C891DC18C7C73F0060F90B /* APBDataBaseSubSession.m in Sources */,
+				31C891DC18C7C73F0060F90B /* APBDatabaseSubSession.m in Sources */,
 				311A215C1794C79F007BF879 /* APBFeedbackBackgroundView.m in Sources */,
 				311A215D1794C79F007BF879 /* APBFeedbackDialogue.m in Sources */,
 				311A215E1794C79F007BF879 /* APBFileMD5Hash.c in Sources */,
@@ -1356,7 +1356,7 @@
 				31E36B3D1856C8A200A32D1A /* APBDatabaseFeedbackReport.m in Sources */,
 				313062021794A357006DF03A /* APBWebOperation.m in Sources */,
 				313063BF1794A357006DF03A /* APBFeedbackBackgroundView.m in Sources */,
-				31C891DB18C7C73F0060F90B /* APBDataBaseSubSession.m in Sources */,
+				31C891DB18C7C73F0060F90B /* APBDatabaseSubSession.m in Sources */,
 				313063C21794A357006DF03A /* APBFeedbackDialogue.m in Sources */,
 				313063C51794A357006DF03A /* APBFileMD5Hash.c in Sources */,
 				31D925211850BC1C00012197 /* APBDatabaseCrashReport.m in Sources */,
@@ -1417,7 +1417,7 @@
 				311711CA17D687FA004170B7 /* APBDeviceInfoManager.m in Sources */,
 				31E36B401856C8A200A32D1A /* APBDatabaseFeedbackReport.m in Sources */,
 				31D924EE184A97CA00012197 /* APBDataManager.m in Sources */,
-				31C891DE18C7C73F0060F90B /* APBDataBaseSubSession.m in Sources */,
+				31C891DE18C7C73F0060F90B /* APBDatabaseSubSession.m in Sources */,
 				31C891D418C7B10C0060F90B /* APBDatabaseSession.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1442,7 +1442,7 @@
 				31E36B3F1856C8A200A32D1A /* APBDatabaseFeedbackReport.m in Sources */,
 				3187321A179DE8C200E0D187 /* APBUpdatesManager.m in Sources */,
 				310D1EBF1898341B003B0532 /* APBBase64Encoder.m in Sources */,
-				31C891DD18C7C73F0060F90B /* APBDataBaseSubSession.m in Sources */,
+				31C891DD18C7C73F0060F90B /* APBDatabaseSubSession.m in Sources */,
 				31E36B341856B2E300A32D1A /* AppBladeDatabaseObject.m in Sources */,
 				3187321B179DE8C200E0D187 /* APBAuthenticationManager.m in Sources */,
 				3187321C179DE8C200E0D187 /* APBCustomParametersManager.m in Sources */,
@@ -1631,6 +1631,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 0.9.5;
 				DSTROOT = /tmp/AppBlade.dst;
@@ -1677,6 +1678,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 0.9.5;
 				DSTROOT = /tmp/AppBlade.dst;
 				FRAMEWORK_SEARCH_PATHS = (
