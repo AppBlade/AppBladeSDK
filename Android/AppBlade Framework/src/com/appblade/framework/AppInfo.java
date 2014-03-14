@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -21,7 +22,7 @@ import android.util.Log;
  *
  */
 public class AppInfo {
-	static final String DefaultUDID = "0000000000000000000000000000000000000000";
+	static final String DefaultUDID = "0000000000000000000000000000000000000000"; 
 	public static String DefaultAppBladeHost = "AppBlade.com";
 	public static String DefaultServiceScheme = "https://";
 
@@ -128,15 +129,42 @@ public class AppInfo {
 	}
 
 	/**
-	 * Checks validity (existence) of AppBlade variables. If we don't have that we prety much can't do anything. 
+	 * Checks validity (existence) of AppBlade variables and the necessary read/write permissions. 
+	 * If we don't have that we pretty much can't do anything. 
 	 * @return if we are valid 
 	 */
 	public boolean isValid() {
+		return this.hasVars() && this.isExternalStorageWritable() && this.isExternalStorageReadable();
+	}
+
+	public boolean hasVars(){
 		return
 				!StringUtils.isNullOrEmpty(AppId) &&
 				!StringUtils.isNullOrEmpty(Token) &&
 				!StringUtils.isNullOrEmpty(Secret) &&
 				!StringUtils.isNullOrEmpty(Issuance);
 	}
+	
+	
+	/** Checks if external storage is available for read and write */
+	public boolean isExternalStorageWritable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
 
+	/** Checks if external storage is available to at least read */
+	public boolean isExternalStorageReadable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state) ||
+	        Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
+
+	
+	
 }
