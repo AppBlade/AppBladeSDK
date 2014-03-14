@@ -1,6 +1,5 @@
 package com.appblade.framework.authenticate;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
@@ -21,7 +20,6 @@ import com.appblade.framework.WebServiceHelper;
  * Prompts a WebView that talks to AppBlade where the user signs in with their valid credentials.<br>
  * WARNING: Uses javascript. If you are using a custom endpoint make sure you trust the site you are accessing.<br>
  */
-@SuppressLint("SetJavaScriptEnabled")
 public class RemoteAuthorizeActivity extends Activity {
 	
 	private static final String EndpointAuthNew = "/oauth/authorization/new?client_id=%s&response_type=code";

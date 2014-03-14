@@ -676,7 +676,6 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 	}
 	
 	//Notifiers
-//	@SuppressWarnings("deprecation")
 	private static void notifyDownloading(Context context) {
 //			Intent blank = new Intent();
 //			PendingIntent contentIntent = PendingIntent.getBroadcast(context, 0, blank, 0);
@@ -688,7 +687,6 @@ public static void downloadUpdate(Activity context, JSONObject update, DownloadP
 //			notificationManager.notify(NotificationNewVersionDownloading, notification);
 	}
 
-//	@SuppressWarnings("deprecation")
 	private static void notifyUpdate(Context context, JSONObject update) {
 //		Log.v(AppBlade.LogTag, "UpdatesHelper.notifyUpdate");
 //		try

@@ -374,7 +374,6 @@ public class SessionHelper {
 	 */
 	public synchronized static void removeSessionsEndedBefore(final Context context, final Date dateEnded){
 		getSessionDataWithListener(context, new OnSessionDataAcquiredListener(){
-			@SuppressWarnings("deprecation")
 			public void OnSessionDataAcquired(List<SessionData> acquiredData) {
 		        // remove all objects from ArrayList that ended before dateEnded
 		        for (int i = 0; i < acquiredData.size(); )

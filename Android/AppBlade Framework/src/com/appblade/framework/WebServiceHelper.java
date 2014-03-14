@@ -111,7 +111,6 @@ public class WebServiceHelper {
 	 * </ul>
 	 * @param request The HttpRequest to which we've added the above headers. 
 	 */
-	@SuppressWarnings("deprecation")
 	public static void addCommonHeaders(HttpRequest request) {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
