@@ -78,6 +78,7 @@ public class SystemUtils {
 			ZipEntry ze = zf.getEntry("classes.dex");
 			long time = (ze.getTime() / 1000);  //time classes.dex was built will remain the same throughout installs (removing last 4 zeros to match appblade)
 			toRet = toRet + time;
+			zf.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			//error grabbing build time. append "debug" instead
@@ -103,6 +104,7 @@ public class SystemUtils {
 				InputStream streamToHash = zf.getInputStream(ze);
 				toRet = StringUtils.sha256FromInputStream(streamToHash);
 			}
+			zf.close();
 		} catch (IOException e) {
 			Log.v(AppBlade.LogTag, "Error reading "+filename);
 			e.printStackTrace();
