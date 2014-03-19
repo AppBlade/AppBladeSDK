@@ -5,7 +5,7 @@
     android:versionName="0.9.6"  >
 
     <uses-sdk android:minSdkVersion="9" />
-    <uses-sdk android:targetSdkVersion="17" />
+    <uses-sdk android:targetSdkVersion="19" />
 
     <application
         android:label="@string/appblade_framework_app_name" >
