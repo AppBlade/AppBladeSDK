@@ -21,7 +21,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
-import android.app.ProgressDialog;
+//import android.app.ProgressDialog;
 //import android.app.Notification;
 import android.app.NotificationManager;
 //import android.app.PendingIntent;
