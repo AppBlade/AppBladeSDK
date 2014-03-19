@@ -22,7 +22,7 @@ public class AuthJavascriptInterface {
 	
 	@JavascriptInterface
 	public void notifyAuthCode(final String code) {
-			final String message = String.format("AuthJavascriptInterface.notifyAuthCode code: %s", code);
+			final String message = String.format("js interface called from Android.notifyAuthCode code: %s", code);
 			Log.v(AppBlade.LogTag, message);
 			
 			if(mActivity != null){

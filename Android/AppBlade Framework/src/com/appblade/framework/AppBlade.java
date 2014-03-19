@@ -116,7 +116,7 @@ public class AppBlade {
 			throw new IllegalArgumentException("Invalid context registered with AppBlade");
 		}
 
-		if(StringUtils.isNullOrEmpty(token) || StringUtils.isNullOrEmpty(secret) || StringUtils.isNullOrEmpty(uuid) || StringUtils.isNullOrEmpty(issuance))
+		if(areApiKeysInvalid(token, secret, uuid, issuance))
 		{
 			throw new IllegalArgumentException("Invalid application info registered with AppBlade");
 		}
@@ -162,8 +162,9 @@ public class AppBlade {
 		
 		// Set the device ID for exception reporting requests
 		String accessToken = RemoteAuthHelper.getAccessToken(context);
+		Log.d(LogTag, String.format("Using accessToken, %s", accessToken));
 		setDeviceId(accessToken);
-
+ 
 		try
 		{
 			String packageName = context.getPackageName();
@@ -180,6 +181,20 @@ public class AppBlade {
 		File exceptionsDirectory = new File(exceptionsDir);
 		canWriteToDisk = exceptionsDirectory.exists();
 		
+	}
+
+	/**
+	 * @param token
+	 * @param secret
+	 * @param uuid
+	 * @param issuance
+	 * @return true if any API keys passed are invalid
+	 */
+	private static boolean areApiKeysInvalid(String token, String secret, String uuid, String issuance) {
+		return  StringUtils.isNullOrEmpty(token) || 
+				StringUtils.isNullOrEmpty(secret) || 
+				StringUtils.isNullOrEmpty(uuid) || 
+				StringUtils.isNullOrEmpty(issuance);
 	}
 
 	/**

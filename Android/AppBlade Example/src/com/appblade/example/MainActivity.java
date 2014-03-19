@@ -32,6 +32,8 @@ public class MainActivity extends AppBladeSessionActivity {
 
 	public void onResume() {
 		super.onResume();
+//		AppBlade.authorize(this);
+
 		//AppBlade.authorize(this); //moved to a button call, but it would usually be here
 		//AppBlade.checkForUpdates(MainActivity.this); //moved to a button call, but it would usually be here
 		

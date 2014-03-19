@@ -31,8 +31,6 @@ public class RemoteAuthHelper {
 	 */
 	private static String getAccessTokenFilename(Context context) {
 		String packageName = context.getPackageName();
-		String basename = String.format("%s::%s", packageName, defaultFileName);
-		String filename = StringUtils.md5(basename);
 		String basename = String.format(Locale.US, "%s::%s", packageName, defaultFileName);
 		String filename = String.format(Locale.US, "app_%s.txt", StringUtils.md5(basename));
 		
@@ -94,21 +92,34 @@ public class RemoteAuthHelper {
 	public static String getAccessToken(Context context) {
 		String accessToken = "";
 		String filename = getAccessTokenFilename(context.getApplicationContext());
-		File authFile = context.getDir(filename, Context.MODE_PRIVATE);
+		File authFile = new File(context.getFilesDir(), filename);
 		try
 		{
-			if(!authFile.exists()){
-				Log.e(AppBlade.LogTag, "Trying to create Authfile location : " + authFile.getAbsolutePath());
-				authFile.mkdirs();
-				authFile.createNewFile();
+			if(!authFile.exists() || authFile.isDirectory()){
+				authFile.delete();
+				Log.e(AppBlade.LogTag, "Access Token: Trying to create Authfile location : " + authFile.getAbsolutePath());
+				String string = "";
+				FileOutputStream outputStream;
+				try {
+				  outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+				  outputStream.write(string.getBytes());
+				  outputStream.close();
+				} catch (Exception e) {
+				  e.printStackTrace();
+				}
 			}
-			FileInputStream fis = context.openFileInput(filename);
+			Log.v(AppBlade.LogTag, "Access Token: Authfile opening file: " + filename);
+			Log.v(AppBlade.LogTag, "Access Token: Authfile opening file: " + authFile.getName());
+			FileInputStream fis = context.openFileInput(authFile.getName());
 		    InputStreamReader inputStreamReader = new InputStreamReader(fis);
 		    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 		    accessToken = bufferedReader.readLine();
 		}
 		catch (Exception ex) { 
 			Log.w(AppBlade.LogTag, "Error creating Access Token ", ex); 
+			if(authFile.exists()){
+				Log.w(AppBlade.LogTag, "Bullshit "); 
+			}
 		}
 		if(!authFile.exists()){
 			Log.e(AppBlade.LogTag, "Did not create Authfile location : " + authFile);

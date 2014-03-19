@@ -46,11 +46,11 @@ public class RemoteAuthorizeActivity extends Activity {
         String path = String.format(EndpointAuthNew, AppBlade.appInfo.Token);
         final String authUrl = WebServiceHelper.getUrl(path);
         Log.v(AppBlade.LogTag, "Loading URL in WebView "  + authUrl);
-        jsInterface = new AuthJavascriptInterface(RemoteAuthorizeActivity.this);
+        this.jsInterface = new AuthJavascriptInterface(RemoteAuthorizeActivity.this);
 
         webview.getSettings().setJavaScriptEnabled(true);
         webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        webview.addJavascriptInterface(jsInterface, "Android");
+        webview.addJavascriptInterface(this.jsInterface, "Android");
         webview.setWebChromeClient(new WebChromeClient() {
         	@Override
 			public void onProgressChanged(WebView view, int progress) {
@@ -63,6 +63,13 @@ public class RemoteAuthorizeActivity extends Activity {
         webview.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onLoadResource(WebView view, String url) {
+				if(url.contains("secure.livechatinc.com"))
+				{
+					
+				}else{
+					Log.d("AppBlade", url);
+				}
+				
 				super.onLoadResource(view, url);
 			}
 			@Override
@@ -74,6 +81,7 @@ public class RemoteAuthorizeActivity extends Activity {
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
 				super.onPageStarted(view, url, favicon);
+				
 				if(progress == null || !progress.isShowing())
 					progress = ProgressDialog.show(RemoteAuthorizeActivity.this, null, "loading...");
 			}
