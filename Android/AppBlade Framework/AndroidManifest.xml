@@ -3,20 +3,15 @@
     package="com.appblade.framework"
     android:versionCode="2"
     android:versionName="0.9.6"  >
-
-    <uses-sdk android:minSdkVersion="9" />
+    <uses-sdk android:minSdkVersion="10" />
     <uses-sdk android:targetSdkVersion="17" />
-
-    <application
-        android:label="@string/appblade_framework_app_name" >
-    </application>
-
     
     <service class="com.appblade.framework.stats.AppBladeSessionLoggingService"
         android:label="AppBlade Session Logging"
         android:name="com.appblade.framework.stats.AppBladeSessionLoggingService" 
         android:permission="com.appblade.framework.permissions.SESSION_LOGGING_PERMISSION"
-        android:exported="false" >
+        android:exported="false" 
+        android:allowBackup="false">
 		<intent-filter>
 			<action android:name="com.appblade.framework.stats.AppBladeSessionLoggingService" />
 		</intent-filter>
