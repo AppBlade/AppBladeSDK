@@ -4,7 +4,7 @@
     android:versionCode="2"
     android:versionName="0.9.6"  >
     <uses-sdk android:minSdkVersion="10" />
-    <uses-sdk android:targetSdkVersion="17" />
+    <uses-sdk android:targetSdkVersion="19" />
     
     <service class="com.appblade.framework.stats.AppBladeSessionLoggingService"
         android:label="AppBlade Session Logging"
