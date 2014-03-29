@@ -6,6 +6,7 @@
     <uses-sdk android:minSdkVersion="10" />
     <uses-sdk android:targetSdkVersion="19" />
     
+    <!-- Provided as example only, copy this into your app to use this service -->
     <service class="com.appblade.framework.stats.AppBladeSessionLoggingService"
         android:label="AppBlade Session Logging"
         android:name="com.appblade.framework.stats.AppBladeSessionLoggingService" 

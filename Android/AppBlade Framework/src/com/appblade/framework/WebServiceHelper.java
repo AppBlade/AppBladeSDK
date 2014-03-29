@@ -115,7 +115,7 @@ public class WebServiceHelper {
 	public static void addCommonHeaders(HttpRequest request) {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
-			request.addHeader("bundle_version", pi.versionName);
+				request.addHeader("bundle_version", pi.versionName);
 				request.addHeader("executable_uuid",  SystemUtils.hashedExecutableUuid(pi));			
 				request.addHeader("static_resource_uuid", SystemUtils.hashedStaticResourcesUuid(pi) );			
 				request.addHeader("certificate_uuid", SystemUtils.hashedCertificateUuid(pi) );			

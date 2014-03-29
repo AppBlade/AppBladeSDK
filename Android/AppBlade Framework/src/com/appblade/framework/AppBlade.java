@@ -51,7 +51,8 @@ import com.appblade.framework.utils.StringUtils;
 public class AppBlade {
 	public static String LogTag = "AppBlade";
 	public static boolean makeToast = false;  //for toast display in the device, not desired by default
-
+	public static String  AppBladeSdkVersion = "0.9.6"; //because the manifest is ignored in library files
+	
 	/**
 	 * Contains basic anonymous information about the application and the device running it after a successful register() call. 
 	 * See AppInfo class for more details.
