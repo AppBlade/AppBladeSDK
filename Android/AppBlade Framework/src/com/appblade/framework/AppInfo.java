@@ -37,6 +37,7 @@ public class AppInfo {
 	PackageInfo PackageInfo;
 	private String systemInfo;
 	public String storedANDROID_ID;
+    public String storedGSF_ID;
 	
 	/**
 	 * Initializes systemInfo string if it does not yet exist.

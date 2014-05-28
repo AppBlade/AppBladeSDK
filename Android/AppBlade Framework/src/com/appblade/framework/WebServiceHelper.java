@@ -20,8 +20,9 @@ import android.util.Log;
  * <br>
  * Current API level is 2.0
  * 
- * @author andrew.tremblay@raizlabs
- * @author rich.stern@raizlabs
+ * @author andrew@appblade.com
+ * @author rich.stern@raizlabs.com
+ * @author james@appblade.com
  */
 public class WebServiceHelper {
 	public enum HttpMethod {
@@ -106,8 +107,12 @@ public class WebServiceHelper {
 	 * <li> device_mfg The {@link android.os.Build.MANUFACTURER} of the OS
 	 * <li> device_model The {@link android.os.Build.MODEL} of the OS
 	 * <li> device_id The {@link android.os.Build.ID} of the OS
-	 * <li> device_brand The {@link android.os.Build.ID} of the OS
+	 * <li> device_brand The {@link android.os.Build.BRAND} of the OS
 	 * <li> device_fingerprint The {@link android.os.Build.FINGERPRINT} of the OS
+     * <li> android_id The {@link android.provider.Settings.Secure.ANDROID_ID} of the device
+     * <li> gsf_id The GSF ID of the device
+     * <li> sdk_version The AppBlade Framework Version for auditing
+     * <li> sdk_git_sha The AppBlade Framework GIT SHA for auditing
 	 * </ul>
 	 * @param request The HttpRequest to which we've added the above headers. 
 	 */
@@ -115,16 +120,17 @@ public class WebServiceHelper {
 	public static void addCommonHeaders(HttpRequest request) {
 		if(AppBlade.hasPackageInfo()) {
 			PackageInfo pi = AppBlade.getPackageInfo();
-			request.addHeader("bundle_version", pi.versionName);
-				request.addHeader("executable_uuid",  SystemUtils.hashedExecutableUuid(pi));			
-				request.addHeader("static_resource_uuid", SystemUtils.hashedStaticResourcesUuid(pi) );			
-				request.addHeader("certificate_uuid", SystemUtils.hashedCertificateUuid(pi) );			
-				request.addHeader("manifest_uuid", SystemUtils.hashedManifestFileUuid(pi) );			
+			request.addHeader("bundle_version",       pi.versionName);
+			request.addHeader("bundle_code",          Integer.toString(pi.versionCode));
+            request.addHeader("executable_uuid",      SystemUtils.hashedExecutableUuid(pi));
+			request.addHeader("static_resource_uuid", SystemUtils.hashedStaticResourcesUuid(pi) );
+			request.addHeader("certificate_uuid",     SystemUtils.hashedCertificateUuid(pi) );
+			request.addHeader("manifest_uuid",        SystemUtils.hashedManifestFileUuid(pi) );
 
-				Log.v(AppBlade.LogTag, " " + request.getFirstHeader("executable_uuid"));
-				Log.v(AppBlade.LogTag, " " + request.getFirstHeader("static_resource_uuid"));
-				Log.v(AppBlade.LogTag, " " + request.getFirstHeader("certificate_uuid"));
-				Log.v(AppBlade.LogTag, " " + request.getFirstHeader("manifest_uuid"));
+			Log.v(AppBlade.LogTag, " " + request.getFirstHeader("executable_uuid"));
+			Log.v(AppBlade.LogTag, " " + request.getFirstHeader("static_resource_uuid"));
+			Log.v(AppBlade.LogTag, " " + request.getFirstHeader("certificate_uuid"));
+			Log.v(AppBlade.LogTag, " " + request.getFirstHeader("manifest_uuid"));
 		}
 		
 		request.addHeader("android_release", Build.VERSION.RELEASE);
@@ -135,8 +141,10 @@ public class WebServiceHelper {
 		request.addHeader("device_brand", Build.BRAND);
 		request.addHeader("device_fingerprint", SystemUtils.getReadableFINGERPRINT());
 		request.addHeader("android_id", AppBlade.appInfo.storedANDROID_ID);
+        request.addHeader("gsf_id", AppBlade.appInfo.storedGSF_ID);
 
-		
+        request.addHeader("sdk_version", AppBlade.VERSION);
+        request.addHeader("sdk_git_sha", AppBlade.GIT_SHA);
 	}
 
 	/**

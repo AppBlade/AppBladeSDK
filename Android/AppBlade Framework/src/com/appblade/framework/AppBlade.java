@@ -14,7 +14,9 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -45,10 +47,15 @@ import com.appblade.framework.utils.StringUtils;
  * <li>Crash Reporting
  * <li>Custom Parameters (for Feedback and Crash Reporting)
  * 
- * @author rich.stern@raizlabs
- * @author andrew.tremblay@raizlabs 
+ * @author rich.stern@raizlabs.com
+ * @author andrew@appblade.com
+ * @author james@appblade.com
  */
 public class AppBlade {
+
+    public static final String VERSION = "0.9.7"; // make sure to validate this against the XML in a hook
+    public static final String GIT_SHA = "$Format:%H$"; // make sure to write this in a hook
+
 	public static String LogTag = "AppBlade";
 	public static boolean makeToast = false;  //for toast display in the device, not desired by default
 
@@ -129,6 +136,7 @@ public class AppBlade {
 		appInfo.Secret = secret;
 		appInfo.Issuance = issuance;
 		appInfo.storedANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        appInfo.storedGSF_ID = getGsfAndroidId(context);
 		
 
 		if(customHost != null)
@@ -757,5 +765,20 @@ public class AppBlade {
 		fileDirectory.mkdirs();
 		return toRet;
 	}
+
+    private static final Uri GSF_URI = Uri.parse("content://com.google.android.gsf.gservices");
+    private static final String GSF_ID_KEY = "android_id";
+
+    public static String getGsfAndroidId(Context context) {
+        String params[] = {GSF_ID_KEY};
+        Cursor c = context.getContentResolver().query(GSF_URI, null, null, params, null);
+        if (!c.moveToFirst() || c.getColumnCount() < 2)
+            return null;
+        try {
+            return Long.toHexString(Long.parseLong(c.getString(1)));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 
 }
