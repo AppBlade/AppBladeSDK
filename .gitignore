@@ -24,3 +24,6 @@ local.properties
 
 /Android/AppBlade Framework/bin/appblade framework.jar
 Android/AppBlade Framework/gen/com/appblade/framework/R.java
+
+# Exceptions
+!iOS/Framework/AppBlade/CrashReporter/Dependencies/protobuf-2.0.3/bin
