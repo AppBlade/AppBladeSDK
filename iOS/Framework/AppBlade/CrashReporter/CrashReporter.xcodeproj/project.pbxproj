@@ -2550,7 +2550,7 @@
 			name = "Tests-MacOSX";
 			productName = "Tests-MacOSX";
 			productReference = 05CD32690EE93DC3000FDE88 /* Tests-MacOSX.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 		05CD32A80EE94062000FDE88 /* Tests-iOS-Simulator */ = {
 			isa = PBXNativeTarget;
@@ -2871,6 +2871,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05F411FB0EF8E023008050CF /* protobuf-c.c in Sources */,
 				05CD318E0EE93A90000FDE88 /* CrashReporter.m in Sources */,
 				053347AD17E16B0200C52E50 /* PLCrashAsyncDwarfEncoding.cpp in Sources */,
 				05CD339D0EE948EB000FDE88 /* PLCrashSignalHandler.mm in Sources */,
@@ -2881,7 +2882,6 @@
 				05F40ACC0EF7379F008050CF /* PLCrashReporter.m in Sources */,
 				05F411A90EF8DA31008050CF /* PLCrashReport.m in Sources */,
 				05F411F40EF8DFDA008050CF /* crash_report.proto in Sources */,
-				05F411FB0EF8E023008050CF /* protobuf-c.c in Sources */,
 				05F413480EF995C0008050CF /* PLCrashReportSystemInfo.m in Sources */,
 				05F414230EF9A6C4008050CF /* PLCrashReportApplicationInfo.m in Sources */,
 				05F414870EF9BFAC008050CF /* PLCrashReportThreadInfo.m in Sources */,
@@ -2940,6 +2940,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05F411F70EF8E001008050CF /* protobuf-c.c in Sources */,
 				05CD31900EE93A90000FDE88 /* CrashReporter.m in Sources */,
 				05CD339F0EE948EB000FDE88 /* PLCrashSignalHandler.mm in Sources */,
 				059666DF0EEDDFB8008A0601 /* PLCrashFrameWalker.c in Sources */,
@@ -2949,7 +2950,6 @@
 				05F40ACB0EF7379F008050CF /* PLCrashReporter.m in Sources */,
 				053347A917E161CB00C52E50 /* unwind_test_arm64.S in Sources */,
 				05F411A70EF8DA31008050CF /* PLCrashReport.m in Sources */,
-				05F411F70EF8E001008050CF /* protobuf-c.c in Sources */,
 				05F411F50EF8DFE4008050CF /* crash_report.proto in Sources */,
 				05F413460EF995C0008050CF /* PLCrashReportSystemInfo.m in Sources */,
 				05F4141F0EF9A6C4008050CF /* PLCrashReportApplicationInfo.m in Sources */,
@@ -4340,12 +4340,14 @@
 		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
 				CURRENT_PROJECT_VERSION = "1.2-rc2";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Source/PLCrashNamespace.h";
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_UNUSED_VALUE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Dependencies/protobuf-2.0.3/include\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = NO;
@@ -4362,6 +4364,7 @@
 					"-Wall",
 					"-Werror",
 					"-Wno-shorten-64-to-32",
+					"-Wno-unused-function",
 				);
 			};
 			name = Debug;
@@ -4369,12 +4372,14 @@
 		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
 				CURRENT_PROJECT_VERSION = "1.2-rc2";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Source/PLCrashNamespace.h";
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_UNUSED_VALUE = NO;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/$(DERIVED_FILES_DIR)\"",
 					"\"$(SRCROOT)/Dependencies/protobuf-2.0.3/include\"",
@@ -4393,6 +4398,7 @@
 					"-Wall",
 					"-Werror",
 					"-Wno-shorten-64-to-32",
+					"-Wno-unused-function",
 				);
 			};
 			name = Release;

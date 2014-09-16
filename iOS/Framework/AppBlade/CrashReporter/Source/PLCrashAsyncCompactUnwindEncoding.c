@@ -913,10 +913,12 @@ plcrash_error_t plcrash_async_cfe_entry_init (plcrash_async_cfe_entry_t *entry, 
                     entry->stack_offset = -(entry->register_count * sizeof(uint64_t));
             
                 return PLCRASH_ESUCCESS;
-                
+
+#ifdef UNWIND_ARM64_MODE_FRAME_OLD
             case UNWIND_ARM64_MODE_FRAME_OLD:
                 PLCF_DEBUG("Unhandled UNWIND_ARM64_MODE_FRAME_OLD encoding");
                 return PLCRASH_ENOTSUP;
+#endif
                 
             case UNWIND_ARM64_MODE_DWARF:
                 entry->type = PLCRASH_ASYNC_CFE_ENTRY_TYPE_DWARF;

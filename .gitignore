@@ -1,6 +1,7 @@
 AppBladeKeys.plist
 .DS_Store
 *.xcuserdatad
+build/
 
 # ANDROID Section
 # built application files

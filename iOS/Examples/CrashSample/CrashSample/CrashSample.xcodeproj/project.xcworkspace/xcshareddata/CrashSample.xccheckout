@@ -5,24 +5,20 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>7CA935F0-B34E-407B-AF9B-A87E9AC37650</string>
+	<string>6D23DE87-58F2-47F1-A164-5C12B98E227F</string>
 	<key>IDESourceControlProjectName</key>
-	<string>AppBlade</string>
+	<string>CrashSample</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>5A0757AA4FD48555506ECE53AE6B2954C2639AA4</key>
 		<string>github.com:AppBlade/AppBladeSDK.git</string>
-		<key>A3A043C9-D7C4-4DAE-A80E-AAF76762A37D</key>
-		<string>ssh://github.com/AppBlade/AppBladeSDK.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>iOS/Framework/AppBlade.xcodeproj</string>
+	<string>iOS/Examples/CrashSample/CrashSample/CrashSample.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>5A0757AA4FD48555506ECE53AE6B2954C2639AA4</key>
-		<string>../../../..</string>
-		<key>A3A043C9-D7C4-4DAE-A80E-AAF76762A37D</key>
-		<string>../../../../../SDK</string>
+		<string>../../../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:AppBlade/AppBladeSDK.git</string>
@@ -39,14 +35,6 @@
 			<string>5A0757AA4FD48555506ECE53AE6B2954C2639AA4</string>
 			<key>IDESourceControlWCCName</key>
 			<string>AppBladeSDK</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>A3A043C9-D7C4-4DAE-A80E-AAF76762A37D</string>
-			<key>IDESourceControlWCCName</key>
-			<string>SDK</string>
 		</dict>
 	</array>
 </dict>
