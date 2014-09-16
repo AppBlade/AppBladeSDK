@@ -1,3 +1,11 @@
+2014-09-16 	Michael Johnson <mike@appblade.com>
+	iOS
+	 * Version 0.6.2
+	 * Fixed conflict with NSOperation base class properties (https://github.com/AppBlade/AppBladeSDK/issues/95)
+	 * Compiler settings and tweaks to compile properly with Xcode 6 and the iOS 8.0 SDK
+	Android
+	 * No changes
+
 2014-05-28 	James Daniels	<james@appblade.com>
 	iOS
 	 * No changes 

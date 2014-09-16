@@ -35,7 +35,7 @@
 
 
 
-static NSString* const s_sdkVersion                     = @"0.6.1";
+static NSString* const s_sdkVersion                     = @"0.6.2";
 
 NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
 const int kAppBladeOfflineError                         = 1200;

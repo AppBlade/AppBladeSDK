@@ -1,6 +1,6 @@
 //
 //  AppBlade.h
-//  AppBlade iOS SDK v0.5.0
+//  AppBlade iOS SDK v0.6.2
 //
 //  Created by Craig Spitzkoff on 6/1/11.
 //  Copyright 2011 AppBlade. All rights reserved.
@@ -119,13 +119,19 @@ UIKIT_EXTERN NSString* const kAppBladeCacheDirectory;
 - (void)showFeedbackDialogue:(BOOL)withScreenshot;
 
 
-+ (void)startSession;
-+ (void)endSession;
++ (void)startSession __attribute__((deprecated("use method -(void)logSessionStart instead")));
+-(void)logSessionStart;
+
++ (void)endSession __attribute__((deprecated("use method -(void)logSessionEnd instead")));
+- (void)logSessionEnd;
 
 
 - (void)refreshToken:(NSString *)tokenToConfirm;
 - (void)confirmToken:(NSString *)tokenToConfirm;
 
 -(BOOL)isAppStoreBuild;
+
+-(void)sanitizeKeychain;
+-(void)cleanOutKeychain;
 
 @end
