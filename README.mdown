@@ -1,13 +1,27 @@
 #AppBlade SDK#
 *An easy-to-use, drop-in library to help you get the most out of Appblade.*
 
-###Clone in our repo, or [Download our compiled SDK v0.6.2](http://appblade.com/sdk/download) 
-###[Put our SDK in your project](https://github.com/AppBlade/SDK/wiki/Embedding-our-SDK)
-###[Check out how to put in our features](https://github.com/AppBlade/SDK/wiki/Feature-Implementation-Guide)
+##Installation
+
+###iOS
+
+The easiest and quickest way to get your project using the AppBlade iOS SDK is to use CocoaPods. Add the following to your `Podfile`:
+
+    pod 'appblade'
+    
+Then run `pod install` on your command line. Mind that you'll still need to fetch the `AppBladeKeys.plist`  personalized for your project and add it to your `ResourceRules` [Not a CocoaPods user? Navigate here to learn about other installation methods.](https://github.com/AppBlade/AppBladeSDK/wiki/Embedding-our-SDK)
+
+###Android
+
+[Learn how to embed the Android SDK here.](https://github.com/AppBlade/AppBladeSDK/wiki/Embedding-our-SDK#android-sdk)
+
+##Usage
+
+[Check out how to enable AppBlade SDK features in our implementation guide](https://github.com/AppBlade/SDK/wiki/Feature-Implementation-Guide).
 
 **Still having trouble installing? Check out our [FAQ](https://github.com/AppBlade/SDK/wiki/FAQ-%28Frequent-AppBlade-Questions%29).**
 
-###Integrating the SDK enables enhanced AppBlade features such as:###
+###Integrating the AppBlade SDK enables enhanced features
 
  - **Application kill switch**
    - Administrators can remote disable AppBlade installed applications.
@@ -25,10 +39,12 @@
  - **User Statistics** 
  	- Project managers can track specific data like when an AppBlade-integrated app was opened, how long it stayed open, and who opened it. 
 
-Current build targets: 
+## Current build targets
+
  - iOS: minimum v5.0
  - Android: minimum API v9, target API v17
 
-####Additional Resources:####
+##Additional Resources:
+
  - [AppBlade.com](https://appblade.com/)
  - [License and terms](https://appblade.com/terms_of_use)
