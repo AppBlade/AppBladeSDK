@@ -82,10 +82,11 @@ struct  _Plcrash__CrashReport__ApplicationInfo
   ProtobufCMessage base;
   char *identifier;
   char *version;
+  char *marketing_version;
 };
 #define PLCRASH__CRASH_REPORT__APPLICATION_INFO__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&plcrash__crash_report__application_info__descriptor) \
-    , NULL, NULL }
+    , NULL, NULL, NULL }
 
 
 struct  _Plcrash__CrashReport__Symbol

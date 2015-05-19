@@ -251,7 +251,7 @@ const ProtobufCMessageDescriptor plcrash__crash_report__system_info__descriptor 
   1,  plcrash__crash_report__system_info__number_ranges,
   NULL,NULL,NULL,NULL    /* reserved[1234] */
 };
-static const ProtobufCFieldDescriptor plcrash__crash_report__application_info__field_descriptors[2] =
+static const ProtobufCFieldDescriptor plcrash__crash_report__application_info__field_descriptors[3] =
 {
   {
     "identifier",
@@ -275,15 +275,27 @@ static const ProtobufCFieldDescriptor plcrash__crash_report__application_info__f
     NULL,
     NULL,NULL    /* reserved1, reserved2 */
   },
+  {
+    "marketing_version",
+    3,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(Plcrash__CrashReport__ApplicationInfo, marketing_version),
+    NULL,
+    NULL,
+    NULL,NULL    /* reserved1, reserved2 */
+  },
 };
 static const unsigned plcrash__crash_report__application_info__field_indices_by_name[] = {
   0,   /* field[0] = identifier */
+  2,   /* field[2] = marketing_version */
   1,   /* field[1] = version */
 };
 static const ProtobufCIntRange plcrash__crash_report__application_info__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 2 }
+  { 0, 3 }
 };
 const ProtobufCMessageDescriptor plcrash__crash_report__application_info__descriptor =
 {
@@ -293,7 +305,7 @@ const ProtobufCMessageDescriptor plcrash__crash_report__application_info__descri
   "Plcrash__CrashReport__ApplicationInfo",
   "plcrash",
   sizeof(Plcrash__CrashReport__ApplicationInfo),
-  2,
+  3,
   plcrash__crash_report__application_info__field_descriptors,
   plcrash__crash_report__application_info__field_indices_by_name,
   1,  plcrash__crash_report__application_info__number_ranges,

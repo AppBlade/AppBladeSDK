@@ -35,7 +35,7 @@
 
 
 
-static NSString* const s_sdkVersion                     = @"0.6.2";
+static NSString* const s_sdkVersion                     = @"0.6.3";
 
 NSString* const kAppBladeErrorDomain                    = @"com.appblade.sdk";
 const int kAppBladeOfflineError                         = 1200;
@@ -105,6 +105,8 @@ static NSString* const kAppBladeApiTokenResponseTimeToLiveKey       = @"ttl";
 
 @property (nonatomic, retain) NSOperationQueue* pendingRequests;
 @property (nonatomic, retain) NSOperationQueue* tokenRequests;
+
+@property (nonatomic, retain) PLCrashReporter* crashReporter;
 
 - (void)raiseConfigurationExceptionWithMessage:(NSString *)message;
 
@@ -543,13 +545,13 @@ static BOOL is_encrypted () {
     }
     ABDebugLog_internal(@"Catch and report crashes");
 
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
+    self.crashReporter = [[PLCrashReporter alloc] init];
     NSError *error;
     
     [self checkForExistingCrashReports];
     
     // Enable the Crash Reporter
-    if (![crashReporter enableCrashReporterAndReturnError: &error])
+    if (![self.crashReporter enableCrashReporterAndReturnError: &error])
         ABErrorLog(@"Warning: Could not enable crash reporter: %@", error);
 }
 
@@ -568,7 +570,7 @@ static BOOL is_encrypted () {
 - (BOOL)hasPendingCrashReport
 {
     /* Check for a live crash report file */
-    if(![[NSFileManager defaultManager] fileExistsAtPath: [[PLCrashReporter sharedReporter] crashReportPath]]){
+    if(![[NSFileManager defaultManager] fileExistsAtPath: [self.crashReporter crashReportPath]]){
         return ([self hasQueuedCrashReports]); //check queue
     }
     return YES;
@@ -590,7 +592,7 @@ static BOOL is_encrypted () {
 }
 
 - (NSString *) queuedCrashReportDirectory {
-    return [[[PLCrashReporter sharedReporter] crashReportDirectory] stringByAppendingPathComponent: PLCRASH_QUEUED_DIR];
+    return [[self.crashReporter crashReportDirectory] stringByAppendingPathComponent: PLCRASH_QUEUED_DIR];
 }
 
 
@@ -603,13 +605,12 @@ static BOOL is_encrypted () {
         return;
     }
 
-    PLCrashReporter *crashReporter = [PLCrashReporter sharedReporter];
     NSData *crashData;
     NSError *error;
     NSString* reportString = nil;
     NSString *queuedFilePath = nil;
     // Try loading the crash report from the live file
-    crashData = [crashReporter loadPendingCrashReportDataAndReturnError: &error];
+    crashData = [self.crashReporter loadPendingCrashReportDataAndReturnError: &error];
     if (crashData != nil) {
         PLCrashReport *report = [[PLCrashReport alloc] initWithData: crashData error: &error];
         if (report != nil) {
@@ -633,11 +634,11 @@ static BOOL is_encrypted () {
     {
         ABErrorLog(@"Could not load a crash report from live file");
     }
-    [crashReporter purgePendingCrashReport]; //remove crash report from immediate file, we have it in the queue now
+    [self.crashReporter purgePendingCrashReport]; //remove crash report from immediate file, we have it in the queue now
 
     if(queuedFilePath == nil){
         //we had no immediate crash, or an invalid save, grab any stored crash report
-        [[PLCrashReporter sharedReporter] loadPendingCrashReportData];
+        [self.crashReporter loadPendingCrashReportData];
 
         reportString = [NSString stringWithContentsOfFile:queuedFilePath encoding:NSUTF8StringEncoding error:&error];
     }
@@ -979,12 +980,12 @@ static BOOL is_encrypted () {
     BOOL success = (status == 201 || status == 200);
     if(success){ //we don't need to hold onto this crash.
         ABDebugLog_internal(@"Appblade: success sending crash report, response status code: %d", status);
-        [[PLCrashReporter sharedReporter] purgePendingCrashReport];
+        [self.crashReporter purgePendingCrashReport];
         NSString *pathOfCrashReport = [client.userInfo valueForKey:kAppBladeCrashReportKeyFilePath];
         [[NSFileManager defaultManager] removeItemAtPath:pathOfCrashReport error:nil];
         ABDebugLog_internal(@"Appblade: removed crash report, %@", pathOfCrashReport);
 
-        if ([[PLCrashReporter sharedReporter] hasPendingCrashReport]){
+        if ([self.crashReporter hasPendingCrashReport]){
             ABDebugLog_internal(@"Appblade: PLCrashReporter has more crash reports");
             [self handleCrashReport];
         }

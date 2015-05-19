@@ -26,7 +26,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "GTMSenTestCase.h"
+#import "SenTestCompat.h"
 #import "PLCrashReport.h"
 #import "PLCrashReporter.h"
 #import "PLCrashFrameWalker.h"
@@ -107,7 +107,7 @@ static plcrash_error_t plcr_live_report_callback (plcrash_async_thread_state_t *
     plcrash_async_file_init(&file, fd, 0);
     
     /* Initialize a writer */
-    STAssertEquals(PLCRASH_ESUCCESS, plcrash_log_writer_init(&writer, @"test.id", @"1.0", PLCRASH_ASYNC_SYMBOL_STRATEGY_ALL, false), @"Initialization failed");
+    STAssertEquals(PLCRASH_ESUCCESS, plcrash_log_writer_init(&writer, @"test.id", @"1.0", @"1.0", PLCRASH_ASYNC_SYMBOL_STRATEGY_ALL, false), @"Initialization failed");
     
     /* Set an exception with a valid return address call stack. */
     NSException *exception;
@@ -156,7 +156,11 @@ static plcrash_error_t plcr_live_report_callback (plcrash_async_thread_state_t *
     STAssertNotNil(crashLog.systemInfo.operatingSystemBuild, @"OS build is nil");
     STAssertNotNil(crashLog.systemInfo.timestamp, @"Timestamp is nil");
     STAssertEquals(crashLog.systemInfo.operatingSystem, PLCrashReportHostOperatingSystem, @"Operating system incorrect");
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     STAssertEquals(crashLog.systemInfo.architecture, PLCrashReportHostArchitecture, @"Architecture incorrect");
+#pragma clang diagnostic pop
+    STAssertNotNil(crashLog.systemInfo.processorInfo, @"Processor info is nil");
     
     /* Machine info */
     const NXArchInfo *archInfo = NXGetLocalArchInfo();
@@ -267,9 +271,9 @@ static plcrash_error_t plcr_live_report_callback (plcrash_async_thread_state_t *
          * The (uint64_t)(uint32_t) casting is prevent improper sign extension when casting the signed cpusubtype integer_t
          * to a larger, unsigned uint64_t value.
          */
-        Dl_info info;
-        STAssertTrue(dladdr((void *)(uintptr_t)imageInfo.imageBaseAddress, &info) != 0, @"dladdr() failed to find image");
-        struct mach_header *hdr = info.dli_fbase;
+        Dl_info dlInfo;
+        STAssertTrue(dladdr((void *)(uintptr_t)imageInfo.imageBaseAddress, &dlInfo) != 0, @"dladdr() failed to find image");
+        struct mach_header *hdr = dlInfo.dli_fbase;
         STAssertEquals(imageInfo.codeType.type, (uint64_t)(uint32_t)hdr->cputype, @"Incorrect CPU type");
         STAssertEquals(imageInfo.codeType.subtype, (uint64_t)(uint32_t)hdr->cpusubtype, @"Incorrect CPU subtype");
     }
