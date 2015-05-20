@@ -124,7 +124,6 @@
 		315EA84418A0866C0061B277 /* PLCrashSysctl.h in Headers */ = {isa = PBXBuildFile; fileRef = 315EA7A318A0866C0061B277 /* PLCrashSysctl.h */; };
 		315EA84B18A0866C0061B277 /* PLCrashUncaughtExceptionHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 315EA7AA18A0866C0061B277 /* PLCrashUncaughtExceptionHandler.h */; };
 		315EA84C18A0866C0061B277 /* PLCrashUncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 315EA7AB18A0866C0061B277 /* PLCrashUncaughtExceptionHandler.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc -w"; }; };
-		315EA84E18A0866C0061B277 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 315EA7AE18A0866C0061B277 /* main.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc -w"; }; };
 		315EA85418A086D30061B277 /* protobuf-c-private.h in Headers */ = {isa = PBXBuildFile; fileRef = 315EA85118A086D30061B277 /* protobuf-c-private.h */; };
 		315EA85518A086D30061B277 /* protobuf-c.c in Sources */ = {isa = PBXBuildFile; fileRef = 315EA85218A086D30061B277 /* protobuf-c.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		315EA85618A086D30061B277 /* protobuf-c.h in Headers */ = {isa = PBXBuildFile; fileRef = 315EA85318A086D30061B277 /* protobuf-c.h */; };
@@ -778,7 +777,6 @@
 			files = (
 				31A563B018A44CDD00138935 /* crash_report.proto in Sources */,
 				315EA85518A086D30061B277 /* protobuf-c.c in Sources */,
-				315EA84E18A0866C0061B277 /* main.m in Sources */,
 				315EA7B018A0866C0061B277 /* CrashReporter.m in Sources */,
 				315EA7BB18A0866C0061B277 /* PLCrashAsyncDwarfCFAStateEvaluation.cpp in Sources */,
 				315EA82A18A0866C0061B277 /* PLCrashReportMachExceptionInfo.m in Sources */,
