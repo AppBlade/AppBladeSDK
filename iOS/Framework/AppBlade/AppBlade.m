@@ -10,12 +10,12 @@
 #import "AppBladeLogging.h"
 #import "AppBladeSimpleKeychain.h"
 
-#import "PLCrashReporter.h"
+#import "CrashReporter/PLCrashReporter.h"
 #include "PLCrashReporter+AppBlade.h"
 
-#import "PLCrashReport.h"
+#import "CrashReporter/PLCrashReport.h"
 #import "AppBladeWebClient.h"
-#import "PLCrashReportTextFormatter.h"
+#import "CrashReporter/PLCrashReportTextFormatter.h"
 #import "FeedbackDialogue.h"
 #import "asl.h"
 #import <QuartzCore/QuartzCore.h>
