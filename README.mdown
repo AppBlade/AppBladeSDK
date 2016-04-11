@@ -7,7 +7,7 @@
 
 The easiest and quickest way to get your project using the AppBlade iOS SDK is to use CocoaPods. Add the following to your `Podfile`:
 
-    pod 'appblade'
+    pod 'AppBlade'
     
 Then run `pod install` on your command line. Mind that you'll still need to fetch the `AppBladeKeys.plist`  personalized for your project and add it to your `ResourceRules` [Not a CocoaPods user? Navigate here to learn about other installation methods.](https://github.com/AppBlade/AppBladeSDK/wiki/Embedding-our-SDK)
 
